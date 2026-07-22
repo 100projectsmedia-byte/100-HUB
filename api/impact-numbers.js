@@ -3,6 +3,7 @@
 // NOTE: lives at /api/impact-numbers.js at the project ROOT for Vercel to detect it.
 
 import { createClient } from '@supabase/supabase-js';
+import { requireAdmin } from '../lib/adminAuth.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -58,6 +59,7 @@ export default async function handler(req, res) {
 
     // POST - update impact numbers
     if (req.method === 'POST') {
+        if (!requireAdmin(req, res)) return;
         try {
             const { magazine, features, collaborations, reach } = req.body || {};
 

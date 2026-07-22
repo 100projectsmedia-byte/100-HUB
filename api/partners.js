@@ -3,6 +3,7 @@
 // NOTE: lives at /api/partners.js at the project ROOT for Vercel to detect it.
 
 import { createClient } from '@supabase/supabase-js';
+import { requireAdmin } from '../lib/adminAuth.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -34,6 +35,7 @@ export default async function handler(req, res) {
 
     // POST - add a new partner
     if (req.method === 'POST') {
+        if (!requireAdmin(req, res)) return;
         try {
             const { url, name } = req.body || {};
 
@@ -66,6 +68,7 @@ export default async function handler(req, res) {
 
     // DELETE - remove a partner
     if (req.method === 'DELETE') {
+        if (!requireAdmin(req, res)) return;
         try {
             const { id } = req.body || {};
 

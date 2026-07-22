@@ -5,6 +5,7 @@
 // Cloudflare Pages Functions convention and Vercel will silently 404 it).
 
 import { createClient } from '@supabase/supabase-js';
+import { createAdminToken } from '../lib/adminAuth.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -41,7 +42,8 @@ export default async function handler(req, res) {
             const isCorrect = pin === '3689';
             return res.status(200).json({
                 success: isCorrect,
-                error: isCorrect ? null : 'Invalid PIN'
+                error: isCorrect ? null : 'Invalid PIN',
+                token: isCorrect ? createAdminToken() : undefined
             });
         }
 
@@ -49,7 +51,8 @@ export default async function handler(req, res) {
 
         return res.status(200).json({
             success: isCorrect,
-            error: isCorrect ? null : 'Invalid PIN'
+            error: isCorrect ? null : 'Invalid PIN',
+            token: isCorrect ? createAdminToken() : undefined
         });
     } catch (error) {
         console.error('Verify PIN error:', error);

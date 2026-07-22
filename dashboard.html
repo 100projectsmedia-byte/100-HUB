@@ -948,6 +948,9 @@
                 submitBtn.textContent = 'Unlock';
 
                 if (result.success) {
+                    if (result.token) {
+                        sessionStorage.setItem('adminToken', result.token);
+                    }
                     pinOverlay.classList.add('hidden');
                     document.body.style.overflow = '';
                     return;
@@ -1020,9 +1023,7 @@
 
                 const response = await fetch('/api/update-pin', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: adminHeaders(),
                     body: JSON.stringify({
                         currentPin: currentPin,
                         newPin: newPin
@@ -1074,6 +1075,17 @@
         // API BASE
         // ==========================================
         const API_BASE = '/api';
+
+        // Attaches the admin session token (set after successful PIN entry)
+        // to write requests. If the token is missing/expired, the API will
+        // reply with 401 and the calling function's error handling kicks in.
+        function adminHeaders() {
+            const token = sessionStorage.getItem('adminToken');
+            return {
+                'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+            };
+        }
         let currentMemberId = null;
         let currentFilter = 'all';
 
@@ -1285,7 +1297,7 @@
             try {
                 const response = await fetch(`${API_BASE}/update-member`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: adminHeaders(),
                     body: JSON.stringify({ email, ...updates })
                 });
 
@@ -1422,7 +1434,7 @@
             try {
                 const response = await fetch(`${API_BASE}/partners`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: adminHeaders(),
                     body: JSON.stringify({ name, url })
                 });
                 const result = await response.json();
@@ -1432,7 +1444,7 @@
                     urlInput.value = '';
                     loadPartners();
                 } else {
-                    showToast('Failed to add partner.', 'error');
+                    showToast(result.error || 'Failed to add partner.', 'error');
                 }
             } catch (error) {
                 showToast('Error adding partner.', 'error');
@@ -1486,7 +1498,7 @@
             
             fetch(`${API_BASE}/media-kit`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: adminHeaders(),
                 body: JSON.stringify({ url })
             })
             .then(response => response.json())

@@ -5,6 +5,7 @@
 // Pages Functions convention, which Vercel does not recognize).
 
 import { createClient } from '@supabase/supabase-js';
+import { requireAdmin } from '../lib/adminAuth.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -18,6 +19,8 @@ export default async function handler(req, res) {
     if (req.method !== 'POST' && req.method !== 'PUT') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
+
+    if (!requireAdmin(req, res)) return;
 
     try {
         const { currentPin, newPin } = req.body || {};

@@ -3,6 +3,7 @@
 // NOTE: lives at /api/update-member.js at the project ROOT for Vercel to detect it.
 
 import { createClient } from '@supabase/supabase-js';
+import { requireAdmin } from '../lib/adminAuth.js';
 
 const EMAIL_FROM = 'noreply@100hub.co.za';
 const REPLY_TO_EMAIL = '100projectsmedia@gmail.com';
@@ -46,6 +47,8 @@ export default async function handler(req, res) {
     if (req.method !== 'POST' && req.method !== 'PUT') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
+
+    if (!requireAdmin(req, res)) return;
 
     try {
         const { email, status, selectedImage, name, role, skills } = req.body || {};
