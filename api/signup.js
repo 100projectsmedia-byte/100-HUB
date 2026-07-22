@@ -1,14 +1,15 @@
-// functions/api/signup.js
+// api/signup.js
 // Saves member data to Supabase
 // Sends confirmation email via Resend
+// NOTE: lives at /api/signup.js at the project ROOT for Vercel to detect it.
 
 import { createClient } from '@supabase/supabase-js';
 
 const EMAIL_FROM = 'noreply@100hub.co.za';
 const REPLY_TO_EMAIL = '100projectsmedia@gmail.com';
 
-async function sendConfirmationEmail(email, name, env) {
-    const apiKey = env.RESEND_API_KEY;
+async function sendConfirmationEmail(email, name) {
+    const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
         console.warn('RESEND_API_KEY not set — skipping email');
         return;
@@ -64,51 +65,38 @@ async function sendConfirmationEmail(email, name, env) {
     }
 }
 
-export async function onRequest(context) {
-    const { request, env } = context;
-    const headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS'
-    };
+export default async function handler(req, res) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
 
-    if (request.method === 'OPTIONS') {
-        return new Response(null, { status: 204, headers });
+    if (req.method === 'OPTIONS') {
+        return res.status(204).end();
     }
 
-    if (request.method !== 'POST') {
-        return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-            status: 405,
-            headers
-        });
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
-        const body = await request.json();
-        const { name, email, role, skills, website, image1, image2, image3, socialPlatform, socialHandle } = body;
+        const { name, email, role, skills, website, image1, image2, image3, socialPlatform, socialHandle } = req.body || {};
 
         if (!name || !email || !role) {
-            return new Response(JSON.stringify({ error: 'Name, email, and role are required' }), {
-                status: 400,
-                headers
-            });
+            return res.status(400).json({ error: 'Name, email, and role are required' });
         }
 
         // Initialize Supabase client
-        const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY);
+        const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
         // Check if email already exists
-        const { data: existing, error: checkError } = await supabase
+        const { data: existing } = await supabase
             .from('members')
             .select('email')
             .eq('email', email)
             .single();
 
         if (existing) {
-            return new Response(JSON.stringify({ error: 'This email is already registered.' }), {
-                status: 400,
-                headers
-            });
+            return res.status(400).json({ error: 'This email is already registered.' });
         }
 
         // Insert member
@@ -136,21 +124,15 @@ export async function onRequest(context) {
         }
 
         // Send confirmation email
-        await sendConfirmationEmail(email, name, env);
+        await sendConfirmationEmail(email, name);
 
-        return new Response(JSON.stringify({
+        return res.status(200).json({
             success: true,
             message: 'Successfully joined the community!',
             member: data
-        }), {
-            status: 200,
-            headers
         });
     } catch (error) {
         console.error('Signup error:', error);
-        return new Response(JSON.stringify({ error: 'Failed to save member data: ' + error.message }), {
-            status: 500,
-            headers
-        });
+        return res.status(500).json({ error: 'Failed to save member data: ' + error.message });
     }
 }

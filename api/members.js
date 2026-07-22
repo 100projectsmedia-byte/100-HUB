@@ -1,34 +1,28 @@
-// functions/api/members.js
+// api/members.js
 // Fetches members from Supabase
+// NOTE: lives at /api/members.js at the project ROOT for Vercel to detect it.
 
 import { createClient } from '@supabase/supabase-js';
 
-export async function onRequest(context) {
-    const { request, env } = context;
-    const headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, OPTIONS'
-    };
+export default async function handler(req, res) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
 
-    if (request.method === 'OPTIONS') {
-        return new Response(null, { status: 204, headers });
+    if (req.method === 'OPTIONS') {
+        return res.status(204).end();
     }
 
-    if (request.method !== 'GET') {
-        return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-            status: 405,
-            headers
-        });
+    if (req.method !== 'GET') {
+        return res.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
-        const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY);
-        
-        const url = new URL(request.url);
-        const statusFilter = url.searchParams.get('status') || 'all';
-        const page = parseInt(url.searchParams.get('page')) || 0;
-        const limit = parseInt(url.searchParams.get('limit')) || 100;
+        const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+
+        const statusFilter = req.query.status || 'all';
+        const page = parseInt(req.query.page) || 0;
+        const limit = parseInt(req.query.limit) || 100;
         const start = page * limit;
 
         let query = supabase
@@ -76,22 +70,17 @@ export async function onRequest(context) {
             declined: declinedCount || 0
         };
 
-        return new Response(JSON.stringify(result), {
-            status: 200,
-            headers: { ...headers, 'Cache-Control': 'no-store' }
-        });
+        res.setHeader('Cache-Control', 'no-store');
+        return res.status(200).json(result);
     } catch (error) {
         console.error('Members error:', error);
-        return new Response(JSON.stringify({
+        return res.status(200).json({
             members: [],
             count: 0,
             total: 0,
             accepted: 0,
             pending: 0,
             declined: 0
-        }), {
-            status: 200,
-            headers
         });
     }
 }

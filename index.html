@@ -550,12 +550,6 @@
                     See More <i class="fa-solid fa-arrow-down"></i>
                 </button>
             </div>
-            <!-- Instagram Link - Very small, optional -->
-            <div class="see-more-container" style="margin-top:8px;">
-                <a href="https://www.instagram.com/100projectsmedia" target="_blank" class="see-more-btn" style="opacity:0.3; font-size:10px; padding:6px 16px;">
-                    <i class="fa-brands fa-instagram"></i> Follow on Instagram
-                </a>
-            </div>
         </div>
     </section>
 
@@ -1413,8 +1407,12 @@
                 
                 let mediaHtml = '';
                 if (isVideo && videoUrl) {
+                    // Note: we deliberately don't embed the raw Instagram video URL here.
+                    // Those URLs are signed/hotlink-protected and frequently return 403 when
+                    // loaded from a different origin. We show the Behold-hosted thumbnail
+                    // instead and only attempt video playback in the modal, on user intent.
                     mediaHtml = `
-                        <video src="${videoUrl}" muted loop playsinline autoplay></video>
+                        <img src="${imageUrl}" alt="${caption.substring(0, 50)}" loading="lazy" />
                         <span class="feed-play"><i class="fa-solid fa-play"></i></span>
                     `;
                 } else {
@@ -1452,13 +1450,6 @@
                 });
             });
 
-            document.querySelectorAll('.feed-image video').forEach(video => {
-                video.addEventListener('mouseenter', () => video.play());
-                video.addEventListener('mouseleave', () => video.pause());
-                if (video.getBoundingClientRect().top < window.innerHeight) {
-                    video.play();
-                }
-            });
         }
 
         function updateFeedButton() {
@@ -1550,8 +1541,12 @@
             
             let mediaHtml = '';
             if (isVideo && videoUrl) {
+                // Instagram's raw CDN video URLs are signed/hotlink-protected and often
+                // return 403 when played from another origin. Try to play it, but fall
+                // back to a poster + "Watch on Instagram" link if it fails (see error
+                // handler attached below, after this is inserted into the DOM).
                 mediaHtml = `
-                    <video src="${videoUrl}" controls playsinline autoplay></video>
+                    <video src="${videoUrl}" controls playsinline autoplay poster="${imageUrl}" data-poster="${imageUrl}" data-permalink="${permalink}"></video>
                 `;
             } else {
                 mediaHtml = `<img src="${imageUrl}" alt="${caption.substring(0, 50)}" loading="lazy" />`;
@@ -1593,7 +1588,32 @@
             setTimeout(() => {
                 const modalVideo = document.querySelector('.modal-image video');
                 if (modalVideo) {
-                    modalVideo.play();
+                    modalVideo.addEventListener('error', function showVideoFallback() {
+                        const wrapper = modalVideo.closest('.modal-image');
+                        if (!wrapper) return;
+                        const poster = modalVideo.dataset.poster;
+                        const link = modalVideo.dataset.permalink || permalink;
+                        wrapper.innerHTML = poster
+                            ? `<div class="modal-video-fallback">
+                                    <img src="${poster}" alt="Video preview" />
+                                    <a href="${link}" target="_blank" class="modal-video-play-link">
+                                        <i class="fa-solid fa-play"></i> Watch on Instagram
+                                    </a>
+                               </div>`
+                            : `<div class="modal-video-fallback">
+                                    <a href="${link}" target="_blank" class="modal-video-play-link">
+                                        <i class="fa-solid fa-play"></i> Watch on Instagram
+                                    </a>
+                               </div>`;
+                    }, { once: true });
+
+                    const playPromise = modalVideo.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(() => {
+                            // Autoplay blocked or load failed — the 'error' listener above
+                            // handles the actual 403/NotSupportedError fallback UI.
+                        });
+                    }
                 }
             }, 500);
         }

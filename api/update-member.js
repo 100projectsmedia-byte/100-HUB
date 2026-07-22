@@ -1,13 +1,14 @@
-// functions/api/update-member.js
+// api/update-member.js
 // Updates a member in Supabase
+// NOTE: lives at /api/update-member.js at the project ROOT for Vercel to detect it.
 
 import { createClient } from '@supabase/supabase-js';
 
 const EMAIL_FROM = 'noreply@100hub.co.za';
 const REPLY_TO_EMAIL = '100projectsmedia@gmail.com';
 
-async function sendEmail({ to, subject, html }, env) {
-    const apiKey = env.RESEND_API_KEY;
+async function sendEmail({ to, subject, html }) {
+    const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
         console.warn('RESEND_API_KEY not set — skipping email');
         return;
@@ -33,37 +34,27 @@ async function sendEmail({ to, subject, html }, env) {
     }
 }
 
-export async function onRequest(context) {
-    const { request, env } = context;
-    const headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST, PUT, OPTIONS'
-    };
+export default async function handler(req, res) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, PUT, OPTIONS');
 
-    if (request.method === 'OPTIONS') {
-        return new Response(null, { status: 204, headers });
+    if (req.method === 'OPTIONS') {
+        return res.status(204).end();
     }
 
-    if (request.method !== 'POST' && request.method !== 'PUT') {
-        return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-            status: 405,
-            headers
-        });
+    if (req.method !== 'POST' && req.method !== 'PUT') {
+        return res.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
-        const body = await request.json();
-        const { email, status, selectedImage, name, role, skills } = body;
+        const { email, status, selectedImage, name, role, skills } = req.body || {};
 
         if (!email) {
-            return new Response(JSON.stringify({ error: 'Member email is required' }), {
-                status: 400,
-                headers
-            });
+            return res.status(400).json({ error: 'Member email is required' });
         }
 
-        const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY);
+        const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
         // Get current member data
         const { data: existingMember, error: fetchError } = await supabase
@@ -73,10 +64,7 @@ export async function onRequest(context) {
             .single();
 
         if (fetchError && !existingMember) {
-            return new Response(JSON.stringify({ error: 'Member not found' }), {
-                status: 404,
-                headers
-            });
+            return res.status(404).json({ error: 'Member not found' });
         }
 
         const updates = {};
@@ -88,10 +76,7 @@ export async function onRequest(context) {
         updates.updated_at = new Date().toISOString();
 
         if (Object.keys(updates).length === 0) {
-            return new Response(JSON.stringify({ error: 'No fields to update' }), {
-                status: 400,
-                headers
-            });
+            return res.status(400).json({ error: 'No fields to update' });
         }
 
         const { data: updated, error: updateError } = await supabase
@@ -139,7 +124,7 @@ export async function onRequest(context) {
                         <p style="font-size:12px;color:#B8B0A8;">100 HUB · Broadcasting &amp; Media Production Company</p>
                     </div>
                 `
-            }, env);
+            });
         }
 
         if (status === 'declined') {
@@ -165,19 +150,13 @@ export async function onRequest(context) {
                         <p style="font-size:12px;color:#B8B0A8;">100 HUB · Broadcasting &amp; Media Production Company</p>
                     </div>
                 `
-            }, env);
+            });
         }
 
-        return new Response(JSON.stringify({ success: true, message: 'Member updated successfully', member: updated }), {
-            status: 200,
-            headers
-        });
+        return res.status(200).json({ success: true, message: 'Member updated successfully', member: updated });
 
     } catch (error) {
         console.error('Update error:', error);
-        return new Response(JSON.stringify({ success: false, error: 'Failed to update member: ' + error.message }), {
-            status: 500,
-            headers
-        });
+        return res.status(500).json({ success: false, error: 'Failed to update member: ' + error.message });
     }
 }

@@ -1,24 +1,22 @@
-// functions/api/impact-numbers.js
+// api/impact-numbers.js
 // Manages impact numbers via Supabase
+// NOTE: lives at /api/impact-numbers.js at the project ROOT for Vercel to detect it.
 
 import { createClient } from '@supabase/supabase-js';
 
-export async function onRequest(context) {
-    const { request, env } = context;
-    const headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
-    };
+export default async function handler(req, res) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
 
-    if (request.method === 'OPTIONS') {
-        return new Response(null, { status: 204, headers });
+    if (req.method === 'OPTIONS') {
+        return res.status(204).end();
     }
 
-    const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY);
+    const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
     // GET - fetch impact numbers
-    if (request.method === 'GET') {
+    if (req.method === 'GET') {
         try {
             const { data, error } = await supabase
                 .from('impact_numbers')
@@ -31,14 +29,11 @@ export async function onRequest(context) {
             }
 
             if (data) {
-                return new Response(JSON.stringify({ success: true, data }), {
-                    status: 200,
-                    headers
-                });
+                return res.status(200).json({ success: true, data });
             }
 
             // Return defaults if no data
-            return new Response(JSON.stringify({
+            return res.status(200).json({
                 success: true,
                 data: {
                     magazine: 8,
@@ -46,13 +41,10 @@ export async function onRequest(context) {
                     collaborations: 50,
                     reach: 1000000
                 }
-            }), {
-                status: 200,
-                headers
             });
         } catch (error) {
             console.error('GET impact numbers error:', error);
-            return new Response(JSON.stringify({
+            return res.status(200).json({
                 success: true,
                 data: {
                     magazine: 8,
@@ -60,18 +52,14 @@ export async function onRequest(context) {
                     collaborations: 50,
                     reach: 1000000
                 }
-            }), {
-                status: 200,
-                headers
             });
         }
     }
 
     // POST - update impact numbers
-    if (request.method === 'POST') {
+    if (req.method === 'POST') {
         try {
-            const body = await request.json();
-            const { magazine, features, collaborations, reach } = body;
+            const { magazine, features, collaborations, reach } = req.body || {};
 
             // First, get the existing record
             const { data: existing, error: fetchError } = await supabase
@@ -116,25 +104,16 @@ export async function onRequest(context) {
                 result = data;
             }
 
-            return new Response(JSON.stringify({
+            return res.status(200).json({
                 success: true,
                 message: 'Impact numbers saved!',
                 data: result
-            }), {
-                status: 200,
-                headers
             });
         } catch (error) {
             console.error('POST impact numbers error:', error);
-            return new Response(JSON.stringify({ error: 'Failed to save impact numbers: ' + error.message }), {
-                status: 500,
-                headers
-            });
+            return res.status(500).json({ error: 'Failed to save impact numbers: ' + error.message });
         }
     }
 
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-        status: 405,
-        headers
-    });
+    return res.status(405).json({ error: 'Method not allowed' });
 }
