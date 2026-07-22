@@ -1165,9 +1165,13 @@
             document.body.style.overflow = '';
         }
 
-        hamburgerBtn.addEventListener('click', toggleMobileMenu);
-        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-        mobileMenuClose.addEventListener('click', closeMobileMenu);
+        if (hamburgerBtn && mobileMenu && mobileMenuOverlay && mobileMenuClose) {
+            hamburgerBtn.addEventListener('click', toggleMobileMenu);
+            mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+            mobileMenuClose.addEventListener('click', closeMobileMenu);
+        } else {
+            console.warn('⚠️ Hamburger menu elements not found in DOM (navbar may be commented out) — skipping mobile menu init.');
+        }
 
         document.querySelectorAll('.mobile-link').forEach(link => {
             link.addEventListener('click', function(e) {
@@ -2163,29 +2167,33 @@
         let lastScrollY = window.scrollY;
         const navbar = document.querySelector('.navbar');
 
-        window.addEventListener('scroll', () => {
-            const currentScrollY = window.scrollY;
+        if (navbar) {
+            window.addEventListener('scroll', () => {
+                const currentScrollY = window.scrollY;
 
-            // At top of page (< 50px): always show navbar with ultra transparency
-            if (currentScrollY <= 50) {
-                navbar.classList.remove('nav-hidden');
-                navbar.classList.remove('nav-scrolled');
+                // At top of page (< 50px): always show navbar with ultra transparency
+                if (currentScrollY <= 50) {
+                    navbar.classList.remove('nav-hidden');
+                    navbar.classList.remove('nav-scrolled');
+                    lastScrollY = currentScrollY;
+                    return;
+                }
+
+                // Scrolling down -> hide navbar smoothly
+                if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                    navbar.classList.add('nav-hidden');
+                } 
+                // Scrolling up -> show navbar with subtle glass fill
+                else if (currentScrollY < lastScrollY) {
+                    navbar.classList.remove('nav-hidden');
+                    navbar.classList.add('nav-scrolled');
+                }
+
                 lastScrollY = currentScrollY;
-                return;
-            }
-
-            // Scrolling down -> hide navbar smoothly
-            if (currentScrollY > lastScrollY && currentScrollY > 100) {
-                navbar.classList.add('nav-hidden');
-            } 
-            // Scrolling up -> show navbar with subtle glass fill
-            else if (currentScrollY < lastScrollY) {
-                navbar.classList.remove('nav-hidden');
-                navbar.classList.add('nav-scrolled');
-            }
-
-            lastScrollY = currentScrollY;
-        }, { passive: true });
+            }, { passive: true });
+        } else {
+            console.warn('⚠️ .navbar element not found in DOM (commented out) — skipping smart navbar scroll behavior.');
+        }
 
         console.log('🌐 3D Globe camera scroll zoom, particle universe & smart navbar active');
     </script>
