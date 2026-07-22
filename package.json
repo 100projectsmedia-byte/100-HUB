@@ -1,0 +1,12 @@
+{
+  "name": "100hub",
+  "version": "1.0.0",
+  "description": "100 HUB - Broadcasting & Media Production",
+  "main": "index.html",
+  "scripts": {
+    "vercel-build": "echo hello"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  }
+}

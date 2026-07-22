@@ -1,0 +1,2189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>100 HUB — Broadcasting & Media Production</title>
+    <meta name="description" content="100 HUB - Your partner in Multimedia, PR, Events & Management." />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <!-- DNS/TCP early connections -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+    <link rel="preconnect" href="https://feeds.behold.so" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+    <!-- Fonts: Inter, Playfair Display, Space Grotesk, Space Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" /></noscript>
+
+    <!-- Site styles -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Preload images -->
+    <link rel="preload" as="image" href="Assets/100_Logo.png">
+    <link rel="preload" as="image" href="Assets/100_Hero.png">
+    <style>
+        /* ---- HUB CARD ---- */
+        .hub-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            background: var(--white);
+            border: 1px solid var(--gray-medium);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+        .hub-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+            border-color: var(--red);
+        }
+
+        .hub-card .hub-image {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            background: var(--gray-light);
+        }
+        .hub-card .hub-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        .hub-card:hover .hub-image img {
+            transform: scale(1.05);
+        }
+
+        .hub-card .hub-info {
+            padding: 14px 16px 16px;
+            text-align: left;
+        }
+        .hub-card .hub-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+        .hub-card .hub-date {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* ---- MEMBER PROFILE MODAL ---- */
+        .member-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 4000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.35s ease;
+        }
+        .member-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .member-modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(8px);
+        }
+        .member-modal-content {
+            position: relative;
+            background: var(--white);
+            border-radius: 16px;
+            width: 92%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+            transform: translateY(20px) scale(0.97);
+            transition: transform 0.35s ease;
+            padding: 0;
+        }
+        .member-modal.active .member-modal-content {
+            transform: translateY(0) scale(1);
+        }
+        .member-modal-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            z-index: 10;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            color: var(--text-primary);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, transform 0.2s;
+            backdrop-filter: blur(4px);
+        }
+        .member-modal-close:hover {
+            background: var(--red);
+            color: white;
+            transform: rotate(90deg);
+        }
+        .member-modal-photo {
+            width: 100%;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            border-radius: 16px 16px 0 0;
+        }
+        .member-modal-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .member-modal-details {
+            padding: 24px 28px 28px;
+        }
+        .member-modal-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 6px;
+            line-height: 1.2;
+        }
+        .member-modal-role {
+            display: inline-block;
+            background: rgba(227,30,36,0.08);
+            color: var(--red);
+            font-size: 12px;
+            font-weight: 500;
+            padding: 3px 12px;
+            border-radius: 100px;
+            margin-bottom: 6px;
+        }
+        .member-modal-date {
+            display: block;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            margin-top: 4px;
+        }
+        .member-modal-skills {
+            margin-bottom: 16px;
+        }
+        .member-modal-label {
+            display: block;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .member-modal-skills p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+        .member-modal-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--gray-medium);
+        }
+        .member-social-link,
+        .member-website-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 10px 16px;
+            border: 1px solid var(--gray-medium);
+            border-radius: 40px;
+            transition: all 0.2s ease;
+            width: fit-content;
+        }
+        .member-social-link:hover,
+        .member-website-link:hover {
+            border-color: var(--red);
+            color: var(--red);
+            background: rgba(227,30,36,0.04);
+        }
+        .member-social-link i,
+        .member-website-link i {
+            font-size: 16px;
+            width: 18px;
+            text-align: center;
+        }
+
+        /* ---- SOCIAL SELECT STYLING ---- */
+        #modalSocialPlatform {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 28px;
+            cursor: pointer;
+        }
+        #modalSocialPlatform:focus {
+            outline: none;
+            border-color: var(--red);
+        }
+        #modalSocialHandle:focus {
+            outline: none;
+            border-color: var(--red);
+        }
+
+        .social-group .social-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            width: 100%;
+        }
+        .social-group .social-row select {
+            flex: 0 0 140px;
+            min-width: 120px;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-medium);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: var(--text-primary);
+            background: var(--white);
+            cursor: pointer;
+        }
+        .social-group .social-row input {
+            flex: 1;
+            min-width: 150px;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-medium);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: var(--text-primary);
+            background: var(--white);
+        }
+        .social-group .social-row select:focus,
+        .social-group .social-row input:focus {
+            outline: none;
+            border-color: var(--red);
+        }
+
+        /* ---- HAMBURGER MENU ---- */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 1001;
+            background: none;
+            border: none;
+        }
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 2px;
+            background: var(--text-primary);
+            transition: var(--transition-fast);
+            border-radius: 2px;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background: var(--white);
+            z-index: 9999;
+            padding: 80px 30px 30px;
+            transition: right 0.35s ease;
+            box-shadow: -4px 0 30px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+        .mobile-menu.open {
+            right: 0;
+        }
+        .mobile-menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 9998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.35s ease;
+        }
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .mobile-menu a {
+            display: block;
+            padding: 12px 0;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-bottom: 1px solid var(--gray-medium);
+            transition: var(--transition-fast);
+        }
+        .mobile-menu a:hover {
+            color: var(--red);
+            padding-left: 8px;
+        }
+        .mobile-menu .mobile-menu-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            transition: var(--transition-fast);
+        }
+        .mobile-menu .mobile-menu-close:hover {
+            color: var(--red);
+            transform: rotate(90deg);
+        }
+
+        @media (max-width: 820px) {
+            .hamburger { display: flex; }
+            .nav-links { display: none !important; }
+            .nav-inner { justify-content: space-between !important; }
+            .hub-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+
+        @media (max-width: 480px) {
+            .member-modal-content { width: 96%; }
+            .member-modal-details { padding: 18px 20px 24px; }
+            .member-modal-name { font-size: 22px; }
+            .social-group .social-row {
+                flex-direction: column;
+                gap: 6px;
+            }
+            .social-group .social-row select,
+            .social-group .social-row input {
+                width: 100%;
+                flex: none;
+                min-width: unset;
+            }
+            .mobile-menu { width: 100%; }
+            .hub-card .hub-info { padding: 10px 12px 12px; }
+            .hub-card .hub-name { font-size: 14px; }
+            .hub-grid { grid-template-columns: 1fr 1fr !important; gap: 10px; }
+        }
+    </style>
+</head>
+    <!-- SITE PRELOADER -->
+    <div id="site-preloader" class="site-preloader">
+        <div class="preloader-inner">
+            <div class="preloader-spinner-box">
+                <div class="preloader-ring ring-outer"></div>
+                <div class="preloader-ring ring-inner"></div>
+                <div class="preloader-logo">
+                    <img src="Assets/100_Logo.png" alt="100 HUB" />
+                </div>
+            </div>
+            <div class="preloader-text-box">
+                <span class="preloader-counter" id="preloaderCounter">0%</span>
+                <span class="preloader-status" id="preloaderStatus">INITIALIZING 3D GLOBE...</span>
+            </div>
+            <div class="preloader-bar-track">
+                <div class="preloader-bar-fill" id="preloaderFill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3D GLOBE BACKGROUND -->
+    <canvas id="globe-canvas"></canvas>
+    <div class="globe-fade-overlay"></div>
+    <div id="globe-nodes-container"></div>
+
+    <!-- ZEZE STYLE TECH HUD OVERLAYS -->
+    <div class="tech-hud hud-top-left">
+        <span>LAT -26.2040° S</span>
+        <span>LON 28.0470° E</span>
+        <span>ALT 1753 M</span>
+        <span class="highlight-red">SIG LOCKED.</span>
+    </div>
+    <div class="tech-hud hud-top-right">
+        <span>NODE 100-HUB-01</span>
+        <span>STATUS ONLINE</span>
+        <span class="highlight-red">SYNC 99.8%</span>
+        <span>UPLINK STABLE</span>
+    </div>
+    <div class="tech-hud hud-bottom-left">
+        <span id="hud-section-indicator">01 / 08</span>
+    </div>
+    <div class="tech-hud hud-bottom-right">
+        <span>CREATORS <strong id="hud-creators-count" class="highlight-red">100</strong></span>
+        <span>NETWORK LIVE</span>
+        <span>TIER FOUNDING</span>
+    </div>
+
+    <!-- NAVIGATION (COMMENTED OUT AS REQUESTED) -->
+    <!--
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-inner">
+                <a href="#" class="nav-logo">
+                    <img src="Assets/100_Logo.png" alt="100 HUB" class="logo-img" />
+                    <span class="logo-text"><span class="highlight-red">HUB</span></span>
+                </a>
+                <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-links">
+                    <a href="#about">About</a>
+                    <a href="#feed">Media</a>
+                    <a href="#community">Community</a>
+                    <a href="#hub">Hub</a>
+                    <a href="#partners">Partners</a>
+                    <a href="#work">Work</a>
+                    <a href="#team">Team</a>
+                    <a href="#contact">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    -->
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" id="mobileMenuClose"><i class="fa-solid fa-xmark"></i></button>
+        <a href="#about" class="mobile-link">About</a>
+        <a href="#feed" class="mobile-link">Media</a>
+        <a href="#community" class="mobile-link">Community</a>
+        <a href="#hub" class="mobile-link">Hub</a>
+        <a href="#partners" class="mobile-link">Partners</a>
+        <a href="#work" class="mobile-link">Work</a>
+        <a href="#team" class="mobile-link">Team</a>
+        <a href="#contact" class="mobile-link">Contact</a>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-brand-header">
+                    <img src="Assets/100_Hero.png" alt="100 HUB" class="hero-img" />
+                </div>
+                <span class="section-number">01 // BROADCASTING & MEDIA PRODUCTION</span>
+                <h1 class="hero-title">
+                    Broadcasting & Media Production Company<span class="highlight-red">.</span>
+                </h1>
+                <p class="hero-tagline">
+                    Your partner in Multimedia, PR, Events & Management.
+                </p>
+                <div class="hero-actions">
+                    <a href="#feed" class="btn-primary">View Our Work</a>
+                    <a href="#community" class="btn-secondary">Join Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about-section" id="about" data-animate>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">02 // ABOUT 100 PROJECTS MEDIA</span>
+            </div>
+            <div class="about-content">
+                <h2 class="about-statement">
+                    100 Projects Media is a South African cultural media platform focused on fashion, music, sport, business and community<span class="highlight-red">.</span>
+                </h2>
+                <p class="about-lead">
+                    Through 100 Magazine, 100 Conversations, events and multimedia production, we create stories that connect brands with culture-first audiences.
+                </p>
+                <p class="about-lead">
+                    Our work spans editorial publishing, photography, film, podcasts, live experiences and strategic content distribution across digital platforms.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEED -->
+    <section class="feed-section" id="feed" data-animate>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">03 // MEDIA & BROADCASTING</span>
+                <h2 class="section-title">Media Dispatches<span class="highlight-red">.</span></h2>
+                <p class="section-subtitle">Stories, interviews, and cultural coverage from the 100 network.</p>
+            </div>
+            <div class="feed-grid" id="instagramFeed">
+                <div class="feed-loading">
+                    <div class="loader"></div>
+                    <p>Loading the latest dispatches...</p>
+                </div>
+            </div>
+            <!-- See More / See Less Button -->
+            <div class="see-more-container" id="feedSeeMore" style="display:none;">
+                <button class="see-more-btn" onclick="toggleFeedPosts()" id="loadMoreFeedBtn">
+                    See More <i class="fa-solid fa-arrow-down"></i>
+                </button>
+            </div>
+            <!-- Instagram Link - Very small, optional -->
+            <div class="see-more-container" style="margin-top:8px;">
+                <a href="https://www.instagram.com/100projectsmedia" target="_blank" class="see-more-btn" style="opacity:0.3; font-size:10px; padding:6px 16px;">
+                    <i class="fa-brands fa-instagram"></i> Follow on Instagram
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- POST MODAL -->
+    <div class="post-modal" id="postModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- COMMUNITY -->
+    <section class="community-section" id="community" data-animate>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">04 // CREATIVE NETWORK</span>
+                <h2 class="section-title">Join the 100 HUB Community<span class="highlight-red">.</span></h2>
+                <p class="section-subtitle">The culture-first creative infrastructure built for South Africa and beyond.</p>
+            </div>
+            <div class="community-grid">
+                <div class="community-content">
+                    <h3>Creators Community</h3>
+                    <p>Connect with writers, creatives, and culture-shapers building something real. Add yourself. Discover talent. Collaborate.</p>
+                    <div class="road-to-100">
+                        <span class="road-label">ROAD TO 100</span>
+                        <div class="road-counter">
+                            <span class="road-number" id="memberCount">...</span>
+                            <span class="road-total">/ 100</span>
+                        </div>
+                        <div class="road-progress">
+                            <div class="road-progress-bar" id="progressBar" style="width: 0%;"></div>
+                        </div>
+                        <p class="road-status" id="roadStatus">Loading members...</p>
+                    </div>
+                    <ul class="community-benefits">
+                        <li><i class="fa-regular fa-circle-check"></i> Creative Opportunities</li>
+                        <li><i class="fa-regular fa-circle-check"></i> Editorial Features</li>
+                        <li><i class="fa-regular fa-circle-check"></i> Events & Networking</li>
+                        <li><i class="fa-regular fa-circle-check"></i> Industry Conversations</li>
+                        <li><i class="fa-regular fa-circle-check"></i> Brand Collaborations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IMPACT NUMBERS -->
+    <section class="impact-section" id="impact" data-animate>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">04</span>
+                <h2 class="section-title">Impact <span class="highlight-red">Numbers</span></h2>
+                <div class="section-divider">
+                    <span class="divider-line-short"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-line-short"></span>
+                </div>
+            </div>
+            <div class="impact-grid-home" id="impactGridHome">
+                <div class="impact-card-home">
+                    <span class="impact-number" id="homeMagazine">08</span>
+                    <span class="impact-label">Magazine Issues</span>
+                </div>
+                <div class="impact-card-home">
+                    <span class="impact-number" id="homeFeatures">100+</span>
+                    <span class="impact-label">Editorial Features</span>
+                </div>
+                <div class="impact-card-home">
+                    <span class="impact-number" id="homeCollaborations">50+</span>
+                    <span class="impact-label">Brand Collaborations</span>
+                </div>
+                <div class="impact-card-home">
+                    <span class="impact-number" id="homeReach">1M+</span>
+                    <span class="impact-label">Digital Reach</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SIGNUP MODAL -->
+    <div class="signup-modal" id="signupModal">
+        <div class="signup-modal-overlay" id="signupModalOverlay"></div>
+        <div class="signup-modal-content">
+            <button class="signup-modal-close" id="signupModalClose"><i class="fa-solid fa-xmark"></i></button>
+            <div id="modalFormHeader">
+                <h2 style="font-family:'Playfair Display',serif; font-size:28px; margin-bottom:8px;">Join the <span style="color:var(--red);">100 HUB</span></h2>
+                <p style="color:var(--text-muted); font-size:14px; margin-bottom:20px;">Apply to become a member of our creative community</p>
+            </div>
+            <form id="signupModalForm">
+                <div class="form-group">
+                    <label>Professional Photo (1-3 images)</label>
+                    <input type="file" id="memberPhotos" accept="image/*" multiple />
+                    <small style="color:var(--text-muted); font-size:11px;">Upload 1 to 3 images (PNG, JPG, JPEG)</small>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="modalMemberName" placeholder="Full Name" required />
+                </div>
+                <div class="form-group">
+                    <input type="email" id="modalMemberEmail" placeholder="Email Address" required />
+                </div>
+                <div class="form-group">
+                    <input type="text" id="modalMemberRole" placeholder="Role/Title (e.g., Photographer, Writer, Brand Strategist)" required />
+                </div>
+                <div class="form-group">
+                    <textarea id="modalMemberSkills" rows="2" placeholder="Creative Focus/Skillset (e.g., Fashion Photography, Brand Strategy)"></textarea>
+                </div>
+                <div class="form-group">
+                    <input type="url" id="modalMemberWebsite" placeholder="Website or Portfolio Link (optional)" />
+                </div>
+                <div class="form-group social-group">
+                    <label style="font-size:12px; color:var(--text-muted); margin-bottom:6px; display:block;">Social Media (optional)</label>
+                    <div class="social-row">
+                        <select id="modalSocialPlatform">
+                            <option value="">Platform</option>
+                            <option value="instagram">Instagram</option>
+                            <option value="tiktok">TikTok</option>
+                            <option value="twitter">Twitter/X</option>
+                            <option value="linkedin">LinkedIn</option>
+                            <option value="youtube">YouTube</option>
+                            <option value="facebook">Facebook</option>
+                            <option value="behance">Behance</option>
+                            <option value="pinterest">Pinterest</option>
+                        </select>
+                        <input type="text" id="modalSocialHandle" placeholder="@yourhandle" />
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary full-width" id="modalSubmitBtn">
+                    <i class="fa-regular fa-paper-plane"></i> Submit Application
+                </button>
+            </form>
+            <div id="modalFormSuccess" style="display:none; text-align:center; padding:30px 20px;">
+                <i class="fa-regular fa-circle-check" style="font-size:48px; color:var(--red); display:block; margin-bottom:16px;"></i>
+                <h3 style="font-family:'Playfair Display',serif; font-size:24px; margin-bottom:8px; color:var(--text-primary);">Thank you for joining!</h3>
+                <p style="color:var(--text-secondary); font-size:15px; line-height:1.7;">
+                    We've received your application and we'll be in touch soon.<br><br>
+                    You'll hear from us once your profile has been reviewed.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MEMBER PROFILE MODAL -->
+    <div class="member-modal" id="memberModal">
+        <div class="member-modal-overlay" id="memberModalOverlay"></div>
+        <div class="member-modal-content">
+            <button class="member-modal-close" id="memberModalClose"><i class="fa-solid fa-xmark"></i></button>
+            <div id="memberModalBody"></div>
+        </div>
+    </div>
+
+    <!-- HUB SECTION -->
+    <section class="hub-section" id="hub" data-animate>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">05 // HUB DIRECTORY</span>
+                <h2 class="section-title">The Hub Roster<span class="highlight-red">.</span></h2>
+                <p class="section-subtitle">Discover independent directors, designers, producers, and cultural strategists.</p>
+            </div>
+            <div class="hub-grid" id="hubGrid">
+                <div class="hub-loading">
+                    <div class="loader"></div>
+                    <p>Loading members...</p>
+                </div>
+            </div>
+            <div class="see-more-container" id="hubSeeMore" style="display:none;">
+                <button class="see-more-btn" onclick="loadMoreHubMembers()">
+                    See More <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- PARTNER LOGOS -->
+    <section class="partners-section" id="partners" data-animate>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">06 // TRUSTED NETWORK</span>
+                <h2 class="section-title">Trusted By Culture Champions<span class="highlight-red">.</span></h2>
+            </div>
+            <div class="partners-wrapper">
+                <div class="partners-track" id="partnersTrack"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WORK WITH US -->
+    <section class="work-section" id="work" data-animate>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">07 // PARTNERSHIPS & MANAGEMENT</span>
+                <h2 class="section-title">Work With Us<span class="highlight-red">.</span></h2>
+            </div>
+            <div class="work-content">
+                <p class="work-text">Whether you're launching a campaign, publishing a story, producing an event or looking for cultural insight, 100 Hub can help you.</p>
+                <div class="work-actions">
+                    <a href="#" class="btn-primary" id="mediaKitBtn"><i class="fa-regular fa-file-pdf"></i> Request Media Kit</a>
+                    <a href="#" class="btn-secondary" id="openSignupModalBtn">Start Partnership</a>
+                </div>
+                <div class="work-contact">
+                    <a href="mailto:100projectsmedia@gmail.com" class="work-email">100projectsmedia@gmail.com</a>
+                    <span class="work-divider">·</span>
+                    <a href="https://www.instagram.com/100projectsmedia" target="_blank" class="work-social">@100projectsmedia</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEAM -->
+    <section class="team-section" id="team" data-animate>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">08 // LEADERSHIP</span>
+                <h2 class="section-title">Meet the Founders<span class="highlight-red">.</span></h2>
+            </div>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-image">
+                        <img src="team/Mpilo.jpeg" alt="Mpilo Nhlapho" loading="lazy" />
+                        <a href="https://www.linkedin.com/in/mpilo-nhlapho-611752251" target="_blank" class="team-linkedin">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                    <div class="team-info">
+                        <h3 class="team-name">Mpilo Nhlapho</h3>
+                        <p class="team-role">Founder &amp; CBO</p>
+                        <a href="https://www.linkedin.com/in/mpilo-nhlapho-611752251" target="_blank" class="team-link">
+                            <i class="fa-brands fa-linkedin-in"></i> Connect on LinkedIn
+                        </a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <div class="team-image">
+                        <img src="team/Khosi.jpeg" alt="Lesley Khocy" loading="lazy" />
+                        <a href="https://www.linkedin.com/in/serutcip-entertainment-288195353" target="_blank" class="team-linkedin">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                    <div class="team-info">
+                        <h3 class="team-name">Lesley Khocy</h3>
+                        <p class="team-role">Co-Founder, Visual Director, Editor In Chief</p>
+                        <a href="https://www.linkedin.com/in/serutcip-entertainment-288195353" target="_blank" class="team-link">
+                            <i class="fa-brands fa-linkedin-in"></i> Connect on LinkedIn
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact-section" id="contact" data-animate>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">09 // CONTACT & INQUIRIES</span>
+                <h2 class="section-title">Get In Touch<span class="highlight-red">.</span></h2>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-details">
+                    <h3>Get in Touch</h3>
+                    <div class="contact-list">
+                        <a href="mailto:100projectsmedia@gmail.com" class="contact-item">
+                            <i class="fa-regular fa-envelope"></i>
+                            <span>100projectsmedia@gmail.com</span>
+                        </a>
+                        <a href="https://www.instagram.com/100projectsmedia" target="_blank" class="contact-item">
+                            <i class="fa-brands fa-instagram"></i>
+                            <span>@100projectsmedia</span>
+                        </a>
+                        <a href="https://vt.tiktok.com/ZSQ4FhnXc/" target="_blank" class="contact-item">
+                            <i class="fa-brands fa-tiktok"></i>
+                            <span>@100projectsmedia</span>
+                        </a>
+                        <a href="https://youtu.be/Z1G7TeuiMz4?si=peQqspcPTATRZYsd" target="_blank" class="contact-item">
+                            <i class="fa-brands fa-youtube"></i>
+                            <span>100 Projects Media</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <img src="Assets/100_Logo.png" alt="100 HUB" class="footer-logo" loading="lazy" />
+                <div class="footer-divider">
+                    <span class="divider-line-short"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-line-short"></span>
+                </div>
+                <p class="footer-tagline">Broadcasting &amp; Media Production Company</p>
+                <div class="footer-social">
+                    <a href="https://www.instagram.com/100projectsmedia" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://vt.tiktok.com/ZSQ4FhnXc/" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="https://youtu.be/Z1G7TeuiMz4?si=peQqspcPTATRZYsd" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="mailto:100projectsmedia@gmail.com"><i class="fa-regular fa-envelope"></i></a>
+                </div>
+                <p class="footer-copy">&copy; 2026 100 HUB. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ==========================================
+        // BEHOLD FEED CONFIG
+        // ==========================================
+        const BEHOLD_FEED_ID = 'qBmSl39X4hdPVipZS1UR';
+        const FEED_URL = `https://feeds.behold.so/${BEHOLD_FEED_ID}`;
+
+        // ==========================================
+        // ARTICLES — SHEET.BEST API
+        // ==========================================
+        const ARTICLES_API_URL = 'https://api.sheetbest.com/sheets/7fb06936-5f4f-4ca5-bb81-b4e8af870b57/tabs/Articles';
+        let articleLinks = {};
+
+        async function loadArticles() {
+            try {
+                const response = await fetch(ARTICLES_API_URL);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (Array.isArray(data)) {
+                        articleLinks = {};
+                        data.forEach(row => {
+                            if (row.postId && row.articleUrl) {
+                                articleLinks[row.postId] = row.articleUrl;
+                            }
+                        });
+                        console.log('📄 Articles loaded:', Object.keys(articleLinks).length);
+                    }
+                }
+            } catch (error) {
+                console.log('ℹ️ Could not load articles');
+            }
+        }
+
+        function getArticleUrl(postId) {
+            return articleLinks[postId] || null;
+        }
+
+        // ==========================================
+        // API ENDPOINTS
+        // ==========================================
+        const API_BASE = '/api';
+
+        // ==========================================
+        // MEMBER COUNT
+        // ==========================================
+        const MAX_MEMBERS = 100;
+
+        async function getMemberCount() {
+            try {
+                const response = await fetch(`${API_BASE}/members?status=all`);
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.count || 0;
+                }
+                return 0;
+            } catch (error) {
+                console.log('Could not get member count');
+                return 0;
+            }
+        }
+
+        function updateCounterDisplay(count) {
+            const counter = document.getElementById('memberCount');
+            const progress = document.getElementById('progressBar');
+            const status = document.getElementById('roadStatus');
+
+            if (count === null || count === undefined) {
+                if (counter) counter.textContent = '...';
+                if (progress) progress.style.width = '0%';
+                if (status) status.textContent = 'Loading members...';
+                return;
+            }
+
+            if (counter) counter.textContent = count;
+            if (progress) progress.style.width = ((count || 0) / MAX_MEMBERS) * 100 + '%';
+            if (status) status.textContent = (count || 0) + ' creators have joined the journey';
+        }
+
+        // ==========================================
+        // CLOUDINARY IMAGE OPTIMIZER
+        // ==========================================
+        function optimizeImage(url, width = 800) {
+            if (!url) return url;
+            if (!url.includes('res.cloudinary.com')) return url;
+            return url.replace('/upload/', `/upload/f_auto,q_auto:good,w_${width},c_limit/`);
+        }
+
+        // ==========================================
+        // HUB MEMBERS
+        // ==========================================
+        let allHubMembers = [];
+        let hubShowingAll = false;
+        const HUB_INITIAL = 6;
+
+        const SOCIAL_META = {
+            instagram: { icon: 'fa-brands fa-instagram', label: 'Instagram', url: (h) => `https://instagram.com/${h}` },
+            tiktok:    { icon: 'fa-brands fa-tiktok',    label: 'TikTok',    url: (h) => `https://tiktok.com/@${h}` },
+            twitter:   { icon: 'fa-brands fa-x-twitter', label: 'Twitter/X', url: (h) => `https://x.com/${h}` },
+            linkedin:  { icon: 'fa-brands fa-linkedin-in',label: 'LinkedIn', url: (h) => `https://linkedin.com/in/${h}` },
+            youtube:   { icon: 'fa-brands fa-youtube',   label: 'YouTube',   url: (h) => `https://youtube.com/@${h}` },
+            facebook:  { icon: 'fa-brands fa-facebook-f',label: 'Facebook',  url: (h) => `https://facebook.com/${h}` },
+            behance:   { icon: 'fa-brands fa-behance',   label: 'Behance',   url: (h) => `https://behance.net/${h}` },
+            pinterest: { icon: 'fa-brands fa-pinterest-p',label:'Pinterest', url: (h) => `https://pinterest.com/${h}` },
+        };
+
+        async function loadHubMembers(reset = true) {
+            try {
+                const response = await fetch(`${API_BASE}/members?status=accepted&limit=200`);
+                if (response.ok) {
+                    const data = await response.json();
+                    allHubMembers = data.members || [];
+                    renderHubGrid();
+                }
+            } catch (error) {
+                console.log('Could not load hub members');
+            }
+        }
+
+        function renderHubGrid() {
+            const container = document.getElementById('hubGrid');
+            const seeMoreWrap = document.getElementById('hubSeeMore');
+
+            if (allHubMembers.length === 0) {
+                container.innerHTML = `<div class="hub-empty"><p>No members yet. Be the first to join!</p></div>`;
+                seeMoreWrap.style.display = 'none';
+                return;
+            }
+
+            const toShow = hubShowingAll ? allHubMembers : allHubMembers.slice(0, HUB_INITIAL);
+
+            container.innerHTML = toShow.map(member => {
+                const img = optimizeImage(member.selectedImage || member.image1 || 'Assets/100_Logo.png', 400);
+                const joinDate = member.timestamp
+                    ? new Date(member.timestamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+                    : '';
+
+                return `
+                    <div class="hub-card" onclick="openMemberModal('${member.email}')">
+                        <div class="hub-image">
+                            <img src="${img}" alt="${member.name}" loading="lazy" />
+                        </div>
+                        <div class="hub-info">
+                            <h3 class="hub-name">${member.name}</h3>
+                            ${joinDate ? `<div class="hub-date"><i class="fa-regular fa-calendar"></i> Joined ${joinDate}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            if (allHubMembers.length > HUB_INITIAL) {
+                seeMoreWrap.style.display = 'block';
+                const btn = seeMoreWrap.querySelector('button');
+                if (btn) {
+                    btn.innerHTML = hubShowingAll
+                        ? 'See Less <i class="fa-solid fa-arrow-up"></i>'
+                        : 'See More <i class="fa-solid fa-arrow-right"></i>';
+                }
+            } else {
+                seeMoreWrap.style.display = 'none';
+            }
+        }
+
+        function loadMoreHubMembers() {
+            hubShowingAll = !hubShowingAll;
+            renderHubGrid();
+            if (!hubShowingAll) {
+                document.getElementById('hub').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // ==========================================
+        // MEMBER PROFILE MODAL - Full Details with Social Platform Label
+        // ==========================================
+        function openMemberModal(email) {
+            const member = allHubMembers.find(m => m.email === email);
+            if (!member) return;
+
+            const img = optimizeImage(member.selectedImage || member.image1 || 'Assets/100_Logo.png', 800);
+            const joinDate = member.timestamp
+                ? new Date(member.timestamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+                : '';
+
+            // Social link with platform label ("Platform: @handle")
+            let socialHtml = '';
+            if (member.socialPlatform && member.socialHandle) {
+                const meta = SOCIAL_META[member.socialPlatform];
+                if (meta) {
+                    const url = meta.url(member.socialHandle);
+                    const platformLabel = meta.label;
+                    socialHtml = `
+                        <a href="${url}" target="_blank" rel="noopener" class="member-social-link">
+                            <i class="${meta.icon}"></i>
+                            <span>${platformLabel}: @${member.socialHandle}</span>
+                        </a>
+                    `;
+                }
+            }
+
+            // Website link with attachment icon
+            let websiteHtml = '';
+            if (member.website) {
+                const display = member.website.replace(/^https?:\/\//, '').replace(/\/$/, '');
+                websiteHtml = `
+                    <a href="${member.website}" target="_blank" rel="noopener" class="member-website-link">
+                        <i class="fa-solid fa-paperclip"></i>
+                        <span>${display}</span>
+                    </a>
+                `;
+            }
+
+            // Skills/Description
+            let skillsHtml = '';
+            if (member.skills) {
+                skillsHtml = `
+                    <div class="member-modal-skills">
+                        <span class="member-modal-label">Description</span>
+                        <p>${member.skills}</p>
+                    </div>
+                `;
+            }
+
+            // Role
+            let roleHtml = '';
+            if (member.role) {
+                roleHtml = `<span class="member-modal-role">${member.role}</span>`;
+            }
+
+            document.getElementById('memberModalBody').innerHTML = `
+                <div class="member-modal-photo">
+                    <img src="${img}" alt="${member.name}" />
+                </div>
+                <div class="member-modal-details">
+                    <h2 class="member-modal-name">${member.name}</h2>
+                    ${roleHtml}
+                    ${joinDate ? `<span class="member-modal-date">Joined ${joinDate}</span>` : ''}
+                    ${skillsHtml}
+                    <div class="member-modal-links">
+                        ${socialHtml}
+                        ${websiteHtml}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('memberModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMemberModal() {
+            document.getElementById('memberModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('memberModalClose').addEventListener('click', closeMemberModal);
+        document.getElementById('memberModalOverlay').addEventListener('click', closeMemberModal);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMemberModal();
+        });
+
+        // ==========================================
+        // IMPACT NUMBERS
+        // ==========================================
+        function loadImpactNumbers() {
+            try {
+                const data = localStorage.getItem('impactNumbers');
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    document.getElementById('homeMagazine').textContent = parsed.magazine || 8;
+                    document.getElementById('homeFeatures').textContent = parsed.features + (parsed.features > 9 ? '' : '+') || '100+';
+                    document.getElementById('homeCollaborations').textContent = parsed.collaborations + (parsed.collaborations > 9 ? '' : '+') || '50+';
+                    document.getElementById('homeReach').textContent = parsed.reach >= 1000000 ? (parsed.reach / 1000000).toFixed(1) + 'M+' : parsed.reach + '+';
+                }
+            } catch (e) {
+                // Default values already in HTML
+            }
+        }
+
+        // ==========================================
+        // HAMBURGER MENU
+        // ==========================================
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+
+        function toggleMobileMenu() {
+            hamburgerBtn.classList.toggle('active');
+            mobileMenu.classList.toggle('open');
+            mobileMenuOverlay.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+        }
+
+        function closeMobileMenu() {
+            hamburgerBtn.classList.remove('active');
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        hamburgerBtn.addEventListener('click', toggleMobileMenu);
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+        mobileMenuClose.addEventListener('click', closeMobileMenu);
+
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                closeMobileMenu();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // ==========================================
+        // SIGNUP MODAL
+        // ==========================================
+        const signupModal = document.getElementById('signupModal');
+        const signupModalClose = document.getElementById('signupModalClose');
+        const signupModalOverlay = document.getElementById('signupModalOverlay');
+
+        function openSignupModal() {
+            signupModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('modalFormHeader').style.display = 'block';
+            document.getElementById('signupModalForm').style.display = 'block';
+            document.getElementById('modalFormSuccess').style.display = 'none';
+        }
+
+        function closeSignupModal() {
+            signupModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        signupModalClose.addEventListener('click', closeSignupModal);
+        signupModalOverlay.addEventListener('click', closeSignupModal);
+
+        document.getElementById('openSignupModalBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            openSignupModal();
+        });
+
+        document.querySelector('.hero-actions .btn-secondary').addEventListener('click', function(e) {
+            e.preventDefault();
+            openSignupModal();
+        });
+
+        // ==========================================
+        // SIGNUP MODAL FORM SUBMISSION
+        // ==========================================
+        document.getElementById('signupModalForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('modalMemberName').value;
+            const email = document.getElementById('modalMemberEmail').value;
+            const role = document.getElementById('modalMemberRole').value;
+            const skills = document.getElementById('modalMemberSkills').value;
+            const website = document.getElementById('modalMemberWebsite').value;
+            const socialPlatform = document.getElementById('modalSocialPlatform').value;
+            const socialHandle = document.getElementById('modalSocialHandle').value.trim().replace(/^@/, '');
+            const fileInput = document.getElementById('memberPhotos');
+            const files = fileInput.files;
+
+            if (!name || !email || !role) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            if (files.length === 0) {
+                alert('Please upload at least one photo.');
+                return;
+            }
+
+            if (files.length > 3) {
+                alert('Please upload a maximum of 3 photos.');
+                return;
+            }
+
+            const submitBtn = document.getElementById('modalSubmitBtn');
+            const form = document.getElementById('signupModalForm');
+            const successDiv = document.getElementById('modalFormSuccess');
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+
+            try {
+                const imageUrls = [];
+                for (const file of files) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', 'members');
+                    formData.append('folder', '100 TRUSTEES');
+
+                    const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/dfozevcbl/image/upload`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (uploadResponse.ok) {
+                        const data = await uploadResponse.json();
+                        imageUrls.push(data.secure_url);
+                        console.log('✅ Uploaded to Cloudinary folder "100 TRUSTEES":', data.secure_url);
+                    } else {
+                        console.error('❌ Upload failed:', await uploadResponse.text());
+                    }
+                }
+
+                if (imageUrls.length === 0) {
+                    alert('Failed to upload images. Please try again.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Application';
+                    return;
+                }
+
+                const response = await fetch(`${API_BASE}/signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        role,
+                        skills,
+                        website,
+                        socialPlatform: socialPlatform || '',
+                        socialHandle: socialHandle || '',
+                        image1: imageUrls[0] || '',
+                        image2: imageUrls[1] || '',
+                        image3: imageUrls[2] || '',
+                        status: 'pending'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('modalFormHeader').style.display = 'none';
+                    form.style.display = 'none';
+                    successDiv.style.display = 'block';
+                    fileInput.value = '';
+                } else {
+                    alert(result.error || 'Something went wrong. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ ' + error.message);
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Application';
+        });
+
+        // ==========================================
+        // FETCH AND RENDER FEED - WITH SEE MORE / SEE LESS
+        // ==========================================
+        let allFeedPosts = [];
+        let feedDisplayCount = 6;
+        let feedShowingAll = false;
+        const FEED_INCREMENT = 6;
+
+        async function fetchFeed() {
+            const container = document.getElementById('instagramFeed');
+            const seeMoreWrap = document.getElementById('feedSeeMore');
+
+            try {
+                const response = await fetch(FEED_URL);
+                if (!response.ok) throw new Error('Failed to load feed');
+
+                const data = await response.json();
+                const posts = data.posts || data;
+
+                if (!posts || posts.length === 0) {
+                    container.innerHTML = `<div class="feed-empty"><p>No posts found. Check back later!</p></div>`;
+                    seeMoreWrap.style.display = 'none';
+                    return;
+                }
+
+                allFeedPosts = posts;
+                feedDisplayCount = Math.min(6, allFeedPosts.length);
+                feedShowingAll = false;
+                renderPosts(allFeedPosts.slice(0, feedDisplayCount), container);
+
+                // Show "See More" if there are more posts
+                if (allFeedPosts.length > feedDisplayCount) {
+                    seeMoreWrap.style.display = 'block';
+                    updateFeedButton();
+                } else {
+                    seeMoreWrap.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Feed error:', error);
+                container.innerHTML = `
+                    <div class="feed-error">
+                        <p>⚠️ Unable to load posts. Please refresh or try again later.</p>
+                    </div>
+                `;
+                seeMoreWrap.style.display = 'none';
+            }
+        }
+
+        function renderPosts(posts, container) {
+            container.innerHTML = posts.map((post, index) => {
+                let imageUrl = '';
+                let videoUrl = '';
+                let isVideo = post.mediaType === 'VIDEO' || post.isReel === true;
+                
+                if (isVideo && post.mediaUrl) {
+                    videoUrl = post.mediaUrl;
+                }
+                
+                if (post.sizes?.large?.mediaUrl) {
+                    imageUrl = post.sizes.large.mediaUrl;
+                } else if (post.mediaUrl && !isVideo) {
+                    imageUrl = post.mediaUrl;
+                } else if (post.sizes?.medium?.mediaUrl) {
+                    imageUrl = post.sizes.medium.mediaUrl;
+                }
+                
+                if (post.mediaType === 'CAROUSEL_ALBUM' && post.children?.length > 0) {
+                    const child = post.children[0];
+                    if (child.sizes?.large?.mediaUrl) imageUrl = child.sizes.large.mediaUrl;
+                    else if (child.mediaUrl) imageUrl = child.mediaUrl;
+                    isVideo = false;
+                }
+                
+                const caption = post.prunedCaption || post.caption || '';
+                const truncatedCaption = caption.length > 120 ? caption.substring(0, 120) + '...' : caption;
+                const date = post.timestamp ? new Date(post.timestamp).toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                }) : '';
+                const writer = "100 HUB";
+                
+                let mediaHtml = '';
+                if (isVideo && videoUrl) {
+                    mediaHtml = `
+                        <video src="${videoUrl}" muted loop playsinline autoplay></video>
+                        <span class="feed-play"><i class="fa-solid fa-play"></i></span>
+                    `;
+                } else {
+                    mediaHtml = `<img src="${imageUrl}" alt="${caption.substring(0, 50)}" loading="lazy" />`;
+                }
+                
+                return `
+                    <div class="feed-item" data-post='${JSON.stringify(post).replace(/'/g, "&#39;")}'>
+                        <div class="feed-image">
+                            ${mediaHtml}
+                        </div>
+                        <div class="feed-content">
+                            <p class="feed-caption">${truncatedCaption}</p>
+                            <div class="feed-meta">
+                                <span class="feed-writer"><i class="fa-regular fa-user"></i> ${writer}</span>
+                                <span class="feed-date"><i class="fa-regular fa-calendar"></i> ${date}</span>
+                            </div>
+                            <div class="feed-actions">
+                                <button class="feed-link" onclick="openPostModal(this)">
+                                    Read Full Story <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.querySelectorAll('.feed-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (e.target.closest('.feed-link')) return;
+                    const link = this.querySelector('.feed-link');
+                    if (link) {
+                        openPostModal(link);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.feed-image video').forEach(video => {
+                video.addEventListener('mouseenter', () => video.play());
+                video.addEventListener('mouseleave', () => video.pause());
+                if (video.getBoundingClientRect().top < window.innerHeight) {
+                    video.play();
+                }
+            });
+        }
+
+        function updateFeedButton() {
+            const btn = document.getElementById('loadMoreFeedBtn');
+            if (!btn) return;
+            
+            if (feedShowingAll) {
+                btn.innerHTML = `See Less <i class="fa-solid fa-arrow-up"></i>`;
+            } else {
+                const remaining = allFeedPosts.length - feedDisplayCount;
+                btn.innerHTML = `See More (${remaining} left) <i class="fa-solid fa-arrow-down"></i>`;
+            }
+        }
+
+        function toggleFeedPosts() {
+            const container = document.getElementById('instagramFeed');
+            const seeMoreWrap = document.getElementById('feedSeeMore');
+
+            if (feedShowingAll) {
+                // Go back to 6 posts
+                feedDisplayCount = Math.min(6, allFeedPosts.length);
+                feedShowingAll = false;
+                renderPosts(allFeedPosts.slice(0, feedDisplayCount), container);
+                updateFeedButton();
+            } else {
+                // Load 6 more
+                const newCount = Math.min(feedDisplayCount + FEED_INCREMENT, allFeedPosts.length);
+                feedDisplayCount = newCount;
+                
+                // Check if we've shown all
+                if (feedDisplayCount >= allFeedPosts.length) {
+                    feedShowingAll = true;
+                }
+                
+                renderPosts(allFeedPosts.slice(0, feedDisplayCount), container);
+                updateFeedButton();
+            }
+
+            // Hide see more if all posts shown or less than 6 total
+            if (allFeedPosts.length <= 6) {
+                seeMoreWrap.style.display = 'none';
+            } else {
+                seeMoreWrap.style.display = 'block';
+            }
+        }
+
+        // ==========================================
+        // POST MODAL
+        // ==========================================
+        const modal = document.getElementById('postModal');
+        const modalBody = document.getElementById('modalBody');
+        const modalClose = document.getElementById('modalClose');
+        const modalOverlay = document.getElementById('modalOverlay');
+
+        function openPostModal(element) {
+            const item = element.closest('.feed-item');
+            const postData = JSON.parse(item.dataset.post);
+            
+            let imageUrl = '';
+            let videoUrl = '';
+            let isVideo = postData.mediaType === 'VIDEO' || postData.isReel === true;
+            
+            if (isVideo && postData.mediaUrl) {
+                videoUrl = postData.mediaUrl;
+            }
+            
+            if (postData.sizes?.large?.mediaUrl) {
+                imageUrl = postData.sizes.large.mediaUrl;
+            } else if (postData.mediaUrl && !isVideo) {
+                imageUrl = postData.mediaUrl;
+            } else if (postData.sizes?.medium?.mediaUrl) {
+                imageUrl = postData.sizes.medium.mediaUrl;
+            }
+            
+            if (postData.mediaType === 'CAROUSEL_ALBUM' && postData.children?.length > 0) {
+                const child = postData.children[0];
+                if (child.sizes?.large?.mediaUrl) imageUrl = child.sizes.large.mediaUrl;
+                else if (child.mediaUrl) imageUrl = child.mediaUrl;
+                isVideo = false;
+            }
+            
+            const caption = postData.prunedCaption || postData.caption || '';
+            const date = postData.timestamp ? new Date(postData.timestamp).toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+            }) : '';
+            const writer = "100 HUB";
+            const permalink = postData.permalink || '#';
+            
+            const articleUrl = getArticleUrl(postData.id);
+            const hasArticle = articleUrl !== null;
+            
+            let mediaHtml = '';
+            if (isVideo && videoUrl) {
+                mediaHtml = `
+                    <video src="${videoUrl}" controls playsinline autoplay></video>
+                `;
+            } else {
+                mediaHtml = `<img src="${imageUrl}" alt="${caption.substring(0, 50)}" loading="lazy" />`;
+            }
+            
+            let articleButtonHtml = '';
+            if (hasArticle) {
+                articleButtonHtml = `
+                    <a href="${articleUrl}" target="_blank" class="btn-primary">
+                        <i class="fa-regular fa-file-lines"></i> View Full Article
+                    </a>
+                `;
+            }
+            
+            modalBody.innerHTML = `
+                <div class="modal-image">
+                    ${mediaHtml}
+                </div>
+                <div class="modal-text">
+                    <div class="modal-meta">
+                        <span class="modal-writer"><i class="fa-regular fa-user"></i> ${writer}</span>
+                        <span class="modal-date"><i class="fa-regular fa-calendar"></i> ${date}</span>
+                        ${hasArticle ? `<span class="modal-article-badge"><i class="fa-regular fa-file-lines"></i> Article Available</span>` : ''}
+                    </div>
+                    <h2 class="modal-title">${caption.split('\n')[0] || 'Untitled'}</h2>
+                    <div class="modal-caption">${caption.replace(/\n/g, '<br>')}</div>
+                    <div class="modal-actions">
+                        ${articleButtonHtml}
+                        <a href="${permalink}" target="_blank" class="btn-secondary">
+                            <i class="fa-regular fa-eye"></i> View on Instagram
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            setTimeout(() => {
+                const modalVideo = document.querySelector('.modal-image video');
+                if (modalVideo) {
+                    modalVideo.play();
+                }
+            }, 500);
+        }
+
+        function closeModal() {
+            const modalVideo = document.querySelector('.modal-image video');
+            if (modalVideo) {
+                modalVideo.pause();
+            }
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        modalClose.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', closeModal);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // ==========================================
+        // MEDIA KIT DOWNLOAD
+        // ==========================================
+        document.getElementById('mediaKitBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            fetch(`${API_BASE}/media-kit`)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('No media kit found');
+                })
+                .then(data => {
+                    if (data.url) {
+                        window.open(data.url, '_blank');
+                    } else {
+                        alert('📄 Media Kit coming soon. Please check back later.');
+                    }
+                })
+                .catch(() => {
+                    alert('📄 Media Kit coming soon. Please check back later.');
+                });
+        });
+
+        // ==========================================
+        // PARTNER LOGOS
+        // ==========================================
+        let partnerLogos = [];
+
+        async function loadPartners() {
+            try {
+                const response = await fetch(`${API_BASE}/partners`);
+                if (response.ok) {
+                    const data = await response.json();
+                    partnerLogos = data.logos || [];
+                    renderPartnerLogos();
+                }
+            } catch (error) {
+                console.log('ℹ️ Could not load partner logos');
+            }
+        }
+
+        function renderPartnerLogos() {
+            const track = document.getElementById('partnersTrack');
+            if (!track) return;
+
+            if (partnerLogos.length === 0) {
+                track.innerHTML = `
+                    <div class="partner-logo-item">
+                        <div style="padding:20px 40px; color:#999; font-style:italic; text-align:center; white-space:nowrap;">
+                            Partner logos coming soon
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const logos = [...partnerLogos, ...partnerLogos];
+            track.innerHTML = logos.map(logo => `
+                <div class="partner-logo-item">
+                    <img src="${logo.url}" alt="${logo.name}" title="${logo.name}" loading="lazy" onerror="this.style.display='none'" />
+                </div>
+            `).join('');
+        }
+
+        // ==========================================
+        // SMOOTH SCROLL
+        // ==========================================
+        document.querySelectorAll('.nav-links a, .hero-actions a, .mobile-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+
+        // ==========================================
+        // INIT
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', async function() {
+            updateCounterDisplay(null);
+            
+            await loadArticles();
+            await loadPartners();
+            await loadHubMembers(true);
+            const memberCount = await getMemberCount();
+            updateCounterDisplay(memberCount);
+            fetchFeed();
+            loadImpactNumbers();
+            
+            console.log('🎯 100 HUB — Website Loaded');
+            console.log('📸 Feed ID:', BEHOLD_FEED_ID);
+            console.log('👥 Member Count:', memberCount, '/', MAX_MEMBERS);
+            console.log('🤝 Partner Logos:', partnerLogos.length);
+        });
+    </script>
+
+    <!-- Three.js for 3D Globe -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // ==========================================
+        // 3D GLOBE INITIALIZATION
+        // ==========================================
+        const canvas = document.getElementById('globe-canvas');
+        const scene = new THREE.Scene();
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100000);
+        camera.position.set(0, 2000, 18000);
+
+        const renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            antialias: true,
+            alpha: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 0.8;
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404060, 0.6);
+        scene.add(ambientLight);
+
+        const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        mainLight.position.set(10000, 8000, 12000);
+        scene.add(mainLight);
+
+        const rimLight = new THREE.DirectionalLight(0x6688ff, 0.4);
+        rimLight.position.set(-8000, 4000, -10000);
+        scene.add(rimLight);
+
+        // Red accent point light
+        const redLight = new THREE.PointLight(0xe31e24, 0.8, 30000);
+        redLight.position.set(5000, -3000, 8000);
+        scene.add(redLight);
+
+        // Subtle blue fill
+        const blueLight = new THREE.PointLight(0x3355ff, 0.3, 25000);
+        blueLight.position.set(-5000, 5000, -5000);
+        scene.add(blueLight);
+
+        // ==========================================
+        // COSMIC UNIVERSE PARTICLE SYSTEM
+        // ==========================================
+        const particleCount = 2500;
+        const particleGeometry = new THREE.BufferGeometry();
+        const particlePositions = new Float32Array(particleCount * 3);
+        const particleColors = new Float32Array(particleCount * 3);
+        const particleSizes = new Float32Array(particleCount);
+
+        const colorPalette = [
+            new THREE.Color(0xffffff),
+            new THREE.Color(0xdce8ff),
+            new THREE.Color(0x88b5ff),
+            new THREE.Color(0xe31e24), // subtle 100 HUB red accents
+            new THREE.Color(0xaaaaaa)
+        ];
+
+        for (let i = 0; i < particleCount; i++) {
+            // Random distribution in universe sphere
+            const radius = 8000 + Math.random() * 32000;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos((Math.random() * 2) - 1);
+
+            particlePositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+            particlePositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+            particlePositions[i * 3 + 2] = radius * Math.cos(phi);
+
+            // Pick random color from palette
+            const c = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+            particleColors[i * 3] = c.r;
+            particleColors[i * 3 + 1] = c.g;
+            particleColors[i * 3 + 2] = c.b;
+
+            particleSizes[i] = 2.0 + Math.random() * 4.0;
+        }
+
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+        particleGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 3.5,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.75,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+
+        const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particleSystem);
+
+        // Orbital Ring Guides
+        const ringGroup = new THREE.Group();
+
+        const createOrbitRing = (radius, tiltX, tiltZ) => {
+            const points = [];
+            const segments = 256;
+            for (let i = 0; i <= segments; i++) {
+                const theta = (i / segments) * Math.PI * 2;
+                points.push(new THREE.Vector3(Math.cos(theta) * radius, 0, Math.sin(theta) * radius));
+            }
+            const ringGeo = new THREE.BufferGeometry().setFromPoints(points);
+
+            // Primary bright orbit track
+            const ringMat = new THREE.LineBasicMaterial({
+                color: 0x99ccff,
+                transparent: true,
+                opacity: 0.65,
+                blending: THREE.AdditiveBlending
+            });
+            const ring = new THREE.LineLoop(ringGeo, ringMat);
+            ring.rotation.x = tiltX;
+            ring.rotation.z = tiltZ;
+
+            // Subtle outer glow track for depth
+            const glowMat = new THREE.LineBasicMaterial({
+                color: 0x4488ff,
+                transparent: true,
+                opacity: 0.35,
+                blending: THREE.AdditiveBlending
+            });
+            const glowRing = new THREE.LineLoop(ringGeo, glowMat);
+            glowRing.rotation.x = tiltX;
+            glowRing.rotation.z = tiltZ;
+            glowRing.scale.setScalar(1.008);
+
+            const group = new THREE.Group();
+            group.add(ring);
+            group.add(glowRing);
+            return group;
+        };
+
+        // ringGroup removed as requested to keep 3D scene clean without orbit lines
+        // scene.add(ringGroup);
+
+        // ==========================================
+        // SCROLL REVEAL OBSERVER
+        // ==========================================
+        const animatedElements = document.querySelectorAll('[data-animate]');
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        animatedElements.forEach((el) => {
+            revealObserver.observe(el);
+        });
+
+        // ==========================================
+        // ATMOSPHERIC GLOW AURA SPHERE
+        // ==========================================
+        const auraGeo = new THREE.SphereGeometry(4250, 48, 48);
+        const auraMat = new THREE.MeshBasicMaterial({
+            color: 0x4477ff,
+            transparent: true,
+            opacity: 0.08,
+            blending: THREE.AdditiveBlending,
+            side: THREE.BackSide
+        });
+        const auraMesh = new THREE.Mesh(auraGeo, auraMat);
+        scene.add(auraMesh);
+
+        // ==========================================
+        // ORBITING CITIES / NODES & HTML BADGES
+        // ==========================================
+        const nodesContainer = document.getElementById('globe-nodes-container');
+        const nodeDefs = [
+            { label: 'JHB-008', radius: 6500, speed: 0.006, theta: 0, tilt: new THREE.Euler(Math.PI * 0.15, 0, Math.PI * 0.1) },
+            { label: 'LOS-022', radius: 6500, speed: 0.008, theta: Math.PI * 0.6, tilt: new THREE.Euler(Math.PI * 0.15, 0, Math.PI * 0.1) },
+            { label: 'LON-041', radius: 8500, speed: -0.005, theta: Math.PI * 1.2, tilt: new THREE.Euler(-Math.PI * 0.25, 0, Math.PI * 0.15) },
+            { label: 'ACC-017', radius: 8500, speed: -0.007, theta: Math.PI * 0.3, tilt: new THREE.Euler(-Math.PI * 0.25, 0, Math.PI * 0.15) },
+            { label: 'NYC-105', radius: 10500, speed: 0.004, theta: Math.PI * 1.7, tilt: new THREE.Euler(Math.PI * 0.35, 0, -Math.PI * 0.2) },
+            { label: '100 HUB', radius: 5500, speed: 0.009, theta: Math.PI * 0.9, tilt: new THREE.Euler(Math.PI * 0.1, 0, Math.PI * 0.05) }
+        ];
+
+        const nodeObjects = [];
+        const nodeSphereGeo = new THREE.SphereGeometry(120, 16, 16);
+        const nodeSphereMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const redNodeMat = new THREE.MeshBasicMaterial({ color: 0xe31e24 });
+
+        nodeDefs.forEach((def, index) => {
+            // 3D Dot Mesh
+            const mesh = new THREE.Mesh(nodeSphereGeo, index === 5 ? redNodeMat : nodeSphereMat);
+            scene.add(mesh);
+
+            // Create HTML Badge
+            const badge = document.createElement('div');
+            badge.className = 'globe-node-badge';
+            badge.innerHTML = `<span class="node-pulse-dot"></span>${def.label}`;
+            nodesContainer.appendChild(badge);
+
+            nodeObjects.push({
+                def: def,
+                mesh: mesh,
+                badgeEl: badge,
+                theta: def.theta
+            });
+        });
+
+        // ==========================================
+        // 3D PRELOADER CONTROLLER
+        // ==========================================
+        const preloader = document.getElementById('site-preloader');
+        const preloaderFill = document.getElementById('preloaderFill');
+        const preloaderCounter = document.getElementById('preloaderCounter');
+        const preloaderStatus = document.getElementById('preloaderStatus');
+
+        function hidePreloader() {
+            if (preloaderFill) preloaderFill.style.width = '100%';
+            if (preloaderCounter) preloaderCounter.textContent = '100%';
+            if (preloaderStatus) preloaderStatus.textContent = 'SYSTEM ONLINE';
+
+            setTimeout(() => {
+                if (preloader) preloader.classList.add('loaded');
+            }, 500);
+        }
+
+        const preloaderSafetyTimer = setTimeout(() => {
+            hidePreloader();
+        }, 6000);
+
+        // Load Globe Model
+        let globeModel = null;
+        const loader = new GLTFLoader();
+
+        loader.load(
+            'Assets/globe/scene.gltf',
+            (gltf) => {
+                globeModel = gltf.scene;
+
+                // Center and scale the model
+                const box = new THREE.Box3().setFromObject(globeModel);
+                const center = box.getCenter(new THREE.Vector3());
+                const size = box.getSize(new THREE.Vector3());
+                const maxDim = Math.max(size.x, size.y, size.z);
+                const scale = 8000 / maxDim;
+                globeModel.scale.setScalar(scale);
+                globeModel.position.sub(center.multiplyScalar(scale));
+
+                // Subtle dark material tint
+                globeModel.traverse((child) => {
+                    if (child.isMesh) {
+                        if (child.material) {
+                            child.material.metalness = 0.1;
+                            child.material.roughness = 0.6;
+                        }
+                    }
+                });
+
+                scene.add(globeModel);
+                console.log('🌍 Globe model loaded');
+
+                clearTimeout(preloaderSafetyTimer);
+                hidePreloader();
+            },
+            (progress) => {
+                if (progress.total > 0) {
+                    const pct = Math.min(Math.floor((progress.loaded / progress.total) * 100), 99);
+                    if (preloaderFill) preloaderFill.style.width = pct + '%';
+                    if (preloaderCounter) preloaderCounter.textContent = pct + '%';
+                    if (preloaderStatus) preloaderStatus.textContent = `LOADING 3D MODEL ${pct}%`;
+                } else {
+                    if (preloaderFill) preloaderFill.style.width = '65%';
+                    if (preloaderCounter) preloaderCounter.textContent = '65%';
+                    if (preloaderStatus) preloaderStatus.textContent = 'LOADING 3D ASSETS...';
+                }
+            },
+            (error) => {
+                console.error('❌ Globe loading error:', error);
+                clearTimeout(preloaderSafetyTimer);
+                hidePreloader();
+            }
+        );
+
+        // Mouse tracking for parallax
+        let mouseX = 0, mouseY = 0;
+        const targetRotX = { value: 0 };
+        const targetRotY = { value: 0 };
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+        });
+
+        // ==========================================
+        // DYNAMIC CAMERA SCROLL INTERPOLATION
+        // ==========================================
+        let targetCamX = 0;
+        let targetCamY = 1500;
+        let targetCamZ = 16000;
+
+        const sections = [
+            { id: 'hero', pos: { x: 0, y: 1500, z: 16000 }, code: '01 / 08' },
+            { id: 'about', pos: { x: -3200, y: 800, z: 9500 }, code: '02 / 08' },
+            { id: 'feed', pos: { x: 3500, y: -800, z: 13500 }, code: '03 / 08' },
+            { id: 'community', pos: { x: 0, y: -2000, z: 9000 }, code: '04 / 08' },
+            { id: 'impact', pos: { x: -2800, y: 1200, z: 11000 }, code: '05 / 08' },
+            { id: 'hub', pos: { x: 3200, y: 0, z: 10000 }, code: '06 / 08' },
+            { id: 'partners', pos: { x: 0, y: 3000, z: 15000 }, code: '07 / 08' },
+            { id: 'work', pos: { x: -2800, y: -1000, z: 10500 }, code: '08 / 08' },
+            { id: 'team', pos: { x: 2800, y: 1000, z: 12500 }, code: '08 / 08' },
+            { id: 'contact', pos: { x: 0, y: 1000, z: 14500 }, code: '08 / 08' }
+        ];
+
+        const hudIndicator = document.getElementById('hud-section-indicator');
+
+        function updateCameraScrollTarget() {
+            const scrollY = window.scrollY;
+            const windowH = window.innerHeight;
+            const scrollMiddle = scrollY + windowH * 0.4;
+
+            let currentSectionIndex = 0;
+
+            sections.forEach((sec, idx) => {
+                const el = document.getElementById(sec.id);
+                if (el) {
+                    const top = el.offsetTop;
+                    const height = el.offsetHeight;
+                    if (scrollMiddle >= top && scrollMiddle < top + height) {
+                        currentSectionIndex = idx;
+                    }
+                }
+            });
+
+            const activeSec = sections[currentSectionIndex];
+            targetCamX = activeSec.pos.x;
+            targetCamY = activeSec.pos.y;
+            targetCamZ = activeSec.pos.z;
+
+            if (hudIndicator) {
+                hudIndicator.textContent = activeSec.code;
+            }
+        }
+
+        window.addEventListener('scroll', updateCameraScrollTarget, { passive: true });
+        updateCameraScrollTarget();
+
+        // Animation loop
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const elapsed = clock.getElapsedTime();
+
+            // Smoothly interpolate camera position (zoom in / zoom out / pan)
+            camera.position.x += (targetCamX - camera.position.x) * 0.04;
+            camera.position.y += (targetCamY - camera.position.y) * 0.04;
+            camera.position.z += (targetCamZ - camera.position.z) * 0.04;
+            camera.lookAt(0, 0, 0);
+
+            // Rotate particle universe slowly
+            if (particleSystem) {
+                particleSystem.rotation.y = elapsed * 0.015;
+                particleSystem.rotation.x = Math.sin(elapsed * 0.03) * 0.04;
+            }
+
+            // Rotate orbit rings
+            if (ringGroup) {
+                ringGroup.rotation.y = elapsed * 0.04;
+            }
+
+            if (globeModel) {
+                // Slow auto-rotation
+                globeModel.rotation.y = elapsed * 0.08;
+
+                // Mouse parallax (subtle tilt)
+                targetRotX.value += (mouseY * 0.15 - targetRotX.value) * 0.02;
+                targetRotY.value += (mouseX * 0.15 - targetRotY.value) * 0.02;
+                globeModel.rotation.x = targetRotX.value;
+                globeModel.rotation.z = targetRotY.value * 0.3;
+            }
+
+            // Animate red accent light
+            redLight.position.x = Math.sin(elapsed * 0.3) * 8000;
+            redLight.position.z = Math.cos(elapsed * 0.3) * 8000;
+
+            // Animate orbiting 3D node satellites & project HTML badges
+            const tempVector = new THREE.Vector3();
+
+            nodeObjects.forEach(node => {
+                node.theta += node.def.speed;
+
+                // Calculate 3D orbital position
+                const posX = Math.cos(node.theta) * node.def.radius;
+                const posZ = Math.sin(node.theta) * node.def.radius;
+                tempVector.set(posX, 0, posZ);
+                tempVector.applyEuler(node.def.tilt);
+
+                node.mesh.position.copy(tempVector);
+
+                // Project 3D coordinates to 2D screen space
+                const projected = tempVector.clone().project(camera);
+
+                const screenX = (projected.x * 0.5 + 0.5) * window.innerWidth;
+                const screenY = (-(projected.y * 0.5) + 0.5) * window.innerHeight;
+
+                // Position badge and adjust opacity based on z-depth
+                if (projected.z > 1) {
+                    node.badgeEl.style.display = 'none';
+                } else {
+                    node.badgeEl.style.display = 'flex';
+                    node.badgeEl.style.transform = `translate(-50%, -50%) translate(${screenX}px, ${screenY}px)`;
+                    node.badgeEl.style.opacity = (projected.z < 0.95) ? '0.9' : '0.15';
+                }
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        const globeCanvas = document.getElementById('globe-canvas');
+        globeCanvas.style.opacity = '1.0';
+
+        // ==========================================
+        // SMART NAVBAR — SHOW ON SCROLL UP / HIDE ON SCROLL DOWN
+        // ==========================================
+        let lastScrollY = window.scrollY;
+        const navbar = document.querySelector('.navbar');
+
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+
+            // At top of page (< 50px): always show navbar with ultra transparency
+            if (currentScrollY <= 50) {
+                navbar.classList.remove('nav-hidden');
+                navbar.classList.remove('nav-scrolled');
+                lastScrollY = currentScrollY;
+                return;
+            }
+
+            // Scrolling down -> hide navbar smoothly
+            if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                navbar.classList.add('nav-hidden');
+            } 
+            // Scrolling up -> show navbar with subtle glass fill
+            else if (currentScrollY < lastScrollY) {
+                navbar.classList.remove('nav-hidden');
+                navbar.classList.add('nav-scrolled');
+            }
+
+            lastScrollY = currentScrollY;
+        }, { passive: true });
+
+        console.log('🌐 3D Globe camera scroll zoom, particle universe & smart navbar active');
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — 100 HUB</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="/style.css" />
+    <style>
+        /* Dashboard-specific styles */
+        .dashboard-layout {
+            padding: 140px 0 100px;
+            min-height: 100vh;
+            background: var(--bg-primary);
+        }
+        .dashboard-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .dashboard-title span {
+            color: var(--red);
+        }
+        .dashboard-stats {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 16px 24px;
+            text-align: center;
+            min-width: 110px;
+        }
+        .stat-card .number {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--red);
+            line-height: 1.2;
+        }
+        .stat-card .label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+        .dashboard-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            flex-wrap: wrap;
+        }
+        .dashboard-tabs button {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .dashboard-tabs button:hover {
+            color: var(--text-primary);
+        }
+        .dashboard-tabs button.active {
+            color: var(--red);
+            border-bottom-color: var(--red);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .dashboard-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 60px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-outline:hover {
+            border-color: var(--red);
+            box-shadow: 0 4px 24px rgba(227, 30, 36, 0.1);
+        }
+        .btn-outline.btn-sm {
+            padding: 6px 14px;
+            font-size: 12px;
+        }
+        .btn-outline.success {
+            color: #4ADE80;
+            border-color: rgba(74, 222, 128, 0.3);
+        }
+        .btn-outline.success:hover {
+            border-color: #4ADE80;
+        }
+        .btn-outline.danger {
+            color: #FF6B6B;
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+        .btn-outline.danger:hover {
+            border-color: #FF6B6B;
+        }
+        .btn-outline.warning {
+            color: #E8B84B;
+            border-color: rgba(232, 184, 75, 0.3);
+        }
+        .btn-outline.warning:hover {
+            border-color: #E8B84B;
+        }
+        .table-wrap {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+        .table-wrap table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+        .table-wrap thead {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .table-wrap th {
+            text-align: left;
+            padding: 14px 20px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .table-wrap td {
+            padding: 14px 20px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .table-wrap tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .table-wrap tbody tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 60px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        .status-badge.pending {
+            background: rgba(232, 184, 75, 0.15);
+            color: #E8B84B;
+        }
+        .status-badge.accepted {
+            background: rgba(74, 222, 128, 0.15);
+            color: #4ADE80;
+        }
+        .status-badge.declined {
+            background: rgba(255, 107, 107, 0.15);
+            color: #FF6B6B;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .empty-state i {
+            font-size: 32px;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .partner-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .partner-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .partner-card:hover {
+            border-color: var(--red);
+            box-shadow: 0 4px 24px rgba(227, 30, 36, 0.1);
+        }
+        .partner-card img {
+            max-width: 100%;
+            max-height: 48px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+        .partner-card .partner-name {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .add-partner-form {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .add-partner-form input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+        }
+        .add-partner-form input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .add-partner-form input:focus {
+            outline: none;
+            border-color: var(--red);
+        }
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .impact-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 24px 16px;
+            text-align: center;
+        }
+        .impact-card .number {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--red);
+        }
+        .impact-card .label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 4px;
+        }
+        .impact-edit-form {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 24px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        .impact-edit-form .btn-primary {
+            grid-column: 1 / -1;
+            justify-self: start;
+        }
+        .impact-edit-form .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 4px;
+        }
+        .impact-edit-form .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+        }
+        .impact-edit-form .form-group input:focus {
+            outline: none;
+            border-color: var(--red);
+        }
+        .mediakit-section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 24px;
+        }
+        .mediakit-current {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .mediakit-current i {
+            font-size: 24px;
+            color: var(--red);
+        }
+        .mediakit-label {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .mediakit-status {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .mediakit-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+        }
+        #mediaKitForm {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        #mediaKitForm input {
+            flex: 1;
+            min-width: 250px;
+            padding: 10px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+        }
+        #mediaKitForm input:focus {
+            outline: none;
+            border-color: var(--red);
+        }
+        #mediaKitProgress {
+            display: none;
+            margin-top: 12px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+        #mediaKitProgress .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top: 2px solid var(--red);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+            margin-right: 12px;
+        }
+        .edit-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 5000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .edit-modal.active {
+            display: flex;
+        }
+        .edit-modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(16px);
+        }
+        .edit-modal-content {
+            position: relative;
+            background: var(--bg-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+        }
+        .edit-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+        .edit-modal-close:hover {
+            background: var(--red);
+            color: var(--white);
+        }
+        .edit-modal .form-group {
+            margin-bottom: 14px;
+        }
+        .edit-modal .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 4px;
+        }
+        .edit-modal .form-group input,
+        .edit-modal .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+        }
+        .edit-modal .form-group input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .image-select-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .image-select-option {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            aspect-ratio: 1;
+            transition: all 0.3s ease;
+        }
+        .image-select-option img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .image-select-option .check {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--red);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .image-select-option.selected {
+            border-color: var(--red);
+        }
+        .image-select-option.selected .check {
+            opacity: 1;
+        }
+        .edit-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            padding: 14px 22px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+            z-index: 6000;
+            opacity: 0;
+            transform: translateY(12px);
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .toast.success {
+            border-color: rgba(74, 222, 128, 0.3);
+        }
+        .toast.error {
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+        @media (max-width: 900px) {
+            .impact-grid { grid-template-columns: repeat(2, 1fr); }
+            .impact-edit-form { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 640px) {
+            .dashboard-layout { padding: 120px 0 60px; }
+            .dashboard-title { font-size: 28px; }
+            .dashboard-stats { width: 100%; }
+            .stat-card { flex: 1; min-width: 0; }
+            .image-select-grid { grid-template-columns: repeat(2, 1fr); }
+            .add-partner-form input { min-width: 100%; }
+            .mediakit-current { flex-wrap: wrap; }
+            .mediakit-actions { margin-left: 0; width: 100%; }
+            #mediaKitForm input { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== PIN PROTECTION OVERLAY ==================== -->
+    <div class="pin-overlay" id="pinOverlay">
+        <div class="pin-box">
+            <div class="lock-icon"><i class="fa-solid fa-lock"></i></div>
+            <h2>Enter PIN</h2>
+            <p>Enter the 4-digit PIN to access the dashboard</p>
+            <div class="pin-inputs" id="pinInputs">
+                <input type="password" maxlength="1" inputmode="numeric" pattern="[0-9]" id="pin1" autofocus />
+                <input type="password" maxlength="1" inputmode="numeric" pattern="[0-9]" id="pin2" />
+                <input type="password" maxlength="1" inputmode="numeric" pattern="[0-9]" id="pin3" />
+                <input type="password" maxlength="1" inputmode="numeric" pattern="[0-9]" id="pin4" />
+            </div>
+            <div class="pin-error" id="pinError"></div>
+            <div class="pin-actions">
+                <button class="btn-pin-submit" id="pinSubmitBtn">Unlock</button>
+                <button class="btn-pin-clear" id="pinClearBtn">Clear</button>
+            </div>
+            <div class="pin-attempts" id="pinAttempts"></div>
+        </div>
+    </div>
+
+    <!-- ==================== NAVIGATION ==================== -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-inner">
+                <a href="/" class="nav-logo">
+                    <img src="Assets/100_Logo.png" alt="100 HUB" class="logo-img" />
+                    <span class="logo-text"><span class="highlight-red">HUB</span></span>
+                </a>
+                <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/dashboard.html" style="color:var(--red);">Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    <!-- Mobile Slide-out Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" id="mobileMenuClose"><i class="fa-solid fa-xmark"></i></button>
+        <a href="/">Home</a>
+        <a href="/dashboard.html" style="color:var(--red);">Dashboard</a>
+    </div>
+
+    <!-- ==================== DASHBOARD CONTENT ==================== -->
+    <section class="dashboard-layout" id="dashboardContent">
+        <div class="container">
+            <div class="dashboard-header">
+                <div>
+                    <a href="/" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+                    <h1 class="dashboard-title">Admin <span>Dashboard</span></h1>
+                </div>
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <span class="number" id="totalMembers">0</span>
+                        <span class="label">Total Members</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="number" id="pendingMembers">0</span>
+                        <span class="label">Pending</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="number" id="acceptedMembers">0</span>
+                        <span class="label">Accepted</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="number" id="totalPartners">0</span>
+                        <span class="label">Partners</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-tabs">
+                <button class="active" data-tab="members">Members</button>
+                <button data-tab="partners">Partners</button>
+                <button data-tab="impact">Impact Numbers</button>
+                <button data-tab="mediakit">Media Kit</button>
+                <button data-tab="settings">Settings</button>
+            </div>
+
+            <!-- Tab: Members -->
+            <div class="tab-content active" id="tab-members">
+                <div class="dashboard-actions">
+                    <button class="btn-outline" onclick="refreshMembers()">
+                        <i class="fa-solid fa-rotate"></i> Refresh
+                    </button>
+                    <button class="btn-outline" onclick="exportCSV()">
+                        <i class="fa-solid fa-download"></i> Export CSV
+                    </button>
+                    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                        <button class="btn-outline btn-sm" onclick="filterMembers('all')" id="filterAll">All</button>
+                        <button class="btn-outline btn-sm warning" onclick="filterMembers('pending')" id="filterPending">Pending</button>
+                        <button class="btn-outline btn-sm success" onclick="filterMembers('accepted')" id="filterAccepted">Accepted</button>
+                        <button class="btn-outline btn-sm danger" onclick="filterMembers('declined')" id="filterDeclined">Declined</button>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th style="text-align:center;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="membersTableBody">
+                            <tr>
+                                <td colspan="6">
+                                    <div class="empty-state">
+                                        <i class="fa-regular fa-users"></i>
+                                        <p>Loading members...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab: Partners -->
+            <div class="tab-content" id="tab-partners">
+                <div class="dashboard-actions">
+                    <button class="btn-outline" onclick="loadPartners()">
+                        <i class="fa-solid fa-rotate"></i> Refresh
+                    </button>
+                </div>
+                <div class="partner-grid" id="partnerGrid">
+                    <div class="empty-state" style="grid-column:1/-1;">
+                        <i class="fa-regular fa-image"></i>
+                        <p>Loading partners...</p>
+                    </div>
+                </div>
+
+                <h3 style="font-family:'Playfair Display',serif; font-size:20px; margin-top:30px; margin-bottom:16px;">Add New Partner</h3>
+                <div class="add-partner-form">
+                    <input type="text" id="partnerName" placeholder="Partner Name (e.g., Adidas)" />
+                    <input type="url" id="partnerUrl" placeholder="Logo URL (Cloudinary or image URL)" />
+                    <button class="btn-primary" onclick="addPartner()">
+                        <i class="fa-regular fa-plus"></i> Add Partner
+                    </button>
+                </div>
+                <p style="font-size:12px; color:rgba(255,255,255,0.5); margin-top:8px;">
+                    💡 Upload images to Cloudinary, then copy the image URL and paste it here.
+                </p>
+            </div>
+
+            <!-- Tab: Impact Numbers -->
+            <div class="tab-content" id="tab-impact">
+                <h3 style="font-family:'Playfair Display',serif; font-size:20px; margin-bottom:16px;">Impact Numbers</h3>
+                <div class="impact-grid" id="impactGrid">
+                    <div class="impact-card">
+                        <span class="number" id="impactMagazine">08</span>
+                        <span class="label">Magazine Issues</span>
+                    </div>
+                    <div class="impact-card">
+                        <span class="number" id="impactFeatures">100+</span>
+                        <span class="label">Editorial Features</span>
+                    </div>
+                    <div class="impact-card">
+                        <span class="number" id="impactCollaborations">50+</span>
+                        <span class="label">Brand Collaborations</span>
+                    </div>
+                    <div class="impact-card">
+                        <span class="number" id="impactReach">1M+</span>
+                        <span class="label">Digital Reach</span>
+                    </div>
+                </div>
+
+                <h4 style="font-size:16px; margin-top:20px; margin-bottom:12px;">Edit Impact Numbers</h4>
+                <div class="impact-edit-form" id="impactEditForm">
+                    <div class="form-group">
+                        <label>Magazine Issues</label>
+                        <input type="number" id="editMagazine" value="8" />
+                    </div>
+                    <div class="form-group">
+                        <label>Editorial Features</label>
+                        <input type="number" id="editFeatures" value="100" />
+                    </div>
+                    <div class="form-group">
+                        <label>Brand Collaborations</label>
+                        <input type="number" id="editCollaborations" value="50" />
+                    </div>
+                    <div class="form-group">
+                        <label>Digital Reach</label>
+                        <input type="number" id="editReach" value="1000000" />
+                    </div>
+                    <button class="btn-primary" onclick="saveImpactNumbers()">
+                        <i class="fa-regular fa-floppy-disk"></i> Save Impact Numbers
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab: Media Kit -->
+            <div class="tab-content" id="tab-mediakit">
+                <h3 style="font-family:'Playfair Display',serif; font-size:20px; margin-bottom:16px;">Media Kit</h3>
+                <p style="color:rgba(255,255,255,0.7); margin-bottom:20px;">Upload your Media Kit PDF to Cloudinary, then paste the URL here.</p>
+                
+                <div class="mediakit-section">
+                    <div class="mediakit-current">
+                        <i class="fa-regular fa-file-pdf"></i>
+                        <div>
+                            <div class="mediakit-label">Current Media Kit</div>
+                            <div class="mediakit-status" id="mediaKitStatus">Checking...</div>
+                        </div>
+                        <div class="mediakit-actions">
+                            <button class="btn-outline" onclick="checkMediaKit()">
+                                <i class="fa-solid fa-rotate"></i> Check
+                            </button>
+                            <a id="mediaKitDownloadLink" href="#" target="_blank" style="display:none;" class="btn-primary">
+                                <i class="fa-solid fa-download"></i> Download
+                            </a>
+                        </div>
+                    </div>
+
+                    <form id="mediaKitForm">
+                        <input type="url" id="mediaKitUrl" placeholder="Paste Cloudinary PDF URL" required />
+                        <button type="submit" class="btn-primary">
+                            <i class="fa-regular fa-upload"></i> Save URL
+                        </button>
+                    </form>
+                    <div id="mediaKitProgress">
+                        <span class="spinner"></span>
+                        <span style="color:rgba(255,255,255,0.7);">Saving...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Settings -->
+            <div class="tab-content" id="tab-settings">
+                <h3 style="font-family:'Playfair Display',serif; font-size:20px; margin-bottom:16px;">Change Dashboard PIN</h3>
+                <p style="color:rgba(255,255,255,0.6); margin-bottom:16px;">Update your dashboard access PIN. Current PIN is required.</p>
+                
+                <div class="pin-update-form" style="max-width:400px;">
+                    <div class="form-group">
+                        <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Current PIN</label>
+                        <input type="password" id="currentPin" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="Enter current 4-digit PIN" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif;" />
+                    </div>
+                    <div class="form-group">
+                        <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">New PIN</label>
+                        <input type="password" id="newPin" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="Enter new 4-digit PIN" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif;" />
+                    </div>
+                    <div class="form-group">
+                        <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Confirm New PIN</label>
+                        <input type="password" id="confirmPin" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="Confirm new 4-digit PIN" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif;" />
+                    </div>
+                    <button class="btn-primary" onclick="updatePIN()" style="background:var(--red); color:var(--white); border:none; border-radius:60px; padding:14px 32px; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.3s ease; font-family:'Inter',sans-serif; display:inline-flex; align-items:center; gap:8px;">
+                        <i class="fa-regular fa-floppy-disk"></i> Update PIN
+                    </button>
+                    <div id="pinUpdateStatus" style="margin-top:12px; font-size:13px; min-height:24px;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== EDIT MEMBER MODAL ==================== -->
+    <div class="edit-modal" id="editModal">
+        <div class="edit-modal-overlay" id="editModalOverlay"></div>
+        <div class="edit-modal-content">
+            <button class="edit-modal-close" id="editModalClose"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="font-family:'Playfair Display',serif; font-size:24px; margin-bottom:4px;">Edit Member</h3>
+            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;">Select the best photo and update details</p>
+            <div id="editMemberData">
+                <div style="margin-bottom:16px;">
+                    <label style="font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); display:block; margin-bottom:8px;">Select Profile Photo</label>
+                    <div class="image-select-grid" id="imageSelectGrid">
+                        <!-- Images will be loaded here -->
+                    </div>
+                </div>
+                <form class="edit-form" id="editForm">
+                    <div class="form-group">
+                        <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Full Name</label>
+                        <input type="text" id="editName" />
+                    </div>
+                    <div class="form-group">
+                        <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Email</label>
+                        <input type="email" id="editEmail" disabled />
+                    </div>
+                    <div class="form-group">
+                        <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Role/Title</label>
+                        <input type="text" id="editRole" />
+                    </div>
+                    <div class="form-group">
+                        <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Creative Focus/Skillset</label>
+                        <textarea id="editSkills" rows="2" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif; min-height:60px; resize:vertical;"></textarea>
+                    </div>
+                    <div class="edit-actions">
+                        <button type="button" class="btn-outline success" onclick="updateMemberStatus('accepted')">
+                            <i class="fa-regular fa-check"></i> Accept
+                        </button>
+                        <button type="button" class="btn-outline danger" onclick="updateMemberStatus('declined')">
+                            <i class="fa-regular fa-xmark"></i> Decline
+                        </button>
+                        <button type="button" class="btn-outline" onclick="saveMemberEdits()">
+                            <i class="fa-regular fa-floppy-disk"></i> Save Changes
+                        </button>
+                        <button type="button" class="btn-outline" onclick="closeEditModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- ==================== POST ID TOOL BUTTON ==================== -->
+    <button onclick="window.location.href='/'" style="position:fixed; bottom:20px; right:20px; background:rgba(227,30,36,0.1); color:#E31E24; border:1px solid rgba(227,30,36,0.15); border-radius:50%; width:30px; height:30px; font-size:11px; cursor:pointer; z-index:9999; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); opacity:0.4;" title="Post ID Tool">
+        🔑
+    </button>
+
+    <script>
+        // ==========================================
+        // PIN PROTECTION - Supabase Integration
+        // ==========================================
+        let pinAttempts = 0;
+        const MAX_ATTEMPTS = 5;
+
+        // Verify PIN with Supabase
+        async function verifyPin(inputPin) {
+            try {
+                const response = await fetch('/api/verify-pin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ pin: inputPin })
+                });
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                console.error('Error verifying PIN:', error);
+                return { success: false, error: 'Network error' };
+            }
+        }
+
+        function initPinProtection() {
+            const pinOverlay = document.getElementById('pinOverlay');
+            const pinInputs = document.querySelectorAll('.pin-inputs input');
+            const pinError = document.getElementById('pinError');
+            const pinAttemptsEl = document.getElementById('pinAttempts');
+            const submitBtn = document.getElementById('pinSubmitBtn');
+            const clearBtn = document.getElementById('pinClearBtn');
+
+            setTimeout(() => pinInputs[0].focus(), 100);
+
+            pinInputs.forEach((input, index) => {
+                input.addEventListener('input', function() {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                    if (this.value.length === 1 && index < pinInputs.length - 1) {
+                        pinInputs[index + 1].focus();
+                    }
+                    pinError.textContent = '';
+                    this.classList.remove('error');
+                });
+
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
+                        pinInputs[index - 1].focus();
+                    }
+                    if (e.key === 'Enter') {
+                        submitBtn.click();
+                    }
+                });
+            });
+
+            submitBtn.addEventListener('click', async function() {
+                const pin = Array.from(pinInputs).map(input => input.value).join('');
+                
+                if (pin.length !== 4) {
+                    pinError.textContent = 'Please enter all 4 digits.';
+                    return;
+                }
+
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Checking...';
+
+                const result = await verifyPin(pin);
+                
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Unlock';
+
+                if (result.success) {
+                    pinOverlay.classList.add('hidden');
+                    document.body.style.overflow = '';
+                    return;
+                }
+
+                pinAttempts++;
+                const remaining = MAX_ATTEMPTS - pinAttempts;
+                pinError.textContent = `Incorrect PIN. ${remaining} attempts remaining.`;
+                pinAttemptsEl.textContent = `Attempts: ${pinAttempts}/${MAX_ATTEMPTS}`;
+
+                pinInputs.forEach(input => {
+                    input.classList.add('error');
+                    input.value = '';
+                });
+
+                setTimeout(() => {
+                    pinInputs.forEach(input => input.classList.remove('error'));
+                    pinInputs[0].focus();
+                }, 500);
+
+                if (pinAttempts >= MAX_ATTEMPTS) {
+                    pinError.textContent = 'Too many failed attempts. Refresh the page to try again.';
+                    pinInputs.forEach(input => input.disabled = true);
+                    submitBtn.disabled = true;
+                    clearBtn.disabled = true;
+                }
+            });
+
+            clearBtn.addEventListener('click', function() {
+                pinInputs.forEach(input => {
+                    input.value = '';
+                    input.classList.remove('error');
+                });
+                pinError.textContent = '';
+                pinInputs[0].focus();
+            });
+
+            pinOverlay.addEventListener('click', function(e) {
+                if (e.target === this) return;
+            });
+        }
+
+        // ==========================================
+        // UPDATE PIN
+        // ==========================================
+        async function updatePIN() {
+            const currentPin = document.getElementById('currentPin').value.trim();
+            const newPin = document.getElementById('newPin').value.trim();
+            const confirmPin = document.getElementById('confirmPin').value.trim();
+            const statusEl = document.getElementById('pinUpdateStatus');
+
+            // Validate
+            if (!currentPin || !newPin || !confirmPin) {
+                statusEl.innerHTML = '<span style="color:#ff6b6b;">⚠️ Please fill in all fields.</span>';
+                return;
+            }
+
+            if (newPin.length !== 4 || !/^\d{4}$/.test(newPin)) {
+                statusEl.innerHTML = '<span style="color:#ff6b6b;">⚠️ PIN must be exactly 4 digits.</span>';
+                return;
+            }
+
+            if (newPin !== confirmPin) {
+                statusEl.innerHTML = '<span style="color:#ff6b6b;">⚠️ New PIN and confirmation do not match.</span>';
+                return;
+            }
+
+            try {
+                statusEl.innerHTML = '<span style="color:#ffd700;">⏳ Updating...</span>';
+
+                const response = await fetch('/api/update-pin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        currentPin: currentPin,
+                        newPin: newPin
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    statusEl.innerHTML = '<span style="color:#4caf50;">✅ PIN updated successfully!</span>';
+                    document.getElementById('currentPin').value = '';
+                    document.getElementById('newPin').value = '';
+                    document.getElementById('confirmPin').value = '';
+                } else {
+                    statusEl.innerHTML = `<span style="color:#ff6b6b;">❌ ${result.error || 'Failed to update PIN'}</span>`;
+                }
+            } catch (error) {
+                statusEl.innerHTML = `<span style="color:#ff6b6b;">❌ Error: ${error.message}</span>`;
+            }
+        }
+
+        // ==========================================
+        // HAMBURGER MENU
+        // ==========================================
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+
+        function toggleMobileMenu() {
+            hamburgerBtn.classList.toggle('active');
+            mobileMenu.classList.toggle('open');
+            mobileMenuOverlay.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+        }
+
+        function closeMobileMenu() {
+            hamburgerBtn.classList.remove('active');
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        hamburgerBtn.addEventListener('click', toggleMobileMenu);
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+        mobileMenuClose.addEventListener('click', closeMobileMenu);
+
+        // ==========================================
+        // API BASE
+        // ==========================================
+        const API_BASE = '/api';
+        let currentMemberId = null;
+        let currentFilter = 'all';
+
+        // ==========================================
+        // CACHE SYSTEM
+        // ==========================================
+        const CACHE = {
+            members: null,
+            timestamp: null,
+            duration: 30000,
+            
+            get(key) {
+                if (!this[key] || !this.timestamp) return null;
+                if (Date.now() - this.timestamp > this.duration) return null;
+                return this[key];
+            },
+            
+            set(key, data) {
+                this[key] = data;
+                this.timestamp = Date.now();
+            },
+            
+            clear() {
+                this.members = null;
+                this.timestamp = null;
+            }
+        };
+
+        // ==========================================
+        // OPTIMIZED IMAGE LOADING
+        // ==========================================
+        function getOptimizedImage(url, width = 400, height = 400) {
+            if (!url) return 'Assets/100_Logo.png';
+            if (url.includes('cloudinary.com')) {
+                return url.replace('/upload/', `/upload/c_fill,w_${width},h_${height},q_auto,f_auto/`);
+            }
+            return url;
+        }
+
+        // ==========================================
+        // TABS
+        // ==========================================
+        document.querySelectorAll('.dashboard-tabs button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.dashboard-tabs button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+                if (this.dataset.tab === 'partners') loadPartners();
+                if (this.dataset.tab === 'mediakit') checkMediaKit();
+                if (this.dataset.tab === 'impact') loadImpactNumbers();
+            });
+        });
+
+        // ==========================================
+        // MEMBERS
+        // ==========================================
+        let allMembers = [];
+
+        async function fetchMembers() {
+            const cached = CACHE.get('members');
+            if (cached) {
+                console.log('📦 Using cached members data');
+                return cached;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/members`);
+                const data = await response.json();
+                CACHE.set('members', data);
+                return data;
+            } catch (error) {
+                console.error('Fetch members error:', error);
+                return { members: [], count: 0 };
+            }
+        }
+
+        function filterMembers(status) {
+            currentFilter = status;
+            renderMembers();
+            document.querySelectorAll('#filterAll, #filterPending, #filterAccepted, #filterDeclined').forEach(btn => {
+                btn.style.background = 'transparent';
+                btn.style.color = '';
+            });
+            const btnMap = { all: 'filterAll', pending: 'filterPending', accepted: 'filterAccepted', declined: 'filterDeclined' };
+            const activeBtn = document.getElementById(btnMap[status]);
+            if (activeBtn) {
+                activeBtn.style.background = 'var(--red)';
+                activeBtn.style.color = 'white';
+            }
+        }
+
+        async function renderMembers() {
+            const tbody = document.getElementById('membersTableBody');
+            const data = await fetchMembers();
+            allMembers = data.members || [];
+            
+            const total = allMembers.length;
+            const pending = allMembers.filter(m => m.status === 'pending').length;
+            const accepted = allMembers.filter(m => m.status === 'accepted').length;
+            document.getElementById('totalMembers').textContent = total;
+            document.getElementById('pendingMembers').textContent = pending;
+            document.getElementById('acceptedMembers').textContent = accepted;
+            
+            let filtered = allMembers;
+            if (currentFilter !== 'all') {
+                filtered = allMembers.filter(m => m.status === currentFilter);
+            }
+            
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <i class="fa-regular fa-users"></i>
+                                <p>${allMembers.length === 0 ? 'No members yet.' : 'No members with status: ' + currentFilter}</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = filtered.map((member, index) => {
+                const img = getOptimizedImage(member.image1, 50, 50);
+                return `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td><strong style="color:var(--text-primary);">${member.name}</strong></td>
+                        <td><a href="mailto:${member.email}" style="color:rgba(255,255,255,0.7); text-decoration:none;">${member.email}</a></td>
+                        <td><span class="member-role">${member.role}</span></td>
+                        <td><span class="status-badge ${member.status || 'pending'}">${member.status || 'pending'}</span></td>
+                        <td style="text-align:center;">
+                            <button class="btn-outline btn-sm" onclick="openEditModal('${member.id}')" title="Edit">
+                                <i class="fa-regular fa-pen-to-square"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function refreshMembers() { 
+            CACHE.clear();
+            renderMembers(); 
+            showToast('Refreshed!', 'success'); 
+        }
+
+        // ==========================================
+        // EDIT MODAL
+        // ==========================================
+        let editingMemberData = null;
+        let selectedImage = '';
+
+        function openEditModal(id) {
+            const member = allMembers.find(m => m.id === id);
+            if (!member) return;
+            
+            editingMemberData = member;
+            currentMemberId = id;
+            selectedImage = member.selectedImage || member.image1 || '';
+
+            document.getElementById('editName').value = member.name || '';
+            document.getElementById('editEmail').value = member.email || '';
+            document.getElementById('editRole').value = member.role || '';
+            document.getElementById('editSkills').value = member.skills || '';
+
+            const grid = document.getElementById('imageSelectGrid');
+            const images = [member.image1, member.image2, member.image3].filter(img => img);
+            
+            if (images.length === 0) {
+                grid.innerHTML = '<p style="color:rgba(255,255,255,0.5); font-size:13px; grid-column:1/-1;">No images uploaded</p>';
+            } else {
+                grid.innerHTML = images.map((img, index) => `
+                    <div class="image-select-option ${selectedImage === img ? 'selected' : ''}" onclick="selectImage('${img}')">
+                        <img src="${getOptimizedImage(img, 200, 200)}" alt="Photo ${index + 1}" loading="lazy" />
+                        <div class="check"><i class="fa-solid fa-check"></i></div>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('editModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+            document.body.style.overflow = '';
+            editingMemberData = null;
+        }
+
+        document.getElementById('editModalClose').addEventListener('click', closeEditModal);
+        document.getElementById('editModalOverlay').addEventListener('click', closeEditModal);
+
+        function selectImage(img) {
+            selectedImage = img;
+            document.querySelectorAll('.image-select-option').forEach(el => {
+                el.classList.remove('selected');
+                if (el.querySelector('img')?.src.includes(img.split('/').pop())) {
+                    el.classList.add('selected');
+                }
+            });
+        }
+
+        // ==========================================
+        // UPDATE MEMBER
+        // ==========================================
+        async function updateMemberDirect(email, updates) {
+            try {
+                const response = await fetch(`${API_BASE}/update-member`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, ...updates })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    console.error('Update failed:', result);
+                    throw new Error(result.error || `Server error ${response.status}`);
+                }
+
+                console.log('Update result:', result);
+                return true;
+            } catch (error) {
+                console.error('Update error:', error);
+                showToast('Error: ' + error.message, 'error');
+                return false;
+            }
+        }
+
+        async function saveMemberEdits() {
+            const updates = {
+                name: document.getElementById('editName').value,
+                role: document.getElementById('editRole').value,
+                skills: document.getElementById('editSkills').value,
+                selectedImage: selectedImage
+            };
+
+            const success = await updateMemberDirect(editingMemberData.email, updates);
+            if (success) {
+                showToast('Member updated!', 'success');
+                closeEditModal();
+                CACHE.clear();
+                renderMembers();
+            } else {
+                showToast('Failed to update member. Please try again.', 'error');
+            }
+        }
+
+        async function updateMemberStatus(status) {
+            const updates = {
+                status: status,
+                selectedImage: selectedImage
+            };
+
+            const success = await updateMemberDirect(editingMemberData.email, updates);
+            if (success) {
+                showToast(`Member ${status}!`, 'success');
+                closeEditModal();
+                CACHE.clear();
+                renderMembers();
+            } else {
+                showToast(`Failed to ${status} member. Please try again.`, 'error');
+            }
+        }
+
+        // ==========================================
+        // IMPACT NUMBERS
+        // ==========================================
+        function loadImpactNumbers() {
+            try {
+                const data = localStorage.getItem('impactNumbers');
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    document.getElementById('impactMagazine').textContent = parsed.magazine || 8;
+                    document.getElementById('impactFeatures').textContent = parsed.features + (parsed.features > 9 ? '' : '+');
+                    document.getElementById('impactCollaborations').textContent = parsed.collaborations + (parsed.collaborations > 9 ? '' : '+');
+                    document.getElementById('impactReach').textContent = parsed.reach >= 1000000 ? (parsed.reach / 1000000).toFixed(1) + 'M+' : parsed.reach + '+';
+                    document.getElementById('editMagazine').value = parsed.magazine || 8;
+                    document.getElementById('editFeatures').value = parsed.features || 100;
+                    document.getElementById('editCollaborations').value = parsed.collaborations || 50;
+                    document.getElementById('editReach').value = parsed.reach || 1000000;
+                }
+            } catch (e) {
+                // Default values already in HTML
+            }
+        }
+
+        function saveImpactNumbers() {
+            const data = {
+                magazine: parseInt(document.getElementById('editMagazine').value) || 8,
+                features: parseInt(document.getElementById('editFeatures').value) || 100,
+                collaborations: parseInt(document.getElementById('editCollaborations').value) || 50,
+                reach: parseInt(document.getElementById('editReach').value) || 1000000
+            };
+            localStorage.setItem('impactNumbers', JSON.stringify(data));
+            loadImpactNumbers();
+            showToast('Impact numbers saved!', 'success');
+        }
+
+        // ==========================================
+        // PARTNERS
+        // ==========================================
+        async function loadPartners() {
+            try {
+                const response = await fetch(`${API_BASE}/partners`);
+                const data = await response.json();
+                const grid = document.getElementById('partnerGrid');
+                
+                if (!data.logos || data.logos.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state" style="grid-column:1/-1;">
+                            <i class="fa-regular fa-image"></i>
+                            <p>No partners added yet.</p>
+                        </div>
+                    `;
+                    document.getElementById('totalPartners').textContent = '0';
+                    return;
+                }
+                
+                document.getElementById('totalPartners').textContent = data.logos.length;
+                grid.innerHTML = data.logos.map(logo => `
+                    <div class="partner-card">
+                        <img src="${logo.url}" alt="${logo.name}" loading="lazy" onerror="this.style.display='none'" />
+                        <div class="partner-name">${logo.name}</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading partners:', error);
+                showToast('Error loading partners.', 'error');
+            }
+        }
+
+        async function addPartner() {
+            const nameInput = document.getElementById('partnerName');
+            const urlInput = document.getElementById('partnerUrl');
+            const name = nameInput.value.trim();
+            const url = urlInput.value.trim();
+            
+            if (!name || !url) {
+                showToast('Please enter both name and URL.', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/partners`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, url })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showToast('Partner added!', 'success');
+                    nameInput.value = '';
+                    urlInput.value = '';
+                    loadPartners();
+                } else {
+                    showToast('Failed to add partner.', 'error');
+                }
+            } catch (error) {
+                showToast('Error adding partner.', 'error');
+            }
+        }
+
+        // ==========================================
+        // MEDIA KIT
+        // ==========================================
+        async function checkMediaKit() {
+            const status = document.getElementById('mediaKitStatus');
+            const downloadLink = document.getElementById('mediaKitDownloadLink');
+            
+            try {
+                const response = await fetch(`${API_BASE}/media-kit`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.url) {
+                        status.innerHTML = `<span style="color:#4caf50;">✅ Media Kit available</span>`;
+                        downloadLink.style.display = 'inline-flex';
+                        downloadLink.href = data.url;
+                        return;
+                    }
+                }
+                status.innerHTML = `<span style="color:#ff9800;">⚠️ No Media Kit URL set</span>`;
+                downloadLink.style.display = 'none';
+            } catch (error) {
+                status.innerHTML = `<span style="color:#ff4444;">❌ Could not check</span>`;
+                downloadLink.style.display = 'none';
+            }
+        }
+
+        document.getElementById('mediaKitForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const urlInput = document.getElementById('mediaKitUrl');
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                showToast('Please enter a URL.', 'error');
+                return;
+            }
+            
+            try { new URL(url); } catch (e) {
+                showToast('Please enter a valid URL.', 'error');
+                return;
+            }
+            
+            const progress = document.getElementById('mediaKitProgress');
+            progress.style.display = 'block';
+            
+            fetch(`${API_BASE}/media-kit`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+            })
+            .then(response => response.json())
+            .then(result => {
+                progress.style.display = 'none';
+                if (result.success) {
+                    showToast('Media Kit URL saved!', 'success');
+                    checkMediaKit();
+                    urlInput.value = '';
+                } else {
+                    showToast(result.error || 'Failed to save.', 'error');
+                }
+            })
+            .catch(error => {
+                progress.style.display = 'none';
+                showToast('Error saving.', 'error');
+            });
+        });
+
+        // ==========================================
+        // EXPORT CSV
+        // ==========================================
+        async function exportCSV() {
+            try {
+                const data = await fetchMembers();
+                if (!data.members || data.members.length === 0) {
+                    showToast('No members to export.', 'error');
+                    return;
+                }
+                const headers = ['Name', 'Email', 'Role', 'Skills', 'Website', 'Status', 'Joined'];
+                const rows = data.members.map(m => [
+                    `"${m.name || ''}"`,
+                    `"${m.email || ''}"`,
+                    `"${m.role || ''}"`,
+                    `"${m.skills || ''}"`,
+                    `"${m.website || ''}"`,
+                    `"${m.status || ''}"`,
+                    `"${m.created_at ? new Date(m.created_at).toLocaleString() : ''}"`
+                ]);
+                const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `100HUB_Members_${new Date().toISOString().slice(0,10)}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast('CSV exported!', 'success');
+            } catch (error) {
+                showToast('Error exporting.', 'error');
+            }
+        }
+
+        // ==========================================
+        // TOAST
+        // ==========================================
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ==========================================
+        // INIT
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            initPinProtection();
+            renderMembers();
+            loadPartners();
+            checkMediaKit();
+            loadImpactNumbers();
+        });
+
+        console.log('📊 100 HUB Dashboard loaded.');
+    </script>
+
+</body>
+</html>
