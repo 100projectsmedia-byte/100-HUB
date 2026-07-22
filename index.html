@@ -1329,35 +1329,32 @@
             const seeMoreWrap = document.getElementById('feedSeeMore');
 
             try {
+                console.log('📡 Fetching Behold feed...');
+                console.log('📡 Feed URL:', FEED_URL);
+                
                 const response = await fetch(FEED_URL);
-                if (!response.ok) throw new Error('Failed to load feed');
-
+                console.log('📡 Response status:', response.status);
+                
+                if (!response.ok) throw new Error(`Failed to load feed: ${response.status}`);
+                
                 const data = await response.json();
+                console.log('📸 Behold data:', data);
+                
                 const posts = data.posts || data;
-
                 if (!posts || posts.length === 0) {
                     container.innerHTML = `<div class="feed-empty"><p>No posts found. Check back later!</p></div>`;
                     seeMoreWrap.style.display = 'none';
                     return;
                 }
-
-                allFeedPosts = posts;
-                feedDisplayCount = Math.min(6, allFeedPosts.length);
-                feedShowingAll = false;
-                renderPosts(allFeedPosts.slice(0, feedDisplayCount), container);
-
-                // Show "See More" if there are more posts
-                if (allFeedPosts.length > feedDisplayCount) {
-                    seeMoreWrap.style.display = 'block';
-                    updateFeedButton();
-                } else {
-                    seeMoreWrap.style.display = 'none';
-                }
+                
+                console.log(`✅ Found ${posts.length} posts`);
+                // ... rest of the function
             } catch (error) {
                 console.error('Feed error:', error);
                 container.innerHTML = `
                     <div class="feed-error">
                         <p>⚠️ Unable to load posts. Please refresh or try again later.</p>
+                        <p style="font-size:12px; opacity:0.5; margin-top:8px;">Error: ${error.message}</p>
                     </div>
                 `;
                 seeMoreWrap.style.display = 'none';
