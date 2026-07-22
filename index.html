@@ -1348,7 +1348,19 @@
                 }
                 
                 console.log(`✅ Found ${posts.length} posts`);
-                // ... rest of the function
+                
+                allFeedPosts = posts;
+                feedDisplayCount = Math.min(6, allFeedPosts.length);
+                feedShowingAll = false;
+                renderPosts(allFeedPosts.slice(0, feedDisplayCount), container);
+                
+                if (allFeedPosts.length > feedDisplayCount) {
+                    seeMoreWrap.style.display = 'block';
+                    updateFeedButton();
+                } else {
+                    seeMoreWrap.style.display = 'none';
+                }
+                
             } catch (error) {
                 console.error('Feed error:', error);
                 container.innerHTML = `
@@ -1462,17 +1474,14 @@
             const seeMoreWrap = document.getElementById('feedSeeMore');
 
             if (feedShowingAll) {
-                // Go back to 6 posts
                 feedDisplayCount = Math.min(6, allFeedPosts.length);
                 feedShowingAll = false;
                 renderPosts(allFeedPosts.slice(0, feedDisplayCount), container);
                 updateFeedButton();
             } else {
-                // Load 6 more
                 const newCount = Math.min(feedDisplayCount + FEED_INCREMENT, allFeedPosts.length);
                 feedDisplayCount = newCount;
                 
-                // Check if we've shown all
                 if (feedDisplayCount >= allFeedPosts.length) {
                     feedShowingAll = true;
                 }
@@ -1481,7 +1490,6 @@
                 updateFeedButton();
             }
 
-            // Hide see more if all posts shown or less than 6 total
             if (allFeedPosts.length <= 6) {
                 seeMoreWrap.style.display = 'none';
             } else {
