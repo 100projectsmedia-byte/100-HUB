@@ -140,6 +140,32 @@
         .btn-outline.warning:hover {
             border-color: #E8B84B;
         }
+        .btn-primary {
+            padding: 10px 24px;
+            background: var(--red);
+            color: var(--white);
+            border: none;
+            border-radius: 60px;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            transition: var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-primary:hover {
+            background: var(--red-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-red-strong);
+        }
+        .btn-primary.btn-sm {
+            padding: 6px 16px;
+            font-size: 11px;
+        }
         .table-wrap {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.06);
@@ -169,6 +195,23 @@
             font-size: 14px;
             color: rgba(255, 255, 255, 0.8);
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            word-break: break-all;
+        }
+        .table-wrap td .article-url {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            max-width: 300px;
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .table-wrap td .article-url a {
+            color: #4ADE80;
+            text-decoration: none;
+        }
+        .table-wrap td .article-url a:hover {
+            text-decoration: underline;
         }
         .table-wrap tbody tr:last-child td {
             border-bottom: none;
@@ -202,6 +245,14 @@
         .status-badge.declined {
             background: rgba(255, 107, 107, 0.15);
             color: #FF6B6B;
+        }
+        .status-badge.linked {
+            background: rgba(74, 222, 128, 0.15);
+            color: #4ADE80;
+        }
+        .status-badge.pending-article {
+            background: rgba(232, 184, 75, 0.15);
+            color: #E8B84B;
         }
         .empty-state {
             text-align: center;
@@ -442,7 +493,7 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
             padding: 32px;
-            max-width: 480px;
+            max-width: 520px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
@@ -643,6 +694,25 @@
             color: var(--red);
         }
 
+        /* Article specific */
+        .article-post-id {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .post-id-tooltip {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-top: 8px;
+            display: block;
+        }
+        .post-id-tooltip i {
+            color: var(--red);
+        }
+
         @media (max-width: 900px) {
             .impact-grid { grid-template-columns: repeat(2, 1fr); }
             .impact-edit-form { grid-template-columns: 1fr; }
@@ -659,6 +729,7 @@
             #mediaKitForm input { min-width: 100%; }
             .table-wrap table { min-width: 600px; }
             .table-wrap .action-cell { flex-wrap: wrap; }
+            .edit-modal-content { padding: 20px; }
         }
     </style>
 </head>
@@ -738,6 +809,10 @@
                         <span class="label">Accepted</span>
                     </div>
                     <div class="stat-card">
+                        <span class="number" id="totalArticles">0</span>
+                        <span class="label">Articles</span>
+                    </div>
+                    <div class="stat-card">
                         <span class="number" id="totalPartners">0</span>
                         <span class="label">Partners</span>
                     </div>
@@ -746,6 +821,7 @@
 
             <div class="dashboard-tabs">
                 <button class="active" data-tab="members">Members</button>
+                <button data-tab="articles">Articles <span style="font-size:10px; opacity:0.5;">(Post ID Tool)</span></button>
                 <button data-tab="partners">Partners</button>
                 <button data-tab="impact">Impact Numbers</button>
                 <button data-tab="mediakit">Media Kit</button>
@@ -791,6 +867,91 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            <!-- Tab: Articles (Post ID Tool) -->
+            <div class="tab-content" id="tab-articles">
+                <div class="dashboard-actions">
+                    <button class="btn-outline" onclick="refreshArticles()">
+                        <i class="fa-solid fa-rotate"></i> Refresh
+                    </button>
+                    <button class="btn-primary" onclick="openAddArticleModal()">
+                        <i class="fa-regular fa-plus"></i> Add Article
+                    </button>
+                    <button class="btn-outline" onclick="fetchBeholdPosts()" id="fetchBeholdBtn">
+                        <i class="fa-brands fa-instagram"></i> Fetch Posts from Instagram
+                    </button>
+                </div>
+
+                <!-- Post ID Tool Info -->
+                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px 16px; margin-bottom:16px;">
+                    <p style="font-size:12px; color:rgba(255,255,255,0.5);">
+                        <i class="fa-regular fa-circle-info" style="color:var(--red);"></i>
+                        <strong>Post ID Tool:</strong> The <strong>Post ID</strong> is the Instagram post identifier (e.g., <code>17991679634800377</code>). 
+                        Use it when adding articles. Click <strong>"Fetch Posts from Instagram"</strong> to see all posts and their IDs.
+                    </p>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Post ID</th>
+                                <th>Article URL</th>
+                                <th>Status</th>
+                                <th style="text-align:center;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="articlesTableBody">
+                            <tr>
+                                <td colspan="5">
+                                    <div class="empty-state">
+                                        <i class="fa-regular fa-file-lines"></i>
+                                        <p>Loading articles...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Behold Posts Display (fetched from Instagram) -->
+                <div id="beholdPostsContainer" style="display:none; margin-top:20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <h4 style="font-family:'Playfair Display',serif; font-size:18px; color:var(--text-primary);">
+                            <i class="fa-brands fa-instagram" style="color:var(--red);"></i> Instagram Posts
+                        </h4>
+                        <button class="btn-outline btn-sm" onclick="document.getElementById('beholdPostsContainer').style.display='none'">
+                            <i class="fa-solid fa-xmark"></i> Close
+                        </button>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; overflow-x:auto; max-height:400px; overflow-y:auto;">
+                        <table style="width:100%; border-collapse:collapse; min-width:500px;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left; padding:12px 16px; font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); border-bottom:1px solid rgba(255,255,255,0.06);">#</th>
+                                    <th style="text-align:left; padding:12px 16px; font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); border-bottom:1px solid rgba(255,255,255,0.06);">Post ID</th>
+                                    <th style="text-align:left; padding:12px 16px; font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); border-bottom:1px solid rgba(255,255,255,0.06);">Caption Preview</th>
+                                    <th style="text-align:left; padding:12px 16px; font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); border-bottom:1px solid rgba(255,255,255,0.06);">Status</th>
+                                    <th style="text-align:center; padding:12px 16px; font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); border-bottom:1px solid rgba(255,255,255,0.06);">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="beholdPostsBody">
+                                <tr>
+                                    <td colspan="5">
+                                        <div class="empty-state" style="padding:30px 20px;">
+                                            <p>Loading posts from Instagram...</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p style="font-size:11px; color:rgba(255,255,255,0.3); margin-top:8px;">
+                        <i class="fa-regular fa-copy"></i> Click the Post ID to copy it, or use the "Add Article" button to link a post to an article.
+                    </p>
                 </div>
             </div>
 
@@ -977,12 +1138,42 @@
         </div>
     </div>
 
+    <!-- ==================== ARTICLE EDIT MODAL ==================== -->
+    <div class="edit-modal" id="articleModal">
+        <div class="edit-modal-overlay" id="articleModalOverlay"></div>
+        <div class="edit-modal-content">
+            <button class="edit-modal-close" id="articleModalClose"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="font-family:'Playfair Display',serif; font-size:24px; margin-bottom:4px;" id="articleModalTitle">Add Article</h3>
+            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;" id="articleModalSubtitle">Link an Instagram post to an article URL</p>
+            <div id="articleFormData">
+                <form id="articleForm">
+                    <div class="form-group">
+                        <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Post ID</label>
+                        <input type="text" id="articlePostId" placeholder="e.g., 17991679634800377" required />
+                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">The Instagram post ID (found in the post URL or from "Fetch Posts" below)</small>
+                    </div>
+                    <div class="form-group">
+                        <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Article URL</label>
+                        <input type="url" id="articleUrl" placeholder="https://substack.com/..." required />
+                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">Full URL to the article (Substack, Medium, etc.)</small>
+                    </div>
+                    <div class="edit-actions">
+                        <button type="button" class="btn-primary" onclick="saveArticle()">
+                            <i class="fa-regular fa-floppy-disk"></i> Save Article
+                        </button>
+                        <button type="button" class="btn-outline" onclick="closeArticleModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- ==================== CONFIRM DELETE MODAL ==================== -->
     <div class="confirm-modal" id="confirmModal">
         <div class="confirm-modal-overlay" id="confirmModalOverlay"></div>
         <div class="confirm-modal-content">
-            <h3>⚠️ Delete Member</h3>
-            <p>Are you sure you want to delete <strong id="confirmMemberName"></strong>?<br>This action cannot be undone.</p>
+            <h3>⚠️ Delete</h3>
+            <p>Are you sure you want to delete <strong id="confirmItemName"></strong>?<br>This action cannot be undone.</p>
             <div class="confirm-actions">
                 <button class="btn-confirm-danger" id="confirmDeleteBtn">
                     <i class="fa-regular fa-trash"></i> Delete
@@ -994,11 +1185,6 @@
 
     <div class="toast" id="toast"></div>
 
-    <!-- ==================== POST ID TOOL BUTTON ==================== -->
-    <button onclick="window.location.href='/'" style="position:fixed; bottom:20px; right:20px; background:rgba(227,30,36,0.1); color:#E31E24; border:1px solid rgba(227,30,36,0.15); border-radius:50%; width:30px; height:30px; font-size:11px; cursor:pointer; z-index:9999; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); opacity:0.4;" title="Post ID Tool">
-        🔑
-    </button>
-
     <script>
         // ==========================================
         // PIN PROTECTION - Supabase Integration
@@ -1006,14 +1192,11 @@
         let pinAttempts = 0;
         const MAX_ATTEMPTS = 5;
 
-        // Verify PIN with Supabase
         async function verifyPin(inputPin) {
             try {
                 const response = await fetch('/api/verify-pin', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ pin: inputPin })
                 });
                 const result = await response.json();
@@ -1062,7 +1245,6 @@
                     return;
                 }
 
-                // Show loading state
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Checking...';
 
@@ -1126,7 +1308,6 @@
             const confirmPin = document.getElementById('confirmPin').value.trim();
             const statusEl = document.getElementById('pinUpdateStatus');
 
-            // Validate
             if (!currentPin || !newPin || !confirmPin) {
                 statusEl.innerHTML = '<span style="color:#ff6b6b;">⚠️ Please fill in all fields.</span>';
                 return;
@@ -1200,9 +1381,6 @@
         // ==========================================
         const API_BASE = '/api';
 
-        // Attaches the admin session token (set after successful PIN entry)
-        // to write requests. If the token is missing/expired, the API will
-        // reply with 401 and the calling function's error handling kicks in.
         function adminHeaders() {
             const token = sessionStorage.getItem('adminToken');
             return {
@@ -1210,14 +1388,13 @@
                 ...(token ? { 'Authorization': `Bearer ${token}` } : {})
             };
         }
-        let currentMemberId = null;
-        let currentFilter = 'all';
 
         // ==========================================
         // CACHE SYSTEM
         // ==========================================
         const CACHE = {
             members: null,
+            articles: null,
             timestamp: null,
             duration: 30000,
             
@@ -1234,6 +1411,7 @@
             
             clear() {
                 this.members = null;
+                this.articles = null;
                 this.timestamp = null;
             }
         };
@@ -1261,6 +1439,7 @@
                 if (this.dataset.tab === 'partners') loadPartners();
                 if (this.dataset.tab === 'mediakit') checkMediaKit();
                 if (this.dataset.tab === 'impact') loadImpactNumbers();
+                if (this.dataset.tab === 'articles') renderArticles();
             });
         });
 
@@ -1268,6 +1447,7 @@
         // MEMBERS
         // ==========================================
         let allMembers = [];
+        let currentFilter = 'all';
 
         async function fetchMembers() {
             const cached = CACHE.get('members');
@@ -1304,6 +1484,7 @@
 
         async function renderMembers() {
             const tbody = document.getElementById('membersTableBody');
+            CACHE.clear();
             const data = await fetchMembers();
             allMembers = data.members || [];
             
@@ -1346,7 +1527,7 @@
                                 <button class="btn-outline btn-sm" onclick="openEditModal('${member.id}')" title="Edit">
                                     <i class="fa-regular fa-pen-to-square"></i>
                                 </button>
-                                <button class="btn-outline btn-sm danger" onclick="confirmDeleteMember('${member.id}', '${member.name}')" title="Delete">
+                                <button class="btn-outline btn-sm danger" onclick="confirmDelete('member', '${member.id}', '${member.name}')" title="Delete">
                                     <i class="fa-regular fa-trash"></i>
                                 </button>
                             </div>
@@ -1363,57 +1544,7 @@
         }
 
         // ==========================================
-        // DELETE MEMBER
-        // ==========================================
-        let deleteTargetId = null;
-
-        function confirmDeleteMember(id, name) {
-            deleteTargetId = id;
-            document.getElementById('confirmMemberName').textContent = name;
-            document.getElementById('confirmModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-     
-
-        document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
-            if (!deleteTargetId) return;
-            
-            try {
-                // Use the correct API endpoint
-                const response = await fetch(`${API_BASE}/members`, {
-                    method: 'DELETE',
-                    headers: adminHeaders(),
-                    body: JSON.stringify({ id: deleteTargetId })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showToast('Member deleted successfully!', 'success');
-                    closeConfirmModal();
-                    CACHE.clear();
-                    renderMembers();
-                } else {
-                    showToast(result.error || 'Failed to delete member.', 'error');
-                }
-            } catch (error) {
-                console.error('Delete error:', error);
-                showToast('Error deleting member.', 'error');
-            }
-        });
-
-        document.getElementById('confirmCancelBtn').addEventListener('click', closeConfirmModal);
-        document.getElementById('confirmModalOverlay').addEventListener('click', closeConfirmModal);
-
-        function closeConfirmModal() {
-            document.getElementById('confirmModal').classList.remove('active');
-            document.body.style.overflow = '';
-            deleteTargetId = null;
-        }
-
-        // ==========================================
-        // EDIT MODAL
+        // MEMBER EDIT
         // ==========================================
         let editingMemberData = null;
         let selectedImage = '';
@@ -1423,7 +1554,6 @@
             if (!member) return;
             
             editingMemberData = member;
-            currentMemberId = id;
             selectedImage = member.selectedImage || member.image1 || '';
 
             document.getElementById('editName').value = member.name || '';
@@ -1468,9 +1598,6 @@
             });
         }
 
-        // ==========================================
-        // UPDATE MEMBER
-        // ==========================================
         async function updateMemberDirect(email, updates) {
             try {
                 const response = await fetch(`${API_BASE}/update-member`, {
@@ -1486,7 +1613,6 @@
                     throw new Error(result.error || `Server error ${response.status}`);
                 }
 
-                console.log('Update result:', result);
                 return true;
             } catch (error) {
                 console.error('Update error:', error);
@@ -1532,37 +1658,371 @@
         }
 
         // ==========================================
-        // IMPACT NUMBERS
+        // ARTICLES
         // ==========================================
-        function loadImpactNumbers() {
+        let allArticles = [];
+        let editingArticleId = null;
+        let beholdPosts = [];
+
+        async function fetchArticles() {
+            const cached = CACHE.get('articles');
+            if (cached) {
+                console.log('📦 Using cached articles data');
+                return cached;
+            }
+            
             try {
-                const data = localStorage.getItem('impactNumbers');
-                if (data) {
-                    const parsed = JSON.parse(data);
-                    document.getElementById('impactMagazine').textContent = parsed.magazine || 8;
-                    document.getElementById('impactFeatures').textContent = parsed.features + (parsed.features > 9 ? '' : '+');
-                    document.getElementById('impactCollaborations').textContent = parsed.collaborations + (parsed.collaborations > 9 ? '' : '+');
-                    document.getElementById('impactReach').textContent = parsed.reach >= 1000000 ? (parsed.reach / 1000000).toFixed(1) + 'M+' : parsed.reach + '+';
-                    document.getElementById('editMagazine').value = parsed.magazine || 8;
-                    document.getElementById('editFeatures').value = parsed.features || 100;
-                    document.getElementById('editCollaborations').value = parsed.collaborations || 50;
-                    document.getElementById('editReach').value = parsed.reach || 1000000;
-                }
-            } catch (e) {
-                // Default values already in HTML
+                const response = await fetch(`${API_BASE}/articles`);
+                const data = await response.json();
+                CACHE.set('articles', data);
+                return data;
+            } catch (error) {
+                console.error('Fetch articles error:', error);
+                return { articles: [] };
             }
         }
 
-        function saveImpactNumbers() {
-            const data = {
-                magazine: parseInt(document.getElementById('editMagazine').value) || 8,
-                features: parseInt(document.getElementById('editFeatures').value) || 100,
-                collaborations: parseInt(document.getElementById('editCollaborations').value) || 50,
-                reach: parseInt(document.getElementById('editReach').value) || 1000000
-            };
-            localStorage.setItem('impactNumbers', JSON.stringify(data));
-            loadImpactNumbers();
-            showToast('Impact numbers saved!', 'success');
+        async function renderArticles() {
+            const tbody = document.getElementById('articlesTableBody');
+            const data = await fetchArticles();
+            allArticles = data.articles || [];
+            
+            document.getElementById('totalArticles').textContent = allArticles.length;
+            
+            if (allArticles.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <i class="fa-regular fa-file-lines"></i>
+                                <p>No articles added yet. Click "Add Article" to link a post to an article.</p>
+                                <p style="font-size:12px; margin-top:8px;">💡 Click "Fetch Posts from Instagram" to see all posts and their IDs.</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = allArticles.map((article, index) => {
+                const urlDisplay = article.article_url ? 
+                    `<span class="article-url"><a href="${article.article_url}" target="_blank">${article.article_url}</a></span>` : 
+                    '<span style="color:rgba(255,255,255,0.3);">No URL</span>';
+                
+                const statusBadge = article.article_url ? 
+                    '<span class="status-badge linked">✅ Linked</span>' : 
+                    '<span class="status-badge pending-article">⏳ Pending</span>';
+                
+                return `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td><span class="article-post-id" onclick="copyPostId('${article.post_id}')" style="cursor:pointer;" title="Click to copy">${article.post_id}</span></td>
+                        <td>${urlDisplay}</td>
+                        <td>${statusBadge}</td>
+                        <td>
+                            <div class="action-cell">
+                                <button class="btn-outline btn-sm" onclick="openEditArticleModal('${article.id}')" title="Edit">
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                </button>
+                                <button class="btn-outline btn-sm danger" onclick="confirmDelete('article', '${article.id}', '${article.post_id}')" title="Delete">
+                                    <i class="fa-regular fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function refreshArticles() {
+            CACHE.clear();
+            renderArticles();
+            showToast('Refreshed!', 'success');
+        }
+
+        // ==========================================
+        // FETCH BEHOLD POSTS (Instagram Feed)
+        // ==========================================
+        async function fetchBeholdPosts() {
+            const container = document.getElementById('beholdPostsContainer');
+            const body = document.getElementById('beholdPostsBody');
+            const btn = document.getElementById('fetchBeholdBtn');
+            
+            container.style.display = 'block';
+            body.innerHTML = `
+                <tr>
+                    <td colspan="5">
+                        <div class="empty-state" style="padding:30px 20px;">
+                            <div class="loader" style="margin:0 auto 12px;"></div>
+                            <p>Fetching posts from Instagram...</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
+            
+            try {
+                const BEHOLD_FEED_ID = 'qBmSl39X4hdPVipZS1UR';
+                const FEED_URL = `https://feeds.behold.so/${BEHOLD_FEED_ID}`;
+                
+                const response = await fetch(FEED_URL);
+                if (!response.ok) throw new Error('Failed to load feed');
+                
+                const data = await response.json();
+                const posts = data.posts || data;
+                
+                if (!posts || posts.length === 0) {
+                    body.innerHTML = `
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-state" style="padding:30px 20px;">
+                                    <p>No posts found from Instagram.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-brands fa-instagram"></i> Fetch Posts from Instagram';
+                    return;
+                }
+                
+                // Map articles by post_id for quick lookup
+                const articleMap = {};
+                allArticles.forEach(a => {
+                    articleMap[a.post_id] = a;
+                });
+                
+                // Get first 20 posts
+                const displayPosts = posts.slice(0, 20);
+                
+                body.innerHTML = displayPosts.map((post, index) => {
+                    const postId = post.id || post.postId || '';
+                    const caption = post.prunedCaption || post.caption || '';
+                    const truncatedCaption = caption.length > 60 ? caption.substring(0, 60) + '...' : caption;
+                    const hasArticle = articleMap[postId];
+                    const statusHtml = hasArticle ? 
+                        '<span class="status-badge linked">✅ Linked</span>' : 
+                        '<span class="status-badge pending-article">⏳ Pending</span>';
+                    
+                    const actionHtml = hasArticle ? 
+                        `<button class="btn-outline btn-sm" onclick="openEditArticleModal('${hasArticle.id}')" title="Edit Article"><i class="fa-regular fa-pen-to-square"></i></button>` :
+                        `<button class="btn-primary btn-sm" onclick="quickAddArticle('${postId}')"><i class="fa-regular fa-plus"></i> Add Article</button>`;
+                    
+                    return `
+                        <tr>
+                            <td style="padding:10px 16px; color:rgba(255,255,255,0.4);">${index + 1}</td>
+                            <td style="padding:10px 16px;">
+                                <span class="article-post-id" onclick="copyPostId('${postId}')" style="cursor:pointer;" title="Click to copy">${postId}</span>
+                            </td>
+                            <td style="padding:10px 16px; color:rgba(255,255,255,0.6); font-size:13px;">${truncatedCaption || 'No caption'}</td>
+                            <td style="padding:10px 16px;">${statusHtml}</td>
+                            <td style="padding:10px 16px; text-align:center;">${actionHtml}</td>
+                        </tr>
+                    `;
+                }).join('');
+                
+            } catch (error) {
+                console.error('Fetch Behold error:', error);
+                body.innerHTML = `
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state" style="padding:30px 20px;">
+                                <p style="color:#ff6b6b;">⚠️ Failed to load posts: ${error.message}</p>
+                                <p style="font-size:12px; margin-top:8px;">Make sure the Behold feed ID is correct.</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+            
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-brands fa-instagram"></i> Fetch Posts from Instagram';
+            
+            // Scroll to the container
+            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // ==========================================
+        // QUICK ADD ARTICLE FROM POST ID
+        // ==========================================
+        function quickAddArticle(postId) {
+            openAddArticleModal();
+            document.getElementById('articlePostId').value = postId;
+            document.getElementById('articleUrl').focus();
+        }
+
+        // ==========================================
+        // COPY POST ID TO CLIPBOARD
+        // ==========================================
+        function copyPostId(postId) {
+            if (!postId) return;
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(postId)
+                    .then(() => showToast('✅ Copied: ' + postId, 'success'))
+                    .catch(() => {
+                        // Fallback
+                        const textarea = document.createElement('textarea');
+                        textarea.value = postId;
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        showToast('✅ Copied: ' + postId, 'success');
+                    });
+            } else {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = postId;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('✅ Copied: ' + postId, 'success');
+            }
+        }
+
+        // ==========================================
+        // ARTICLE MODAL
+        // ==========================================
+        function openAddArticleModal() {
+            editingArticleId = null;
+            document.getElementById('articleModalTitle').textContent = 'Add Article';
+            document.getElementById('articleModalSubtitle').textContent = 'Link an Instagram post to an article URL';
+            document.getElementById('articlePostId').value = '';
+            document.getElementById('articleUrl').value = '';
+            document.getElementById('articleModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function openEditArticleModal(id) {
+            const article = allArticles.find(a => a.id === id);
+            if (!article) return;
+            
+            editingArticleId = id;
+            document.getElementById('articleModalTitle').textContent = 'Edit Article';
+            document.getElementById('articleModalSubtitle').textContent = 'Update the article URL for this post';
+            document.getElementById('articlePostId').value = article.post_id || '';
+            document.getElementById('articleUrl').value = article.article_url || '';
+            document.getElementById('articleModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeArticleModal() {
+            document.getElementById('articleModal').classList.remove('active');
+            document.body.style.overflow = '';
+            editingArticleId = null;
+        }
+
+        document.getElementById('articleModalClose').addEventListener('click', closeArticleModal);
+        document.getElementById('articleModalOverlay').addEventListener('click', closeArticleModal);
+
+        async function saveArticle() {
+            const postId = document.getElementById('articlePostId').value.trim();
+            const articleUrl = document.getElementById('articleUrl').value.trim();
+            
+            if (!postId || !articleUrl) {
+                showToast('Please fill in both fields.', 'error');
+                return;
+            }
+            
+            try {
+                const body = editingArticleId ? 
+                    { id: editingArticleId, postId, articleUrl } : 
+                    { postId, articleUrl };
+                
+                const response = await fetch(`${API_BASE}/articles`, {
+                    method: 'POST',
+                    headers: adminHeaders(),
+                    body: JSON.stringify(body)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(editingArticleId ? 'Article updated!' : 'Article added!', 'success');
+                    closeArticleModal();
+                    CACHE.clear();
+                    renderArticles();
+                    // Close the Behold posts container if open
+                    document.getElementById('beholdPostsContainer').style.display = 'none';
+                } else {
+                    showToast(result.error || 'Failed to save article.', 'error');
+                }
+            } catch (error) {
+                console.error('Save article error:', error);
+                showToast('Error saving article.', 'error');
+            }
+        }
+
+        // ==========================================
+        // DELETE CONFIRMATION
+        // ==========================================
+        let deleteTarget = { type: '', id: '', name: '' };
+
+        function confirmDelete(type, id, name) {
+            deleteTarget = { type, id, name };
+            document.getElementById('confirmItemName').textContent = name;
+            document.getElementById('confirmModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
+            if (!deleteTarget.id) return;
+            
+            try {
+                let endpoint = '';
+                let body = { id: deleteTarget.id };
+                
+                if (deleteTarget.type === 'member') {
+                    endpoint = `${API_BASE}/members`;
+                } else if (deleteTarget.type === 'article') {
+                    endpoint = `${API_BASE}/articles`;
+                } else if (deleteTarget.type === 'partner') {
+                    endpoint = `${API_BASE}/partners`;
+                } else {
+                    showToast('Unknown item type.', 'error');
+                    return;
+                }
+                
+                const response = await fetch(endpoint, {
+                    method: 'DELETE',
+                    headers: adminHeaders(),
+                    body: JSON.stringify(body)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`${deleteTarget.type} deleted successfully!`, 'success');
+                    closeConfirmModal();
+                    CACHE.clear();
+                    
+                    if (deleteTarget.type === 'member') renderMembers();
+                    else if (deleteTarget.type === 'article') {
+                        renderArticles();
+                        // Close the Behold posts container if open
+                        document.getElementById('beholdPostsContainer').style.display = 'none';
+                    }
+                    else if (deleteTarget.type === 'partner') loadPartners();
+                } else {
+                    showToast(result.error || `Failed to delete ${deleteTarget.type}.`, 'error');
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                showToast('Error deleting item.', 'error');
+            }
+        });
+
+        document.getElementById('confirmCancelBtn').addEventListener('click', closeConfirmModal);
+        document.getElementById('confirmModalOverlay').addEventListener('click', closeConfirmModal);
+
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+            document.body.style.overflow = '';
+            deleteTarget = { type: '', id: '', name: '' };
         }
 
         // ==========================================
@@ -1588,7 +2048,7 @@
                 document.getElementById('totalPartners').textContent = data.logos.length;
                 grid.innerHTML = data.logos.map(logo => `
                     <div class="partner-card">
-                        <button class="partner-delete" onclick="deletePartner('${logo.id}')" title="Delete partner">
+                        <button class="partner-delete" onclick="confirmDelete('partner', '${logo.id}', '${logo.name}')" title="Delete partner">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                         <img src="${logo.url}" alt="${logo.name}" loading="lazy" onerror="this.style.display='none'" />
@@ -1598,27 +2058,6 @@
             } catch (error) {
                 console.error('Error loading partners:', error);
                 showToast('Error loading partners.', 'error');
-            }
-        }
-
-        async function deletePartner(id) {
-            if (!confirm('Are you sure you want to delete this partner?')) return;
-            
-            try {
-                const response = await fetch(`${API_BASE}/partners`, {
-                    method: 'DELETE',
-                    headers: adminHeaders(),
-                    body: JSON.stringify({ id })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    showToast('Partner deleted!', 'success');
-                    loadPartners();
-                } else {
-                    showToast(result.error || 'Failed to delete partner.', 'error');
-                }
-            } catch (error) {
-                showToast('Error deleting partner.', 'error');
             }
         }
 
@@ -1651,6 +2090,38 @@
             } catch (error) {
                 showToast('Error adding partner.', 'error');
             }
+        }
+
+        // ==========================================
+        // IMPACT NUMBERS
+        // ==========================================
+        function loadImpactNumbers() {
+            try {
+                const data = localStorage.getItem('impactNumbers');
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    document.getElementById('impactMagazine').textContent = parsed.magazine || 8;
+                    document.getElementById('impactFeatures').textContent = parsed.features + (parsed.features > 9 ? '' : '+');
+                    document.getElementById('impactCollaborations').textContent = parsed.collaborations + (parsed.collaborations > 9 ? '' : '+');
+                    document.getElementById('impactReach').textContent = parsed.reach >= 1000000 ? (parsed.reach / 1000000).toFixed(1) + 'M+' : parsed.reach + '+';
+                    document.getElementById('editMagazine').value = parsed.magazine || 8;
+                    document.getElementById('editFeatures').value = parsed.features || 100;
+                    document.getElementById('editCollaborations').value = parsed.collaborations || 50;
+                    document.getElementById('editReach').value = parsed.reach || 1000000;
+                }
+            } catch (e) {}
+        }
+
+        function saveImpactNumbers() {
+            const data = {
+                magazine: parseInt(document.getElementById('editMagazine').value) || 8,
+                features: parseInt(document.getElementById('editFeatures').value) || 100,
+                collaborations: parseInt(document.getElementById('editCollaborations').value) || 50,
+                reach: parseInt(document.getElementById('editReach').value) || 1000000
+            };
+            localStorage.setItem('impactNumbers', JSON.stringify(data));
+            loadImpactNumbers();
+            showToast('Impact numbers saved!', 'success');
         }
 
         // ==========================================
@@ -1774,12 +2245,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             initPinProtection();
             renderMembers();
+            renderArticles();
             loadPartners();
             checkMediaKit();
             loadImpactNumbers();
         });
 
         console.log('📊 100 HUB Dashboard loaded.');
+        console.log('📝 Articles tab includes Post ID Tool - fetch posts from Instagram to see all post IDs.');
     </script>
 
 </body>
