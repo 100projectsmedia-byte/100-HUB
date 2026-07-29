@@ -1,7 +1,4 @@
 // api/members.js
-// Fetches members from Supabase
-// NOTE: lives at /api/members.js at the project ROOT for Vercel to detect it.
-
 import { createClient } from '@supabase/supabase-js';
 import { requireAdmin } from '../lib/adminAuth.js';
 
@@ -18,7 +15,11 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+    // Use SERVICE_ROLE_KEY for admin operations (bypasses RLS)
+    const supabase = createClient(
+        process.env.SUPABASE_URL,
+        process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY
+    );
 
     // GET - fetch members
     if (req.method === 'GET') {
@@ -44,7 +45,6 @@ export default async function handler(req, res) {
                 throw error;
             }
 
-            // Get counts for stats
             const { count: totalCount } = await supabase
                 .from('members')
                 .select('*', { count: 'exact', head: true });
@@ -90,19 +90,23 @@ export default async function handler(req, res) {
 
     // DELETE - remove a member by ID
     if (req.method === 'DELETE') {
-        // Check admin authorization
-        if (!requireAdmin(req, res)) return;
+        console.log('🗑️ DELETE request received for /api/members');
+        
+        if (!requireAdmin(req, res)) {
+            console.log('❌ Admin authorization failed');
+            return;
+        }
 
         try {
             const { id } = req.body || {};
 
             if (!id) {
+                console.log('❌ No ID provided');
                 return res.status(400).json({ error: 'Member ID is required' });
             }
 
             console.log('🗑️ Deleting member with ID:', id);
 
-            // First, get the member to verify it exists
             const { data: member, error: fetchError } = await supabase
                 .from('members')
                 .select('email, name')
@@ -110,18 +114,19 @@ export default async function handler(req, res) {
                 .single();
 
             if (fetchError || !member) {
-                console.error('Member not found:', fetchError);
+                console.error('❌ Member not found:', fetchError);
                 return res.status(404).json({ error: 'Member not found' });
             }
 
-            // Delete the member
+            console.log('👤 Found member:', member.name, member.email);
+
             const { error: deleteError } = await supabase
                 .from('members')
                 .delete()
                 .eq('id', id);
 
             if (deleteError) {
-                console.error('Delete error:', deleteError);
+                console.error('❌ Delete error:', deleteError);
                 throw deleteError;
             }
 
@@ -132,7 +137,7 @@ export default async function handler(req, res) {
                 message: `Member ${member.name} (${member.email}) deleted successfully!`
             });
         } catch (error) {
-            console.error('DELETE member error:', error);
+            console.error('❌ DELETE member error:', error);
             return res.status(500).json({ error: 'Failed to delete member: ' + error.message });
         }
     }
