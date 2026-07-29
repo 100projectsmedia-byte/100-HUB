@@ -29,16 +29,17 @@ export default async function handler(req, res) {
             if (error && error.code !== 'PGRST116') {
                 // PGRST116 means no rows found
                 console.error('Supabase fetch error:', error);
+                return res.status(200).json({ error: 'No media kit found' });
             }
 
             if (data && data.url) {
                 return res.status(200).json({ success: true, url: data.url });
             }
 
-            return res.status(404).json({ error: 'Media Kit not found' });
+            return res.status(200).json({ error: 'No media kit found' });
         } catch (error) {
             console.error('GET media kit error:', error);
-            return res.status(500).json({ error: 'Failed to fetch media kit' });
+            return res.status(200).json({ error: 'Failed to fetch media kit' });
         }
     }
 
@@ -59,11 +60,32 @@ export default async function handler(req, res) {
                 return res.status(400).json({ error: 'Invalid URL format' });
             }
 
-            const { error } = await supabase
+            // First check if a record exists
+            const { data: existing, error: checkError } = await supabase
                 .from('media_kit')
-                .insert({ url });
+                .select('id')
+                .limit(1)
+                .single();
 
-            if (error) throw error;
+            let result;
+
+            if (existing) {
+                // Update existing
+                result = await supabase
+                    .from('media_kit')
+                    .update({ 
+                        url: url,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', existing.id);
+            } else {
+                // Insert new
+                result = await supabase
+                    .from('media_kit')
+                    .insert({ url });
+            }
+
+            if (result.error) throw result.error;
 
             return res.status(200).json({
                 success: true,

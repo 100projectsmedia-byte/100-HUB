@@ -88,16 +88,19 @@ export default async function handler(req, res) {
         }
     }
 
-    // DELETE - remove a member
+    // DELETE - remove a member by ID
     if (req.method === 'DELETE') {
+        // Check admin authorization
         if (!requireAdmin(req, res)) return;
-        
+
         try {
             const { id } = req.body || {};
 
             if (!id) {
                 return res.status(400).json({ error: 'Member ID is required' });
             }
+
+            console.log('🗑️ Deleting member with ID:', id);
 
             // First, get the member to verify it exists
             const { data: member, error: fetchError } = await supabase
@@ -107,6 +110,7 @@ export default async function handler(req, res) {
                 .single();
 
             if (fetchError || !member) {
+                console.error('Member not found:', fetchError);
                 return res.status(404).json({ error: 'Member not found' });
             }
 
@@ -121,8 +125,10 @@ export default async function handler(req, res) {
                 throw deleteError;
             }
 
-            return res.status(200).json({ 
-                success: true, 
+            console.log(`✅ Deleted member: ${member.name} (${member.email})`);
+
+            return res.status(200).json({
+                success: true,
                 message: `Member ${member.name} (${member.email}) deleted successfully!`
             });
         } catch (error) {
