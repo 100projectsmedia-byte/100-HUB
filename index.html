@@ -1681,9 +1681,9 @@
                 
                 let mediaHtml = '';
                 if (isVideo && videoUrl) {
-                    // For videos, use a poster image and play on hover
+                    // Show poster image with play overlay - NO video element to avoid 403 errors
                     mediaHtml = `
-                        <video src="${videoUrl}" muted loop playsinline poster="${imageUrl}" data-poster="${imageUrl}"></video>
+                        <img src="${imageUrl}" alt="${caption.substring(0, 50)}" loading="lazy" />
                         <span class="feed-play"><i class="fa-solid fa-play"></i></span>
                     `;
                 } else {
@@ -1720,27 +1720,6 @@
                         openPostModal(link);
                     }
                 });
-            });
-
-            // Video hover autoplay
-            document.querySelectorAll('.feed-image video').forEach(video => {
-                video.addEventListener('mouseenter', function() {
-                    this.play().catch(() => {});
-                });
-                video.addEventListener('mouseleave', function() {
-                    this.pause();
-                });
-                // If video is in viewport, start playing
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.play().catch(() => {});
-                        } else {
-                            entry.target.pause();
-                        }
-                    });
-                }, { threshold: 0.5 });
-                observer.observe(video);
             });
         }
 
@@ -1833,9 +1812,14 @@
             
             let mediaHtml = '';
             if (isVideo && videoUrl) {
-                // For video in modal, try to play with controls
+                // Use the fallback with poster image and "Watch on Instagram" link
                 mediaHtml = `
-                    <video src="${videoUrl}" controls playsinline autoplay poster="${imageUrl}"></video>
+                    <div class="modal-video-fallback">
+                        <img src="${imageUrl}" alt="Video preview" />
+                        <a href="${permalink}" target="_blank" class="modal-video-play-link">
+                            <i class="fa-solid fa-play"></i> Watch on Instagram
+                        </a>
+                    </div>
                 `;
             } else {
                 mediaHtml = `<img src="${imageUrl}" alt="${caption.substring(0, 50)}" loading="lazy" />`;
@@ -1873,21 +1857,9 @@
             
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
-            
-            // Try to autoplay video in modal
-            setTimeout(() => {
-                const modalVideo = document.querySelector('.modal-image video');
-                if (modalVideo) {
-                    modalVideo.play().catch(() => {});
-                }
-            }, 500);
         }
 
         function closeModal() {
-            const modalVideo = document.querySelector('.modal-image video');
-            if (modalVideo) {
-                modalVideo.pause();
-            }
             modal.classList.remove('active');
             document.body.style.overflow = '';
         }
