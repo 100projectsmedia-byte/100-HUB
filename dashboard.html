@@ -1969,8 +1969,10 @@
             document.body.style.overflow = 'hidden';
         }
 
-        document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
+       document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
             if (!deleteTarget.id) return;
+            
+            console.log('🗑️ Delete target:', deleteTarget); // Add this line
             
             try {
                 let endpoint = '';
@@ -1987,6 +1989,8 @@
                     return;
                 }
                 
+                console.log('📡 Sending DELETE to:', endpoint, body); // Add this line
+                
                 const response = await fetch(endpoint, {
                     method: 'DELETE',
                     headers: adminHeaders(),
@@ -1994,6 +1998,7 @@
                 });
                 
                 const result = await response.json();
+                console.log('📥 Response:', result); // Add this line
                 
                 if (result.success) {
                     showToast(`${deleteTarget.type} deleted successfully!`, 'success');
@@ -2001,11 +2006,7 @@
                     CACHE.clear();
                     
                     if (deleteTarget.type === 'member') renderMembers();
-                    else if (deleteTarget.type === 'article') {
-                        renderArticles();
-                        // Close the Behold posts container if open
-                        document.getElementById('beholdPostsContainer').style.display = 'none';
-                    }
+                    else if (deleteTarget.type === 'article') renderArticles();
                     else if (deleteTarget.type === 'partner') loadPartners();
                 } else {
                     showToast(result.error || `Failed to delete ${deleteTarget.type}.`, 'error');
