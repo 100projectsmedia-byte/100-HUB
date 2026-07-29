@@ -593,6 +593,7 @@
         }
     </style>
 </head>
+<body>
     <!-- SITE PRELOADER -->
     <div id="site-preloader" class="site-preloader">
         <div class="preloader-inner">
@@ -1147,39 +1148,34 @@
         const FEED_URL = `https://feeds.behold.so/${BEHOLD_FEED_ID}`;
 
         // ==========================================
-        // ARTICLES — SHEET.BEST API
+        // ARTICLES — SUPABASE API
         // ==========================================
-        const ARTICLES_API_URL = 'https://api.sheetbest.com/sheets/7fb06936-5f4f-4ca5-bb81-b4e8af870b57/tabs/Articles';
+        const API_BASE = '/api';
         let articleLinks = {};
 
         async function loadArticles() {
             try {
-                const response = await fetch(ARTICLES_API_URL);
+                const response = await fetch(`${API_BASE}/articles`);
                 if (response.ok) {
                     const data = await response.json();
-                    if (Array.isArray(data)) {
+                    if (data.articles && Array.isArray(data.articles)) {
                         articleLinks = {};
-                        data.forEach(row => {
-                            if (row.postId && row.articleUrl) {
-                                articleLinks[row.postId] = row.articleUrl;
+                        data.articles.forEach(row => {
+                            if (row.post_id && row.article_url) {
+                                articleLinks[row.post_id] = row.article_url;
                             }
                         });
-                        console.log('📄 Articles loaded:', Object.keys(articleLinks).length);
+                        console.log('📄 Articles loaded from Supabase:', Object.keys(articleLinks).length);
                     }
                 }
             } catch (error) {
-                console.log('ℹ️ Could not load articles');
+                console.log('ℹ️ Could not load articles from Supabase:', error);
             }
         }
 
         function getArticleUrl(postId) {
             return articleLinks[postId] || null;
         }
-
-        // ==========================================
-        // API ENDPOINTS
-        // ==========================================
-        const API_BASE = '/api';
 
         // ==========================================
         // MEMBER COUNT
@@ -1685,12 +1681,9 @@
                 
                 let mediaHtml = '';
                 if (isVideo && videoUrl) {
-                    // Note: we deliberately don't embed the raw Instagram video URL here.
-                    // Those URLs are signed/hotlink-protected and frequently return 403 when
-                    // loaded from a different origin. We show the Behold-hosted thumbnail
-                    // instead and only attempt video playback in the modal, on user intent.
+                    // For videos, use a poster image and play on hover
                     mediaHtml = `
-                        <img src="${imageUrl}" alt="${caption.substring(0, 50)}" loading="lazy" />
+                        <video src="${videoUrl}" muted loop playsinline poster="${imageUrl}" data-poster="${imageUrl}"></video>
                         <span class="feed-play"><i class="fa-solid fa-play"></i></span>
                     `;
                 } else {
@@ -1718,6 +1711,7 @@
                 `;
             }).join('');
 
+            // Click on feed item to open modal (unless clicking on the link)
             document.querySelectorAll('.feed-item').forEach(item => {
                 item.addEventListener('click', function(e) {
                     if (e.target.closest('.feed-link')) return;
@@ -1728,6 +1722,26 @@
                 });
             });
 
+            // Video hover autoplay
+            document.querySelectorAll('.feed-image video').forEach(video => {
+                video.addEventListener('mouseenter', function() {
+                    this.play().catch(() => {});
+                });
+                video.addEventListener('mouseleave', function() {
+                    this.pause();
+                });
+                // If video is in viewport, start playing
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.play().catch(() => {});
+                        } else {
+                            entry.target.pause();
+                        }
+                    });
+                }, { threshold: 0.5 });
+                observer.observe(video);
+            });
         }
 
         function updateFeedButton() {
@@ -1819,12 +1833,9 @@
             
             let mediaHtml = '';
             if (isVideo && videoUrl) {
-                // Instagram's raw CDN video URLs are signed/hotlink-protected and often
-                // return 403 when played from another origin. Try to play it, but fall
-                // back to a poster + "Watch on Instagram" link if it fails (see error
-                // handler attached below, after this is inserted into the DOM).
+                // For video in modal, try to play with controls
                 mediaHtml = `
-                    <video src="${videoUrl}" controls playsinline autoplay poster="${imageUrl}" data-poster="${imageUrl}" data-permalink="${permalink}"></video>
+                    <video src="${videoUrl}" controls playsinline autoplay poster="${imageUrl}"></video>
                 `;
             } else {
                 mediaHtml = `<img src="${imageUrl}" alt="${caption.substring(0, 50)}" loading="lazy" />`;
@@ -1863,35 +1874,11 @@
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
             
+            // Try to autoplay video in modal
             setTimeout(() => {
                 const modalVideo = document.querySelector('.modal-image video');
                 if (modalVideo) {
-                    modalVideo.addEventListener('error', function showVideoFallback() {
-                        const wrapper = modalVideo.closest('.modal-image');
-                        if (!wrapper) return;
-                        const poster = modalVideo.dataset.poster;
-                        const link = modalVideo.dataset.permalink || permalink;
-                        wrapper.innerHTML = poster
-                            ? `<div class="modal-video-fallback">
-                                    <img src="${poster}" alt="Video preview" />
-                                    <a href="${link}" target="_blank" class="modal-video-play-link">
-                                        <i class="fa-solid fa-play"></i> Watch on Instagram
-                                    </a>
-                               </div>`
-                            : `<div class="modal-video-fallback">
-                                    <a href="${link}" target="_blank" class="modal-video-play-link">
-                                        <i class="fa-solid fa-play"></i> Watch on Instagram
-                                    </a>
-                               </div>`;
-                    }, { once: true });
-
-                    const playPromise = modalVideo.play();
-                    if (playPromise !== undefined) {
-                        playPromise.catch(() => {
-                            // Autoplay blocked or load failed — the 'error' listener above
-                            // handles the actual 403/NotSupportedError fallback UI.
-                        });
-                    }
+                    modalVideo.play().catch(() => {});
                 }
             }, 500);
         }
@@ -1994,9 +1981,6 @@
         });
 
         // ==========================================
-        // INIT
-        // ==========================================
-        // ==========================================
         // ENTERTAINMENT SECTION — video controls + lazy play
         // ==========================================
         (function initEntertainmentSection() {
@@ -2061,6 +2045,9 @@
             }
         })();
 
+        // ==========================================
+        // INIT
+        // ==========================================
         document.addEventListener('DOMContentLoaded', async function() {
             updateCounterDisplay(null);
             
@@ -2184,50 +2171,6 @@
 
         const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
         scene.add(particleSystem);
-
-        // Orbital Ring Guides
-        const ringGroup = new THREE.Group();
-
-        const createOrbitRing = (radius, tiltX, tiltZ) => {
-            const points = [];
-            const segments = 256;
-            for (let i = 0; i <= segments; i++) {
-                const theta = (i / segments) * Math.PI * 2;
-                points.push(new THREE.Vector3(Math.cos(theta) * radius, 0, Math.sin(theta) * radius));
-            }
-            const ringGeo = new THREE.BufferGeometry().setFromPoints(points);
-
-            // Primary bright orbit track
-            const ringMat = new THREE.LineBasicMaterial({
-                color: 0x99ccff,
-                transparent: true,
-                opacity: 0.65,
-                blending: THREE.AdditiveBlending
-            });
-            const ring = new THREE.LineLoop(ringGeo, ringMat);
-            ring.rotation.x = tiltX;
-            ring.rotation.z = tiltZ;
-
-            // Subtle outer glow track for depth
-            const glowMat = new THREE.LineBasicMaterial({
-                color: 0x4488ff,
-                transparent: true,
-                opacity: 0.35,
-                blending: THREE.AdditiveBlending
-            });
-            const glowRing = new THREE.LineLoop(ringGeo, glowMat);
-            glowRing.rotation.x = tiltX;
-            glowRing.rotation.z = tiltZ;
-            glowRing.scale.setScalar(1.008);
-
-            const group = new THREE.Group();
-            group.add(ring);
-            group.add(glowRing);
-            return group;
-        };
-
-        // ringGroup removed as requested to keep 3D scene clean without orbit lines
-        // scene.add(ringGroup);
 
         // ==========================================
         // SCROLL REVEAL OBSERVER
@@ -2458,11 +2401,6 @@
             if (particleSystem) {
                 particleSystem.rotation.y = elapsed * 0.015;
                 particleSystem.rotation.x = Math.sin(elapsed * 0.03) * 0.04;
-            }
-
-            // Rotate orbit rings
-            if (ringGroup) {
-                ringGroup.rotation.y = elapsed * 0.04;
             }
 
             if (globeModel) {
