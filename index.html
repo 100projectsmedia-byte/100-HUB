@@ -32,22 +32,22 @@
         .hub-card {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             cursor: pointer;
-            background: var(--white);
-            border: 1px solid var(--gray-medium);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: var(--radius-sm);
             overflow: hidden;
         }
         .hub-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
             border-color: var(--red);
+            box-shadow: 0 12px 40px rgba(227,30,36,0.15);
         }
 
         .hub-card .hub-image {
             width: 100%;
             aspect-ratio: 1 / 1;
             overflow: hidden;
-            background: var(--gray-light);
+            background: var(--bg-tertiary);
         }
         .hub-card .hub-image img {
             width: 100%;
@@ -62,17 +62,64 @@
         .hub-card .hub-info {
             padding: 14px 16px 16px;
             text-align: left;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(8px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
         .hub-card .hub-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-primary);
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: #ffffff;
             margin-bottom: 2px;
+        }
+        .hub-card .hub-email {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 2px;
+            word-break: break-all;
+        }
+        .hub-card .hub-role {
+            font-size: 12px;
+            color: var(--red);
+            font-weight: 500;
+            margin-bottom: 4px;
         }
         .hub-card .hub-date {
             font-size: 11px;
-            color: var(--text-muted);
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 4px;
+        }
+        .hub-card .hub-skills {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .hub-card .hub-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+        .hub-card .hub-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            transition: var(--transition-fast);
+        }
+        .hub-card .hub-links a:hover {
+            color: var(--red);
+        }
+        .hub-card .hub-links a i {
+            font-size: 13px;
         }
 
         /* ---- MEMBER PROFILE MODAL ---- */
@@ -94,21 +141,22 @@
         .member-modal-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(0,0,0,0.65);
-            backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
         }
         .member-modal-content {
             position: relative;
-            background: var(--white);
+            background: var(--bg-secondary);
             border-radius: 16px;
             width: 92%;
             max-width: 520px;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+            box-shadow: 0 24px 80px rgba(0,0,0,0.5);
             transform: translateY(20px) scale(0.97);
             transition: transform 0.35s ease;
             padding: 0;
+            border: 1px solid var(--border-medium);
         }
         .member-modal.active .member-modal-content {
             transform: translateY(0) scale(1);
@@ -121,8 +169,8 @@
             width: 34px;
             height: 34px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.9);
-            border: none;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--border-medium);
             color: var(--text-primary);
             font-size: 16px;
             cursor: pointer;
@@ -136,12 +184,14 @@
             background: var(--red);
             color: white;
             transform: rotate(90deg);
+            border-color: var(--red);
         }
         .member-modal-photo {
             width: 100%;
             aspect-ratio: 4/3;
             overflow: hidden;
             border-radius: 16px 16px 0 0;
+            background: var(--bg-tertiary);
         }
         .member-modal-photo img {
             width: 100%;
@@ -153,29 +203,34 @@
             padding: 24px 28px 28px;
         }
         .member-modal-name {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
             font-size: 26px;
             font-weight: 700;
             color: var(--text-primary);
-            margin: 0 0 6px;
+            margin: 0 0 4px;
             line-height: 1.2;
+        }
+        .member-modal-email {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 8px;
+            word-break: break-all;
         }
         .member-modal-role {
             display: inline-block;
-            background: rgba(227,30,36,0.08);
+            background: rgba(227,30,36,0.12);
             color: var(--red);
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 500;
-            padding: 3px 12px;
+            padding: 4px 14px;
             border-radius: 100px;
-            margin-bottom: 6px;
+            margin-bottom: 12px;
         }
         .member-modal-date {
             display: block;
-            font-size: 11px;
+            font-size: 12px;
             color: var(--text-muted);
             margin-bottom: 16px;
-            margin-top: 4px;
         }
         .member-modal-skills {
             margin-bottom: 16px;
@@ -201,7 +256,7 @@
             gap: 10px;
             margin-top: 16px;
             padding-top: 16px;
-            border-top: 1px solid var(--gray-medium);
+            border-top: 1px solid var(--border-subtle);
         }
         .member-social-link,
         .member-website-link {
@@ -213,7 +268,7 @@
             color: var(--text-primary);
             text-decoration: none;
             padding: 10px 16px;
-            border: 1px solid var(--gray-medium);
+            border: 1px solid var(--border-medium);
             border-radius: 40px;
             transition: all 0.2s ease;
             width: fit-content;
@@ -222,7 +277,7 @@
         .member-website-link:hover {
             border-color: var(--red);
             color: var(--red);
-            background: rgba(227,30,36,0.04);
+            background: rgba(227,30,36,0.06);
         }
         .member-social-link i,
         .member-website-link i {
@@ -258,28 +313,37 @@
         .social-group .social-row select {
             flex: 0 0 140px;
             min-width: 120px;
-            padding: 10px 12px;
-            border: 1px solid var(--gray-medium);
+            padding: 12px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: var(--radius-sm);
             font-size: 14px;
-            color: var(--text-primary);
-            background: var(--white);
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.04);
             cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+        .social-group .social-row select option {
+            background: #1a1a1a;
+            color: #ffffff;
         }
         .social-group .social-row input {
             flex: 1;
             min-width: 150px;
-            padding: 10px 12px;
-            border: 1px solid var(--gray-medium);
+            padding: 12px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: var(--radius-sm);
             font-size: 14px;
             color: var(--text-primary);
-            background: var(--white);
+            background: rgba(255, 255, 255, 0.04);
+            font-family: 'Inter', sans-serif;
         }
         .social-group .social-row select:focus,
         .social-group .social-row input:focus {
             outline: none;
             border-color: var(--red);
+        }
+        .social-group .social-row input::placeholder {
+            color: var(--text-muted);
         }
 
         /* ---- HAMBURGER MENU ---- */
@@ -317,11 +381,12 @@
             right: -100%;
             width: 280px;
             height: 100vh;
-            background: var(--white);
+            background: rgba(15,15,15,0.95);
+            backdrop-filter: blur(20px);
             z-index: 9999;
             padding: 80px 30px 30px;
             transition: right 0.35s ease;
-            box-shadow: -4px 0 30px rgba(0,0,0,0.1);
+            box-shadow: -4px 0 30px rgba(0,0,0,0.3);
             overflow-y: auto;
         }
         .mobile-menu.open {
@@ -330,7 +395,8 @@
         .mobile-menu-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
             z-index: 9998;
             opacity: 0;
             visibility: hidden;
@@ -345,9 +411,9 @@
             padding: 12px 0;
             font-size: 15px;
             font-weight: 500;
-            color: var(--text-primary);
+            color: var(--text-secondary);
             text-decoration: none;
-            border-bottom: 1px solid var(--gray-medium);
+            border-bottom: 1px solid var(--border-subtle);
             transition: var(--transition-fast);
         }
         .mobile-menu a:hover {
@@ -852,9 +918,6 @@
                     <input type="text" id="modalMemberRole" placeholder="Role/Title (e.g., Photographer, Writer, Brand Strategist)" required />
                 </div>
                 <div class="form-group">
-                    <textarea id="modalMemberSkills" rows="2" placeholder="Creative Focus/Skillset (e.g., Fashion Photography, Brand Strategy)"></textarea>
-                </div>
-                <div class="form-group">
                     <input type="url" id="modalMemberWebsite" placeholder="Website or Portfolio Link (optional)" />
                 </div>
                 <div class="form-group social-group">
@@ -1267,9 +1330,34 @@
 
             container.innerHTML = toShow.map(member => {
                 const img = optimizeImage(member.selectedImage || member.image1 || 'assets/100_Logo.png', 400);
-                const joinDate = member.timestamp
-                    ? new Date(member.timestamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+                const joinDate = member.created_at || member.timestamp
+                    ? new Date(member.created_at || member.timestamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
                     : '';
+
+                // Build social link if available
+                let socialLinkHtml = '';
+                if (member.socialPlatform && member.socialHandle) {
+                    const meta = SOCIAL_META[member.socialPlatform];
+                    if (meta) {
+                        const url = meta.url(member.socialHandle);
+                        socialLinkHtml = `
+                            <a href="${url}" target="_blank" rel="noopener">
+                                <i class="${meta.icon}"></i> @${member.socialHandle}
+                            </a>
+                        `;
+                    }
+                }
+
+                // Website link if available
+                let websiteLinkHtml = '';
+                if (member.website) {
+                    const display = member.website.replace(/^https?:\/\//, '').replace(/\/$/, '');
+                    websiteLinkHtml = `
+                        <a href="${member.website}" target="_blank" rel="noopener">
+                            <i class="fa-solid fa-link"></i> ${display}
+                        </a>
+                    `;
+                }
 
                 return `
                     <div class="hub-card" onclick="openMemberModal('${member.email}')">
@@ -1278,7 +1366,16 @@
                         </div>
                         <div class="hub-info">
                             <h3 class="hub-name">${member.name}</h3>
+                            ${member.email ? `<div class="hub-email"><i class="fa-regular fa-envelope"></i> ${member.email}</div>` : ''}
+                            ${member.role ? `<div class="hub-role">${member.role}</div>` : ''}
                             ${joinDate ? `<div class="hub-date"><i class="fa-regular fa-calendar"></i> Joined ${joinDate}</div>` : ''}
+                            ${member.skills ? `<div class="hub-skills">${member.skills}</div>` : ''}
+                            ${(socialLinkHtml || websiteLinkHtml) ? `
+                                <div class="hub-links">
+                                    ${socialLinkHtml}
+                                    ${websiteLinkHtml}
+                                </div>
+                            ` : ''}
                         </div>
                     </div>
                 `;
@@ -1313,8 +1410,8 @@
             if (!member) return;
 
             const img = optimizeImage(member.selectedImage || member.image1 || 'assets/100_Logo.png', 800);
-            const joinDate = member.timestamp
-                ? new Date(member.timestamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+            const joinDate = member.created_at || member.timestamp
+                ? new Date(member.created_at || member.timestamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
                 : '';
 
             // Social link with platform label ("Platform: @handle")
@@ -1362,19 +1459,28 @@
                 roleHtml = `<span class="member-modal-role">${member.role}</span>`;
             }
 
+            // Email
+            let emailHtml = '';
+            if (member.email) {
+                emailHtml = `<div class="member-modal-email"><i class="fa-regular fa-envelope"></i> ${member.email}</div>`;
+            }
+
             document.getElementById('memberModalBody').innerHTML = `
                 <div class="member-modal-photo">
                     <img src="${img}" alt="${member.name}" />
                 </div>
                 <div class="member-modal-details">
                     <h2 class="member-modal-name">${member.name}</h2>
+                    ${emailHtml}
                     ${roleHtml}
                     ${joinDate ? `<span class="member-modal-date">Joined ${joinDate}</span>` : ''}
                     ${skillsHtml}
-                    <div class="member-modal-links">
-                        ${socialHtml}
-                        ${websiteHtml}
-                    </div>
+                    ${(socialHtml || websiteHtml) ? `
+                        <div class="member-modal-links">
+                            ${socialHtml}
+                            ${websiteHtml}
+                        </div>
+                    ` : ''}
                 </div>
             `;
 
