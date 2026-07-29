@@ -1374,10 +1374,13 @@
             document.body.style.overflow = 'hidden';
         }
 
+     
+
         document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
             if (!deleteTargetId) return;
             
             try {
+                // Use the correct API endpoint
                 const response = await fetch(`${API_BASE}/members`, {
                     method: 'DELETE',
                     headers: adminHeaders(),
@@ -1395,6 +1398,7 @@
                     showToast(result.error || 'Failed to delete member.', 'error');
                 }
             } catch (error) {
+                console.error('Delete error:', error);
                 showToast('Error deleting member.', 'error');
             }
         });
