@@ -493,7 +493,7 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
             padding: 32px;
-            max-width: 560px;
+            max-width: 600px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
@@ -1303,29 +1303,72 @@
         </div>
     </div>
 
-    <!-- ==================== ADD POST MODAL (SIMPLIFIED) ==================== -->
+    <!-- ==================== ADD POST MODAL (WITH FILE UPLOAD) ==================== -->
     <div class="edit-modal" id="postModal">
         <div class="edit-modal-overlay" id="postModalOverlay"></div>
         <div class="edit-modal-content">
             <button class="edit-modal-close" id="postModalClose"><i class="fa-solid fa-xmark"></i></button>
             <h3 style="font-family:'Playfair Display',serif; font-size:24px; margin-bottom:4px;" id="postModalTitle">Add Instagram Post</h3>
-            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;" id="postModalSubtitle">Enter post details manually</p>
+            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;" id="postModalSubtitle">Upload your media and paste the Instagram URL</p>
             <div>
-                <!-- Manual Entry -->
+                <!-- Step 1: Instagram URL -->
                 <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:16px; margin-bottom:16px;">
+                    <h4 style="font-size:13px; color:var(--text-primary); margin-bottom:8px;">🔗 Step 1: Instagram URL</h4>
+                    <div class="form-group" style="margin-bottom:8px;">
+                        <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Paste Instagram URL</label>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                            <input type="url" id="postInstagramUrl" placeholder="https://www.instagram.com/p/..." style="flex:1; min-width:200px; padding:10px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif;" />
+                            <button type="button" class="btn-outline btn-sm" onclick="fetchPostDetails()" id="fetchDetailsBtn">
+                                <i class="fa-solid fa-cloud-arrow-down"></i> Fetch Details
+                            </button>
+                        </div>
+                        <div id="fetchStatus" style="margin-top:6px; font-size:12px; min-height:20px;"></div>
+                    </div>
+                    <div id="fetchedDetails" style="display:none; background:rgba(74,222,128,0.05); border:1px solid rgba(74,222,128,0.2); border-radius:8px; padding:12px; margin-top:8px;">
+                        <div style="font-size:12px; color:#4ADE80; margin-bottom:4px;">✅ Post details fetched!</div>
+                        <div style="font-size:11px; color:rgba(255,255,255,0.5);">
+                            <span id="fetchedPostId">ID: ---</span> · 
+                            <span id="fetchedCaptionPreview">Caption: ---</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Upload Media -->
+                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:16px; margin-bottom:16px;">
+                    <h4 style="font-size:13px; color:var(--text-primary); margin-bottom:8px;">📷 Step 2: Upload Media File</h4>
+                    <div class="form-group" style="margin-bottom:8px;">
+                        <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Choose Image or Video *</label>
+                        <input type="file" id="postMediaFile" accept="image/*,video/*" style="width:100%; padding:10px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif;" />
+                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">Supported: JPG, PNG, GIF, MP4, MOV (Max 10MB)</small>
+                    </div>
+                    <div id="mediaPreview" style="display:none; margin-top:12px; border-radius:10px; overflow:hidden; background:var(--bg-tertiary); max-height:300px;"></div>
+                    <div id="uploadProgress" style="display:none; margin-top:8px;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="flex:1; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden;">
+                                <div id="uploadProgressBar" style="width:0%; height:100%; background:var(--red); border-radius:2px; transition:width 0.3s ease;"></div>
+                            </div>
+                            <span id="uploadProgressText" style="font-size:11px; color:rgba(255,255,255,0.4); white-space:nowrap;">0%</span>
+                        </div>
+                    </div>
+                    <div id="uploadStatus" style="margin-top:6px; font-size:12px; min-height:20px;"></div>
+                </div>
+
+                <!-- Step 3: Post Details -->
+                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:16px; margin-bottom:16px;">
+                    <h4 style="font-size:13px; color:var(--text-primary); margin-bottom:8px;">✏️ Step 3: Review & Save</h4>
                     <div class="form-group">
                         <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Post ID *</label>
-                        <input type="text" id="manualPostId" placeholder="e.g., DYkL86jDIy6" required />
-                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">From Instagram URL: instagram.com/p/[POST_ID]/</small>
+                        <input type="text" id="manualPostId" placeholder="e.g., DFC7m0lIkxP" required />
+                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">Auto-filled from URL, or enter manually</small>
                     </div>
                     <div class="form-group">
-                        <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Image URL *</label>
-                        <input type="url" id="manualImageUrl" placeholder="https://res.cloudinary.com/... or direct image URL" required />
-                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">Upload image to Cloudinary or use direct image URL</small>
+                        <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Image URL (auto-filled after upload)</label>
+                        <input type="text" id="manualImageUrl" placeholder="Will auto-fill after upload" readonly style="background:rgba(255,255,255,0.02); color:rgba(255,255,255,0.4);" />
                     </div>
                     <div class="form-group">
                         <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Caption</label>
                         <textarea id="manualCaption" rows="2" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif; resize:vertical;"></textarea>
+                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">Auto-fetched from Instagram, or enter manually</small>
                     </div>
                     <div class="form-group">
                         <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Permalink</label>
@@ -1343,7 +1386,7 @@
                 </div>
 
                 <div class="edit-actions">
-                    <button type="button" class="btn-primary" onclick="savePost()" id="postSubmitBtn">
+                    <button type="button" class="btn-primary" onclick="savePostWithUpload()" id="postSubmitBtn">
                         <i class="fa-regular fa-floppy-disk"></i> Save Post
                     </button>
                     <button type="button" class="btn-outline" onclick="closePostModal()">Cancel</button>
@@ -2197,7 +2240,7 @@
         }
 
         // ==========================================
-        // POSTS - CRUD Operations (UPDATED)
+        // POSTS - CRUD Operations (WITH FILE UPLOAD)
         // ==========================================
         let allPosts = [];
         let filteredPosts = [];
@@ -2205,17 +2248,27 @@
         const POST_DEFAULT_COUNT = 9;
         const POST_INCREMENT = 3;
 
-        // ==========================================
-        // ADD POST MODAL - FUNCTIONS (SIMPLIFIED)
-        // ==========================================
+        let uploadedMediaUrl = '';
+        let fetchedPostData = {};
+
         function openAddPostModal() {
-            // Clear all fields - only use elements that exist
+            // Clear all fields
+            document.getElementById('postInstagramUrl').value = '';
             document.getElementById('manualPostId').value = '';
             document.getElementById('manualImageUrl').value = '';
             document.getElementById('manualCaption').value = '';
             document.getElementById('manualPermalink').value = '';
             document.getElementById('manualWriter').value = '100 HUB';
             document.getElementById('postArticleUrl').value = '';
+            document.getElementById('postMediaFile').value = '';
+            document.getElementById('mediaPreview').style.display = 'none';
+            document.getElementById('mediaPreview').innerHTML = '';
+            document.getElementById('uploadStatus').innerHTML = '';
+            document.getElementById('uploadProgress').style.display = 'none';
+            document.getElementById('fetchedDetails').style.display = 'none';
+            document.getElementById('fetchStatus').innerHTML = '';
+            uploadedMediaUrl = '';
+            fetchedPostData = {};
             
             document.getElementById('postModal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -2226,24 +2279,209 @@
             document.body.style.overflow = '';
         }
 
-        async function savePost() {
-            const submitBtn = document.getElementById('postSubmitBtn');
+        // ==========================================
+        // FETCH POST DETAILS FROM INSTAGRAM URL
+        // ==========================================
+        async function fetchPostDetails() {
+            const url = document.getElementById('postInstagramUrl').value.trim();
+            const status = document.getElementById('fetchStatus');
+            const detailsDiv = document.getElementById('fetchedDetails');
             
-            // Manual entry
+            if (!url) {
+                status.innerHTML = '<span style="color:#ff6b6b;">⚠️ Please enter an Instagram URL.</span>';
+                return;
+            }
+            
+            // Extract Post ID from URL
+            let postId = '';
+            const patterns = [
+                /instagram\.com\/p\/([A-Za-z0-9_-]+)/,
+                /instagram\.com\/reel\/([A-Za-z0-9_-]+)/,
+                /instagram\.com\/tv\/([A-Za-z0-9_-]+)/
+            ];
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) {
+                    postId = match[1];
+                    break;
+                }
+            }
+            
+            if (!postId) {
+                status.innerHTML = '<span style="color:#ff6b6b;">⚠️ Could not extract Post ID from URL.</span>';
+                return;
+            }
+            
+            const btn = document.getElementById('fetchDetailsBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Fetching...';
+            status.innerHTML = '<span style="color:#ffd700;">⏳ Fetching post details...</span>';
+            
+            try {
+                // Try to fetch via Instagram OEmbed
+                const oembedUrl = `https://api.instagram.com/oembed?url=${encodeURIComponent(url)}`;
+                const response = await fetch(oembedUrl);
+                let caption = '';
+                let author = '100 HUB';
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    caption = data.title || '';
+                    author = data.author_name || '100 HUB';
+                } else {
+                    // If OEmbed fails, use the post ID as caption
+                    caption = `Instagram post ${postId}`;
+                }
+                
+                // Auto-fill fields
+                document.getElementById('manualPostId').value = postId;
+                document.getElementById('manualCaption').value = caption;
+                document.getElementById('manualPermalink').value = url;
+                document.getElementById('manualWriter').value = author;
+                
+                // Store fetched data
+                fetchedPostData = { postId, caption, author, url };
+                
+                // Show success
+                detailsDiv.style.display = 'block';
+                document.getElementById('fetchedPostId').textContent = `ID: ${postId}`;
+                const captionPreview = caption.length > 50 ? caption.substring(0, 50) + '...' : caption;
+                document.getElementById('fetchedCaptionPreview').textContent = `Caption: ${captionPreview}`;
+                status.innerHTML = '<span style="color:#4ADE80;">✅ Post details fetched! Review below.</span>';
+                
+            } catch (error) {
+                console.error('Fetch error:', error);
+                status.innerHTML = '<span style="color:#ff6b6b;">⚠️ Could not fetch post details. Please enter manually.</span>';
+                // Still auto-fill the post ID
+                document.getElementById('manualPostId').value = postId;
+            }
+            
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-down"></i> Fetch Details';
+        }
+
+        // ==========================================
+        // UPLOAD MEDIA TO CLOUDINARY
+        // ==========================================
+        async function uploadMediaFile(file) {
+            return new Promise((resolve, reject) => {
+                const progressDiv = document.getElementById('uploadProgress');
+                const progressBar = document.getElementById('uploadProgressBar');
+                const progressText = document.getElementById('uploadProgressText');
+                const status = document.getElementById('uploadStatus');
+                
+                progressDiv.style.display = 'block';
+                status.innerHTML = '<span style="color:#ffd700;">⏳ Uploading to Cloudinary...</span>';
+                
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', 'members');
+                formData.append('folder', '100 TRUSTEES');
+                
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', 'https://api.cloudinary.com/v1_1/dfozevcbl/image/upload');
+                
+                xhr.upload.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                        const percent = Math.round((e.loaded / e.total) * 100);
+                        progressBar.style.width = percent + '%';
+                        progressText.textContent = percent + '%';
+                    }
+                };
+                
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        const data = JSON.parse(xhr.responseText);
+                        const imageUrl = data.secure_url;
+                        document.getElementById('manualImageUrl').value = imageUrl;
+                        uploadedMediaUrl = imageUrl;
+                        status.innerHTML = '<span style="color:#4ADE80;">✅ Upload complete!</span>';
+                        progressBar.style.width = '100%';
+                        progressText.textContent = '100%';
+                        
+                        // Show preview
+                        showMediaPreview(file, imageUrl);
+                        
+                        resolve(imageUrl);
+                    } else {
+                        status.innerHTML = '<span style="color:#ff6b6b;">❌ Upload failed. Please try again.</span>';
+                        reject(new Error('Upload failed'));
+                    }
+                };
+                
+                xhr.onerror = () => {
+                    status.innerHTML = '<span style="color:#ff6b6b;">❌ Upload failed. Please try again.</span>';
+                    reject(new Error('Upload error'));
+                };
+                
+                xhr.send(formData);
+            });
+        }
+
+        // ==========================================
+        // SHOW MEDIA PREVIEW
+        // ==========================================
+        function showMediaPreview(file, imageUrl) {
+            const previewDiv = document.getElementById('mediaPreview');
+            previewDiv.style.display = 'block';
+            
+            if (file.type.startsWith('video/')) {
+                previewDiv.innerHTML = `
+                    <video controls style="width:100%; max-height:300px; object-fit:contain; background:var(--bg-tertiary);">
+                        <source src="${imageUrl}" type="${file.type}">
+                        Your browser does not support the video tag.
+                    </video>
+                `;
+            } else {
+                previewDiv.innerHTML = `
+                    <img src="${imageUrl}" alt="Post preview" style="width:100%; max-height:300px; object-fit:contain; background:var(--bg-tertiary);" />
+                `;
+            }
+        }
+
+        // ==========================================
+        // SAVE POST WITH FILE UPLOAD
+        // ==========================================
+        async function savePostWithUpload() {
+            const submitBtn = document.getElementById('postSubmitBtn');
+            const fileInput = document.getElementById('postMediaFile');
+            const file = fileInput.files[0];
+            
+            // Step 1: Validate
             const postId = document.getElementById('manualPostId').value.trim();
-            const imageUrl = document.getElementById('manualImageUrl').value.trim();
             const caption = document.getElementById('manualCaption').value.trim();
             const permalink = document.getElementById('manualPermalink').value.trim();
             const writer = document.getElementById('manualWriter').value.trim() || '100 HUB';
             const articleUrl = document.getElementById('postArticleUrl').value.trim();
             
-            if (!postId || !imageUrl) {
-                showToast('Post ID and Image URL are required.', 'error');
+            if (!postId) {
+                showToast('⚠️ Please enter a Post ID.', 'error');
                 return;
             }
             
+            if (!file) {
+                showToast('⚠️ Please select an image or video file.', 'error');
+                return;
+            }
+            
+            // Check file size (10MB limit)
+            if (file.size > 10 * 1024 * 1024) {
+                showToast('⚠️ File is too large. Maximum 10MB.', 'error');
+                return;
+            }
+            
+            // Step 2: Upload file to Cloudinary
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+            
             try {
-                submitBtn.disabled = true;
+                const imageUrl = await uploadMediaFile(file);
+                
+                if (!imageUrl) {
+                    throw new Error('Upload failed');
+                }
+                
+                // Step 3: Save to Supabase
                 submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
                 
                 const response = await fetch('/api/posts', {
@@ -2256,7 +2494,8 @@
                         permalink: permalink || `https://www.instagram.com/p/${postId}/`,
                         writer: writer,
                         article_url: articleUrl,
-                        is_video: false,
+                        is_video: file.type.startsWith('video/'),
+                        video_url: file.type.startsWith('video/') ? imageUrl : '',
                         published_at: new Date().toISOString()
                     })
                 });
@@ -2264,15 +2503,15 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    showToast('✅ Post added successfully!', 'success');
+                    showToast('✅ Post saved successfully!', 'success');
                     closePostModal();
                     loadPosts();
                 } else {
-                    showToast(result.error || 'Failed to add post.', 'error');
+                    showToast(result.error || 'Failed to save post.', 'error');
                 }
             } catch (error) {
-                console.error('Save post error:', error);
-                showToast('❌ Error saving post.', 'error');
+                console.error('Save error:', error);
+                showToast('❌ Error saving post. Please try again.', 'error');
             }
             
             submitBtn.disabled = false;
@@ -2844,11 +3083,29 @@
             checkMediaKit();
             loadImpactNumbers();
             loadPosts();
+
+            // Handle file input change
+            const fileInput = document.getElementById('postMediaFile');
+            if (fileInput) {
+                fileInput.addEventListener('change', function() {
+                    if (this.files.length > 0) {
+                        const file = this.files[0];
+                        if (file.size > 10 * 1024 * 1024) {
+                            showToast('⚠️ File is too large. Maximum 10MB.', 'error');
+                            this.value = '';
+                            return;
+                        }
+                        uploadMediaFile(file).catch(() => {
+                            showToast('❌ Upload failed. Please try again.', 'error');
+                        });
+                    }
+                });
+            }
         });
 
         console.log('📊 100 HUB Dashboard loaded.');
         console.log('📝 Articles tab includes Post ID Tool - fetch posts from Instagram to see all post IDs.');
-        console.log('📸 Posts tab - manage Instagram posts with manual entry.');
+        console.log('📸 Posts tab - manage Instagram posts with file upload.');
     </script>
 
 </body>
