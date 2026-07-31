@@ -230,7 +230,6 @@
                 <p class="section-subtitle">Stories, interviews, and cultural coverage from the 100 network.</p>
             </div>
 
-            <!-- Search Bar -->
             <div class="feed-search">
                 <input type="text" id="feedSearchInput" placeholder="Search posts by caption or keyword..." />
                 <button class="btn-outline btn-sm" onclick="searchFeedPosts()">
@@ -359,6 +358,14 @@
 
     <script>
         // ==========================================
+        // API HELPER - Consolidated API Calls
+        // ==========================================
+        function apiUrl(path, params = {}) {
+            const queryParams = new URLSearchParams({ path, ...params });
+            return `/api?${queryParams.toString()}`;
+        }
+
+        // ==========================================
         // API BASE
         // ==========================================
         const API_BASE = '/api';
@@ -383,8 +390,8 @@
             try {
                 const searchTerm = searchInput ? searchInput.value.trim() : '';
                 const url = searchTerm 
-                    ? `/api/posts?limit=100&search=${encodeURIComponent(searchTerm)}`
-                    : '/api/posts?limit=100';
+                    ? apiUrl('posts', { limit: 100, search: encodeURIComponent(searchTerm) })
+                    : apiUrl('posts', { limit: 100 });
                     
                 const response = await fetch(url);
                 const data = await response.json();
@@ -654,7 +661,7 @@
 
         async function loadPartners() {
             try {
-                const response = await fetch(`${API_BASE}/partners`);
+                const response = await fetch(apiUrl('partners'));
                 if (response.ok) {
                     const data = await response.json();
                     partnerLogos = data.logos || [];
@@ -683,7 +690,7 @@
             const logos = [...partnerLogos, ...partnerLogos];
             track.innerHTML = logos.map(logo => `
                 <div class="partner-logo-item">
-                    <img src="${logo.url}" alt="${logo.name}" title="${logo.name}" loading="lazy" onerror="this.style.display='none'" />
+                    <img src="${logo.url}" alt="${logo.name}" title="${logo.name}" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'color:rgba(255,255,255,0.3);font-size:11px;\\'>${logo.name}</span>'" />
                 </div>
             `).join('');
         }
@@ -693,7 +700,7 @@
         // ==========================================
         async function updateCreatorsCount() {
             try {
-                const response = await fetch(`${API_BASE}/members?status=accepted&limit=1`);
+                const response = await fetch(apiUrl('members', { status: 'accepted', limit: 1 }));
                 if (response.ok) {
                     const data = await response.json();
                     const count = data.count || 0;

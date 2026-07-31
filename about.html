@@ -263,7 +263,7 @@
         // ==========================================
         async function updateCreatorsCount() {
             try {
-                const response = await fetch('/api/members?status=accepted&limit=1');
+                const response = await fetch('/api?path=members&status=accepted&limit=1');
                 if (response.ok) {
                     const data = await response.json();
                     const count = data.count || 0;

@@ -838,7 +838,7 @@
 
         async function loadPartnersWork() {
             try {
-                const response = await fetch('/api/partners');
+                const response = await fetch('/api?path=partners');
                 if (response.ok) {
                     const data = await response.json();
                     partnerLogosWork = data.logos || [];
@@ -893,7 +893,7 @@
         // ==========================================
         async function updateCreatorsCount() {
             try {
-                const response = await fetch('/api/members?status=accepted&limit=1');
+                const response = await fetch('/api?path=members&status=accepted&limit=1');
                 if (response.ok) {
                     const data = await response.json();
                     const count = data.count || 0;

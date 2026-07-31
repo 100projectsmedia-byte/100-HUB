@@ -360,9 +360,9 @@
         // ==========================================
         // MEMBER COUNT
         // ==========================================
-        async function getMemberCount() {
+       async function getMemberCount() {
             try {
-                const response = await fetch(`${API_BASE}/members?status=all`);
+                const response = await fetch('/api?path=members&status=all');
                 if (response.ok) {
                     const data = await response.json();
                     return data.count || 0;
@@ -414,9 +414,9 @@
             return url.replace('/upload/', `/upload/f_auto,q_auto:good,w_${width},c_limit/`);
         }
 
-        async function loadHubMembers(reset = true) {
+      async function loadHubMembers(reset = true) {
             try {
-                const response = await fetch(`${API_BASE}/members?status=accepted&limit=200`);
+                const response = await fetch('/api?path=members&status=accepted&limit=200');
                 if (response.ok) {
                     const data = await response.json();
                     allHubMembers = data.members || [];
@@ -426,7 +426,7 @@
                 console.log('Could not load hub members');
             }
         }
-
+        
         function renderHubGrid() {
             const container = document.getElementById('hubGrid');
             const seeMoreWrap = document.getElementById('hubSeeMore');
@@ -750,7 +750,7 @@
         // ==========================================
         async function updateCreatorsCount() {
             try {
-                const response = await fetch('/api/members?status=accepted&limit=1');
+                const response = await fetch('/api?path=members&status=accepted&limit=1');
                 if (response.ok) {
                     const data = await response.json();
                     const count = data.count || 0;
@@ -759,7 +759,6 @@
                 }
             } catch (e) {}
         }
-
         // ==========================================
         // NAVBAR SCROLL
         // ==========================================
