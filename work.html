@@ -864,8 +864,6 @@
                 return;
             }
 
-            console.log('📋 Rendering work partner logos:', partnerLogosWork);
-
             const logos = [...partnerLogosWork, ...partnerLogosWork];
             track.innerHTML = logos.map(logo => `
                 <div class="partner-logo-item">
@@ -874,7 +872,7 @@
                         alt="${logo.name}" 
                         title="${logo.name}" 
                         loading="lazy" 
-                        style="max-height:50px; max-width:120px; object-fit:contain;"
+                        style="max-height:50px; max-width:120px; width:auto; height:auto; object-fit:contain;"
                         onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'color:rgba(255,255,255,0.5);font-size:12px;\\'>${logo.name}</span>';"
                     />
                 </div>

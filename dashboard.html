@@ -3374,23 +3374,23 @@
                 document.getElementById('totalPartners').textContent = data.logos.length;
                 
                 grid.innerHTML = data.logos.map(logo => `
-                    <div class="partner-card">
-                        <button class="partner-delete" onclick="confirmDelete('partner', '${logo.id}', '${logo.name}')" title="Delete partner">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                        <div style="display:flex; align-items:center; justify-content:center; min-height:60px;">
-                            <img 
-                                src="${logo.url}" 
-                                alt="${logo.name}" 
-                                loading="lazy" 
-                                style="max-width:100%; max-height:50px; object-fit:contain;"
-                                onerror="this.style.display='none'; this.parentElement.querySelector('.partner-name-fallback').style.display='block';"
-                            />
-                            <div class="partner-name-fallback" style="display:none; font-size:14px; color:rgba(255,255,255,0.8);">${logo.name}</div>
-                        </div>
-                        <div class="partner-name" style="font-size:11px; color:rgba(255,255,255,0.4); margin-top:4px;">${logo.name}</div>
+                <div class="partner-card">
+                    <button class="partner-delete" onclick="confirmDelete('partner', '${logo.id}', '${logo.name}')" title="Delete partner">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    <div style="display:flex; align-items:center; justify-content:center; min-height:60px; padding:5px 0;">
+                        <img 
+                            src="${logo.url}" 
+                            alt="${logo.name}" 
+                            loading="lazy" 
+                            style="max-width:100%; max-height:50px; width:auto; height:auto; object-fit:contain;"
+                            onerror="this.style.display='none'; this.parentElement.querySelector('.partner-name-fallback').style.display='block';"
+                        />
+                        <div class="partner-name-fallback" style="display:none; font-size:14px; color:rgba(255,255,255,0.8);">${logo.name}</div>
                     </div>
-                `).join('');
+                    <div class="partner-name" style="font-size:11px; color:rgba(255,255,255,0.4); margin-top:4px;">${logo.name}</div>
+                </div>
+            `).join('');
             } catch (error) {
                 console.error('Error loading partners:', error);
                 showToast('Error loading partners.', 'error');
