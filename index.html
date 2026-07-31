@@ -27,7 +27,6 @@
         .page-home .impact-section { padding: 80px 0; }
         .page-home .partners-section { padding: 60px 0 80px; }
 
-        /* Hero Nav Links - only on home page */
         .hero-nav {
             display: flex;
             gap: 12px;
@@ -72,7 +71,6 @@
             .hero-nav a { padding: 6px 14px; font-size: 11px; }
         }
 
-        /* Feed Search */
         .feed-search {
             display: flex;
             gap: 12px;
@@ -374,59 +372,55 @@
         const FEED_DEFAULT_COUNT = 9;
         const FEED_INCREMENT = 3;
 
-
         // ==========================================
-        // LOAD POSTS FROM DATABASE (Primary)
+        // LOAD POSTS FROM DATABASE
         // ==========================================
         async function loadPosts() {
-        const container = document.getElementById('instagramFeed');
-        const seeMoreWrap = document.getElementById('feedSeeMore');
-        const searchInput = document.getElementById('feedSearchInput');
+            const container = document.getElementById('instagramFeed');
+            const seeMoreWrap = document.getElementById('feedSeeMore');
+            const searchInput = document.getElementById('feedSearchInput');
 
-        try {
-            const searchTerm = searchInput ? searchInput.value.trim() : '';
-            const url = searchTerm 
-                ? `/api/posts?limit=100&search=${encodeURIComponent(searchTerm)}`
-                : '/api/posts?limit=100';
+            try {
+                const searchTerm = searchInput ? searchInput.value.trim() : '';
+                const url = searchTerm 
+                    ? `/api/posts?limit=100&search=${encodeURIComponent(searchTerm)}`
+                    : '/api/posts?limit=100';
+                    
+                const response = await fetch(url);
+                const data = await response.json();
                 
-            const response = await fetch(url);
-            const data = await response.json();
-            
-            if (data.success && data.posts && data.posts.length > 0) {
-                allFeedPosts = data.posts;
-                document.getElementById('feedShowingCount').textContent = allFeedPosts.length;
-                feedDisplayCount = Math.min(FEED_DEFAULT_COUNT, allFeedPosts.length);
-                feedShowingAll = false;
-                renderFeedPosts(allFeedPosts.slice(0, feedDisplayCount), container);
-                
-                if (allFeedPosts.length > feedDisplayCount) {
-                    seeMoreWrap.style.display = 'flex';
-                    seeMoreWrap.style.gap = '12px';
-                    seeMoreWrap.style.justifyContent = 'center';
-                    updateFeedButton();
+                if (data.success && data.posts && data.posts.length > 0) {
+                    allFeedPosts = data.posts;
+                    document.getElementById('feedShowingCount').textContent = allFeedPosts.length;
+                    feedDisplayCount = Math.min(FEED_DEFAULT_COUNT, allFeedPosts.length);
+                    feedShowingAll = false;
+                    renderFeedPosts(allFeedPosts.slice(0, feedDisplayCount), container);
+                    
+                    if (allFeedPosts.length > feedDisplayCount) {
+                        seeMoreWrap.style.display = 'flex';
+                        seeMoreWrap.style.gap = '12px';
+                        seeMoreWrap.style.justifyContent = 'center';
+                        updateFeedButton();
+                    } else {
+                        seeMoreWrap.style.display = 'none';
+                    }
                 } else {
+                    container.innerHTML = `<div class="feed-empty"><p>No posts yet. Check back later!</p></div>`;
                     seeMoreWrap.style.display = 'none';
                 }
-            } else {
-                // No posts found - show empty state
-                container.innerHTML = `<div class="feed-empty"><p>No posts yet. Check back later!</p></div>`;
+            } catch (error) {
+                console.error('Load posts error:', error);
+                container.innerHTML = `
+                    <div class="feed-error">
+                        <p>⚠️ Unable to load posts. Please refresh or try again later.</p>
+                    </div>
+                `;
                 seeMoreWrap.style.display = 'none';
             }
-        } catch (error) {
-            console.error('Load posts error:', error);
-            container.innerHTML = `
-                <div class="feed-error">
-                    <p>⚠️ Unable to load posts. Please refresh or try again later.</p>
-                </div>
-            `;
-            seeMoreWrap.style.display = 'none';
         }
-    }
-
-
 
         // ==========================================
-        // RENDER FEED POSTS (from database)
+        // RENDER FEED POSTS
         // ==========================================
         function renderFeedPosts(posts, container) {
             if (posts.length === 0) {
@@ -447,7 +441,6 @@
                 
                 let mediaHtml = '';
                 if (post.is_video && post.video_url) {
-                    // Video with autoplay, muted, loop, playsinline
                     mediaHtml = `
                         <video autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover;">
                             <source src="${post.video_url}" type="video/mp4">
@@ -480,7 +473,6 @@
                 `;
             }).join('');
 
-            // Click handler for feed items
             document.querySelectorAll('.feed-item').forEach(item => {
                 item.addEventListener('click', function(e) {
                     if (e.target.closest('.feed-link')) return;
@@ -491,8 +483,6 @@
                 });
             });
         }
-
-
 
         // ==========================================
         // FEED CONTROLS
@@ -530,11 +520,8 @@
                 }
             }
             
-            // Render with current display count
-            // Render with current display count
             const postsToShow = allFeedPosts.slice(0, feedDisplayCount);
             renderFeedPosts(postsToShow, container);
-            }
             updateFeedButton();
 
             const seeMoreWrap = document.getElementById('feedSeeMore');
@@ -551,7 +538,7 @@
             feedDisplayCount = FEED_DEFAULT_COUNT;
             feedShowingAll = false;
             const container = document.getElementById('instagramFeed');
-           const postsToShow = allFeedPosts.slice(0, feedDisplayCount);
+            const postsToShow = allFeedPosts.slice(0, feedDisplayCount);
             renderFeedPosts(postsToShow, container);
             updateFeedButton();
             document.getElementById('feed').scrollIntoView({ behavior: 'smooth' });
@@ -788,7 +775,7 @@
             updateCreatorsCount();
             loadPosts();
             console.log('🏠 100 HUB — Home Page Loaded');
-            console.log('📸 Feed System: Database Posts (primary) + Behold (fallback)');
+            console.log('📸 Feed System: Database Posts');
             console.log('🔍 Search: Search posts by caption or keyword');
             console.log('📄 Default: 9 posts, See More loads 3 more');
         });
