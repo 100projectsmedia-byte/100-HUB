@@ -2209,11 +2209,7 @@
         // ADD POST MODAL - FUNCTIONS (SIMPLIFIED)
         // ==========================================
         function openAddPostModal() {
-            document.getElementById('postModalTitle').textContent = 'Add Instagram Post';
-            document.getElementById('postModalSubtitle').textContent = 'Enter post details manually';
-            
-            // Clear all fields
-            document.getElementById('postInstagramUrl').value = '';
+            // Clear all fields - only use elements that exist
             document.getElementById('manualPostId').value = '';
             document.getElementById('manualImageUrl').value = '';
             document.getElementById('manualCaption').value = '';
