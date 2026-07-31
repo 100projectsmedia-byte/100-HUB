@@ -1303,44 +1303,25 @@
         </div>
     </div>
 
-    <!-- ==================== ADD POST MODAL (UPDATED) ==================== -->
+    <!-- ==================== ADD POST MODAL (SIMPLIFIED) ==================== -->
     <div class="edit-modal" id="postModal">
         <div class="edit-modal-overlay" id="postModalOverlay"></div>
         <div class="edit-modal-content">
             <button class="edit-modal-close" id="postModalClose"><i class="fa-solid fa-xmark"></i></button>
             <h3 style="font-family:'Playfair Display',serif; font-size:24px; margin-bottom:4px;" id="postModalTitle">Add Instagram Post</h3>
-            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;" id="postModalSubtitle">Auto-fetch OR manually enter post details</p>
+            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;" id="postModalSubtitle">Enter post details manually</p>
             <div>
-                <!-- Option 1: Auto-fetch -->
+                <!-- Manual Entry -->
                 <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:16px; margin-bottom:16px;">
-                    <h4 style="font-size:13px; color:var(--text-primary); margin-bottom:8px;">📸 Auto-Fetch from Instagram</h4>
-                    <div class="form-group" style="margin-bottom:8px;">
-                        <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Instagram URL</label>
-                        <input type="url" id="postInstagramUrl" placeholder="https://www.instagram.com/p/..." />
-                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">Works for public personal accounts only</small>
-                    </div>
-                    <button type="button" class="btn-outline btn-sm" onclick="fetchInstagramPost()" id="fetchPostBtn">
-                        <i class="fa-solid fa-cloud-arrow-down"></i> Fetch Post
-                    </button>
-                </div>
-
-                <!-- OR Divider -->
-                <div style="display:flex; align-items:center; gap:16px; margin:16px 0;">
-                    <hr style="flex:1; border:1px solid rgba(255,255,255,0.06);" />
-                    <span style="font-size:11px; color:rgba(255,255,255,0.3);">OR</span>
-                    <hr style="flex:1; border:1px solid rgba(255,255,255,0.06);" />
-                </div>
-
-                <!-- Option 2: Manual Entry -->
-                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:16px; margin-bottom:16px;">
-                    <h4 style="font-size:13px; color:var(--text-primary); margin-bottom:8px;">✏️ Manual Entry</h4>
                     <div class="form-group">
                         <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Post ID *</label>
                         <input type="text" id="manualPostId" placeholder="e.g., DYkL86jDIy6" required />
+                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">From Instagram URL: instagram.com/p/[POST_ID]/</small>
                     </div>
                     <div class="form-group">
                         <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Image URL *</label>
-                        <input type="url" id="manualImageUrl" placeholder="https://res.cloudinary.com/..." required />
+                        <input type="url" id="manualImageUrl" placeholder="https://res.cloudinary.com/... or direct image URL" required />
+                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">Upload image to Cloudinary or use direct image URL</small>
                     </div>
                     <div class="form-group">
                         <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Caption</label>
@@ -1349,6 +1330,7 @@
                     <div class="form-group">
                         <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Permalink</label>
                         <input type="url" id="manualPermalink" placeholder="https://www.instagram.com/p/..." />
+                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">Full Instagram URL</small>
                     </div>
                     <div class="form-group">
                         <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Writer</label>
@@ -2224,11 +2206,11 @@
         const POST_INCREMENT = 3;
 
         // ==========================================
-        // ADD POST MODAL - FUNCTIONS
+        // ADD POST MODAL - FUNCTIONS (SIMPLIFIED)
         // ==========================================
         function openAddPostModal() {
             document.getElementById('postModalTitle').textContent = 'Add Instagram Post';
-            document.getElementById('postModalSubtitle').textContent = 'Auto-fetch OR manually enter post details';
+            document.getElementById('postModalSubtitle').textContent = 'Enter post details manually';
             
             // Clear all fields
             document.getElementById('postInstagramUrl').value = '';
@@ -2248,113 +2230,7 @@
             document.body.style.overflow = '';
         }
 
-        async function fetchInstagramPost() {
-            const url = document.getElementById('postInstagramUrl').value.trim();
-            if (!url) {
-                showToast('Please enter an Instagram URL.', 'error');
-                return;
-            }
-            
-            const btn = document.getElementById('fetchPostBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Fetching...';
-            
-            try {
-                // First try to fetch via our API
-                const response = await fetch('/api/posts/fetch', {
-                    method: 'POST',
-                    headers: adminHeaders(),
-                    body: JSON.stringify({ url })
-                });
-                
-                if (response.ok) {
-                    const result = await response.json();
-                    if (result.success && result.data) {
-                        document.getElementById('manualPostId').value = result.data.post_id || '';
-                        document.getElementById('manualImageUrl').value = result.data.image_url || '';
-                        document.getElementById('manualCaption').value = result.data.caption || '';
-                        document.getElementById('manualPermalink').value = result.data.permalink || '';
-                        document.getElementById('manualWriter').value = result.data.writer || '100 HUB';
-                        showToast('✅ Post data fetched! Review and click Save.', 'success');
-                        btn.disabled = false;
-                        btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-down"></i> Fetch Post';
-                        return;
-                    }
-                }
-                
-                // Fallback: Try to fetch via Instagram OEmbed directly
-                const oembedUrl = `https://api.instagram.com/oembed?url=${encodeURIComponent(url)}`;
-                const oembedResponse = await fetch(oembedUrl);
-                
-                if (oembedResponse.ok) {
-                    const data = await oembedResponse.json();
-                    // Extract post ID from URL
-                    const postIdMatch = url.match(/\/p\/([A-Za-z0-9_-]+)/);
-                    const postId = postIdMatch ? postIdMatch[1] : '';
-                    
-                    // Try to get image URL from the HTML
-                    let imageUrl = '';
-                    if (data.thumbnail_url) {
-                        imageUrl = data.thumbnail_url;
-                    }
-                    
-                    document.getElementById('manualPostId').value = postId || '';
-                    document.getElementById('manualImageUrl').value = imageUrl || '';
-                    document.getElementById('manualCaption').value = data.title || '';
-                    document.getElementById('manualPermalink').value = url || '';
-                    document.getElementById('manualWriter').value = data.author_name || '100 HUB';
-                    showToast('✅ Post data fetched! Review and click Save.', 'success');
-                } else {
-                    showToast('❌ Could not fetch post data. Please enter details manually.', 'error');
-                }
-            } catch (error) {
-                console.error('Fetch error:', error);
-                showToast('❌ Error fetching post. Please enter details manually.', 'error');
-            }
-            
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-down"></i> Fetch Post';
-        }
-
         async function savePost() {
-            // Check if using auto-fetch or manual
-            const instagramUrl = document.getElementById('postInstagramUrl').value.trim();
-            
-            // If Instagram URL is provided, try auto-fetch
-            if (instagramUrl) {
-                try {
-                    const submitBtn = document.getElementById('postSubmitBtn');
-                    submitBtn.disabled = true;
-                    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
-                    
-                    const response = await fetch('/api/posts', {
-                        method: 'POST',
-                        headers: adminHeaders(),
-                        body: JSON.stringify({ 
-                            url: instagramUrl,
-                            article_url: document.getElementById('postArticleUrl').value.trim() || ''
-                        })
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (result.success) {
-                        showToast('Post added successfully!', 'success');
-                        closePostModal();
-                        loadPosts();
-                    } else {
-                        showToast(result.error || 'Failed to add post.', 'error');
-                    }
-                } catch (error) {
-                    console.error('Save post error:', error);
-                    showToast('Error saving post.', 'error');
-                }
-                
-                document.getElementById('postSubmitBtn').disabled = false;
-                document.getElementById('postSubmitBtn').innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Post';
-                return;
-            }
-            
             // Manual entry
             const postId = document.getElementById('manualPostId').value.trim();
             const imageUrl = document.getElementById('manualImageUrl').value.trim();
@@ -2391,7 +2267,7 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    showToast('Post added successfully!', 'success');
+                    showToast('✅ Post added successfully!', 'success');
                     closePostModal();
                     loadPosts();
                 } else {
@@ -2399,7 +2275,7 @@
                 }
             } catch (error) {
                 console.error('Save post error:', error);
-                showToast('Error saving post.', 'error');
+                showToast('❌ Error saving post.', 'error');
             }
             
             submitBtn.disabled = false;
@@ -2975,7 +2851,7 @@
 
         console.log('📊 100 HUB Dashboard loaded.');
         console.log('📝 Articles tab includes Post ID Tool - fetch posts from Instagram to see all post IDs.');
-        console.log('📸 Posts tab - manage Instagram posts with auto-fetch, search, and article linking.');
+        console.log('📸 Posts tab - manage Instagram posts with manual entry.');
     </script>
 
 </body>
