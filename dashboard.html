@@ -789,10 +789,76 @@
             flex-wrap: wrap;
         }
 
+        /* Work Grid Styles */
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .work-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .work-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--red);
+        }
+        .work-card .work-media {
+            position: relative;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+            background: var(--bg-tertiary);
+        }
+        .work-card .work-media img,
+        .work-card .work-media video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .work-card .work-featured-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--red);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            color: white;
+        }
+        .work-card .work-info {
+            padding: 12px 14px;
+        }
+        .work-card .work-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .work-card .work-category {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 4px;
+        }
+        .work-card .work-description {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
+        }
+        .work-card .work-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
         @media (max-width: 900px) {
             .impact-grid { grid-template-columns: repeat(2, 1fr); }
             .impact-edit-form { grid-template-columns: 1fr; }
             .post-grid { grid-template-columns: repeat(2, 1fr); }
+            .work-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 640px) {
             .dashboard-layout { padding: 120px 0 60px; }
@@ -808,6 +874,7 @@
             .table-wrap .action-cell { flex-wrap: wrap; }
             .edit-modal-content { padding: 20px; }
             .post-grid { grid-template-columns: 1fr; }
+            .work-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -909,6 +976,7 @@
                 <button class="active" data-tab="members">Members</button>
                 <button data-tab="articles">Articles <span style="font-size:10px; opacity:0.5;">(Post ID Tool)</span></button>
                 <button data-tab="posts">Posts</button>
+                <button data-tab="work">Work</button>
                 <button data-tab="partners">Partners</button>
                 <button data-tab="impact">Impact Numbers</button>
                 <button data-tab="mediakit">Media Kit</button>
@@ -1087,6 +1155,25 @@
                     <button class="see-more-btn" onclick="resetPostView()" id="resetPostViewBtn" style="margin-left:12px; display:none;">
                         Show Less <i class="fa-solid fa-arrow-up"></i>
                     </button>
+                </div>
+            </div>
+
+            <!-- Tab: Work -->
+            <div class="tab-content" id="tab-work">
+                <div class="dashboard-actions">
+                    <button class="btn-outline" onclick="loadWorkItems()">
+                        <i class="fa-solid fa-rotate"></i> Refresh
+                    </button>
+                    <button class="btn-primary" onclick="openAddWorkModal()">
+                        <i class="fa-regular fa-plus"></i> Add Work
+                    </button>
+                </div>
+
+                <div class="work-grid" id="workGrid">
+                    <div class="empty-state" style="grid-column:1/-1; padding:60px 20px;">
+                        <i class="fa-regular fa-images"></i>
+                        <p>Loading work items...</p>
+                    </div>
                 </div>
             </div>
 
@@ -1307,7 +1394,7 @@
     <div class="edit-modal" id="postModal">
         <div class="edit-modal-overlay" id="postModalOverlay"></div>
         <div class="edit-modal-content">
-            <button class="edit-modal-close" id="postModalClose"><i class="fa-solid fa-xmark"></i></button>
+            <button class="edit-modal-close" id="postModalClose" onclick="closePostModal()"><i class="fa-solid fa-xmark"></i></button>
             <h3 style="font-family:'Playfair Display',serif; font-size:24px; margin-bottom:4px;" id="postModalTitle">Add Instagram Post</h3>
             <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;" id="postModalSubtitle">Upload your media and paste the Instagram URL</p>
             <div>
@@ -1390,6 +1477,60 @@
                         <i class="fa-regular fa-floppy-disk"></i> Save Post
                     </button>
                     <button type="button" class="btn-outline" onclick="closePostModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== ADD WORK MODAL ==================== -->
+    <div class="edit-modal" id="workModal">
+        <div class="edit-modal-overlay" id="workModalOverlay"></div>
+        <div class="edit-modal-content">
+            <button class="edit-modal-close" id="workModalClose" onclick="closeWorkModal()"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="font-family:'Playfair Display',serif; font-size:24px; margin-bottom:4px;" id="workModalTitle">Add Work</h3>
+            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;">Add a new work item to display on the Work page</p>
+            <div>
+                <div class="form-group">
+                    <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Title *</label>
+                    <input type="text" id="workTitle" placeholder="e.g., Street Editorial" />
+                </div>
+                <div class="form-group">
+                    <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Category</label>
+                    <input type="text" id="workCategory" placeholder="e.g., Fashion Visuals" />
+                </div>
+                <div class="form-group">
+                    <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Description</label>
+                    <textarea id="workDescription" rows="2" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif; resize:vertical;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Media URL *</label>
+                    <input type="url" id="workMediaUrl" placeholder="https://res.cloudinary.com/..." />
+                    <small style="color:rgba(255,255,255,0.4); font-size:11px;">Upload to Cloudinary and paste the URL</small>
+                </div>
+                <div class="form-group">
+                    <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Media Type</label>
+                    <select id="workMediaType" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif;">
+                        <option value="image">Image</option>
+                        <option value="video">Video</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Display Order</label>
+                    <input type="number" id="workDisplayOrder" value="0" />
+                    <small style="color:rgba(255,255,255,0.4); font-size:11px;">Lower numbers appear first</small>
+                </div>
+                <div class="form-group">
+                    <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Featured</label>
+                    <select id="workFeatured" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif;">
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
+                    </select>
+                </div>
+                <div class="edit-actions">
+                    <button type="button" class="btn-primary" onclick="saveWorkItem()" id="workSubmitBtn">
+                        <i class="fa-regular fa-floppy-disk"></i> Save Work
+                    </button>
+                    <button type="button" class="btn-outline" onclick="closeWorkModal()">Cancel</button>
                 </div>
             </div>
         </div>
@@ -1722,6 +1863,7 @@
                 if (this.dataset.tab === 'impact') loadImpactNumbers();
                 if (this.dataset.tab === 'articles') renderArticles();
                 if (this.dataset.tab === 'posts') loadPosts();
+                if (this.dataset.tab === 'work') loadWorkItems();
             });
         });
 
@@ -2378,8 +2520,14 @@
                 formData.append('upload_preset', 'members');
                 formData.append('folder', '100 TRUSTEES');
                 
+                // Use the correct endpoint based on file type
+                const isVideo = file.type.startsWith('video/');
+                const uploadUrl = isVideo 
+                    ? 'https://api.cloudinary.com/v1_1/dfozevcbl/video/upload'
+                    : 'https://api.cloudinary.com/v1_1/dfozevcbl/image/upload';
+                
                 const xhr = new XMLHttpRequest();
-                xhr.open('POST', 'https://api.cloudinary.com/v1_1/dfozevcbl/image/upload');
+                xhr.open('POST', uploadUrl);
                 
                 xhr.upload.onprogress = (e) => {
                     if (e.lengthComputable) {
@@ -2392,26 +2540,29 @@
                 xhr.onload = () => {
                     if (xhr.status === 200) {
                         const data = JSON.parse(xhr.responseText);
-                        const imageUrl = data.secure_url;
-                        document.getElementById('manualImageUrl').value = imageUrl;
-                        uploadedMediaUrl = imageUrl;
+                        const mediaUrl = data.secure_url;
+                        document.getElementById('manualImageUrl').value = mediaUrl;
+                        uploadedMediaUrl = mediaUrl;
                         status.innerHTML = '<span style="color:#4ADE80;">✅ Upload complete!</span>';
                         progressBar.style.width = '100%';
                         progressText.textContent = '100%';
                         
-                        // Show preview
-                        showMediaPreview(file, imageUrl);
-                        
-                        resolve(imageUrl);
+                        showMediaPreview(file, mediaUrl);
+                        resolve(mediaUrl);
                     } else {
-                        status.innerHTML = '<span style="color:#ff6b6b;">❌ Upload failed. Please try again.</span>';
-                        reject(new Error('Upload failed'));
+                        let errorMsg = 'Upload failed.';
+                        try {
+                            const errorData = JSON.parse(xhr.responseText);
+                            errorMsg = errorData.error?.message || errorMsg;
+                        } catch(e) {}
+                        status.innerHTML = `<span style="color:#ff6b6b;">❌ ${errorMsg}</span>`;
+                        reject(new Error(errorMsg));
                     }
                 };
                 
                 xhr.onerror = () => {
-                    status.innerHTML = '<span style="color:#ff6b6b;">❌ Upload failed. Please try again.</span>';
-                    reject(new Error('Upload error'));
+                    status.innerHTML = '<span style="color:#ff6b6b;">❌ Network error. Please check your connection.</span>';
+                    reject(new Error('Network error'));
                 };
                 
                 xhr.send(formData);
@@ -2792,6 +2943,153 @@
         }
 
         // ==========================================
+        // WORK ITEMS - CRUD Operations
+        // ==========================================
+        let allWorkItems = [];
+        let editingWorkId = null;
+
+        async function loadWorkItems() {
+            const grid = document.getElementById('workGrid');
+            try {
+                const response = await fetch('/api/work-items');
+                const data = await response.json();
+                if (data.success) {
+                    allWorkItems = data.items || [];
+                    renderWorkGrid();
+                }
+            } catch (error) {
+                console.error('Load work items error:', error);
+                grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+                    <i class="fa-regular fa-images"></i>
+                    <p>Error loading work items.</p>
+                </div>`;
+            }
+        }
+
+        function renderWorkGrid() {
+            const grid = document.getElementById('workGrid');
+            if (allWorkItems.length === 0) {
+                grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+                    <i class="fa-regular fa-images"></i>
+                    <p>No work items added yet. Click "Add Work" to get started.</p>
+                </div>`;
+                return;
+            }
+
+            grid.innerHTML = allWorkItems.map(item => `
+                <div class="work-card">
+                    <div class="work-media">
+                        ${item.media_type === 'video' 
+                            ? `<video muted><source src="${item.media_url}"></video>`
+                            : `<img src="${item.media_url}" alt="${item.title}" loading="lazy" />`
+                        }
+                        ${item.featured ? '<span class="work-featured-badge">⭐ Featured</span>' : ''}
+                    </div>
+                    <div class="work-info">
+                        <div class="work-title">${item.title}</div>
+                        <div class="work-category">${item.category || 'Uncategorized'}</div>
+                        <div class="work-description">${item.description || ''}</div>
+                        <div class="work-actions">
+                            <button class="btn-outline btn-sm" onclick="openEditWorkModal('${item.id}')" title="Edit">
+                                <i class="fa-regular fa-pen-to-square"></i>
+                            </button>
+                            <button class="btn-outline btn-sm danger" onclick="confirmDelete('work', '${item.id}', '${item.title}')" title="Delete">
+                                <i class="fa-regular fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openAddWorkModal() {
+            editingWorkId = null;
+            document.getElementById('workModalTitle').textContent = 'Add Work';
+            document.getElementById('workTitle').value = '';
+            document.getElementById('workCategory').value = '';
+            document.getElementById('workDescription').value = '';
+            document.getElementById('workMediaUrl').value = '';
+            document.getElementById('workMediaType').value = 'image';
+            document.getElementById('workDisplayOrder').value = '0';
+            document.getElementById('workFeatured').value = 'false';
+            document.getElementById('workModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function openEditWorkModal(id) {
+            const item = allWorkItems.find(w => w.id === id);
+            if (!item) return;
+            editingWorkId = id;
+            document.getElementById('workModalTitle').textContent = 'Edit Work';
+            document.getElementById('workTitle').value = item.title || '';
+            document.getElementById('workCategory').value = item.category || '';
+            document.getElementById('workDescription').value = item.description || '';
+            document.getElementById('workMediaUrl').value = item.media_url || '';
+            document.getElementById('workMediaType').value = item.media_type || 'image';
+            document.getElementById('workDisplayOrder').value = item.display_order || 0;
+            document.getElementById('workFeatured').value = item.featured ? 'true' : 'false';
+            document.getElementById('workModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeWorkModal() {
+            document.getElementById('workModal').classList.remove('active');
+            document.body.style.overflow = '';
+            editingWorkId = null;
+        }
+
+        document.getElementById('workModalClose').addEventListener('click', closeWorkModal);
+        document.getElementById('workModalOverlay').addEventListener('click', closeWorkModal);
+
+        async function saveWorkItem() {
+            const title = document.getElementById('workTitle').value.trim();
+            const category = document.getElementById('workCategory').value.trim();
+            const description = document.getElementById('workDescription').value.trim();
+            const media_url = document.getElementById('workMediaUrl').value.trim();
+            const media_type = document.getElementById('workMediaType').value;
+            const display_order = parseInt(document.getElementById('workDisplayOrder').value) || 0;
+            const featured = document.getElementById('workFeatured').value === 'true';
+
+            if (!title || !media_url) {
+                showToast('Title and Media URL are required.', 'error');
+                return;
+            }
+
+            const submitBtn = document.getElementById('workSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+            try {
+                const url = '/api/work-items';
+                const method = editingWorkId ? 'PUT' : 'POST';
+                const body = editingWorkId 
+                    ? { id: editingWorkId, title, category, description, media_url, media_type, display_order, featured }
+                    : { title, category, description, media_url, media_type, display_order, featured };
+
+                const response = await fetch(url, {
+                    method: method,
+                    headers: adminHeaders(),
+                    body: JSON.stringify(body)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showToast(editingWorkId ? 'Work updated!' : 'Work added!', 'success');
+                    closeWorkModal();
+                    loadWorkItems();
+                } else {
+                    showToast(result.error || 'Failed to save work item.', 'error');
+                }
+            } catch (error) {
+                console.error('Save work error:', error);
+                showToast('Error saving work item.', 'error');
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Work';
+        }
+
+        // ==========================================
         // DELETE CONFIRMATION
         // ==========================================
         let deleteTarget = { type: '', id: '', name: '' };
@@ -2818,6 +3116,8 @@
                     endpoint = `${API_BASE}/partners`;
                 } else if (deleteTarget.type === 'post') {
                     endpoint = `${API_BASE}/posts`;
+                } else if (deleteTarget.type === 'work') {
+                    endpoint = `${API_BASE}/work-items`;
                 } else {
                     showToast('Unknown item type.', 'error');
                     return;
@@ -2840,6 +3140,7 @@
                     else if (deleteTarget.type === 'article') renderArticles();
                     else if (deleteTarget.type === 'partner') loadPartners();
                     else if (deleteTarget.type === 'post') loadPosts();
+                    else if (deleteTarget.type === 'work') loadWorkItems();
                 } else {
                     showToast(result.error || `Failed to delete ${deleteTarget.type}.`, 'error');
                 }
@@ -3083,6 +3384,7 @@
             checkMediaKit();
             loadImpactNumbers();
             loadPosts();
+            loadWorkItems();
 
             // Handle file input change
             const fileInput = document.getElementById('postMediaFile');
@@ -3106,6 +3408,7 @@
         console.log('📊 100 HUB Dashboard loaded.');
         console.log('📝 Articles tab includes Post ID Tool - fetch posts from Instagram to see all post IDs.');
         console.log('📸 Posts tab - manage Instagram posts with file upload.');
+        console.log('🎬 Work tab - manage work items displayed on the Work page.');
     </script>
 
 </body>
