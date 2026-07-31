@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>100 HUB — Profiles</title>
+    <meta name="description" content="100 HUB - Creative Network & Community" />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preload" as="image" href="assets/100_Logo.png">
+
+    <style>
+        .page-profiles .hub-section { padding: 140px 0 80px; }
+        .page-profiles .community-section { padding: 80px 0 100px; }
+
+        .community-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .community-form {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            padding: 32px;
+            backdrop-filter: blur(12px);
+        }
+        .community-form h3 {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+        .social-group .social-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            width: 100%;
+        }
+        .social-group .social-row select {
+            flex: 0 0 140px;
+            min-width: 120px;
+            padding: 12px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.04);
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+        .social-group .social-row select option {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+        .social-group .social-row input {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.04);
+            font-family: 'Inter', sans-serif;
+        }
+        .social-group .social-row select:focus,
+        .social-group .social-row input:focus {
+            outline: none;
+            border-color: var(--red);
+        }
+        @media (max-width: 820px) {
+            .community-grid { grid-template-columns: 1fr; gap: 40px; }
+            .social-group .social-row { flex-direction: column; }
+            .social-group .social-row select,
+            .social-group .social-row input { width: 100%; flex: none; min-width: unset; }
+        }
+    </style>
+</head>
+<body class="page-profiles">
+
+    <!-- SITE PRELOADER -->
+    <div id="site-preloader" class="site-preloader">
+        <div class="preloader-inner">
+            <div class="preloader-spinner-box">
+                <div class="preloader-ring ring-outer"></div>
+                <div class="preloader-ring ring-inner"></div>
+                <div class="preloader-logo">
+                    <img src="assets/100_Logo.png" alt="100 HUB" />
+                </div>
+            </div>
+            <div class="preloader-text-box">
+                <span class="preloader-counter" id="preloaderCounter">0%</span>
+                <span class="preloader-status" id="preloaderStatus">INITIALIZING 3D GLOBE...</span>
+            </div>
+            <div class="preloader-bar-track">
+                <div class="preloader-bar-fill" id="preloaderFill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3D GLOBE BACKGROUND -->
+    <canvas id="globe-canvas"></canvas>
+    <div class="globe-fade-overlay"></div>
+    <div id="globe-nodes-container"></div>
+
+    <!-- TECH HUD OVERLAYS -->
+    <div class="tech-hud hud-top-left">
+        <span>LAT -26.2040° S</span>
+        <span>LON 28.0470° E</span>
+        <span>ALT 1753 M</span>
+        <span class="highlight-red">SIG LOCKED.</span>
+    </div>
+    <div class="tech-hud hud-top-right">
+        <span>NODE 100-HUB-01</span>
+        <span>STATUS ONLINE</span>
+        <span class="highlight-red">SYNC 99.8%</span>
+        <span>UPLINK STABLE</span>
+    </div>
+    <div class="tech-hud hud-bottom-left">
+        <span>04 / 09</span>
+    </div>
+    <div class="tech-hud hud-bottom-right">
+        <span>CREATORS <strong id="hud-creators-count" class="highlight-red">100</strong></span>
+        <span>NETWORK LIVE</span>
+        <span>TIER FOUNDING</span>
+    </div>
+
+    <!-- ==================== HEADER ==================== -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-inner">
+                <a href="/" class="nav-logo">
+                    <img src="assets/100_Logo.png" alt="100 HUB" class="logo-img" />
+                    <span class="logo-text"><span class="highlight-red">HUB</span></span>
+                </a>
+                <div class="nav-right">
+                    <div class="nav-social">
+                        <a href="https://www.instagram.com/100projectsmedia" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="mailto:100projectsmedia@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
+                    </div>
+                    <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Slide-out Menu -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" id="mobileMenuClose"><i class="fa-solid fa-xmark"></i></button>
+        <div class="mobile-menu-links">
+            <a href="/">Home</a>
+            <a href="/about.html">About</a>
+            <a href="/work.html">Our Work</a>
+            <a href="/profiles.html" class="active">Profiles</a>
+            <a href="/contact.html">Contact</a>
+        </div>
+        <div class="mobile-menu-social">
+            <a href="https://www.instagram.com/100projectsmedia" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>
+            <a href="mailto:100projectsmedia@gmail.com"><i class="fa-regular fa-envelope"></i> Email</a>
+        </div>
+    </div>
+
+    <!-- ==================== PROFILES (HUB) SECTION ==================== -->
+    <section class="hub-section" id="hub" data-animate>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">01 // PROFILES</span>
+                <h2 class="section-title">The Hub Roster<span class="highlight-red">.</span></h2>
+                <p class="section-subtitle">Discover independent directors, designers, producers, and cultural strategists.</p>
+            </div>
+            <div class="hub-grid" id="hubGrid">
+                <div class="hub-loading">
+                    <div class="loader"></div>
+                    <p>Loading members...</p>
+                </div>
+            </div>
+            <div class="see-more-container" id="hubSeeMore" style="display:none;">
+                <button class="see-more-btn" onclick="loadMoreHubMembers()">
+                    See More <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== COMMUNITY SECTION ==================== -->
+    <section class="community-section" id="community" data-animate>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">02 // CREATIVE NETWORK</span>
+                <h2 class="section-title">Join the 100 HUB Community<span class="highlight-red">.</span></h2>
+                <p class="section-subtitle">The culture-first creative infrastructure built for South Africa and beyond.</p>
+            </div>
+            <div class="community-grid">
+                <div class="community-content">
+                    <h3>Creators Community</h3>
+                    <p>Connect with writers, creatives, and culture-shapers building something real. Add yourself. Discover talent. Collaborate.</p>
+                    <div class="road-to-100">
+                        <span class="road-label">ROAD TO 100</span>
+                        <div class="road-counter">
+                            <span class="road-number" id="memberCount">...</span>
+                            <span class="road-total">/ 100</span>
+                        </div>
+                        <div class="road-progress">
+                            <div class="road-progress-bar" id="progressBar" style="width: 0%;"></div>
+                        </div>
+                        <p class="road-status" id="roadStatus">Loading members...</p>
+                    </div>
+                    <ul class="community-benefits">
+                        <li><i class="fa-regular fa-circle-check"></i> Creative Opportunities</li>
+                        <li><i class="fa-regular fa-circle-check"></i> Editorial Features</li>
+                        <li><i class="fa-regular fa-circle-check"></i> Events & Networking</li>
+                        <li><i class="fa-regular fa-circle-check"></i> Industry Conversations</li>
+                        <li><i class="fa-regular fa-circle-check"></i> Brand Collaborations</li>
+                    </ul>
+                    <!-- JOIN BUTTON -->
+                    <div style="margin-top: 24px;">
+                        <a href="#community-form" class="btn-primary" onclick="document.getElementById('community-form').scrollIntoView({behavior:'smooth'}); return false;">
+                            <i class="fa-regular fa-paper-plane"></i> Join the Community
+                        </a>
+                    </div>
+                </div>
+                <div class="community-form" id="community-form">
+                    <h3>Apply to Join</h3>
+                    <form id="signupForm">
+                        <div class="form-group">
+                            <label style="display:block; font-size:12px; color:var(--text-muted); margin-bottom:4px;">Professional Photo (1-3 images)</label>
+                            <input type="file" id="memberPhotos" accept="image/*" multiple required />
+                            <small style="color:var(--text-muted); font-size:11px;">Upload 1 to 3 images (PNG, JPG, JPEG)</small>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="memberName" placeholder="Full Name" required />
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="memberEmail" placeholder="Email Address" required />
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="memberRole" placeholder="Role/Title (e.g., Photographer, Writer, Brand Strategist)" required />
+                        </div>
+                        <div class="form-group">
+                            <input type="url" id="memberWebsite" placeholder="Website or Portfolio Link (optional)" />
+                        </div>
+                        <div class="form-group social-group">
+                            <label style="font-size:12px; color:var(--text-muted); margin-bottom:6px; display:block;">Social Media (optional)</label>
+                            <div class="social-row">
+                                <select id="socialPlatform">
+                                    <option value="">Platform</option>
+                                    <option value="instagram">Instagram</option>
+                                    <option value="tiktok">TikTok</option>
+                                    <option value="twitter">Twitter/X</option>
+                                    <option value="linkedin">LinkedIn</option>
+                                    <option value="youtube">YouTube</option>
+                                    <option value="facebook">Facebook</option>
+                                    <option value="behance">Behance</option>
+                                    <option value="pinterest">Pinterest</option>
+                                </select>
+                                <input type="text" id="socialHandle" placeholder="@yourhandle" />
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary full-width" id="signupSubmitBtn">
+                            <i class="fa-regular fa-paper-plane"></i> Submit Application
+                        </button>
+                    </form>
+                    <div id="signupSuccess" style="display:none; text-align:center; padding:20px 0;">
+                        <i class="fa-regular fa-circle-check" style="font-size:40px; color:var(--red); display:block; margin-bottom:12px;"></i>
+                        <h4 style="font-size:20px; margin-bottom:8px; color:var(--text-primary);">Application Submitted!</h4>
+                        <p style="color:var(--text-secondary); font-size:14px;">We'll review your profile and be in touch soon.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-top">
+                    <img src="assets/100_Logo.png" alt="100 HUB" class="footer-logo" loading="lazy" />
+                    <div class="footer-social">
+                        <a href="https://www.instagram.com/100projectsmedia" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://vt.tiktok.com/ZSQ4FhnXc/" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+                        <a href="https://youtu.be/Z1G7TeuiMz4?si=peQqspcPTATRZYsd" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="mailto:100projectsmedia@gmail.com"><i class="fa-regular fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="footer-divider">
+                    <span class="divider-line-short"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-line-short"></span>
+                </div>
+                <div class="footer-bottom">
+                    <p class="footer-tagline">Broadcasting &amp; Media Production Company</p>
+                    <p class="footer-copy">&copy; 2026 100 HUB. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <script>
+        // ==========================================
+        // API BASE
+        // ==========================================
+        const API_BASE = '/api';
+        const MAX_MEMBERS = 100;
+
+        // ==========================================
+        // HAMBURGER MENU
+        // ==========================================
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+
+        function toggleMobileMenu() {
+            hamburgerBtn.classList.toggle('active');
+            mobileMenu.classList.toggle('open');
+            mobileMenuOverlay.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+        }
+
+        function closeMobileMenu() {
+            hamburgerBtn.classList.remove('active');
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        if (hamburgerBtn && mobileMenu && mobileMenuOverlay && mobileMenuClose) {
+            hamburgerBtn.addEventListener('click', toggleMobileMenu);
+            mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+            mobileMenuClose.addEventListener('click', closeMobileMenu);
+        }
+
+        // ==========================================
+        // MEMBER COUNT
+        // ==========================================
+        async function getMemberCount() {
+            try {
+                const response = await fetch(`${API_BASE}/members?status=all`);
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.count || 0;
+                }
+                return 0;
+            } catch (error) {
+                return 0;
+            }
+        }
+
+        function updateCounterDisplay(count) {
+            const counter = document.getElementById('memberCount');
+            const progress = document.getElementById('progressBar');
+            const status = document.getElementById('roadStatus');
+
+            if (count === null || count === undefined) {
+                if (counter) counter.textContent = '...';
+                if (progress) progress.style.width = '0%';
+                if (status) status.textContent = 'Loading members...';
+                return;
+            }
+
+            if (counter) counter.textContent = count;
+            if (progress) progress.style.width = ((count || 0) / MAX_MEMBERS) * 100 + '%';
+            if (status) status.textContent = (count || 0) + ' creators have joined the journey';
+        }
+
+        // ==========================================
+        // HUB MEMBERS
+        // ==========================================
+        let allHubMembers = [];
+        let hubShowingAll = false;
+        const HUB_INITIAL = 6;
+
+        const SOCIAL_META = {
+            instagram: { icon: 'fa-brands fa-instagram', label: 'Instagram', url: (h) => `https://instagram.com/${h}` },
+            tiktok:    { icon: 'fa-brands fa-tiktok',    label: 'TikTok',    url: (h) => `https://tiktok.com/@${h}` },
+            twitter:   { icon: 'fa-brands fa-x-twitter', label: 'Twitter/X', url: (h) => `https://x.com/${h}` },
+            linkedin:  { icon: 'fa-brands fa-linkedin-in',label: 'LinkedIn', url: (h) => `https://linkedin.com/in/${h}` },
+            youtube:   { icon: 'fa-brands fa-youtube',   label: 'YouTube',   url: (h) => `https://youtube.com/@${h}` },
+            facebook:  { icon: 'fa-brands fa-facebook-f',label: 'Facebook',  url: (h) => `https://facebook.com/${h}` },
+            behance:   { icon: 'fa-brands fa-behance',   label: 'Behance',   url: (h) => `https://behance.net/${h}` },
+            pinterest: { icon: 'fa-brands fa-pinterest-p',label:'Pinterest', url: (h) => `https://pinterest.com/${h}` },
+        };
+
+        function optimizeImage(url, width = 400) {
+            if (!url) return url;
+            if (!url.includes('res.cloudinary.com')) return url;
+            return url.replace('/upload/', `/upload/f_auto,q_auto:good,w_${width},c_limit/`);
+        }
+
+        async function loadHubMembers(reset = true) {
+            try {
+                const response = await fetch(`${API_BASE}/members?status=accepted&limit=200`);
+                if (response.ok) {
+                    const data = await response.json();
+                    allHubMembers = data.members || [];
+                    renderHubGrid();
+                }
+            } catch (error) {
+                console.log('Could not load hub members');
+            }
+        }
+
+        function renderHubGrid() {
+            const container = document.getElementById('hubGrid');
+            const seeMoreWrap = document.getElementById('hubSeeMore');
+
+            if (allHubMembers.length === 0) {
+                container.innerHTML = `<div class="hub-empty"><p>No members yet. Be the first to join!</p></div>`;
+                seeMoreWrap.style.display = 'none';
+                return;
+            }
+
+            const toShow = hubShowingAll ? allHubMembers : allHubMembers.slice(0, HUB_INITIAL);
+
+            container.innerHTML = toShow.map(member => {
+                const img = optimizeImage(member.selectedImage || member.image1 || 'assets/100_Logo.png', 400);
+                const joinDate = member.created_at || member.timestamp
+                    ? new Date(member.created_at || member.timestamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+                    : '';
+
+                let socialLinkHtml = '';
+                if (member.socialPlatform && member.socialHandle) {
+                    const meta = SOCIAL_META[member.socialPlatform];
+                    if (meta) {
+                        const url = meta.url(member.socialHandle);
+                        socialLinkHtml = `
+                            <a href="${url}" target="_blank" rel="noopener">
+                                <i class="${meta.icon}"></i> @${member.socialHandle}
+                            </a>
+                        `;
+                    }
+                }
+
+                let websiteLinkHtml = '';
+                if (member.website) {
+                    const display = member.website.replace(/^https?:\/\//, '').replace(/\/$/, '');
+                    websiteLinkHtml = `
+                        <a href="${member.website}" target="_blank" rel="noopener">
+                            <i class="fa-solid fa-link"></i> ${display}
+                        </a>
+                    `;
+                }
+
+                return `
+                    <div class="hub-card" onclick="openMemberModal('${member.email}')">
+                        <div class="hub-image">
+                            <img src="${img}" alt="${member.name}" loading="lazy" />
+                        </div>
+                        <div class="hub-info">
+                            <h3 class="hub-name">${member.name}</h3>
+                            ${member.email ? `<div class="hub-email"><i class="fa-regular fa-envelope"></i> ${member.email}</div>` : ''}
+                            ${member.role ? `<div class="hub-role">${member.role}</div>` : ''}
+                            ${joinDate ? `<div class="hub-date"><i class="fa-regular fa-calendar"></i> Joined ${joinDate}</div>` : ''}
+                            ${member.skills ? `<div class="hub-skills">${member.skills}</div>` : ''}
+                            ${(socialLinkHtml || websiteLinkHtml) ? `
+                                <div class="hub-links">
+                                    ${socialLinkHtml}
+                                    ${websiteLinkHtml}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            if (allHubMembers.length > HUB_INITIAL) {
+                seeMoreWrap.style.display = 'block';
+                const btn = seeMoreWrap.querySelector('button');
+                if (btn) {
+                    btn.innerHTML = hubShowingAll
+                        ? 'See Less <i class="fa-solid fa-arrow-up"></i>'
+                        : 'See More <i class="fa-solid fa-arrow-right"></i>';
+                }
+            } else {
+                seeMoreWrap.style.display = 'none';
+            }
+        }
+
+        function loadMoreHubMembers() {
+            hubShowingAll = !hubShowingAll;
+            renderHubGrid();
+            if (!hubShowingAll) {
+                document.getElementById('hub').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // ==========================================
+        // MEMBER PROFILE MODAL
+        // ==========================================
+        function openMemberModal(email) {
+            const member = allHubMembers.find(m => m.email === email);
+            if (!member) return;
+
+            const img = optimizeImage(member.selectedImage || member.image1 || 'assets/100_Logo.png', 800);
+            const joinDate = member.created_at || member.timestamp
+                ? new Date(member.created_at || member.timestamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+                : '';
+
+            let socialHtml = '';
+            if (member.socialPlatform && member.socialHandle) {
+                const meta = SOCIAL_META[member.socialPlatform];
+                if (meta) {
+                    const url = meta.url(member.socialHandle);
+                    socialHtml = `
+                        <a href="${url}" target="_blank" rel="noopener" class="member-social-link">
+                            <i class="${meta.icon}"></i>
+                            <span>${meta.label}: @${member.socialHandle}</span>
+                        </a>
+                    `;
+                }
+            }
+
+            let websiteHtml = '';
+            if (member.website) {
+                const display = member.website.replace(/^https?:\/\//, '').replace(/\/$/, '');
+                websiteHtml = `
+                    <a href="${member.website}" target="_blank" rel="noopener" class="member-website-link">
+                        <i class="fa-solid fa-paperclip"></i>
+                        <span>${display}</span>
+                    </a>
+                `;
+            }
+
+            let skillsHtml = '';
+            if (member.skills) {
+                skillsHtml = `
+                    <div class="member-modal-skills">
+                        <span class="member-modal-label">Description</span>
+                        <p>${member.skills}</p>
+                    </div>
+                `;
+            }
+
+            let roleHtml = '';
+            if (member.role) {
+                roleHtml = `<span class="member-modal-role">${member.role}</span>`;
+            }
+
+            let emailHtml = '';
+            if (member.email) {
+                emailHtml = `<div class="member-modal-email"><i class="fa-regular fa-envelope"></i> ${member.email}</div>`;
+            }
+
+            let modal = document.getElementById('memberModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'memberModal';
+                modal.className = 'member-modal';
+                modal.innerHTML = `
+                    <div class="member-modal-overlay" id="memberModalOverlay"></div>
+                    <div class="member-modal-content">
+                        <button class="member-modal-close" id="memberModalClose"><i class="fa-solid fa-xmark"></i></button>
+                        <div id="memberModalBody"></div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+
+                document.getElementById('memberModalClose').addEventListener('click', closeMemberModal);
+                document.getElementById('memberModalOverlay').addEventListener('click', closeMemberModal);
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') closeMemberModal();
+                });
+            }
+
+            document.getElementById('memberModalBody').innerHTML = `
+                <div class="member-modal-photo">
+                    <img src="${img}" alt="${member.name}" />
+                </div>
+                <div class="member-modal-details">
+                    <h2 class="member-modal-name">${member.name}</h2>
+                    ${emailHtml}
+                    ${roleHtml}
+                    ${joinDate ? `<span class="member-modal-date">Joined ${joinDate}</span>` : ''}
+                    ${skillsHtml}
+                    ${(socialHtml || websiteHtml) ? `
+                        <div class="member-modal-links">
+                            ${socialHtml}
+                            ${websiteHtml}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMemberModal() {
+            const modal = document.getElementById('memberModal');
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // ==========================================
+        // SIGNUP FORM
+        // ==========================================
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('memberName').value;
+            const email = document.getElementById('memberEmail').value;
+            const role = document.getElementById('memberRole').value;
+            const website = document.getElementById('memberWebsite').value;
+            const socialPlatform = document.getElementById('socialPlatform').value;
+            const socialHandle = document.getElementById('socialHandle').value.trim().replace(/^@/, '');
+            const fileInput = document.getElementById('memberPhotos');
+            const files = fileInput.files;
+
+            if (!name || !email || !role) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            if (files.length === 0) {
+                alert('Please upload at least one photo.');
+                return;
+            }
+
+            if (files.length > 3) {
+                alert('Please upload a maximum of 3 photos.');
+                return;
+            }
+
+            const submitBtn = document.getElementById('signupSubmitBtn');
+            const form = document.getElementById('signupForm');
+            const successDiv = document.getElementById('signupSuccess');
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+
+            try {
+                const imageUrls = [];
+                for (const file of files) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', 'members');
+                    formData.append('folder', '100 TRUSTEES');
+
+                    const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/dfozevcbl/image/upload`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (uploadResponse.ok) {
+                        const data = await uploadResponse.json();
+                        imageUrls.push(data.secure_url);
+                    } else {
+                        console.error('Upload failed:', await uploadResponse.text());
+                    }
+                }
+
+                if (imageUrls.length === 0) {
+                    alert('Failed to upload images. Please try again.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Application';
+                    return;
+                }
+
+                const response = await fetch(`${API_BASE}/signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        role,
+                        website,
+                        socialPlatform: socialPlatform || '',
+                        socialHandle: socialHandle || '',
+                        image1: imageUrls[0] || '',
+                        image2: imageUrls[1] || '',
+                        image3: imageUrls[2] || '',
+                        status: 'pending'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    form.style.display = 'none';
+                    successDiv.style.display = 'block';
+                    fileInput.value = '';
+
+                    const count = await getMemberCount();
+                    updateCounterDisplay(count);
+                    loadHubMembers();
+                } else {
+                    alert(result.error || 'Something went wrong. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ ' + error.message);
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Application';
+        });
+
+        // ==========================================
+        // SCROLL REVEAL
+        // ==========================================
+        const animatedElements = document.querySelectorAll('[data-animate]');
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        animatedElements.forEach((el) => {
+            revealObserver.observe(el);
+        });
+
+        // ==========================================
+        // HUD CREATORS COUNT
+        // ==========================================
+        async function updateCreatorsCount() {
+            try {
+                const response = await fetch('/api/members?status=accepted&limit=1');
+                if (response.ok) {
+                    const data = await response.json();
+                    const count = data.count || 0;
+                    const hudEl = document.getElementById('hud-creators-count');
+                    if (hudEl) hudEl.textContent = count;
+                }
+            } catch (e) {}
+        }
+
+        // ==========================================
+        // NAVBAR SCROLL
+        // ==========================================
+        const navbar = document.querySelector('.navbar');
+        if (navbar) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY <= 50) {
+                    navbar.classList.remove('nav-scrolled');
+                } else {
+                    navbar.classList.add('nav-scrolled');
+                }
+            }, { passive: true });
+        }
+
+        // ==========================================
+        // INIT
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', async function() {
+            updateCounterDisplay(null);
+            await loadHubMembers(true);
+            const memberCount = await getMemberCount();
+            updateCounterDisplay(memberCount);
+            updateCreatorsCount();
+            console.log('👥 100 HUB — Profiles Page Loaded');
+        });
+    </script>
+
+    <!-- Three.js for 3D Globe -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+        // (Same 3D globe code - condensed)
+        const canvas = document.getElementById('globe-canvas');
+        const scene = new THREE.Scene();
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100000);
+        camera.position.set(0, 2000, 18000);
+
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 0.8;
+
+        const ambientLight = new THREE.AmbientLight(0x404060, 0.6);
+        scene.add(ambientLight);
+        const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        mainLight.position.set(10000, 8000, 12000);
+        scene.add(mainLight);
+        const rimLight = new THREE.DirectionalLight(0x6688ff, 0.4);
+        rimLight.position.set(-8000, 4000, -10000);
+        scene.add(rimLight);
+        const redLight = new THREE.PointLight(0xe31e24, 0.8, 30000);
+        redLight.position.set(5000, -3000, 8000);
+        scene.add(redLight);
+
+        const particleCount = 2500;
+        const particleGeometry = new THREE.BufferGeometry();
+        const particlePositions = new Float32Array(particleCount * 3);
+        const particleColors = new Float32Array(particleCount * 3);
+        const colorPalette = [
+            new THREE.Color(0xffffff), new THREE.Color(0xdce8ff),
+            new THREE.Color(0x88b5ff), new THREE.Color(0xe31e24), new THREE.Color(0xaaaaaa)
+        ];
+        for (let i = 0; i < particleCount; i++) {
+            const radius = 8000 + Math.random() * 32000;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos((Math.random() * 2) - 1);
+            particlePositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+            particlePositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+            particlePositions[i * 3 + 2] = radius * Math.cos(phi);
+            const c = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+            particleColors[i * 3] = c.r;
+            particleColors[i * 3 + 1] = c.g;
+            particleColors[i * 3 + 2] = c.b;
+        }
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+        particleGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 3.5, vertexColors: true, transparent: true,
+            opacity: 0.75, blending: THREE.AdditiveBlending, depthWrite: false
+        });
+        const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particleSystem);
+
+        const auraGeo = new THREE.SphereGeometry(4250, 48, 48);
+        const auraMat = new THREE.MeshBasicMaterial({
+            color: 0x4477ff, transparent: true, opacity: 0.08,
+            blending: THREE.AdditiveBlending, side: THREE.BackSide
+        });
+        const auraMesh = new THREE.Mesh(auraGeo, auraMat);
+        scene.add(auraMesh);
+
+        const nodesContainer = document.getElementById('globe-nodes-container');
+        const nodeDefs = [
+            { label: 'JHB-008', radius: 6500, speed: 0.006, theta: 0, tilt: new THREE.Euler(Math.PI * 0.15, 0, Math.PI * 0.1) },
+            { label: 'LON-041', radius: 8500, speed: -0.005, theta: Math.PI * 1.2, tilt: new THREE.Euler(-Math.PI * 0.25, 0, Math.PI * 0.15) },
+            { label: '100 HUB', radius: 5500, speed: 0.009, theta: Math.PI * 0.9, tilt: new THREE.Euler(Math.PI * 0.1, 0, Math.PI * 0.05) }
+        ];
+        const nodeObjects = [];
+        const nodeSphereGeo = new THREE.SphereGeometry(120, 16, 16);
+        const nodeSphereMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const redNodeMat = new THREE.MeshBasicMaterial({ color: 0xe31e24 });
+        nodeDefs.forEach((def, index) => {
+            const mesh = new THREE.Mesh(nodeSphereGeo, index === 2 ? redNodeMat : nodeSphereMat);
+            scene.add(mesh);
+            const badge = document.createElement('div');
+            badge.className = 'globe-node-badge';
+            badge.innerHTML = `<span class="node-pulse-dot"></span>${def.label}`;
+            nodesContainer.appendChild(badge);
+            nodeObjects.push({ def, mesh, badgeEl: badge, theta: def.theta });
+        });
+
+        const preloader = document.getElementById('site-preloader');
+        const preloaderFill = document.getElementById('preloaderFill');
+        const preloaderCounter = document.getElementById('preloaderCounter');
+        const preloaderStatus = document.getElementById('preloaderStatus');
+
+        function hidePreloader() {
+            if (preloaderFill) preloaderFill.style.width = '100%';
+            if (preloaderCounter) preloaderCounter.textContent = '100%';
+            if (preloaderStatus) preloaderStatus.textContent = 'SYSTEM ONLINE';
+            setTimeout(() => { if (preloader) preloader.classList.add('loaded'); }, 500);
+        }
+
+        const preloaderSafetyTimer = setTimeout(hidePreloader, 6000);
+        let globeModel = null;
+        const loader = new GLTFLoader();
+        loader.load(
+            'assets/globe/scene.gltf',
+            (gltf) => {
+                globeModel = gltf.scene;
+                const box = new THREE.Box3().setFromObject(globeModel);
+                const center = box.getCenter(new THREE.Vector3());
+                const size = box.getSize(new THREE.Vector3());
+                const maxDim = Math.max(size.x, size.y, size.z);
+                const scale = 8000 / maxDim;
+                globeModel.scale.setScalar(scale);
+                globeModel.position.sub(center.multiplyScalar(scale));
+                globeModel.traverse((child) => {
+                    if (child.isMesh && child.material) {
+                        child.material.metalness = 0.1;
+                        child.material.roughness = 0.6;
+                    }
+                });
+                scene.add(globeModel);
+                clearTimeout(preloaderSafetyTimer);
+                hidePreloader();
+            },
+            (progress) => {
+                if (progress.total > 0) {
+                    const pct = Math.min(Math.floor((progress.loaded / progress.total) * 100), 99);
+                    if (preloaderFill) preloaderFill.style.width = pct + '%';
+                    if (preloaderCounter) preloaderCounter.textContent = pct + '%';
+                    if (preloaderStatus) preloaderStatus.textContent = `LOADING 3D MODEL ${pct}%`;
+                }
+            },
+            () => { clearTimeout(preloaderSafetyTimer); hidePreloader(); }
+        );
+
+        let mouseX = 0, mouseY = 0;
+        const targetRotX = { value: 0 }, targetRotY = { value: 0 };
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+        });
+
+        let targetCamY = 1500;
+        let targetCamZ = 16000;
+
+        function updateCameraScrollTarget() {
+            const scrollY = window.scrollY;
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = maxScroll > 0 ? scrollY / maxScroll : 0;
+            targetCamY = 1500 - progress * 800;
+            targetCamZ = 16000 - progress * 2000;
+        }
+
+        window.addEventListener('scroll', updateCameraScrollTarget, { passive: true });
+        updateCameraScrollTarget();
+
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsed = clock.getElapsedTime();
+
+            camera.position.y += (targetCamY - camera.position.y) * 0.03;
+            camera.position.z += (targetCamZ - camera.position.z) * 0.03;
+            camera.lookAt(0, 0, 0);
+
+            if (particleSystem) {
+                particleSystem.rotation.y = elapsed * 0.015;
+                particleSystem.rotation.x = Math.sin(elapsed * 0.03) * 0.04;
+            }
+            if (globeModel) {
+                globeModel.rotation.y = elapsed * 0.08;
+                targetRotX.value += (mouseY * 0.15 - targetRotX.value) * 0.02;
+                targetRotY.value += (mouseX * 0.15 - targetRotY.value) * 0.02;
+                globeModel.rotation.x = targetRotX.value;
+                globeModel.rotation.z = targetRotY.value * 0.3;
+            }
+            redLight.position.x = Math.sin(elapsed * 0.3) * 8000;
+            redLight.position.z = Math.cos(elapsed * 0.3) * 8000;
+
+            const tempVector = new THREE.Vector3();
+            nodeObjects.forEach(node => {
+                node.theta += node.def.speed;
+                const posX = Math.cos(node.theta) * node.def.radius;
+                const posZ = Math.sin(node.theta) * node.def.radius;
+                tempVector.set(posX, 0, posZ);
+                tempVector.applyEuler(node.def.tilt);
+                node.mesh.position.copy(tempVector);
+                const projected = tempVector.clone().project(camera);
+                const screenX = (projected.x * 0.5 + 0.5) * window.innerWidth;
+                const screenY = (-(projected.y * 0.5) + 0.5) * window.innerHeight;
+                if (projected.z > 1) {
+                    node.badgeEl.style.display = 'none';
+                } else {
+                    node.badgeEl.style.display = 'flex';
+                    node.badgeEl.style.transform = `translate(-50%, -50%) translate(${screenX}px, ${screenY}px)`;
+                    node.badgeEl.style.opacity = (projected.z < 0.95) ? '0.9' : '0.15';
+                }
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        console.log('🌐 3D Globe active on profiles page');
+    </script>
+
+</body>
+</html>

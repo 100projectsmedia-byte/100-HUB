@@ -955,6 +955,54 @@
                 </div>
             </div>
 
+                        <!-- Tab: Posts -->
+            <div class="tab-content" id="tab-posts">
+                <div class="dashboard-actions">
+                    <button class="btn-outline" onclick="loadPosts()">
+                        <i class="fa-solid fa-rotate"></i> Refresh
+                    </button>
+                    <button class="btn-primary" onclick="openAddPostModal()">
+                        <i class="fa-regular fa-plus"></i> Add Post
+                    </button>
+                    <button class="btn-outline" onclick="syncAllPosts()" id="syncPostsBtn">
+                        <i class="fa-brands fa-instagram"></i> Sync All
+                    </button>
+                </div>
+
+                <!-- Search Bar -->
+                <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
+                    <input type="text" id="postSearchInput" placeholder="Search posts by caption or post ID..." 
+                        style="flex:1; min-width:200px; padding:10px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif;" />
+                    <button class="btn-outline btn-sm" onclick="searchPosts()">
+                        <i class="fa-solid fa-search"></i> Search
+                    </button>
+                    <button class="btn-outline btn-sm" onclick="clearPostSearch()">
+                        <i class="fa-solid fa-times"></i> Clear
+                    </button>
+                    <span id="postCountDisplay" style="font-size:12px; color:rgba(255,255,255,0.4); margin-left:auto;">
+                        Total: <span id="postTotalCount">0</span>
+                    </span>
+                </div>
+
+                <!-- Posts Grid -->
+                <div class="post-grid" id="postGrid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:20px;">
+                    <div class="empty-state" style="grid-column:1/-1; padding:60px 20px;">
+                        <i class="fa-regular fa-images"></i>
+                        <p>Loading posts...</p>
+                    </div>
+                </div>
+
+                <!-- Show More / Show Less -->
+                <div class="see-more-container" id="postSeeMore" style="display:none;">
+                    <button class="see-more-btn" onclick="loadMorePosts()" id="loadMorePostsBtn">
+                        Show More <i class="fa-solid fa-arrow-down"></i>
+                    </button>
+                    <button class="see-more-btn" onclick="resetPostView()" id="resetPostViewBtn" style="margin-left:12px; display:none;">
+                        Show Less <i class="fa-solid fa-arrow-up"></i>
+                    </button>
+                </div>
+            </div>
+
             <!-- Tab: Partners -->
             <div class="tab-content" id="tab-partners">
                 <div class="dashboard-actions">
@@ -1164,6 +1212,88 @@
                         <button type="button" class="btn-outline" onclick="closeArticleModal()">Cancel</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+        <!-- ==================== ADD POST MODAL ==================== -->
+    <div class="edit-modal" id="postModal">
+        <div class="edit-modal-overlay" id="postModalOverlay"></div>
+        <div class="edit-modal-content">
+            <button class="edit-modal-close" id="postModalClose"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="font-family:'Playfair Display',serif; font-size:24px; margin-bottom:4px;" id="postModalTitle">Add Instagram Post</h3>
+            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;" id="postModalSubtitle">Paste an Instagram URL to auto-fetch the post</p>
+            <div>
+                <div class="form-group">
+                    <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Instagram URL</label>
+                    <input type="url" id="postInstagramUrl" placeholder="https://www.instagram.com/p/..." required />
+                    <small style="color:rgba(255,255,255,0.4); font-size:11px;">The system will auto-fetch image, caption, and post ID</small>
+                </div>
+                <div class="form-group">
+                    <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Article URL (Optional)</label>
+                    <input type="url" id="postArticleUrl" placeholder="https://substack.com/..." />
+                    <small style="color:rgba(255,255,255,0.4); font-size:11px;">Link an article to this post</small>
+                </div>
+                <div class="edit-actions">
+                    <button type="button" class="btn-primary" onclick="savePost()" id="postSubmitBtn">
+                        <i class="fa-regular fa-floppy-disk"></i> Save Post
+                    </button>
+                    <button type="button" class="btn-outline" onclick="closePostModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== LINK ARTICLE MODAL ==================== -->
+    <div class="edit-modal" id="linkArticleModal">
+        <div class="edit-modal-overlay" id="linkArticleModalOverlay"></div>
+        <div class="edit-modal-content">
+            <button class="edit-modal-close" id="linkArticleModalClose"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="font-family:'Playfair Display',serif; font-size:24px; margin-bottom:4px;">Link Article to Post</h3>
+            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;" id="linkPostDisplay">Post ID: </p>
+            <div>
+                <input type="hidden" id="linkPostId" />
+                <div class="form-group">
+                    <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Article URL</label>
+                    <input type="url" id="linkArticleUrl" placeholder="https://substack.com/..." required />
+                </div>
+                <div class="edit-actions">
+                    <button type="button" class="btn-primary" onclick="saveArticleLink()">
+                        <i class="fa-regular fa-link"></i> Link Article
+                    </button>
+                    <button type="button" class="btn-outline" onclick="closeLinkArticleModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== EDIT POST MODAL ==================== -->
+    <div class="edit-modal" id="editPostModal">
+        <div class="edit-modal-overlay" id="editPostModalOverlay"></div>
+        <div class="edit-modal-content">
+            <button class="edit-modal-close" id="editPostModalClose"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="font-family:'Playfair Display',serif; font-size:24px; margin-bottom:4px;">Edit Post</h3>
+            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;">Update post details</p>
+            <div>
+                <input type="hidden" id="editPostId" />
+                <div class="form-group">
+                    <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Caption</label>
+                    <textarea id="editPostCaption" rows="3" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif; resize:vertical;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Writer</label>
+                    <input type="text" id="editPostWriter" placeholder="100 HUB" />
+                </div>
+                <div class="form-group">
+                    <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Article URL</label>
+                    <input type="url" id="editPostArticleUrl" placeholder="https://substack.com/..." />
+                </div>
+                <div class="edit-actions">
+                    <button type="button" class="btn-primary" onclick="saveEditPost()">
+                        <i class="fa-regular fa-floppy-disk"></i> Save Changes
+                    </button>
+                    <button type="button" class="btn-outline" onclick="closeEditPostModal()">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1740,6 +1870,340 @@
             showToast('Refreshed!', 'success');
         }
 
+
+        // ==========================================
+        // POSTS - CRUD Operations
+        // ==========================================
+        let allPosts = [];
+        let filteredPosts = [];
+        let postDisplayCount = 9;
+        const POST_DEFAULT_COUNT = 9;
+        const POST_INCREMENT = 3;
+
+        async function loadPosts() {
+            const grid = document.getElementById('postGrid');
+            const searchTerm = document.getElementById('postSearchInput')?.value || '';
+            
+            try {
+                const url = searchTerm.trim() 
+                    ? `/api/posts?limit=100&search=${encodeURIComponent(searchTerm)}`
+                    : '/api/posts?limit=100';
+                    
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.success) {
+                    allPosts = data.posts || [];
+                    filteredPosts = allPosts;
+                    document.getElementById('postTotalCount').textContent = allPosts.length;
+                    renderPostGrid();
+                } else {
+                    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+                        <i class="fa-regular fa-images"></i>
+                        <p>Failed to load posts.</p>
+                    </div>`;
+                }
+            } catch (error) {
+                console.error('Load posts error:', error);
+                grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+                    <i class="fa-regular fa-images"></i>
+                    <p>Error loading posts.</p>
+                </div>`;
+            }
+        }
+
+        function renderPostGrid() {
+            const grid = document.getElementById('postGrid');
+            const seeMoreWrap = document.getElementById('postSeeMore');
+            const loadMoreBtn = document.getElementById('loadMorePostsBtn');
+            const resetBtn = document.getElementById('resetPostViewBtn');
+
+            const postsToShow = filteredPosts.slice(0, postDisplayCount);
+            
+            if (postsToShow.length === 0) {
+                grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+                    <i class="fa-regular fa-images"></i>
+                    <p>${filteredPosts.length === 0 ? 'No posts found. Add your first post!' : 'No posts match your search.'}</p>
+                </div>`;
+                seeMoreWrap.style.display = 'none';
+                return;
+            }
+
+            grid.innerHTML = postsToShow.map((post, index) => {
+                const hasArticle = post.article_url && post.article_url.trim() !== '';
+                const date = post.published_at ? new Date(post.published_at).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                }) : 'No date';
+                
+                const caption = post.caption || '';
+                const truncatedCaption = caption.length > 60 ? caption.substring(0, 60) + '...' : caption;
+                
+                return `
+                    <div class="post-card" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; overflow:hidden; transition:all 0.3s ease;">
+                        <div style="position:relative; aspect-ratio:4/5; overflow:hidden; background:var(--bg-tertiary);">
+                            <img src="${post.image_url || 'assets/100_Logo.png'}" alt="${post.post_id}" style="width:100%; height:100%; object-fit:cover;" loading="lazy" />
+                            ${post.is_video ? '<span style="position:absolute; top:10px; right:10px; background:rgba(0,0,0,0.6); padding:4px 10px; border-radius:20px; font-size:10px; color:white;"><i class="fa-solid fa-play"></i> Video</span>' : ''}
+                            ${hasArticle ? '<span style="position:absolute; bottom:10px; right:10px; background:rgba(227,30,36,0.9); padding:4px 10px; border-radius:20px; font-size:10px; color:white;"><i class="fa-regular fa-file-lines"></i> Article</span>' : ''}
+                        </div>
+                        <div style="padding:12px 14px;">
+                            <div style="font-size:11px; color:rgba(255,255,255,0.4); font-family:'Space Mono',monospace; margin-bottom:4px;">ID: ${post.post_id}</div>
+                            <div style="font-size:13px; color:rgba(255,255,255,0.8); margin-bottom:4px; line-height:1.4;">${truncatedCaption}</div>
+                            <div style="font-size:11px; color:rgba(255,255,255,0.3); margin-bottom:8px;">${post.writer || '100 HUB'} · ${date}</div>
+                            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                <button class="btn-outline btn-sm" onclick="openEditPostModal('${post.id}')" title="Edit">
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                </button>
+                                <button class="btn-outline btn-sm" onclick="openLinkArticleModal('${post.id}')" title="Link Article">
+                                    <i class="fa-regular fa-link"></i>
+                                </button>
+                                <button class="btn-outline btn-sm danger" onclick="confirmDelete('post', '${post.id}', '${post.post_id}')" title="Delete">
+                                    <i class="fa-regular fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Show/Hide See More buttons
+            if (filteredPosts.length > postDisplayCount) {
+                seeMoreWrap.style.display = 'flex';
+                seeMoreWrap.style.gap = '12px';
+                seeMoreWrap.style.justifyContent = 'center';
+                loadMoreBtn.style.display = 'inline-flex';
+                if (postDisplayCount > POST_DEFAULT_COUNT) {
+                    resetBtn.style.display = 'inline-flex';
+                } else {
+                    resetBtn.style.display = 'none';
+                }
+            } else {
+                seeMoreWrap.style.display = 'none';
+            }
+        }
+
+        function searchPosts() {
+            const searchTerm = document.getElementById('postSearchInput').value.trim();
+            if (!searchTerm) {
+                filteredPosts = allPosts;
+            } else {
+                const term = searchTerm.toLowerCase();
+                filteredPosts = allPosts.filter(post => 
+                    (post.caption && post.caption.toLowerCase().includes(term)) ||
+                    (post.post_id && post.post_id.toLowerCase().includes(term))
+                );
+            }
+            postDisplayCount = POST_DEFAULT_COUNT;
+            renderPostGrid();
+        }
+
+        function clearPostSearch() {
+            document.getElementById('postSearchInput').value = '';
+            filteredPosts = allPosts;
+            postDisplayCount = POST_DEFAULT_COUNT;
+            renderPostGrid();
+        }
+
+        function loadMorePosts() {
+            postDisplayCount += POST_INCREMENT;
+            if (postDisplayCount > filteredPosts.length) {
+                postDisplayCount = filteredPosts.length;
+            }
+            renderPostGrid();
+        }
+
+        function resetPostView() {
+            postDisplayCount = POST_DEFAULT_COUNT;
+            renderPostGrid();
+        }
+
+        // ==========================================
+        // ADD POST MODAL
+        // ==========================================
+        function openAddPostModal() {
+            document.getElementById('postModalTitle').textContent = 'Add Instagram Post';
+            document.getElementById('postModalSubtitle').textContent = 'Paste an Instagram URL to auto-fetch the post';
+            document.getElementById('postInstagramUrl').value = '';
+            document.getElementById('postArticleUrl').value = '';
+            document.getElementById('postModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePostModal() {
+            document.getElementById('postModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        async function savePost() {
+            const url = document.getElementById('postInstagramUrl').value.trim();
+            const articleUrl = document.getElementById('postArticleUrl').value.trim();
+            
+            if (!url) {
+                showToast('Please enter an Instagram URL.', 'error');
+                return;
+            }
+            
+            const submitBtn = document.getElementById('postSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+            
+            try {
+                const response = await fetch('/api/posts', {
+                    method: 'POST',
+                    headers: adminHeaders(),
+                    body: JSON.stringify({ url, article_url: articleUrl || '' })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Post added successfully!', 'success');
+                    closePostModal();
+                    loadPosts();
+                } else {
+                    showToast(result.error || 'Failed to add post.', 'error');
+                }
+            } catch (error) {
+                console.error('Save post error:', error);
+                showToast('Error saving post.', 'error');
+            }
+            
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Post';
+        }
+
+        // ==========================================
+        // SYNC ALL POSTS
+        // ==========================================
+        async function syncAllPosts() {
+            const btn = document.getElementById('syncPostsBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Syncing...';
+            
+            try {
+                const response = await fetch('/api/posts/sync', {
+                    method: 'POST',
+                    headers: adminHeaders()
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`✅ Synced ${result.synced} posts, skipped ${result.skipped} existing`, 'success');
+                    loadPosts();
+                } else {
+                    showToast(result.error || 'Sync failed.', 'error');
+                }
+            } catch (error) {
+                console.error('Sync error:', error);
+                showToast('Error syncing posts.', 'error');
+            }
+            
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-brands fa-instagram"></i> Sync All';
+        }
+
+        // ==========================================
+        // LINK ARTICLE TO POST
+        // ==========================================
+        function openLinkArticleModal(postId) {
+            const post = allPosts.find(p => p.id === postId);
+            if (!post) return;
+            
+            document.getElementById('linkPostId').value = postId;
+            document.getElementById('linkPostDisplay').textContent = `Post ID: ${post.post_id}`;
+            document.getElementById('linkArticleUrl').value = post.article_url || '';
+            document.getElementById('linkArticleModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLinkArticleModal() {
+            document.getElementById('linkArticleModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        async function saveArticleLink() {
+            const postId = document.getElementById('linkPostId').value;
+            const articleUrl = document.getElementById('linkArticleUrl').value.trim();
+            
+            if (!articleUrl) {
+                showToast('Please enter an article URL.', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/posts`, {
+                    method: 'PUT',
+                    headers: adminHeaders(),
+                    body: JSON.stringify({ 
+                        id: postId,
+                        article_url: articleUrl
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Article linked successfully!', 'success');
+                    closeLinkArticleModal();
+                    loadPosts();
+                } else {
+                    showToast(result.error || 'Failed to link article.', 'error');
+                }
+            } catch (error) {
+                console.error('Link article error:', error);
+                showToast('Error linking article.', 'error');
+            }
+        }
+
+        // ==========================================
+        // EDIT POST MODAL
+        // ==========================================
+        function openEditPostModal(postId) {
+            const post = allPosts.find(p => p.id === postId);
+            if (!post) return;
+            
+            document.getElementById('editPostId').value = post.id;
+            document.getElementById('editPostCaption').value = post.caption || '';
+            document.getElementById('editPostWriter').value = post.writer || '100 HUB';
+            document.getElementById('editPostArticleUrl').value = post.article_url || '';
+            document.getElementById('editPostModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeEditPostModal() {
+            document.getElementById('editPostModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        async function saveEditPost() {
+            const id = document.getElementById('editPostId').value;
+            const caption = document.getElementById('editPostCaption').value.trim();
+            const writer = document.getElementById('editPostWriter').value.trim();
+            const article_url = document.getElementById('editPostArticleUrl').value.trim();
+            
+            try {
+                const response = await fetch(`/api/posts`, {
+                    method: 'PUT',
+                    headers: adminHeaders(),
+                    body: JSON.stringify({ id, caption, writer, article_url })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Post updated successfully!', 'success');
+                    closeEditPostModal();
+                    loadPosts();
+                } else {
+                    showToast(result.error || 'Failed to update post.', 'error');
+                }
+            } catch (error) {
+                console.error('Update post error:', error);
+                showToast('Error updating post.', 'error');
+            }
+        }
         // ==========================================
         // FETCH BEHOLD POSTS (Instagram Feed)
         // ==========================================

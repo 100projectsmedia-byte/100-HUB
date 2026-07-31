@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>100 HUB — About</title>
+    <meta name="description" content="About 100 HUB - Broadcasting & Media Production" />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preload" as="image" href="assets/100_Logo.png">
+
+    <style>
+        .page-about .about-section { padding: 140px 0 80px; }
+        .page-about .team-section { padding: 80px 0 100px; }
+    </style>
+</head>
+<body class="page-about">
+
+    <!-- SITE PRELOADER -->
+    <div id="site-preloader" class="site-preloader">
+        <div class="preloader-inner">
+            <div class="preloader-spinner-box">
+                <div class="preloader-ring ring-outer"></div>
+                <div class="preloader-ring ring-inner"></div>
+                <div class="preloader-logo">
+                    <img src="assets/100_Logo.png" alt="100 HUB" />
+                </div>
+            </div>
+            <div class="preloader-text-box">
+                <span class="preloader-counter" id="preloaderCounter">0%</span>
+                <span class="preloader-status" id="preloaderStatus">INITIALIZING 3D GLOBE...</span>
+            </div>
+            <div class="preloader-bar-track">
+                <div class="preloader-bar-fill" id="preloaderFill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3D GLOBE BACKGROUND -->
+    <canvas id="globe-canvas"></canvas>
+    <div class="globe-fade-overlay"></div>
+    <div id="globe-nodes-container"></div>
+
+    <!-- TECH HUD OVERLAYS -->
+    <div class="tech-hud hud-top-left">
+        <span>LAT -26.2040° S</span>
+        <span>LON 28.0470° E</span>
+        <span>ALT 1753 M</span>
+        <span class="highlight-red">SIG LOCKED.</span>
+    </div>
+    <div class="tech-hud hud-top-right">
+        <span>NODE 100-HUB-01</span>
+        <span>STATUS ONLINE</span>
+        <span class="highlight-red">SYNC 99.8%</span>
+        <span>UPLINK STABLE</span>
+    </div>
+    <div class="tech-hud hud-bottom-left">
+        <span>02 / 09</span>
+    </div>
+    <div class="tech-hud hud-bottom-right">
+        <span>CREATORS <strong id="hud-creators-count" class="highlight-red">100</strong></span>
+        <span>NETWORK LIVE</span>
+        <span>TIER FOUNDING</span>
+    </div>
+
+    <!-- ==================== HEADER ==================== -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-inner">
+                <a href="/" class="nav-logo">
+                    <img src="assets/100_Logo.png" alt="100 HUB" class="logo-img" />
+                    <span class="logo-text"><span class="highlight-red">HUB</span></span>
+                </a>
+                <div class="nav-right">
+                    <div class="nav-social">
+                        <a href="https://www.instagram.com/100projectsmedia" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="mailto:100projectsmedia@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
+                    </div>
+                    <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Slide-out Menu -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" id="mobileMenuClose"><i class="fa-solid fa-xmark"></i></button>
+        <div class="mobile-menu-links">
+            <a href="/">Home</a>
+            <a href="/about.html" class="active">About</a>
+            <a href="/work.html">Our Work</a>
+            <a href="/profiles.html">Profiles</a>
+            <a href="/contact.html">Contact</a>
+        </div>
+        <div class="mobile-menu-social">
+            <a href="https://www.instagram.com/100projectsmedia" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>
+            <a href="mailto:100projectsmedia@gmail.com"><i class="fa-regular fa-envelope"></i> Email</a>
+        </div>
+    </div>
+
+    <!-- ==================== ABOUT SECTION ==================== -->
+    <section class="about-section" id="about" data-animate>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">01 // ABOUT 100 PROJECTS MEDIA</span>
+            </div>
+            <div class="about-content">
+                <h2 class="about-statement">
+                    100 Projects Media is a South African cultural media platform focused on fashion, music, sport, business and community<span class="highlight-red">.</span>
+                </h2>
+                <p class="about-lead">
+                    Through 100 Magazine, 100 Conversations, events and multimedia production, we create stories that connect brands with culture-first audiences.
+                </p>
+                <p class="about-lead">
+                    Our work spans editorial publishing, photography, film, podcasts, live experiences and strategic content distribution across digital platforms.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TEAM SECTION ==================== -->
+    <section class="team-section" id="team" data-animate>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">02 // LEADERSHIP</span>
+                <h2 class="section-title">Meet the Founders<span class="highlight-red">.</span></h2>
+            </div>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-image">
+                        <img src="team/Mpilo.jpeg" alt="Mpilo Nhlapho" loading="lazy" />
+                        <a href="https://www.linkedin.com/in/mpilo-nhlapho-611752251" target="_blank" class="team-linkedin">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                    <div class="team-info">
+                        <h3 class="team-name">Mpilo Nhlapho</h3>
+                        <p class="team-role">Founder &amp; CBO</p>
+                        <a href="https://www.linkedin.com/in/mpilo-nhlapho-611752251" target="_blank" class="team-link">
+                            <i class="fa-brands fa-linkedin-in"></i> Connect on LinkedIn
+                        </a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <div class="team-image">
+                        <img src="team/Khosi.jpeg" alt="Lesley Khocy" loading="lazy" />
+                        <a href="https://www.linkedin.com/in/serutcip-entertainment-288195353" target="_blank" class="team-linkedin">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                    <div class="team-info">
+                        <h3 class="team-name">Lesley Khocy</h3>
+                        <p class="team-role">Co-Founder, Visual Director, Editor In Chief</p>
+                        <a href="https://www.linkedin.com/in/serutcip-entertainment-288195353" target="_blank" class="team-link">
+                            <i class="fa-brands fa-linkedin-in"></i> Connect on LinkedIn
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-top">
+                    <img src="assets/100_Logo.png" alt="100 HUB" class="footer-logo" loading="lazy" />
+                    <div class="footer-social">
+                        <a href="https://www.instagram.com/100projectsmedia" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://vt.tiktok.com/ZSQ4FhnXc/" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+                        <a href="https://youtu.be/Z1G7TeuiMz4?si=peQqspcPTATRZYsd" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="mailto:100projectsmedia@gmail.com"><i class="fa-regular fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="footer-divider">
+                    <span class="divider-line-short"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-line-short"></span>
+                </div>
+                <div class="footer-bottom">
+                    <p class="footer-tagline">Broadcasting &amp; Media Production Company</p>
+                    <p class="footer-copy">&copy; 2026 100 HUB. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <script>
+        // ==========================================
+        // HAMBURGER MENU
+        // ==========================================
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+
+        function toggleMobileMenu() {
+            hamburgerBtn.classList.toggle('active');
+            mobileMenu.classList.toggle('open');
+            mobileMenuOverlay.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+        }
+
+        function closeMobileMenu() {
+            hamburgerBtn.classList.remove('active');
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        if (hamburgerBtn && mobileMenu && mobileMenuOverlay && mobileMenuClose) {
+            hamburgerBtn.addEventListener('click', toggleMobileMenu);
+            mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+            mobileMenuClose.addEventListener('click', closeMobileMenu);
+        }
+
+        // ==========================================
+        // SCROLL REVEAL
+        // ==========================================
+        const animatedElements = document.querySelectorAll('[data-animate]');
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        animatedElements.forEach((el) => {
+            revealObserver.observe(el);
+        });
+
+        // ==========================================
+        // HUD CREATORS COUNT
+        // ==========================================
+        async function updateCreatorsCount() {
+            try {
+                const response = await fetch('/api/members?status=accepted&limit=1');
+                if (response.ok) {
+                    const data = await response.json();
+                    const count = data.count || 0;
+                    const hudEl = document.getElementById('hud-creators-count');
+                    if (hudEl) hudEl.textContent = count;
+                }
+            } catch (e) {}
+        }
+
+        // ==========================================
+        // NAVBAR SCROLL
+        // ==========================================
+        const navbar = document.querySelector('.navbar');
+        if (navbar) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY <= 50) {
+                    navbar.classList.remove('nav-scrolled');
+                } else {
+                    navbar.classList.add('nav-scrolled');
+                }
+            }, { passive: true });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCreatorsCount();
+            console.log('📄 100 HUB — About Page Loaded');
+        });
+    </script>
+
+    <!-- Three.js for 3D Globe -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+        // (Same 3D globe code as home page)
+        const canvas = document.getElementById('globe-canvas');
+        const scene = new THREE.Scene();
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100000);
+        camera.position.set(0, 2000, 18000);
+
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 0.8;
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404060, 0.6);
+        scene.add(ambientLight);
+        const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        mainLight.position.set(10000, 8000, 12000);
+        scene.add(mainLight);
+        const rimLight = new THREE.DirectionalLight(0x6688ff, 0.4);
+        rimLight.position.set(-8000, 4000, -10000);
+        scene.add(rimLight);
+        const redLight = new THREE.PointLight(0xe31e24, 0.8, 30000);
+        redLight.position.set(5000, -3000, 8000);
+        scene.add(redLight);
+
+        // Particles
+        const particleCount = 2500;
+        const particleGeometry = new THREE.BufferGeometry();
+        const particlePositions = new Float32Array(particleCount * 3);
+        const particleColors = new Float32Array(particleCount * 3);
+        const colorPalette = [
+            new THREE.Color(0xffffff), new THREE.Color(0xdce8ff),
+            new THREE.Color(0x88b5ff), new THREE.Color(0xe31e24), new THREE.Color(0xaaaaaa)
+        ];
+        for (let i = 0; i < particleCount; i++) {
+            const radius = 8000 + Math.random() * 32000;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos((Math.random() * 2) - 1);
+            particlePositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+            particlePositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+            particlePositions[i * 3 + 2] = radius * Math.cos(phi);
+            const c = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+            particleColors[i * 3] = c.r;
+            particleColors[i * 3 + 1] = c.g;
+            particleColors[i * 3 + 2] = c.b;
+        }
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+        particleGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 3.5, vertexColors: true, transparent: true,
+            opacity: 0.75, blending: THREE.AdditiveBlending, depthWrite: false
+        });
+        const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particleSystem);
+
+        // Aura
+        const auraGeo = new THREE.SphereGeometry(4250, 48, 48);
+        const auraMat = new THREE.MeshBasicMaterial({
+            color: 0x4477ff, transparent: true, opacity: 0.08,
+            blending: THREE.AdditiveBlending, side: THREE.BackSide
+        });
+        const auraMesh = new THREE.Mesh(auraGeo, auraMat);
+        scene.add(auraMesh);
+
+        // Nodes
+        const nodesContainer = document.getElementById('globe-nodes-container');
+        const nodeDefs = [
+            { label: 'JHB-008', radius: 6500, speed: 0.006, theta: 0, tilt: new THREE.Euler(Math.PI * 0.15, 0, Math.PI * 0.1) },
+            { label: 'LON-041', radius: 8500, speed: -0.005, theta: Math.PI * 1.2, tilt: new THREE.Euler(-Math.PI * 0.25, 0, Math.PI * 0.15) },
+            { label: 'NYC-105', radius: 10500, speed: 0.004, theta: Math.PI * 1.7, tilt: new THREE.Euler(Math.PI * 0.35, 0, -Math.PI * 0.2) },
+            { label: '100 HUB', radius: 5500, speed: 0.009, theta: Math.PI * 0.9, tilt: new THREE.Euler(Math.PI * 0.1, 0, Math.PI * 0.05) }
+        ];
+        const nodeObjects = [];
+        const nodeSphereGeo = new THREE.SphereGeometry(120, 16, 16);
+        const nodeSphereMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const redNodeMat = new THREE.MeshBasicMaterial({ color: 0xe31e24 });
+        nodeDefs.forEach((def, index) => {
+            const mesh = new THREE.Mesh(nodeSphereGeo, index === 3 ? redNodeMat : nodeSphereMat);
+            scene.add(mesh);
+            const badge = document.createElement('div');
+            badge.className = 'globe-node-badge';
+            badge.innerHTML = `<span class="node-pulse-dot"></span>${def.label}`;
+            nodesContainer.appendChild(badge);
+            nodeObjects.push({ def, mesh, badgeEl: badge, theta: def.theta });
+        });
+
+        // Preloader
+        const preloader = document.getElementById('site-preloader');
+        const preloaderFill = document.getElementById('preloaderFill');
+        const preloaderCounter = document.getElementById('preloaderCounter');
+        const preloaderStatus = document.getElementById('preloaderStatus');
+
+        function hidePreloader() {
+            if (preloaderFill) preloaderFill.style.width = '100%';
+            if (preloaderCounter) preloaderCounter.textContent = '100%';
+            if (preloaderStatus) preloaderStatus.textContent = 'SYSTEM ONLINE';
+            setTimeout(() => { if (preloader) preloader.classList.add('loaded'); }, 500);
+        }
+
+        const preloaderSafetyTimer = setTimeout(hidePreloader, 6000);
+        let globeModel = null;
+        const loader = new GLTFLoader();
+        loader.load(
+            'assets/globe/scene.gltf',
+            (gltf) => {
+                globeModel = gltf.scene;
+                const box = new THREE.Box3().setFromObject(globeModel);
+                const center = box.getCenter(new THREE.Vector3());
+                const size = box.getSize(new THREE.Vector3());
+                const maxDim = Math.max(size.x, size.y, size.z);
+                const scale = 8000 / maxDim;
+                globeModel.scale.setScalar(scale);
+                globeModel.position.sub(center.multiplyScalar(scale));
+                globeModel.traverse((child) => {
+                    if (child.isMesh && child.material) {
+                        child.material.metalness = 0.1;
+                        child.material.roughness = 0.6;
+                    }
+                });
+                scene.add(globeModel);
+                clearTimeout(preloaderSafetyTimer);
+                hidePreloader();
+            },
+            (progress) => {
+                if (progress.total > 0) {
+                    const pct = Math.min(Math.floor((progress.loaded / progress.total) * 100), 99);
+                    if (preloaderFill) preloaderFill.style.width = pct + '%';
+                    if (preloaderCounter) preloaderCounter.textContent = pct + '%';
+                    if (preloaderStatus) preloaderStatus.textContent = `LOADING 3D MODEL ${pct}%`;
+                }
+            },
+            () => { clearTimeout(preloaderSafetyTimer); hidePreloader(); }
+        );
+
+        let mouseX = 0, mouseY = 0;
+        const targetRotX = { value: 0 }, targetRotY = { value: 0 };
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+        });
+
+        let targetCamY = 1500;
+        let targetCamZ = 16000;
+
+        function updateCameraScrollTarget() {
+            const scrollY = window.scrollY;
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = maxScroll > 0 ? scrollY / maxScroll : 0;
+            targetCamY = 1500 - progress * 800;
+            targetCamZ = 16000 - progress * 2000;
+        }
+
+        window.addEventListener('scroll', updateCameraScrollTarget, { passive: true });
+        updateCameraScrollTarget();
+
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsed = clock.getElapsedTime();
+
+            camera.position.y += (targetCamY - camera.position.y) * 0.03;
+            camera.position.z += (targetCamZ - camera.position.z) * 0.03;
+            camera.lookAt(0, 0, 0);
+
+            if (particleSystem) {
+                particleSystem.rotation.y = elapsed * 0.015;
+                particleSystem.rotation.x = Math.sin(elapsed * 0.03) * 0.04;
+            }
+            if (globeModel) {
+                globeModel.rotation.y = elapsed * 0.08;
+                targetRotX.value += (mouseY * 0.15 - targetRotX.value) * 0.02;
+                targetRotY.value += (mouseX * 0.15 - targetRotY.value) * 0.02;
+                globeModel.rotation.x = targetRotX.value;
+                globeModel.rotation.z = targetRotY.value * 0.3;
+            }
+            redLight.position.x = Math.sin(elapsed * 0.3) * 8000;
+            redLight.position.z = Math.cos(elapsed * 0.3) * 8000;
+
+            const tempVector = new THREE.Vector3();
+            nodeObjects.forEach(node => {
+                node.theta += node.def.speed;
+                const posX = Math.cos(node.theta) * node.def.radius;
+                const posZ = Math.sin(node.theta) * node.def.radius;
+                tempVector.set(posX, 0, posZ);
+                tempVector.applyEuler(node.def.tilt);
+                node.mesh.position.copy(tempVector);
+                const projected = tempVector.clone().project(camera);
+                const screenX = (projected.x * 0.5 + 0.5) * window.innerWidth;
+                const screenY = (-(projected.y * 0.5) + 0.5) * window.innerHeight;
+                if (projected.z > 1) {
+                    node.badgeEl.style.display = 'none';
+                } else {
+                    node.badgeEl.style.display = 'flex';
+                    node.badgeEl.style.transform = `translate(-50%, -50%) translate(${screenX}px, ${screenY}px)`;
+                    node.badgeEl.style.opacity = (projected.z < 0.95) ? '0.9' : '0.15';
+                }
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        console.log('🌐 3D Globe active on about page');
+    </script>
+
+</body>
+</html>
