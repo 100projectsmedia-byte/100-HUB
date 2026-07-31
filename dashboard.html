@@ -713,9 +713,86 @@
             color: var(--red);
         }
 
+        /* Posts Grid Styles */
+        .post-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .post-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .post-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--red);
+        }
+        .post-card .post-image {
+            position: relative;
+            aspect-ratio: 4/5;
+            overflow: hidden;
+            background: var(--bg-tertiary);
+        }
+        .post-card .post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .post-card .post-badge {
+            position: absolute;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            color: white;
+        }
+        .post-card .post-badge.video {
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.6);
+        }
+        .post-card .post-badge.article {
+            bottom: 10px;
+            right: 10px;
+            background: rgba(227, 30, 36, 0.9);
+        }
+        .post-card .post-info {
+            padding: 12px 14px;
+        }
+        .post-card .post-id {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+            font-family: 'Space Mono', monospace;
+            margin-bottom: 4px;
+        }
+        .post-card .post-caption {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 4px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .post-card .post-meta {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-bottom: 8px;
+        }
+        .post-card .post-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
         @media (max-width: 900px) {
             .impact-grid { grid-template-columns: repeat(2, 1fr); }
             .impact-edit-form { grid-template-columns: 1fr; }
+            .post-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 640px) {
             .dashboard-layout { padding: 120px 0 60px; }
@@ -730,6 +807,7 @@
             .table-wrap table { min-width: 600px; }
             .table-wrap .action-cell { flex-wrap: wrap; }
             .edit-modal-content { padding: 20px; }
+            .post-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -764,14 +842,16 @@
                     <img src="assets/100_Logo.png" alt="100 HUB" class="logo-img" />
                     <span class="logo-text"><span class="highlight-red">HUB</span></span>
                 </a>
-                <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                <div class="nav-links">
-                    <a href="/">Home</a>
-                    <a href="/dashboard.html" style="color:var(--red);">Dashboard</a>
+                <div class="nav-right">
+                    <div class="nav-social">
+                        <a href="https://www.instagram.com/100projectsmedia" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="mailto:100projectsmedia@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
+                    </div>
+                    <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -783,8 +863,14 @@
     <!-- Mobile Slide-out Menu -->
     <div class="mobile-menu" id="mobileMenu">
         <button class="mobile-menu-close" id="mobileMenuClose"><i class="fa-solid fa-xmark"></i></button>
-        <a href="/">Home</a>
-        <a href="/dashboard.html" style="color:var(--red);">Dashboard</a>
+        <div class="mobile-menu-links">
+            <a href="/">Home</a>
+            <a href="/dashboard.html" style="color:var(--red);">Dashboard</a>
+        </div>
+        <div class="mobile-menu-social">
+            <a href="https://www.instagram.com/100projectsmedia" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>
+            <a href="mailto:100projectsmedia@gmail.com"><i class="fa-regular fa-envelope"></i> Email</a>
+        </div>
     </div>
 
     <!-- ==================== DASHBOARD CONTENT ==================== -->
@@ -822,6 +908,7 @@
             <div class="dashboard-tabs">
                 <button class="active" data-tab="members">Members</button>
                 <button data-tab="articles">Articles <span style="font-size:10px; opacity:0.5;">(Post ID Tool)</span></button>
+                <button data-tab="posts">Posts</button>
                 <button data-tab="partners">Partners</button>
                 <button data-tab="impact">Impact Numbers</button>
                 <button data-tab="mediakit">Media Kit</button>
@@ -955,7 +1042,7 @@
                 </div>
             </div>
 
-                        <!-- Tab: Posts -->
+            <!-- Tab: Posts -->
             <div class="tab-content" id="tab-posts">
                 <div class="dashboard-actions">
                     <button class="btn-outline" onclick="loadPosts()">
@@ -985,7 +1072,7 @@
                 </div>
 
                 <!-- Posts Grid -->
-                <div class="post-grid" id="postGrid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:20px;">
+                <div class="post-grid" id="postGrid">
                     <div class="empty-state" style="grid-column:1/-1; padding:60px 20px;">
                         <i class="fa-regular fa-images"></i>
                         <p>Loading posts...</p>
@@ -1216,7 +1303,7 @@
         </div>
     </div>
 
-        <!-- ==================== ADD POST MODAL ==================== -->
+    <!-- ==================== ADD POST MODAL ==================== -->
     <div class="edit-modal" id="postModal">
         <div class="edit-modal-overlay" id="postModalOverlay"></div>
         <div class="edit-modal-content">
@@ -1570,6 +1657,7 @@
                 if (this.dataset.tab === 'mediakit') checkMediaKit();
                 if (this.dataset.tab === 'impact') loadImpactNumbers();
                 if (this.dataset.tab === 'articles') renderArticles();
+                if (this.dataset.tab === 'posts') loadPosts();
             });
         });
 
@@ -1870,6 +1958,222 @@
             showToast('Refreshed!', 'success');
         }
 
+        // ==========================================
+        // FETCH BEHOLD POSTS (Instagram Feed)
+        // ==========================================
+        async function fetchBeholdPosts() {
+            const container = document.getElementById('beholdPostsContainer');
+            const body = document.getElementById('beholdPostsBody');
+            const btn = document.getElementById('fetchBeholdBtn');
+            
+            container.style.display = 'block';
+            body.innerHTML = `
+                <tr>
+                    <td colspan="5">
+                        <div class="empty-state" style="padding:30px 20px;">
+                            <div class="loader" style="margin:0 auto 12px;"></div>
+                            <p>Fetching posts from Instagram...</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
+            
+            try {
+                const BEHOLD_FEED_ID = 'qBmSl39X4hdPVipZS1UR';
+                const FEED_URL = `https://feeds.behold.so/${BEHOLD_FEED_ID}`;
+                
+                const response = await fetch(FEED_URL);
+                if (!response.ok) throw new Error('Failed to load feed');
+                
+                const data = await response.json();
+                const posts = data.posts || data;
+                
+                if (!posts || posts.length === 0) {
+                    body.innerHTML = `
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-state" style="padding:30px 20px;">
+                                    <p>No posts found from Instagram.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-brands fa-instagram"></i> Fetch Posts from Instagram';
+                    return;
+                }
+                
+                // Map articles by post_id for quick lookup
+                const articleMap = {};
+                allArticles.forEach(a => {
+                    articleMap[a.post_id] = a;
+                });
+                
+                // Get first 20 posts
+                const displayPosts = posts.slice(0, 20);
+                
+                body.innerHTML = displayPosts.map((post, index) => {
+                    const postId = post.id || post.postId || '';
+                    const caption = post.prunedCaption || post.caption || '';
+                    const truncatedCaption = caption.length > 60 ? caption.substring(0, 60) + '...' : caption;
+                    const hasArticle = articleMap[postId];
+                    const statusHtml = hasArticle ? 
+                        '<span class="status-badge linked">✅ Linked</span>' : 
+                        '<span class="status-badge pending-article">⏳ Pending</span>';
+                    
+                    const actionHtml = hasArticle ? 
+                        `<button class="btn-outline btn-sm" onclick="openEditArticleModal('${hasArticle.id}')" title="Edit Article"><i class="fa-regular fa-pen-to-square"></i></button>` :
+                        `<button class="btn-primary btn-sm" onclick="quickAddArticle('${postId}')"><i class="fa-regular fa-plus"></i> Add Article</button>`;
+                    
+                    return `
+                        <tr>
+                            <td style="padding:10px 16px; color:rgba(255,255,255,0.4);">${index + 1}</td>
+                            <td style="padding:10px 16px;">
+                                <span class="article-post-id" onclick="copyPostId('${postId}')" style="cursor:pointer;" title="Click to copy">${postId}</span>
+                            </td>
+                            <td style="padding:10px 16px; color:rgba(255,255,255,0.6); font-size:13px;">${truncatedCaption || 'No caption'}</td>
+                            <td style="padding:10px 16px;">${statusHtml}</td>
+                            <td style="padding:10px 16px; text-align:center;">${actionHtml}</td>
+                        </tr>
+                    `;
+                }).join('');
+                
+            } catch (error) {
+                console.error('Fetch Behold error:', error);
+                body.innerHTML = `
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state" style="padding:30px 20px;">
+                                <p style="color:#ff6b6b;">⚠️ Failed to load posts: ${error.message}</p>
+                                <p style="font-size:12px; margin-top:8px;">Make sure the Behold feed ID is correct.</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+            
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-brands fa-instagram"></i> Fetch Posts from Instagram';
+            
+            // Scroll to the container
+            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // ==========================================
+        // QUICK ADD ARTICLE FROM POST ID
+        // ==========================================
+        function quickAddArticle(postId) {
+            openAddArticleModal();
+            document.getElementById('articlePostId').value = postId;
+            document.getElementById('articleUrl').focus();
+        }
+
+        // ==========================================
+        // COPY POST ID TO CLIPBOARD
+        // ==========================================
+        function copyPostId(postId) {
+            if (!postId) return;
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(postId)
+                    .then(() => showToast('✅ Copied: ' + postId, 'success'))
+                    .catch(() => {
+                        // Fallback
+                        const textarea = document.createElement('textarea');
+                        textarea.value = postId;
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        showToast('✅ Copied: ' + postId, 'success');
+                    });
+            } else {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = postId;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('✅ Copied: ' + postId, 'success');
+            }
+        }
+
+        // ==========================================
+        // ARTICLE MODAL
+        // ==========================================
+        function openAddArticleModal() {
+            editingArticleId = null;
+            document.getElementById('articleModalTitle').textContent = 'Add Article';
+            document.getElementById('articleModalSubtitle').textContent = 'Link an Instagram post to an article URL';
+            document.getElementById('articlePostId').value = '';
+            document.getElementById('articleUrl').value = '';
+            document.getElementById('articleModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function openEditArticleModal(id) {
+            const article = allArticles.find(a => a.id === id);
+            if (!article) return;
+            
+            editingArticleId = id;
+            document.getElementById('articleModalTitle').textContent = 'Edit Article';
+            document.getElementById('articleModalSubtitle').textContent = 'Update the article URL for this post';
+            document.getElementById('articlePostId').value = article.post_id || '';
+            document.getElementById('articleUrl').value = article.article_url || '';
+            document.getElementById('articleModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeArticleModal() {
+            document.getElementById('articleModal').classList.remove('active');
+            document.body.style.overflow = '';
+            editingArticleId = null;
+        }
+
+        document.getElementById('articleModalClose').addEventListener('click', closeArticleModal);
+        document.getElementById('articleModalOverlay').addEventListener('click', closeArticleModal);
+
+        async function saveArticle() {
+            const postId = document.getElementById('articlePostId').value.trim();
+            const articleUrl = document.getElementById('articleUrl').value.trim();
+            
+            if (!postId || !articleUrl) {
+                showToast('Please fill in both fields.', 'error');
+                return;
+            }
+            
+            try {
+                const body = editingArticleId ? 
+                    { id: editingArticleId, postId, articleUrl } : 
+                    { postId, articleUrl };
+                
+                const response = await fetch(`${API_BASE}/articles`, {
+                    method: 'POST',
+                    headers: adminHeaders(),
+                    body: JSON.stringify(body)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(editingArticleId ? 'Article updated!' : 'Article added!', 'success');
+                    closeArticleModal();
+                    CACHE.clear();
+                    renderArticles();
+                    // Close the Behold posts container if open
+                    document.getElementById('beholdPostsContainer').style.display = 'none';
+                } else {
+                    showToast(result.error || 'Failed to save article.', 'error');
+                }
+            } catch (error) {
+                console.error('Save article error:', error);
+                showToast('Error saving article.', 'error');
+            }
+        }
 
         // ==========================================
         // POSTS - CRUD Operations
@@ -1941,17 +2245,17 @@
                 const truncatedCaption = caption.length > 60 ? caption.substring(0, 60) + '...' : caption;
                 
                 return `
-                    <div class="post-card" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; overflow:hidden; transition:all 0.3s ease;">
-                        <div style="position:relative; aspect-ratio:4/5; overflow:hidden; background:var(--bg-tertiary);">
-                            <img src="${post.image_url || 'assets/100_Logo.png'}" alt="${post.post_id}" style="width:100%; height:100%; object-fit:cover;" loading="lazy" />
-                            ${post.is_video ? '<span style="position:absolute; top:10px; right:10px; background:rgba(0,0,0,0.6); padding:4px 10px; border-radius:20px; font-size:10px; color:white;"><i class="fa-solid fa-play"></i> Video</span>' : ''}
-                            ${hasArticle ? '<span style="position:absolute; bottom:10px; right:10px; background:rgba(227,30,36,0.9); padding:4px 10px; border-radius:20px; font-size:10px; color:white;"><i class="fa-regular fa-file-lines"></i> Article</span>' : ''}
+                    <div class="post-card">
+                        <div class="post-image">
+                            <img src="${post.image_url || 'assets/100_Logo.png'}" alt="${post.post_id}" loading="lazy" />
+                            ${post.is_video ? '<span class="post-badge video"><i class="fa-solid fa-play"></i> Video</span>' : ''}
+                            ${hasArticle ? '<span class="post-badge article"><i class="fa-regular fa-file-lines"></i> Article</span>' : ''}
                         </div>
-                        <div style="padding:12px 14px;">
-                            <div style="font-size:11px; color:rgba(255,255,255,0.4); font-family:'Space Mono',monospace; margin-bottom:4px;">ID: ${post.post_id}</div>
-                            <div style="font-size:13px; color:rgba(255,255,255,0.8); margin-bottom:4px; line-height:1.4;">${truncatedCaption}</div>
-                            <div style="font-size:11px; color:rgba(255,255,255,0.3); margin-bottom:8px;">${post.writer || '100 HUB'} · ${date}</div>
-                            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                        <div class="post-info">
+                            <div class="post-id">ID: ${post.post_id}</div>
+                            <div class="post-caption">${truncatedCaption}</div>
+                            <div class="post-meta">${post.writer || '100 HUB'} · ${date}</div>
+                            <div class="post-actions">
                                 <button class="btn-outline btn-sm" onclick="openEditPostModal('${post.id}')" title="Edit">
                                     <i class="fa-regular fa-pen-to-square"></i>
                                 </button>
@@ -2204,222 +2508,6 @@
                 showToast('Error updating post.', 'error');
             }
         }
-        // ==========================================
-        // FETCH BEHOLD POSTS (Instagram Feed)
-        // ==========================================
-        async function fetchBeholdPosts() {
-            const container = document.getElementById('beholdPostsContainer');
-            const body = document.getElementById('beholdPostsBody');
-            const btn = document.getElementById('fetchBeholdBtn');
-            
-            container.style.display = 'block';
-            body.innerHTML = `
-                <tr>
-                    <td colspan="5">
-                        <div class="empty-state" style="padding:30px 20px;">
-                            <div class="loader" style="margin:0 auto 12px;"></div>
-                            <p>Fetching posts from Instagram...</p>
-                        </div>
-                    </td>
-                </tr>
-            `;
-            
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
-            
-            try {
-                const BEHOLD_FEED_ID = 'qBmSl39X4hdPVipZS1UR';
-                const FEED_URL = `https://feeds.behold.so/${BEHOLD_FEED_ID}`;
-                
-                const response = await fetch(FEED_URL);
-                if (!response.ok) throw new Error('Failed to load feed');
-                
-                const data = await response.json();
-                const posts = data.posts || data;
-                
-                if (!posts || posts.length === 0) {
-                    body.innerHTML = `
-                        <tr>
-                            <td colspan="5">
-                                <div class="empty-state" style="padding:30px 20px;">
-                                    <p>No posts found from Instagram.</p>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fa-brands fa-instagram"></i> Fetch Posts from Instagram';
-                    return;
-                }
-                
-                // Map articles by post_id for quick lookup
-                const articleMap = {};
-                allArticles.forEach(a => {
-                    articleMap[a.post_id] = a;
-                });
-                
-                // Get first 20 posts
-                const displayPosts = posts.slice(0, 20);
-                
-                body.innerHTML = displayPosts.map((post, index) => {
-                    const postId = post.id || post.postId || '';
-                    const caption = post.prunedCaption || post.caption || '';
-                    const truncatedCaption = caption.length > 60 ? caption.substring(0, 60) + '...' : caption;
-                    const hasArticle = articleMap[postId];
-                    const statusHtml = hasArticle ? 
-                        '<span class="status-badge linked">✅ Linked</span>' : 
-                        '<span class="status-badge pending-article">⏳ Pending</span>';
-                    
-                    const actionHtml = hasArticle ? 
-                        `<button class="btn-outline btn-sm" onclick="openEditArticleModal('${hasArticle.id}')" title="Edit Article"><i class="fa-regular fa-pen-to-square"></i></button>` :
-                        `<button class="btn-primary btn-sm" onclick="quickAddArticle('${postId}')"><i class="fa-regular fa-plus"></i> Add Article</button>`;
-                    
-                    return `
-                        <tr>
-                            <td style="padding:10px 16px; color:rgba(255,255,255,0.4);">${index + 1}</td>
-                            <td style="padding:10px 16px;">
-                                <span class="article-post-id" onclick="copyPostId('${postId}')" style="cursor:pointer;" title="Click to copy">${postId}</span>
-                            </td>
-                            <td style="padding:10px 16px; color:rgba(255,255,255,0.6); font-size:13px;">${truncatedCaption || 'No caption'}</td>
-                            <td style="padding:10px 16px;">${statusHtml}</td>
-                            <td style="padding:10px 16px; text-align:center;">${actionHtml}</td>
-                        </tr>
-                    `;
-                }).join('');
-                
-            } catch (error) {
-                console.error('Fetch Behold error:', error);
-                body.innerHTML = `
-                    <tr>
-                        <td colspan="5">
-                            <div class="empty-state" style="padding:30px 20px;">
-                                <p style="color:#ff6b6b;">⚠️ Failed to load posts: ${error.message}</p>
-                                <p style="font-size:12px; margin-top:8px;">Make sure the Behold feed ID is correct.</p>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }
-            
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fa-brands fa-instagram"></i> Fetch Posts from Instagram';
-            
-            // Scroll to the container
-            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        // ==========================================
-        // QUICK ADD ARTICLE FROM POST ID
-        // ==========================================
-        function quickAddArticle(postId) {
-            openAddArticleModal();
-            document.getElementById('articlePostId').value = postId;
-            document.getElementById('articleUrl').focus();
-        }
-
-        // ==========================================
-        // COPY POST ID TO CLIPBOARD
-        // ==========================================
-        function copyPostId(postId) {
-            if (!postId) return;
-            
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(postId)
-                    .then(() => showToast('✅ Copied: ' + postId, 'success'))
-                    .catch(() => {
-                        // Fallback
-                        const textarea = document.createElement('textarea');
-                        textarea.value = postId;
-                        document.body.appendChild(textarea);
-                        textarea.select();
-                        document.execCommand('copy');
-                        document.body.removeChild(textarea);
-                        showToast('✅ Copied: ' + postId, 'success');
-                    });
-            } else {
-                // Fallback for older browsers
-                const textarea = document.createElement('textarea');
-                textarea.value = postId;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                showToast('✅ Copied: ' + postId, 'success');
-            }
-        }
-
-        // ==========================================
-        // ARTICLE MODAL
-        // ==========================================
-        function openAddArticleModal() {
-            editingArticleId = null;
-            document.getElementById('articleModalTitle').textContent = 'Add Article';
-            document.getElementById('articleModalSubtitle').textContent = 'Link an Instagram post to an article URL';
-            document.getElementById('articlePostId').value = '';
-            document.getElementById('articleUrl').value = '';
-            document.getElementById('articleModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function openEditArticleModal(id) {
-            const article = allArticles.find(a => a.id === id);
-            if (!article) return;
-            
-            editingArticleId = id;
-            document.getElementById('articleModalTitle').textContent = 'Edit Article';
-            document.getElementById('articleModalSubtitle').textContent = 'Update the article URL for this post';
-            document.getElementById('articlePostId').value = article.post_id || '';
-            document.getElementById('articleUrl').value = article.article_url || '';
-            document.getElementById('articleModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeArticleModal() {
-            document.getElementById('articleModal').classList.remove('active');
-            document.body.style.overflow = '';
-            editingArticleId = null;
-        }
-
-        document.getElementById('articleModalClose').addEventListener('click', closeArticleModal);
-        document.getElementById('articleModalOverlay').addEventListener('click', closeArticleModal);
-
-        async function saveArticle() {
-            const postId = document.getElementById('articlePostId').value.trim();
-            const articleUrl = document.getElementById('articleUrl').value.trim();
-            
-            if (!postId || !articleUrl) {
-                showToast('Please fill in both fields.', 'error');
-                return;
-            }
-            
-            try {
-                const body = editingArticleId ? 
-                    { id: editingArticleId, postId, articleUrl } : 
-                    { postId, articleUrl };
-                
-                const response = await fetch(`${API_BASE}/articles`, {
-                    method: 'POST',
-                    headers: adminHeaders(),
-                    body: JSON.stringify(body)
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showToast(editingArticleId ? 'Article updated!' : 'Article added!', 'success');
-                    closeArticleModal();
-                    CACHE.clear();
-                    renderArticles();
-                    // Close the Behold posts container if open
-                    document.getElementById('beholdPostsContainer').style.display = 'none';
-                } else {
-                    showToast(result.error || 'Failed to save article.', 'error');
-                }
-            } catch (error) {
-                console.error('Save article error:', error);
-                showToast('Error saving article.', 'error');
-            }
-        }
 
         // ==========================================
         // DELETE CONFIRMATION
@@ -2433,10 +2521,8 @@
             document.body.style.overflow = 'hidden';
         }
 
-       document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
             if (!deleteTarget.id) return;
-            
-            console.log('🗑️ Delete target:', deleteTarget); // Add this line
             
             try {
                 let endpoint = '';
@@ -2448,12 +2534,12 @@
                     endpoint = `${API_BASE}/articles`;
                 } else if (deleteTarget.type === 'partner') {
                     endpoint = `${API_BASE}/partners`;
+                } else if (deleteTarget.type === 'post') {
+                    endpoint = `${API_BASE}/posts`;
                 } else {
                     showToast('Unknown item type.', 'error');
                     return;
                 }
-                
-                console.log('📡 Sending DELETE to:', endpoint, body); // Add this line
                 
                 const response = await fetch(endpoint, {
                     method: 'DELETE',
@@ -2462,7 +2548,6 @@
                 });
                 
                 const result = await response.json();
-                console.log('📥 Response:', result); // Add this line
                 
                 if (result.success) {
                     showToast(`${deleteTarget.type} deleted successfully!`, 'success');
@@ -2472,6 +2557,7 @@
                     if (deleteTarget.type === 'member') renderMembers();
                     else if (deleteTarget.type === 'article') renderArticles();
                     else if (deleteTarget.type === 'partner') loadPartners();
+                    else if (deleteTarget.type === 'post') loadPosts();
                 } else {
                     showToast(result.error || `Failed to delete ${deleteTarget.type}.`, 'error');
                 }
@@ -2714,10 +2800,12 @@
             loadPartners();
             checkMediaKit();
             loadImpactNumbers();
+            loadPosts();
         });
 
         console.log('📊 100 HUB Dashboard loaded.');
         console.log('📝 Articles tab includes Post ID Tool - fetch posts from Instagram to see all post IDs.');
+        console.log('📸 Posts tab - manage Instagram posts with auto-fetch, search, and article linking.');
     </script>
 
 </body>
