@@ -3265,6 +3265,7 @@
         // ==========================================
         // PARTNERS - WITH FILE UPLOAD
         // ==========================================
+        
         async function uploadPartnerLogo(file) {
             return new Promise((resolve, reject) => {
                 const formData = new FormData();
@@ -3275,16 +3276,19 @@
                 const xhr = new XMLHttpRequest();
                 xhr.open('POST', 'https://api.cloudinary.com/v1_1/dfozevcbl/image/upload');
                 
-                xhr.onload = () => {
+                xhr.onload = function() {
                     if (xhr.status === 200) {
                         const data = JSON.parse(xhr.responseText);
+                        console.log('✅ Partner logo uploaded:', data.secure_url);
                         resolve(data.secure_url);
                     } else {
+                        console.error('❌ Upload failed:', xhr.status, xhr.responseText);
                         reject(new Error('Upload failed'));
                     }
                 };
                 
-                xhr.onerror = () => {
+                xhr.onerror = function() {
+                    console.error('❌ Network error');
                     reject(new Error('Network error'));
                 };
                 
@@ -3292,45 +3296,62 @@
             });
         }
 
-        async function addPartner() {
-            const name = document.getElementById('partnerName').value.trim();
-            const fileInput = document.getElementById('partnerFileInput');
-            const file = fileInput.files[0];
-            
-            if (!name) {
-                showToast('Please enter a partner name.', 'error');
-                return;
-            }
-            
-            if (!file) {
-                showToast('Please select a logo image.', 'error');
-                return;
-            }
-            
-            try {
-                // Upload to Cloudinary
-                const url = await uploadPartnerLogo(file);
-                
-                // Save to Supabase
-                const response = await fetch(`${API_BASE}/partners`, {
-                    method: 'POST',
-                    headers: adminHeaders(),
-                    body: JSON.stringify({ name, url })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    showToast('Partner added!', 'success');
-                    document.getElementById('partnerName').value = '';
-                    document.getElementById('partnerFileInput').value = '';
-                    document.getElementById('partnerFileName').textContent = 'No file selected';
-                    loadPartners();
-                } else {
-                    showToast(result.error || 'Failed to add partner.', 'error');
-                }
-            } catch (error) {
-                showToast('Error uploading partner logo.', 'error');
-            }
+    // ==========================================
+    // ADD PARTNER - UPDATED
+    // ==========================================
+    async function addPartner() {
+        const name = document.getElementById('partnerName').value.trim();
+        const fileInput = document.getElementById('partnerFileInput');
+        const file = fileInput.files[0];
+        
+        if (!name) {
+            showToast('Please enter a partner name.', 'error');
+            return;
         }
+        
+        if (!file) {
+            showToast('Please select a logo image.', 'error');
+            return;
+        }
+        
+        const submitBtn = event.target;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+        
+        try {
+            // Step 1: Upload to Cloudinary
+            const url = await uploadPartnerLogo(file);
+            
+            if (!url) {
+                throw new Error('Failed to get URL from Cloudinary');
+            }
+            
+            // Step 2: Save to Supabase
+            const response = await fetch(`${API_BASE}/partners`, {
+                method: 'POST',
+                headers: adminHeaders(),
+                body: JSON.stringify({ name, url })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showToast(`✅ ${name} added successfully!`, 'success');
+                document.getElementById('partnerName').value = '';
+                document.getElementById('partnerFileInput').value = '';
+                document.getElementById('partnerFileName').textContent = 'No file selected';
+                loadPartners();
+            } else {
+                showToast(result.error || 'Failed to add partner.', 'error');
+            }
+        } catch (error) {
+            console.error('Add partner error:', error);
+            showToast('❌ Failed to upload logo. Please try again.', 'error');
+        }
+        
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-regular fa-plus"></i> Add Partner';
+    }
 
         // ==========================================
         // MEDIA KIT - WITH FILE UPLOAD
