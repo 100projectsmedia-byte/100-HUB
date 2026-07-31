@@ -3340,7 +3340,7 @@
                 const xhr = new XMLHttpRequest();
                 xhr.open('POST', 'https://api.cloudinary.com/v1_1/dfozevcbl/image/upload');
                 
-                xhr.onload = () => {
+                xhr.onload = function() {
                     if (xhr.status === 200) {
                         const data = JSON.parse(xhr.responseText);
                         console.log('✅ Partner logo uploaded:', data.secure_url);
@@ -3351,7 +3351,7 @@
                     }
                 };
                 
-                xhr.onerror = () => {
+                xhr.onerror = function() {
                     console.error('❌ Network error');
                     reject(new Error('Network error'));
                 };
@@ -3365,7 +3365,7 @@
             const fileInput = document.getElementById('partnerFileInput');
             const file = fileInput.files[0];
             const status = document.getElementById('partnerUploadStatus');
-            const btn = event.target;
+            const btn = document.getElementById('addPartnerBtn') || event.target;
             
             if (!name) {
                 showToast('Please enter a partner name.', 'error');
@@ -3377,6 +3377,7 @@
                 return;
             }
             
+            // Check file size (5MB max for logos)
             if (file.size > 5 * 1024 * 1024) {
                 showToast('Logo file is too large. Maximum 5MB.', 'error');
                 return;
@@ -3387,21 +3388,25 @@
             status.innerHTML = '<span style="color:#ffd700;">⏳ Uploading to Cloudinary...</span>';
             
             try {
+                // Step 1: Upload to Cloudinary
                 const url = await uploadPartnerLogo(file);
                 
                 if (!url) {
                     throw new Error('Failed to get URL from Cloudinary');
                 }
                 
+                console.log('📤 Cloudinary URL:', url);
                 status.innerHTML = '<span style="color:#4ADE80;">✅ Uploaded to Cloudinary! Saving to database...</span>';
                 
-                const response = await fetch(apiUrl('partners'), {
+                // Step 2: Save to Supabase using the consolidated API
+                const response = await fetch('/api?path=partners', {
                     method: 'POST',
                     headers: adminHeaders(),
                     body: JSON.stringify({ name, url })
                 });
                 
                 const result = await response.json();
+                console.log('📥 Save result:', result);
                 
                 if (result.success) {
                     showToast(`✅ ${name} added successfully!`, 'success');
@@ -3426,7 +3431,7 @@
 
         async function loadPartners() {
             try {
-                const response = await fetch(apiUrl('partners'));
+                const response = await fetch('/api?path=partners');
                 const data = await response.json();
                 const grid = document.getElementById('partnerGrid');
                 
@@ -3441,15 +3446,25 @@
                     return;
                 }
                 
+                console.log('📋 Partner logos loaded:', data.logos);
                 document.getElementById('totalPartners').textContent = data.logos.length;
+                
                 grid.innerHTML = data.logos.map(logo => `
                     <div class="partner-card">
                         <button class="partner-delete" onclick="confirmDelete('partner', '${logo.id}', '${logo.name}')" title="Delete partner">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
-                        <img src="${logo.url}" alt="${logo.name}" loading="lazy" onerror="this.alt='${logo.name}'; this.style.display='none'; this.parentElement.querySelector('.partner-name-fallback').style.display='block';" />
-                        <div class="partner-name-fallback" style="display:none; font-size:13px; color:rgba(255,255,255,0.8); padding:10px 0;">${logo.name}</div>
-                        <div class="partner-name" style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:4px;">${logo.name}</div>
+                        <div style="display:flex; align-items:center; justify-content:center; min-height:60px;">
+                            <img 
+                                src="${logo.url}" 
+                                alt="${logo.name}" 
+                                loading="lazy" 
+                                style="max-width:100%; max-height:50px; object-fit:contain;"
+                                onerror="this.style.display='none'; this.parentElement.querySelector('.partner-name-fallback').style.display='block';"
+                            />
+                            <div class="partner-name-fallback" style="display:none; font-size:14px; color:rgba(255,255,255,0.8);">${logo.name}</div>
+                        </div>
+                        <div class="partner-name" style="font-size:11px; color:rgba(255,255,255,0.4); margin-top:4px;">${logo.name}</div>
                     </div>
                 `).join('');
             } catch (error) {
