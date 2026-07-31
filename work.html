@@ -98,7 +98,7 @@
             max-width: 480px;
         }
 
-        /* Creator Section */
+        /* Creator Section - Dynamic Work Items */
         .creator-section { padding: 40px 7% 120px; }
         .section-tag {
             font-size: 11px;
@@ -202,16 +202,16 @@
             color: var(--text-secondary);
         }
 
-        /* Partner Logos - Dynamic */
+        /* Partner Logos - Clean, No Cards */
         .partners-section-work {
             background: transparent;
             overflow: hidden;
-            padding: 60px 7% 100px;
+            padding: 40px 7% 80px;
         }
         .partners-section-work .section-header {
             text-align: center;
             max-width: 100%;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
         .partners-section-work .section-number {
             font-family: 'Space Mono', monospace;
@@ -235,44 +235,51 @@
             position: relative;
             width: 100%;
             overflow: hidden;
-            padding: 20px 0;
+            padding: 10px 0;
         }
         .partners-track {
             display: flex;
-            gap: 40px;
+            gap: 60px;
             align-items: center;
-            animation: scrollPartnerLogos 25s linear infinite;
+            animation: scrollPartnerLogos 30s linear infinite;
             width: fit-content;
+        }
+        .partners-track:hover {
+            animation-play-state: paused;
         }
         .partner-logo-item {
             flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: var(--radius-sm);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            min-height: 70px;
-            min-width: 120px;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(8px);
+            padding: 8px 16px;
+            min-height: 50px;
+            min-width: 80px;
+            transition: transform 0.3s ease;
         }
         .partner-logo-item:hover {
-            border-color: rgba(227, 30, 36, 0.3);
-            box-shadow: var(--shadow-red);
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
         .partner-logo-item img {
-            max-height: 50px;
-            max-width: 120px;
+            max-height: 40px;
+            max-width: 130px;
+            width: auto;
+            height: auto;
             object-fit: contain;
-            filter: brightness(0) invert(1);
-            opacity: 0.7;
-            transition: opacity 0.3s ease;
+            opacity: 0.6;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            filter: none !important;
         }
         .partner-logo-item:hover img {
             opacity: 1;
+            transform: scale(1.05);
+        }
+        .partner-logo-item span {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
         }
         @keyframes scrollPartnerLogos {
             0% { transform: translateX(0); }
@@ -458,6 +465,8 @@
             .contact-form-wrap-work { padding: 24px; }
             .contact-form-work .form-row { grid-template-columns: 1fr; }
             .partners-section-work .section-title { font-size: 28px; }
+            .partners-track { gap: 40px; }
+            .partner-logo-item img { max-height: 30px; max-width: 90px; }
         }
         @media (max-width: 600px) {
             .creator-grid { grid-template-columns: 1fr; }
@@ -470,6 +479,8 @@
             .community-item-work h3 { font-size: 22px; }
             .community-buttons-work a { width: 100%; text-align: center; }
             .partners-section-work .section-title { font-size: 24px; }
+            .partners-track { gap: 30px; }
+            .partner-logo-item img { max-height: 25px; max-width: 70px; }
         }
     </style>
 </head>
@@ -567,43 +578,15 @@
         </div>
     </section>
 
-    <!-- ==================== CREATOR GRID ==================== -->
+    <!-- ==================== CREATOR GRID (DYNAMIC) ==================== -->
     <section class="creator-section" id="creators">
         <div class="section-tag">FEATURED VISUALS</div>
         <h2 class="section-title">Creative Energy<br>Captured In Motion</h2>
-        <div class="creator-grid">
-            <div class="creator-card">
-                <video autoplay muted loop playsinline>
-                    <source src="assets/entertainment/h&m.mp4" type="video/mp4">
-                </video>
-                <div class="creator-overlay"></div>
-                <div class="creator-info">
-                    <div class="creator-role">FASHION VISUALS</div>
-                    <h3>Street Editorial</h3>
-                    <p>Fashion-driven visuals inspired by music, youth culture and nightlife energy.</p>
-                </div>
-            </div>
-            <div class="creator-card">
-                <video autoplay muted loop playsinline>
-                    <source src="assets/entertainment/maxhosa.mp4" type="video/mp4">
-                </video>
-                <div class="creator-overlay"></div>
-                <div class="creator-info">
-                    <div class="creator-role">CREATOR CONTENT</div>
-                    <h3>Digital Campaigns</h3>
-                    <p>Viral-ready visuals designed for creators, artists and online storytelling.</p>
-                </div>
-            </div>
-            <div class="creator-card">
-                <video autoplay muted loop playsinline>
-                    <source src="assets/entertainment/redbull.mp4" type="video/mp4">
-                </video>
-                <div class="creator-overlay"></div>
-                <div class="creator-info">
-                    <div class="creator-role">EVENT CULTURE</div>
-                    <h3>Nightlife Moments</h3>
-                    <p>Capturing raw atmosphere, movement and the feeling of being there.</p>
-                </div>
+        <div class="creator-grid" id="workItemsGrid">
+            <!-- Dynamically loaded from Supabase -->
+            <div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:rgba(255,255,255,0.5);">
+                <div class="loader"></div>
+                <p>Loading work items...</p>
             </div>
         </div>
     </section>
@@ -637,9 +620,7 @@
             <div class="partners-wrapper">
                 <div class="partners-track" id="partnersTrackWork">
                     <div class="partner-logo-item">
-                        <div style="padding:20px 40px; color:#999; font-style:italic; text-align:center; white-space:nowrap;">
-                            Loading partners...
-                        </div>
+                        <span style="color:rgba(255,255,255,0.25); font-size:13px; letter-spacing:1px;">Loading partners...</span>
                     </div>
                 </div>
             </div>
@@ -742,6 +723,14 @@
 
     <script>
         // ==========================================
+        // API HELPER
+        // ==========================================
+        function apiUrl(path, params = {}) {
+            const queryParams = new URLSearchParams({ path, ...params });
+            return `/api?${queryParams.toString()}`;
+        }
+
+        // ==========================================
         // HAMBURGER MENU
         // ==========================================
         const hamburgerBtn = document.getElementById('hamburgerBtn');
@@ -809,26 +798,83 @@
         }
 
         // ==========================================
-        // LAZY LOAD CREATOR VIDEOS
+        // LOAD WORK ITEMS FROM SUPABASE
         // ==========================================
-        const creatorSection = document.getElementById('creators');
-        if (creatorSection && 'IntersectionObserver' in window) {
-            const creatorVideos = creatorSection.querySelectorAll('video');
-            const creatorObserver = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    const videoEl = entry.target;
-                    if (entry.isIntersecting) {
-                        if (!videoEl.src && !videoEl.currentSrc) {
-                            videoEl.load();
-                        }
-                        videoEl.play().catch(() => {});
-                    } else {
-                        videoEl.pause();
-                    }
-                });
-            }, { threshold: 0.25 });
+        async function loadWorkItems() {
+            const grid = document.getElementById('workItemsGrid');
+            
+            try {
+                const response = await fetch(apiUrl('work-items'));
+                const data = await response.json();
+                
+                if (data.success && data.items && data.items.length > 0) {
+                    renderWorkItems(data.items, grid);
+                } else {
+                    // Fallback to hardcoded content if no items in database
+                    renderFallbackWorkItems(grid);
+                }
+            } catch (error) {
+                console.error('Load work items error:', error);
+                renderFallbackWorkItems(grid);
+            }
+        }
 
-            creatorVideos.forEach((videoEl) => creatorObserver.observe(videoEl));
+        function renderWorkItems(items, grid) {
+            grid.innerHTML = items.map(item => `
+                <div class="creator-card" onclick="window.open('${item.media_url}', '_blank')">
+                    ${item.media_type === 'video' 
+                        ? `<video autoplay muted loop playsinline><source src="${item.media_url}" type="video/mp4"></video>`
+                        : `<img src="${item.media_url}" alt="${item.title}" loading="lazy" style="width:100%; height:100%; object-fit:cover;" />`
+                    }
+                    <div class="creator-overlay"></div>
+                    <div class="creator-info">
+                        <div class="creator-role">${item.category || 'FEATURED'}</div>
+                        <h3>${item.title}</h3>
+                        <p>${item.description || ''}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderFallbackWorkItems(grid) {
+            // Hardcoded fallback content
+            const fallbackItems = [
+                {
+                    title: 'Street Editorial',
+                    category: 'FASHION VISUALS',
+                    description: 'Fashion-driven visuals inspired by music, youth culture and nightlife energy.',
+                    media_url: 'assets/entertainment/h&m.mp4',
+                    media_type: 'video'
+                },
+                {
+                    title: 'Digital Campaigns',
+                    category: 'CREATOR CONTENT',
+                    description: 'Viral-ready visuals designed for creators, artists and online storytelling.',
+                    media_url: 'assets/entertainment/maxhosa.mp4',
+                    media_type: 'video'
+                },
+                {
+                    title: 'Nightlife Moments',
+                    category: 'EVENT CULTURE',
+                    description: 'Capturing raw atmosphere, movement and the feeling of being there.',
+                    media_url: 'assets/entertainment/redbull.mp4',
+                    media_type: 'video'
+                }
+            ];
+            
+            grid.innerHTML = fallbackItems.map(item => `
+                <div class="creator-card">
+                    <video autoplay muted loop playsinline>
+                        <source src="${item.media_url}" type="video/mp4">
+                    </video>
+                    <div class="creator-overlay"></div>
+                    <div class="creator-info">
+                        <div class="creator-role">${item.category}</div>
+                        <h3>${item.title}</h3>
+                        <p>${item.description}</p>
+                    </div>
+                </div>
+            `).join('');
         }
 
         // ==========================================
@@ -838,7 +884,7 @@
 
         async function loadPartnersWork() {
             try {
-                const response = await fetch('/api?path=partners');
+                const response = await fetch(apiUrl('partners'));
                 if (response.ok) {
                     const data = await response.json();
                     partnerLogosWork = data.logos || [];
@@ -856,7 +902,7 @@
             if (partnerLogosWork.length === 0) {
                 track.innerHTML = `
                     <div class="partner-logo-item">
-                        <span style="color:rgba(255,255,255,0.3); font-size:13px; letter-spacing:1px;">PARTNER LOGOS COMING SOON</span>
+                        <span style="color:rgba(255,255,255,0.25); font-size:13px; letter-spacing:1px;">PARTNER LOGOS COMING SOON</span>
                     </div>
                 `;
                 return;
@@ -871,7 +917,7 @@
                         title="${logo.name}" 
                         loading="lazy" 
                         style="max-height:40px; max-width:130px; width:auto; height:auto; object-fit:contain; filter:none !important;"
-                        onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'color:rgba(255,255,255,0.3);font-size:12px;letter-spacing:0.5px;\\'>${logo.name}</span>';"
+                        onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'color:rgba(255,255,255,0.25);font-size:12px;letter-spacing:0.5px;\\'>${logo.name}</span>';"
                     />
                 </div>
             `).join('');
@@ -897,7 +943,7 @@
         // ==========================================
         async function updateCreatorsCount() {
             try {
-                const response = await fetch('/api?path=members&status=accepted&limit=1');
+                const response = await fetch(apiUrl('members', { status: 'accepted', limit: 1 }));
                 if (response.ok) {
                     const data = await response.json();
                     const count = data.count || 0;
@@ -921,10 +967,16 @@
             }, { passive: true });
         }
 
+        // ==========================================
+        // INIT
+        // ==========================================
         document.addEventListener('DOMContentLoaded', function() {
             updateCreatorsCount();
+            loadWorkItems();
             loadPartnersWork();
             console.log('🎬 100 HUB — Our Work Page Loaded');
+            console.log('📋 Work items loaded from database with dynamic rendering');
+            console.log('🤝 Partner logos loaded from database');
         });
     </script>
 
