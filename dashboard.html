@@ -892,6 +892,109 @@
             display: none;
         }
 
+        /* ==========================================
+           SEARCH BAR - STYLED
+           ========================================== */
+        .search-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 6px;
+            transition: all 0.3s ease;
+        }
+        .search-bar:focus-within {
+            border-color: var(--red);
+            box-shadow: 0 0 0 3px rgba(227, 30, 36, 0.08);
+        }
+        .search-bar .search-icon {
+            padding: 0 6px 0 14px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .search-bar input {
+            flex: 1;
+            min-width: 150px;
+            padding: 10px 6px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+        }
+        .search-bar input::placeholder {
+            color: var(--text-muted);
+        }
+        .search-bar .search-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            padding-right: 4px;
+        }
+        .search-bar .search-actions .btn-search {
+            padding: 8px 16px;
+            background: var(--red);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+        .search-bar .search-actions .btn-search:hover {
+            background: var(--red-dark);
+            transform: translateY(-1px);
+        }
+        .search-bar .search-actions .btn-clear {
+            padding: 8px 12px;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+        .search-bar .search-actions .btn-clear:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+        .search-bar .search-count {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.35);
+            padding: 0 12px;
+            white-space: nowrap;
+        }
+        @media (max-width: 600px) {
+            .search-bar {
+                flex-wrap: wrap;
+                padding: 8px;
+            }
+            .search-bar input {
+                min-width: 100%;
+                padding: 10px 0;
+            }
+            .search-bar .search-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            .search-bar .search-count {
+                width: 100%;
+                text-align: center;
+                padding: 4px 0;
+            }
+        }
+
         @media (max-width: 900px) {
             .impact-grid { grid-template-columns: repeat(2, 1fr); }
             .impact-edit-form { grid-template-columns: 1fr; }
@@ -1161,19 +1264,15 @@
                     </button>
                 </div>
 
-                <!-- Search Bar -->
-                <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
-                    <input type="text" id="postSearchInput" placeholder="Search posts by caption or post ID..." 
-                        style="flex:1; min-width:200px; padding:10px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif;" />
-                    <button class="btn-outline btn-sm" onclick="searchPosts()">
-                        <i class="fa-solid fa-search"></i> Search
-                    </button>
-                    <button class="btn-outline btn-sm" onclick="clearPostSearch()">
-                        <i class="fa-solid fa-times"></i> Clear
-                    </button>
-                    <span id="postCountDisplay" style="font-size:12px; color:rgba(255,255,255,0.4); margin-left:auto;">
-                        Total: <span id="postTotalCount">0</span>
-                    </span>
+                <!-- Search Bar - Styled -->
+                <div class="search-bar">
+                    <span class="search-icon"><i class="fa-solid fa-search"></i></span>
+                    <input type="text" id="postSearchInput" placeholder="Search posts by caption or post ID..." />
+                    <div class="search-actions">
+                        <button class="btn-search" onclick="searchPosts()">Search</button>
+                        <button class="btn-clear" onclick="clearPostSearch()"><i class="fa-solid fa-times"></i></button>
+                    </div>
+                    <span class="search-count">Total: <span id="postTotalCount">0</span></span>
                 </div>
 
                 <!-- Posts Grid -->
@@ -1230,18 +1329,18 @@
 
                 <h3 style="font-family:'Playfair Display',serif; font-size:20px; margin-top:30px; margin-bottom:16px;">Add New Partner</h3>
                 <div class="add-partner-form">
-                    <input type="text" id="partnerName" placeholder="Partner Name (e.g., Adidas)" style="flex:1; min-width:200px; padding:12px 18px; border:1px solid rgba(255,255,255,0.1); border-radius:10px; background:rgba(255,255,255,0.04); color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif;" />
+                    <input type="text" id="partnerName" placeholder="Partner Name (e.g., Converse)" />
                     <div class="file-upload-area" id="partnerUploadArea" onclick="document.getElementById('partnerFileInput').click()">
                         <i class="fa-regular fa-image"></i>
-                        <p>Click to upload partner logo</p>
+                        <p>Click to upload logo</p>
                         <div class="file-name" id="partnerFileName">No file selected</div>
                         <input type="file" id="partnerFileInput" accept="image/*" />
                     </div>
-                    <input type="hidden" id="partnerUrl" />
                     <button class="btn-primary" onclick="addPartner()">
                         <i class="fa-regular fa-plus"></i> Add Partner
                     </button>
                 </div>
+                <div id="partnerUploadStatus" style="margin-top:8px; font-size:12px; min-height:20px;"></div>
                 <p style="font-size:12px; color:rgba(255,255,255,0.5); margin-top:8px;">
                     💡 Upload a logo image (PNG, JPG, SVG) - it will be saved to Cloudinary automatically.
                 </p>
@@ -1341,17 +1440,17 @@
                 <div class="pin-update-form" style="max-width:400px;">
                     <div class="form-group">
                         <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Current PIN</label>
-                        <input type="password" id="currentPin" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="Enter current 4-digit PIN" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif;" />
+                        <input type="password" id="currentPin" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="Enter current 4-digit PIN" />
                     </div>
                     <div class="form-group">
                         <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">New PIN</label>
-                        <input type="password" id="newPin" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="Enter new 4-digit PIN" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif;" />
+                        <input type="password" id="newPin" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="Enter new 4-digit PIN" />
                     </div>
                     <div class="form-group">
                         <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Confirm New PIN</label>
-                        <input type="password" id="confirmPin" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="Confirm new 4-digit PIN" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif;" />
+                        <input type="password" id="confirmPin" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="Confirm new 4-digit PIN" />
                     </div>
-                    <button class="btn-primary" onclick="updatePIN()" style="background:var(--red); color:var(--white); border:none; border-radius:60px; padding:14px 32px; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.3s ease; font-family:'Inter',sans-serif; display:inline-flex; align-items:center; gap:8px;">
+                    <button class="btn-primary" onclick="updatePIN()">
                         <i class="fa-regular fa-floppy-disk"></i> Update PIN
                     </button>
                     <div id="pinUpdateStatus" style="margin-top:12px; font-size:13px; min-height:24px;"></div>
@@ -1360,7 +1459,8 @@
         </div>
     </section>
 
-    <!-- ==================== EDIT MEMBER MODAL ==================== -->
+    <!-- ==================== MODALS ==================== -->
+    <!-- Edit Member Modal -->
     <div class="edit-modal" id="editModal">
         <div class="edit-modal-overlay" id="editModalOverlay"></div>
         <div class="edit-modal-content">
@@ -1370,26 +1470,24 @@
             <div id="editMemberData">
                 <div style="margin-bottom:16px;">
                     <label style="font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); display:block; margin-bottom:8px;">Select Profile Photo</label>
-                    <div class="image-select-grid" id="imageSelectGrid">
-                        <!-- Images will be loaded here -->
-                    </div>
+                    <div class="image-select-grid" id="imageSelectGrid"></div>
                 </div>
                 <form class="edit-form" id="editForm">
                     <div class="form-group">
-                        <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Full Name</label>
+                        <label>Full Name</label>
                         <input type="text" id="editName" />
                     </div>
                     <div class="form-group">
-                        <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Email</label>
+                        <label>Email</label>
                         <input type="email" id="editEmail" disabled />
                     </div>
                     <div class="form-group">
-                        <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Role/Title</label>
+                        <label>Role/Title</label>
                         <input type="text" id="editRole" />
                     </div>
                     <div class="form-group">
-                        <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Creative Focus/Skillset</label>
-                        <textarea id="editSkills" rows="2" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif; min-height:60px; resize:vertical;"></textarea>
+                        <label>Creative Focus/Skillset</label>
+                        <textarea id="editSkills" rows="2"></textarea>
                     </div>
                     <div class="edit-actions">
                         <button type="button" class="btn-outline success" onclick="updateMemberStatus('accepted')">
@@ -1408,24 +1506,23 @@
         </div>
     </div>
 
-    <!-- ==================== ARTICLE EDIT MODAL ==================== -->
+    <!-- Article Modal -->
     <div class="edit-modal" id="articleModal">
         <div class="edit-modal-overlay" id="articleModalOverlay"></div>
         <div class="edit-modal-content">
             <button class="edit-modal-close" id="articleModalClose"><i class="fa-solid fa-xmark"></i></button>
-            <h3 style="font-family:'Playfair Display',serif; font-size:24px; margin-bottom:4px;" id="articleModalTitle">Add Article</h3>
+            <h3 id="articleModalTitle">Add Article</h3>
             <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;" id="articleModalSubtitle">Link an Instagram post to an article URL</p>
             <div id="articleFormData">
                 <form id="articleForm">
                     <div class="form-group">
-                        <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Post ID</label>
+                        <label>Post ID</label>
                         <input type="text" id="articlePostId" placeholder="e.g., 17991679634800377" required />
-                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">The Instagram post ID (found in the post URL or from "Fetch Posts" below)</small>
+                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">The Instagram post ID</small>
                     </div>
                     <div class="form-group">
-                        <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Article URL</label>
+                        <label>Article URL</label>
                         <input type="url" id="articleUrl" placeholder="https://substack.com/..." required />
-                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">Full URL to the article (Substack, Medium, etc.)</small>
                     </div>
                     <div class="edit-actions">
                         <button type="button" class="btn-primary" onclick="saveArticle()">
@@ -1438,12 +1535,12 @@
         </div>
     </div>
 
-    <!-- ==================== ADD POST MODAL (WITH FILE UPLOAD) ==================== -->
+    <!-- Add Post Modal -->
     <div class="edit-modal" id="postModal">
         <div class="edit-modal-overlay" id="postModalOverlay"></div>
         <div class="edit-modal-content">
             <button class="edit-modal-close" id="postModalClose" onclick="closePostModal()"><i class="fa-solid fa-xmark"></i></button>
-            <h3 style="font-family:'Playfair Display',serif; font-size:24px; margin-bottom:4px;" id="postModalTitle">Add Instagram Post</h3>
+            <h3 id="postModalTitle">Add Instagram Post</h3>
             <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;" id="postModalSubtitle">Upload your media and paste the Instagram URL</p>
             <div>
                 <!-- Step 1: Instagram URL -->
@@ -1535,28 +1632,28 @@
         </div>
     </div>
 
-    <!-- ==================== ADD WORK MODAL ==================== -->
+    <!-- Add Work Modal -->
     <div class="edit-modal" id="workModal">
         <div class="edit-modal-overlay" id="workModalOverlay"></div>
         <div class="edit-modal-content">
             <button class="edit-modal-close" id="workModalClose" onclick="closeWorkModal()"><i class="fa-solid fa-xmark"></i></button>
-            <h3 style="font-family:'Playfair Display',serif; font-size:24px; margin-bottom:4px;" id="workModalTitle">Add Work</h3>
+            <h3 id="workModalTitle">Add Work</h3>
             <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;">Add a new work item to display on the Work page</p>
             <div>
                 <div class="form-group">
-                    <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Title *</label>
+                    <label>Title *</label>
                     <input type="text" id="workTitle" placeholder="e.g., Street Editorial" />
                 </div>
                 <div class="form-group">
-                    <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Category</label>
+                    <label>Category</label>
                     <input type="text" id="workCategory" placeholder="e.g., Fashion Visuals" />
                 </div>
                 <div class="form-group">
-                    <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Description</label>
-                    <textarea id="workDescription" rows="2" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif; resize:vertical;"></textarea>
+                    <label>Description</label>
+                    <textarea id="workDescription" rows="2"></textarea>
                 </div>
                 <div class="form-group">
-                    <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Upload Media *</label>
+                    <label>Upload Media *</label>
                     <div class="file-upload-area" id="workUploadArea" onclick="document.getElementById('workMediaFile').click()">
                         <i class="fa-regular fa-image"></i>
                         <p>Click to upload image or video</p>
@@ -1566,20 +1663,20 @@
                     <small style="color:rgba(255,255,255,0.4); font-size:11px;">Upload an image or video for this work item</small>
                 </div>
                 <div class="form-group">
-                    <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Media Type</label>
-                    <select id="workMediaType" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif;">
+                    <label>Media Type</label>
+                    <select id="workMediaType">
                         <option value="image">Image</option>
                         <option value="video">Video</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Display Order</label>
+                    <label>Display Order</label>
                     <input type="number" id="workDisplayOrder" value="0" />
                     <small style="color:rgba(255,255,255,0.4); font-size:11px;">Lower numbers appear first</small>
                 </div>
                 <div class="form-group">
-                    <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Featured</label>
-                    <select id="workFeatured" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif;">
+                    <label>Featured</label>
+                    <select id="workFeatured">
                         <option value="false">No</option>
                         <option value="true">Yes</option>
                     </select>
@@ -1604,17 +1701,17 @@
         </div>
     </div>
 
-    <!-- ==================== LINK ARTICLE MODAL ==================== -->
+    <!-- Link Article Modal -->
     <div class="edit-modal" id="linkArticleModal">
         <div class="edit-modal-overlay" id="linkArticleModalOverlay"></div>
         <div class="edit-modal-content">
             <button class="edit-modal-close" id="linkArticleModalClose"><i class="fa-solid fa-xmark"></i></button>
-            <h3 style="font-family:'Playfair Display',serif; font-size:24px; margin-bottom:4px;">Link Article to Post</h3>
+            <h3>Link Article to Post</h3>
             <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;" id="linkPostDisplay">Post ID: </p>
             <div>
                 <input type="hidden" id="linkPostId" />
                 <div class="form-group">
-                    <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Article URL</label>
+                    <label>Article URL</label>
                     <input type="url" id="linkArticleUrl" placeholder="https://substack.com/..." required />
                 </div>
                 <div class="edit-actions">
@@ -1627,25 +1724,25 @@
         </div>
     </div>
 
-    <!-- ==================== EDIT POST MODAL ==================== -->
+    <!-- Edit Post Modal -->
     <div class="edit-modal" id="editPostModal">
         <div class="edit-modal-overlay" id="editPostModalOverlay"></div>
         <div class="edit-modal-content">
             <button class="edit-modal-close" id="editPostModalClose"><i class="fa-solid fa-xmark"></i></button>
-            <h3 style="font-family:'Playfair Display',serif; font-size:24px; margin-bottom:4px;">Edit Post</h3>
+            <h3>Edit Post</h3>
             <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;">Update post details</p>
             <div>
                 <input type="hidden" id="editPostId" />
                 <div class="form-group">
-                    <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Caption</label>
-                    <textarea id="editPostCaption" rows="3" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif; resize:vertical;"></textarea>
+                    <label>Caption</label>
+                    <textarea id="editPostCaption" rows="3"></textarea>
                 </div>
                 <div class="form-group">
-                    <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Writer</label>
+                    <label>Writer</label>
                     <input type="text" id="editPostWriter" placeholder="100 HUB" />
                 </div>
                 <div class="form-group">
-                    <label style="display:block; font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); margin-bottom:4px;">Article URL</label>
+                    <label>Article URL</label>
                     <input type="url" id="editPostArticleUrl" placeholder="https://substack.com/..." />
                 </div>
                 <div class="edit-actions">
@@ -1658,7 +1755,7 @@
         </div>
     </div>
 
-    <!-- ==================== CONFIRM DELETE MODAL ==================== -->
+    <!-- Confirm Delete Modal -->
     <div class="confirm-modal" id="confirmModal">
         <div class="confirm-modal-overlay" id="confirmModalOverlay"></div>
         <div class="confirm-modal-content">
@@ -1677,20 +1774,27 @@
 
     <script>
         // ==========================================
-        // PIN PROTECTION - Supabase Integration
+        // API HELPER - Consolidated API Calls
+        // ==========================================
+        function apiUrl(path, params = {}) {
+            const queryParams = new URLSearchParams({ path, ...params });
+            return `/api?${queryParams.toString()}`;
+        }
+
+        // ==========================================
+        // PIN PROTECTION
         // ==========================================
         let pinAttempts = 0;
         const MAX_ATTEMPTS = 5;
 
         async function verifyPin(inputPin) {
             try {
-                const response = await fetch('/api/verify-pin', {
+                const response = await fetch(apiUrl('verify-pin'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ pin: inputPin })
                 });
-                const result = await response.json();
-                return result;
+                return await response.json();
             } catch (error) {
                 console.error('Error verifying PIN:', error);
                 return { success: false, error: 'Network error' };
@@ -1816,13 +1920,10 @@
             try {
                 statusEl.innerHTML = '<span style="color:#ffd700;">⏳ Updating...</span>';
 
-                const response = await fetch('/api/update-pin', {
+                const response = await fetch(apiUrl('update-pin'), {
                     method: 'POST',
                     headers: adminHeaders(),
-                    body: JSON.stringify({
-                        currentPin: currentPin,
-                        newPin: newPin
-                    })
+                    body: JSON.stringify({ currentPin, newPin })
                 });
 
                 const result = await response.json();
@@ -1949,7 +2050,7 @@
             }
             
             try {
-                const response = await fetch(`${API_BASE}/members`);
+                const response = await fetch(apiUrl('members'));
                 const data = await response.json();
                 CACHE.set('members', data);
                 return data;
@@ -2092,7 +2193,7 @@
 
         async function updateMemberDirect(email, updates) {
             try {
-                const response = await fetch(`${API_BASE}/update-member`, {
+                const response = await fetch(apiUrl('update-member'), {
                     method: 'POST',
                     headers: adminHeaders(),
                     body: JSON.stringify({ email, ...updates })
@@ -2164,7 +2265,7 @@
             }
             
             try {
-                const response = await fetch(`${API_BASE}/articles`);
+                const response = await fetch(apiUrl('articles'));
                 const data = await response.json();
                 CACHE.set('articles', data);
                 return data;
@@ -2355,7 +2456,6 @@
                 navigator.clipboard.writeText(postId)
                     .then(() => showToast('✅ Copied: ' + postId, 'success'))
                     .catch(() => {
-                        // Fallback
                         const textarea = document.createElement('textarea');
                         textarea.value = postId;
                         document.body.appendChild(textarea);
@@ -2365,7 +2465,6 @@
                         showToast('✅ Copied: ' + postId, 'success');
                     });
             } else {
-                // Fallback for older browsers
                 const textarea = document.createElement('textarea');
                 textarea.value = postId;
                 document.body.appendChild(textarea);
@@ -2425,7 +2524,7 @@
                     { id: editingArticleId, postId, articleUrl } : 
                     { postId, articleUrl };
                 
-                const response = await fetch(`${API_BASE}/articles`, {
+                const response = await fetch(apiUrl('articles'), {
                     method: 'POST',
                     headers: adminHeaders(),
                     body: JSON.stringify(body)
@@ -2438,7 +2537,6 @@
                     closeArticleModal();
                     CACHE.clear();
                     renderArticles();
-                    // Close the Behold posts container if open
                     document.getElementById('beholdPostsContainer').style.display = 'none';
                 } else {
                     showToast(result.error || 'Failed to save article.', 'error');
@@ -2462,7 +2560,6 @@
         let fetchedPostData = {};
 
         function openAddPostModal() {
-            // Clear all fields
             document.getElementById('postInstagramUrl').value = '';
             document.getElementById('manualPostId').value = '';
             document.getElementById('manualImageUrl').value = '';
@@ -2503,7 +2600,6 @@
                 return;
             }
             
-            // Extract Post ID from URL
             let postId = '';
             const patterns = [
                 /instagram\.com\/p\/([A-Za-z0-9_-]+)/,
@@ -2529,7 +2625,6 @@
             status.innerHTML = '<span style="color:#ffd700;">⏳ Fetching post details...</span>';
             
             try {
-                // Try to fetch via Instagram OEmbed
                 const oembedUrl = `https://api.instagram.com/oembed?url=${encodeURIComponent(url)}`;
                 const response = await fetch(oembedUrl);
                 let caption = '';
@@ -2540,20 +2635,16 @@
                     caption = data.title || '';
                     author = data.author_name || '100 HUB';
                 } else {
-                    // If OEmbed fails, use the post ID as caption
                     caption = `Instagram post ${postId}`;
                 }
                 
-                // Auto-fill fields
                 document.getElementById('manualPostId').value = postId;
                 document.getElementById('manualCaption').value = caption;
                 document.getElementById('manualPermalink').value = url;
                 document.getElementById('manualWriter').value = author;
                 
-                // Store fetched data
                 fetchedPostData = { postId, caption, author, url };
                 
-                // Show success
                 detailsDiv.style.display = 'block';
                 document.getElementById('fetchedPostId').textContent = `ID: ${postId}`;
                 const captionPreview = caption.length > 50 ? caption.substring(0, 50) + '...' : caption;
@@ -2563,7 +2654,6 @@
             } catch (error) {
                 console.error('Fetch error:', error);
                 status.innerHTML = '<span style="color:#ff6b6b;">⚠️ Could not fetch post details. Please enter manually.</span>';
-                // Still auto-fill the post ID
                 document.getElementById('manualPostId').value = postId;
             }
             
@@ -2574,7 +2664,7 @@
         // ==========================================
         // UPLOAD MEDIA TO CLOUDINARY
         // ==========================================
-        async function uploadMediaFile(file, type = 'image') {
+        async function uploadMediaFile(file) {
             return new Promise((resolve, reject) => {
                 const progressDiv = document.getElementById('uploadProgress');
                 const progressBar = document.getElementById('uploadProgressBar');
@@ -2589,7 +2679,6 @@
                 formData.append('upload_preset', 'members');
                 formData.append('folder', '100 TRUSTEES');
                 
-                // Use the correct endpoint based on file type
                 const isVideo = file.type.startsWith('video/');
                 const uploadUrl = isVideo 
                     ? 'https://api.cloudinary.com/v1_1/dfozevcbl/video/upload'
@@ -2638,9 +2727,6 @@
             });
         }
 
-        // ==========================================
-        // SHOW MEDIA PREVIEW
-        // ==========================================
         function showMediaPreview(file, imageUrl) {
             const previewDiv = document.getElementById('mediaPreview');
             previewDiv.style.display = 'block';
@@ -2659,15 +2745,11 @@
             }
         }
 
-        // ==========================================
-        // SAVE POST WITH FILE UPLOAD
-        // ==========================================
         async function savePostWithUpload() {
             const submitBtn = document.getElementById('postSubmitBtn');
             const fileInput = document.getElementById('postMediaFile');
             const file = fileInput.files[0];
             
-            // Step 1: Validate
             const postId = document.getElementById('manualPostId').value.trim();
             const caption = document.getElementById('manualCaption').value.trim();
             const permalink = document.getElementById('manualPermalink').value.trim();
@@ -2684,13 +2766,11 @@
                 return;
             }
             
-            // Check file size (10MB limit)
             if (file.size > 10 * 1024 * 1024) {
                 showToast('⚠️ File is too large. Maximum 10MB.', 'error');
                 return;
             }
             
-            // Step 2: Upload file to Cloudinary
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
             
@@ -2701,10 +2781,9 @@
                     throw new Error('Upload failed');
                 }
                 
-                // Step 3: Save to Supabase
                 submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
                 
-                const response = await fetch('/api/posts', {
+                const response = await fetch(apiUrl('posts'), {
                     method: 'POST',
                     headers: adminHeaders(),
                     body: JSON.stringify({
@@ -2738,17 +2817,14 @@
             submitBtn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Post';
         }
 
-        // ==========================================
-        // LOAD POSTS
-        // ==========================================
         async function loadPosts() {
             const grid = document.getElementById('postGrid');
             const searchTerm = document.getElementById('postSearchInput')?.value || '';
             
             try {
                 const url = searchTerm.trim() 
-                    ? `/api/posts?limit=100&search=${encodeURIComponent(searchTerm)}`
-                    : '/api/posts?limit=100';
+                    ? apiUrl('posts', { limit: 100, search: encodeURIComponent(searchTerm) })
+                    : apiUrl('posts', { limit: 100 });
                     
                 const response = await fetch(url);
                 const data = await response.json();
@@ -2828,7 +2904,6 @@
                 `;
             }).join('');
 
-            // Show/Hide See More buttons
             if (filteredPosts.length > postDisplayCount) {
                 seeMoreWrap.style.display = 'flex';
                 seeMoreWrap.style.gap = '12px';
@@ -2879,16 +2954,13 @@
             renderPostGrid();
         }
 
-        // ==========================================
-        // SYNC ALL POSTS
-        // ==========================================
         async function syncAllPosts() {
             const btn = document.getElementById('syncPostsBtn');
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Syncing...';
             
             try {
-                const response = await fetch('/api/posts/sync', {
+                const response = await fetch(apiUrl('posts-sync'), {
                     method: 'POST',
                     headers: adminHeaders()
                 });
@@ -2939,7 +3011,7 @@
             }
             
             try {
-                const response = await fetch(`/api/posts`, {
+                const response = await fetch(apiUrl('posts'), {
                     method: 'PUT',
                     headers: adminHeaders(),
                     body: JSON.stringify({ 
@@ -2990,7 +3062,7 @@
             const article_url = document.getElementById('editPostArticleUrl').value.trim();
             
             try {
-                const response = await fetch(`/api/posts`, {
+                const response = await fetch(apiUrl('posts'), {
                     method: 'PUT',
                     headers: adminHeaders(),
                     body: JSON.stringify({ id, caption, writer, article_url })
@@ -3021,7 +3093,7 @@
         async function loadWorkItems() {
             const grid = document.getElementById('workGrid');
             try {
-                const response = await fetch('/api/work-items');
+                const response = await fetch(apiUrl('work-items'));
                 const data = await response.json();
                 if (data.success) {
                     allWorkItems = data.items || [];
@@ -3118,9 +3190,6 @@
         document.getElementById('workModalClose').addEventListener('click', closeWorkModal);
         document.getElementById('workModalOverlay').addEventListener('click', closeWorkModal);
 
-        // ==========================================
-        // WORK MEDIA UPLOAD
-        // ==========================================
         async function uploadWorkMediaFile(file) {
             return new Promise((resolve, reject) => {
                 const progressDiv = document.getElementById('workUploadProgress');
@@ -3182,9 +3251,6 @@
             });
         }
 
-        // ==========================================
-        // SAVE WORK ITEM
-        // ==========================================
         async function saveWorkItem() {
             const title = document.getElementById('workTitle').value.trim();
             const category = document.getElementById('workCategory').value.trim();
@@ -3202,7 +3268,6 @@
             
             let media_url = document.getElementById('workMediaUrl').value.trim();
             
-            // If there's a new file, upload it
             if (file) {
                 if (file.size > 10 * 1024 * 1024) {
                     showToast('⚠️ File is too large. Maximum 10MB.', 'error');
@@ -3233,7 +3298,7 @@
             submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
             try {
-                const url = '/api/work-items';
+                const url = apiUrl('work-items');
                 const method = editingWorkId ? 'PUT' : 'POST';
                 const body = editingWorkId 
                     ? { id: editingWorkId, title, category, description, media_url, media_type, display_order, featured }
@@ -3265,7 +3330,6 @@
         // ==========================================
         // PARTNERS - WITH FILE UPLOAD
         // ==========================================
-        
         async function uploadPartnerLogo(file) {
             return new Promise((resolve, reject) => {
                 const formData = new FormData();
@@ -3276,18 +3340,18 @@
                 const xhr = new XMLHttpRequest();
                 xhr.open('POST', 'https://api.cloudinary.com/v1_1/dfozevcbl/image/upload');
                 
-                xhr.onload = function() {
+                xhr.onload = () => {
                     if (xhr.status === 200) {
                         const data = JSON.parse(xhr.responseText);
                         console.log('✅ Partner logo uploaded:', data.secure_url);
                         resolve(data.secure_url);
                     } else {
                         console.error('❌ Upload failed:', xhr.status, xhr.responseText);
-                        reject(new Error('Upload failed'));
+                        reject(new Error('Upload failed: ' + xhr.status));
                     }
                 };
                 
-                xhr.onerror = function() {
+                xhr.onerror = () => {
                     console.error('❌ Network error');
                     reject(new Error('Network error'));
                 };
@@ -3296,66 +3360,162 @@
             });
         }
 
-    // ==========================================
-    // ADD PARTNER - UPDATED
-    // ==========================================
-    async function addPartner() {
-        const name = document.getElementById('partnerName').value.trim();
-        const fileInput = document.getElementById('partnerFileInput');
-        const file = fileInput.files[0];
-        
-        if (!name) {
-            showToast('Please enter a partner name.', 'error');
-            return;
-        }
-        
-        if (!file) {
-            showToast('Please select a logo image.', 'error');
-            return;
-        }
-        
-        const submitBtn = event.target;
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
-        
-        try {
-            // Step 1: Upload to Cloudinary
-            const url = await uploadPartnerLogo(file);
+        async function addPartner() {
+            const name = document.getElementById('partnerName').value.trim();
+            const fileInput = document.getElementById('partnerFileInput');
+            const file = fileInput.files[0];
+            const status = document.getElementById('partnerUploadStatus');
+            const btn = event.target;
             
-            if (!url) {
-                throw new Error('Failed to get URL from Cloudinary');
+            if (!name) {
+                showToast('Please enter a partner name.', 'error');
+                return;
             }
             
-            // Step 2: Save to Supabase
-            const response = await fetch(`${API_BASE}/partners`, {
-                method: 'POST',
-                headers: adminHeaders(),
-                body: JSON.stringify({ name, url })
-            });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                showToast(`✅ ${name} added successfully!`, 'success');
-                document.getElementById('partnerName').value = '';
-                document.getElementById('partnerFileInput').value = '';
-                document.getElementById('partnerFileName').textContent = 'No file selected';
-                loadPartners();
-            } else {
-                showToast(result.error || 'Failed to add partner.', 'error');
+            if (!file) {
+                showToast('Please select a logo image.', 'error');
+                return;
             }
-        } catch (error) {
-            console.error('Add partner error:', error);
-            showToast('❌ Failed to upload logo. Please try again.', 'error');
+            
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('Logo file is too large. Maximum 5MB.', 'error');
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+            status.innerHTML = '<span style="color:#ffd700;">⏳ Uploading to Cloudinary...</span>';
+            
+            try {
+                const url = await uploadPartnerLogo(file);
+                
+                if (!url) {
+                    throw new Error('Failed to get URL from Cloudinary');
+                }
+                
+                status.innerHTML = '<span style="color:#4ADE80;">✅ Uploaded to Cloudinary! Saving to database...</span>';
+                
+                const response = await fetch(apiUrl('partners'), {
+                    method: 'POST',
+                    headers: adminHeaders(),
+                    body: JSON.stringify({ name, url })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`✅ ${name} added successfully!`, 'success');
+                    document.getElementById('partnerName').value = '';
+                    document.getElementById('partnerFileInput').value = '';
+                    document.getElementById('partnerFileName').textContent = 'No file selected';
+                    status.innerHTML = '';
+                    loadPartners();
+                } else {
+                    showToast(result.error || 'Failed to add partner.', 'error');
+                    status.innerHTML = `<span style="color:#ff6b6b;">❌ ${result.error || 'Failed to save'}</span>`;
+                }
+            } catch (error) {
+                console.error('Add partner error:', error);
+                showToast('❌ Failed to upload logo: ' + error.message, 'error');
+                status.innerHTML = `<span style="color:#ff6b6b;">❌ ${error.message}</span>`;
+            }
+            
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-regular fa-plus"></i> Add Partner';
         }
-        
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fa-regular fa-plus"></i> Add Partner';
-    }
+
+        async function loadPartners() {
+            try {
+                const response = await fetch(apiUrl('partners'));
+                const data = await response.json();
+                const grid = document.getElementById('partnerGrid');
+                
+                if (!data.logos || data.logos.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state" style="grid-column:1/-1;">
+                            <i class="fa-regular fa-image"></i>
+                            <p>No partners added yet.</p>
+                        </div>
+                    `;
+                    document.getElementById('totalPartners').textContent = '0';
+                    return;
+                }
+                
+                document.getElementById('totalPartners').textContent = data.logos.length;
+                grid.innerHTML = data.logos.map(logo => `
+                    <div class="partner-card">
+                        <button class="partner-delete" onclick="confirmDelete('partner', '${logo.id}', '${logo.name}')" title="Delete partner">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        <img src="${logo.url}" alt="${logo.name}" loading="lazy" onerror="this.alt='${logo.name}'; this.style.display='none'; this.parentElement.querySelector('.partner-name-fallback').style.display='block';" />
+                        <div class="partner-name-fallback" style="display:none; font-size:13px; color:rgba(255,255,255,0.8); padding:10px 0;">${logo.name}</div>
+                        <div class="partner-name" style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:4px;">${logo.name}</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading partners:', error);
+                showToast('Error loading partners.', 'error');
+            }
+        }
 
         // ==========================================
-        // MEDIA KIT - WITH FILE UPLOAD
+        // IMPACT NUMBERS
         // ==========================================
+        function loadImpactNumbers() {
+            try {
+                const data = localStorage.getItem('impactNumbers');
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    document.getElementById('impactMagazine').textContent = parsed.magazine || 8;
+                    document.getElementById('impactFeatures').textContent = parsed.features + (parsed.features > 9 ? '' : '+');
+                    document.getElementById('impactCollaborations').textContent = parsed.collaborations + (parsed.collaborations > 9 ? '' : '+');
+                    document.getElementById('impactReach').textContent = parsed.reach >= 1000000 ? (parsed.reach / 1000000).toFixed(1) + 'M+' : parsed.reach + '+';
+                    document.getElementById('editMagazine').value = parsed.magazine || 8;
+                    document.getElementById('editFeatures').value = parsed.features || 100;
+                    document.getElementById('editCollaborations').value = parsed.collaborations || 50;
+                    document.getElementById('editReach').value = parsed.reach || 1000000;
+                }
+            } catch (e) {}
+        }
+
+        function saveImpactNumbers() {
+            const data = {
+                magazine: parseInt(document.getElementById('editMagazine').value) || 8,
+                features: parseInt(document.getElementById('editFeatures').value) || 100,
+                collaborations: parseInt(document.getElementById('editCollaborations').value) || 50,
+                reach: parseInt(document.getElementById('editReach').value) || 1000000
+            };
+            localStorage.setItem('impactNumbers', JSON.stringify(data));
+            loadImpactNumbers();
+            showToast('Impact numbers saved!', 'success');
+        }
+
+        // ==========================================
+        // MEDIA KIT
+        // ==========================================
+        async function checkMediaKit() {
+            const status = document.getElementById('mediaKitStatus');
+            const downloadLink = document.getElementById('mediaKitDownloadLink');
+            
+            try {
+                const response = await fetch(apiUrl('media-kit'));
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.url) {
+                        status.innerHTML = `<span style="color:#4caf50;">✅ Media Kit available</span>`;
+                        downloadLink.style.display = 'inline-flex';
+                        downloadLink.href = data.url;
+                        return;
+                    }
+                }
+                status.innerHTML = `<span style="color:#ff9800;">⚠️ No Media Kit uploaded</span>`;
+                downloadLink.style.display = 'none';
+            } catch (error) {
+                status.innerHTML = `<span style="color:#ff4444;">❌ Could not check</span>`;
+                downloadLink.style.display = 'none';
+            }
+        }
+
         document.getElementById('mediaKitForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -3381,7 +3541,6 @@
             progress.style.display = 'block';
             
             try {
-                // Upload to Cloudinary
                 const formData = new FormData();
                 formData.append('file', file);
                 formData.append('upload_preset', 'members');
@@ -3397,8 +3556,7 @@
                 const data = await uploadResponse.json();
                 const url = data.secure_url;
                 
-                // Save to Supabase
-                const response = await fetch(`${API_BASE}/media-kit`, {
+                const response = await fetch(apiUrl('media-kit'), {
                     method: 'POST',
                     headers: adminHeaders(),
                     body: JSON.stringify({ url })
@@ -3441,21 +3599,21 @@
                 let body = { id: deleteTarget.id };
                 
                 if (deleteTarget.type === 'member') {
-                    endpoint = `${API_BASE}/members`;
+                    endpoint = 'members';
                 } else if (deleteTarget.type === 'article') {
-                    endpoint = `${API_BASE}/articles`;
+                    endpoint = 'articles';
                 } else if (deleteTarget.type === 'partner') {
-                    endpoint = `${API_BASE}/partners`;
+                    endpoint = 'partners';
                 } else if (deleteTarget.type === 'post') {
-                    endpoint = `${API_BASE}/posts`;
+                    endpoint = 'posts';
                 } else if (deleteTarget.type === 'work') {
-                    endpoint = `${API_BASE}/work-items`;
+                    endpoint = 'work-items';
                 } else {
                     showToast('Unknown item type.', 'error');
                     return;
                 }
                 
-                const response = await fetch(endpoint, {
+                const response = await fetch(apiUrl(endpoint), {
                     method: 'DELETE',
                     headers: adminHeaders(),
                     body: JSON.stringify(body)
@@ -3489,100 +3647,6 @@
             document.getElementById('confirmModal').classList.remove('active');
             document.body.style.overflow = '';
             deleteTarget = { type: '', id: '', name: '' };
-        }
-
-        // ==========================================
-        // PARTNERS - Load
-        // ==========================================
-        async function loadPartners() {
-            try {
-                const response = await fetch(`${API_BASE}/partners`);
-                const data = await response.json();
-                const grid = document.getElementById('partnerGrid');
-                
-                if (!data.logos || data.logos.length === 0) {
-                    grid.innerHTML = `
-                        <div class="empty-state" style="grid-column:1/-1;">
-                            <i class="fa-regular fa-image"></i>
-                            <p>No partners added yet.</p>
-                        </div>
-                    `;
-                    document.getElementById('totalPartners').textContent = '0';
-                    return;
-                }
-                
-                document.getElementById('totalPartners').textContent = data.logos.length;
-                grid.innerHTML = data.logos.map(logo => `
-                    <div class="partner-card">
-                        <button class="partner-delete" onclick="confirmDelete('partner', '${logo.id}', '${logo.name}')" title="Delete partner">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                        <img src="${logo.url}" alt="${logo.name}" loading="lazy" onerror="this.style.display='none'" />
-                        <div class="partner-name">${logo.name}</div>
-                    </div>
-                `).join('');
-            } catch (error) {
-                console.error('Error loading partners:', error);
-                showToast('Error loading partners.', 'error');
-            }
-        }
-
-        // ==========================================
-        // IMPACT NUMBERS
-        // ==========================================
-        function loadImpactNumbers() {
-            try {
-                const data = localStorage.getItem('impactNumbers');
-                if (data) {
-                    const parsed = JSON.parse(data);
-                    document.getElementById('impactMagazine').textContent = parsed.magazine || 8;
-                    document.getElementById('impactFeatures').textContent = parsed.features + (parsed.features > 9 ? '' : '+');
-                    document.getElementById('impactCollaborations').textContent = parsed.collaborations + (parsed.collaborations > 9 ? '' : '+');
-                    document.getElementById('impactReach').textContent = parsed.reach >= 1000000 ? (parsed.reach / 1000000).toFixed(1) + 'M+' : parsed.reach + '+';
-                    document.getElementById('editMagazine').value = parsed.magazine || 8;
-                    document.getElementById('editFeatures').value = parsed.features || 100;
-                    document.getElementById('editCollaborations').value = parsed.collaborations || 50;
-                    document.getElementById('editReach').value = parsed.reach || 1000000;
-                }
-            } catch (e) {}
-        }
-
-        function saveImpactNumbers() {
-            const data = {
-                magazine: parseInt(document.getElementById('editMagazine').value) || 8,
-                features: parseInt(document.getElementById('editFeatures').value) || 100,
-                collaborations: parseInt(document.getElementById('editCollaborations').value) || 50,
-                reach: parseInt(document.getElementById('editReach').value) || 1000000
-            };
-            localStorage.setItem('impactNumbers', JSON.stringify(data));
-            loadImpactNumbers();
-            showToast('Impact numbers saved!', 'success');
-        }
-
-        // ==========================================
-        // MEDIA KIT - Check
-        // ==========================================
-        async function checkMediaKit() {
-            const status = document.getElementById('mediaKitStatus');
-            const downloadLink = document.getElementById('mediaKitDownloadLink');
-            
-            try {
-                const response = await fetch(`${API_BASE}/media-kit`);
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.url) {
-                        status.innerHTML = `<span style="color:#4caf50;">✅ Media Kit available</span>`;
-                        downloadLink.style.display = 'inline-flex';
-                        downloadLink.href = data.url;
-                        return;
-                    }
-                }
-                status.innerHTML = `<span style="color:#ff9800;">⚠️ No Media Kit uploaded</span>`;
-                downloadLink.style.display = 'none';
-            } catch (error) {
-                status.innerHTML = `<span style="color:#ff4444;">❌ Could not check</span>`;
-                downloadLink.style.display = 'none';
-            }
         }
 
         // ==========================================
@@ -3646,11 +3710,7 @@
             loadPosts();
             loadWorkItems();
 
-            // ==========================================
-            // FILE INPUT HANDLERS
-            // ==========================================
-            
-            // Post file input
+            // File input handlers
             const postFileInput = document.getElementById('postMediaFile');
             if (postFileInput) {
                 postFileInput.addEventListener('change', function() {
@@ -3671,7 +3731,6 @@
                 });
             }
             
-            // Work file input
             const workFileInput = document.getElementById('workMediaFile');
             if (workFileInput) {
                 workFileInput.addEventListener('change', function() {
@@ -3685,7 +3744,6 @@
                             document.getElementById('workFileName').textContent = 'No file selected';
                             return;
                         }
-                        // Auto-upload work file
                         uploadWorkMediaFile(file).catch(() => {
                             showToast('❌ Upload failed. Please try again.', 'error');
                         });
@@ -3693,16 +3751,15 @@
                 });
             }
             
-            // Partner file input
             const partnerFileInput = document.getElementById('partnerFileInput');
             if (partnerFileInput) {
                 partnerFileInput.addEventListener('change', function() {
                     const fileName = this.files[0] ? this.files[0].name : 'No file selected';
                     document.getElementById('partnerFileName').textContent = fileName;
+                    document.getElementById('partnerUploadStatus').innerHTML = '';
                 });
             }
             
-            // Media Kit file input
             const mediaKitFileInput = document.getElementById('mediaKitFileInput');
             if (mediaKitFileInput) {
                 mediaKitFileInput.addEventListener('change', function() {
@@ -3713,7 +3770,7 @@
         });
 
         console.log('📊 100 HUB Dashboard loaded.');
-        console.log('📝 All tabs with file upload support.');
+        console.log('📝 All tabs with consolidated API and file upload support.');
     </script>
 </body>
 </html>
