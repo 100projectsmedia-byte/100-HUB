@@ -2359,6 +2359,88 @@ section {
 }
 
 /* ==========================================
+   COMING SOON PAGE STYLES
+   ========================================== */
+.coming-soon-section {
+    padding: 200px 0 150px;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: transparent;
+}
+.coming-soon-section .coming-icon {
+    font-size: 72px;
+    color: var(--red);
+    margin-bottom: 24px;
+    display: block;
+}
+.coming-soon-section h1 {
+    font-family: 'Space Grotesk', -apple-system, sans-serif;
+    font-size: 64px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -2px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+}
+.coming-soon-section h1 span {
+    color: var(--red);
+}
+.coming-soon-section p {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.6);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.8;
+}
+.coming-soon-section .coming-soon-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 24px auto;
+    max-width: 200px;
+}
+.coming-soon-section .coming-soon-divider .divider-line {
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+.coming-soon-section .coming-soon-divider .divider-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--red);
+}
+.coming-soon-section .coming-soon-divider .divider-dot-light {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+}
+.coming-soon-section .coming-soon-sub {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 32px;
+}
+
+@media (max-width: 768px) {
+    .coming-soon-section { padding: 150px 0 100px; }
+    .coming-soon-section h1 { font-size: 40px; }
+    .coming-soon-section .coming-icon { font-size: 48px; }
+    .coming-soon-section p { font-size: 16px; padding: 0 20px; }
+}
+@media (max-width: 480px) {
+    .coming-soon-section { padding: 120px 0 80px; }
+    .coming-soon-section h1 { font-size: 30px; }
+    .coming-soon-section .coming-icon { font-size: 36px; }
+}
+
+/* ==========================================
    SITE 3D PRELOADER
    ========================================== */
 .site-preloader {
