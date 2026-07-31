@@ -10,7 +10,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
-    <link rel="preconnect" href="https://feeds.behold.so" crossorigin>
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
@@ -27,7 +26,7 @@
         .page-home .feed-section { padding: 80px 0; }
         .page-home .impact-section { padding: 80px 0; }
         .page-home .partners-section { padding: 60px 0 80px; }
-        
+
         /* Hero Nav Links - only on home page */
         .hero-nav {
             display: flex;
@@ -72,7 +71,7 @@
             .hero-nav { gap: 8px; }
             .hero-nav a { padding: 6px 14px; font-size: 11px; }
         }
-        
+
         /* Feed Search */
         .feed-search {
             display: flex;
@@ -367,7 +366,7 @@
         const API_BASE = '/api';
 
         // ==========================================
-        // BEHOLD FEED CONFIG (Fallback)
+        // BEHOLD FEED CONFIG (Fallback - ONLY if database has no posts)
         // ==========================================
         const BEHOLD_FEED_ID = 'qBmSl39X4hdPVipZS1UR';
         const FEED_URL = `https://feeds.behold.so/${BEHOLD_FEED_ID}`;
@@ -383,35 +382,7 @@
         let usingBeholdFallback = false;
 
         // ==========================================
-        // ARTICLES (for backward compatibility)
-        // ==========================================
-        let articleLinks = {};
-
-        async function loadArticles() {
-            try {
-                const response = await fetch(`${API_BASE}/articles`);
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.articles && Array.isArray(data.articles)) {
-                        articleLinks = {};
-                        data.articles.forEach(row => {
-                            if (row.post_id && row.article_url) {
-                                articleLinks[row.post_id] = row.article_url;
-                            }
-                        });
-                    }
-                }
-            } catch (error) {
-                console.log('ℹ️ Could not load articles');
-            }
-        }
-
-        function getArticleUrl(postId) {
-            return articleLinks[postId] || null;
-        }
-
-        // ==========================================
-        // LOAD POSTS (Primary)
+        // LOAD POSTS FROM DATABASE (Primary)
         // ==========================================
         async function loadPosts() {
             const container = document.getElementById('instagramFeed');
@@ -428,6 +399,7 @@
                 const data = await response.json();
                 
                 if (data.success && data.posts && data.posts.length > 0) {
+                    // Use database posts
                     usingBeholdFallback = false;
                     allFeedPosts = data.posts;
                     document.getElementById('feedShowingCount').textContent = allFeedPosts.length;
@@ -446,7 +418,7 @@
                     return;
                 }
             } catch (error) {
-                console.log('Posts API error, falling back to Behold:', error);
+                console.log('Posts API error:', error);
             }
 
             // Fallback to Behold if no posts in database
@@ -599,7 +571,7 @@
                     year: 'numeric'
                 }) : '';
                 const writer = "100 HUB";
-                const hasArticle = getArticleUrl(post.id) !== null;
+                const hasArticle = false; // Behold posts don't have article links
                 
                 let mediaHtml = '';
                 if (isVideo && videoUrl) {
@@ -612,10 +584,9 @@
                 }
                 
                 return `
-                    <div class="feed-item" data-post='${JSON.stringify({...post, image_url: imageUrl, is_video: isVideo, video_url: videoUrl, caption: caption, writer: writer, article_url: getArticleUrl(post.id), published_at: post.timestamp}).replace(/'/g, "&#39;")}'>
+                    <div class="feed-item" data-post='${JSON.stringify({...post, image_url: imageUrl, is_video: isVideo, video_url: videoUrl, caption: caption, writer: writer, article_url: null, published_at: post.timestamp}).replace(/'/g, "&#39;")}'>
                         <div class="feed-image">
                             ${mediaHtml}
-                            ${hasArticle ? '<span style="position:absolute; bottom:10px; right:10px; background:rgba(227,30,36,0.9); padding:4px 12px; border-radius:20px; font-size:10px; color:white; z-index:5;"><i class="fa-regular fa-file-lines"></i> Article</span>' : ''}
                         </div>
                         <div class="feed-content">
                             <p class="feed-caption">${truncatedCaption}</p>
@@ -625,7 +596,7 @@
                             </div>
                             <div class="feed-actions">
                                 <button class="feed-link" onclick="openPostModal(this)">
-                                    ${hasArticle ? 'Read Full Story' : 'View Post'} <i class="fa-solid fa-arrow-right"></i>
+                                    View Post <i class="fa-solid fa-arrow-right"></i>
                                 </button>
                             </div>
                         </div>
@@ -668,7 +639,6 @@
 
         function toggleFeedPosts() {
             const container = document.getElementById('instagramFeed');
-            const seeMoreWrap = document.getElementById('feedSeeMore');
 
             if (feedShowingAll) {
                 feedDisplayCount = FEED_DEFAULT_COUNT;
@@ -690,6 +660,7 @@
             }
             updateFeedButton();
 
+            const seeMoreWrap = document.getElementById('feedSeeMore');
             if (allFeedPosts.length <= FEED_DEFAULT_COUNT) {
                 seeMoreWrap.style.display = 'none';
             } else {
@@ -939,13 +910,14 @@
         // INIT
         // ==========================================
         document.addEventListener('DOMContentLoaded', async function() {
-            await loadArticles();
             loadImpactNumbers();
             loadPartners();
             updateCreatorsCount();
             loadPosts();
             console.log('🏠 100 HUB — Home Page Loaded');
-            console.log('📸 Feed System: Database Posts + Behold Fallback');
+            console.log('📸 Feed System: Database Posts (primary) + Behold (fallback)');
+            console.log('🔍 Search: Search posts by caption or keyword');
+            console.log('📄 Default: 9 posts, See More loads 3 more');
         });
     </script>
 
