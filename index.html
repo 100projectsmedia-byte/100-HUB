@@ -366,12 +366,6 @@
         const API_BASE = '/api';
 
         // ==========================================
-        // BEHOLD FEED CONFIG (Fallback - ONLY if database has no posts)
-        // ==========================================
-        const BEHOLD_FEED_ID = 'qBmSl39X4hdPVipZS1UR';
-        const FEED_URL = `https://feeds.behold.so/${BEHOLD_FEED_ID}`;
-
-        // ==========================================
         // POSTS STATE
         // ==========================================
         let allFeedPosts = [];
@@ -379,77 +373,31 @@
         let feedShowingAll = false;
         const FEED_DEFAULT_COUNT = 9;
         const FEED_INCREMENT = 3;
-        let usingBeholdFallback = false;
+
 
         // ==========================================
         // LOAD POSTS FROM DATABASE (Primary)
         // ==========================================
         async function loadPosts() {
-            const container = document.getElementById('instagramFeed');
-            const seeMoreWrap = document.getElementById('feedSeeMore');
-            const searchInput = document.getElementById('feedSearchInput');
+        const container = document.getElementById('instagramFeed');
+        const seeMoreWrap = document.getElementById('feedSeeMore');
+        const searchInput = document.getElementById('feedSearchInput');
 
-            try {
-                const searchTerm = searchInput ? searchInput.value.trim() : '';
-                const url = searchTerm 
-                    ? `/api/posts?limit=100&search=${encodeURIComponent(searchTerm)}`
-                    : '/api/posts?limit=100';
-                    
-                const response = await fetch(url);
-                const data = await response.json();
+        try {
+            const searchTerm = searchInput ? searchInput.value.trim() : '';
+            const url = searchTerm 
+                ? `/api/posts?limit=100&search=${encodeURIComponent(searchTerm)}`
+                : '/api/posts?limit=100';
                 
-                if (data.success && data.posts && data.posts.length > 0) {
-                    // Use database posts
-                    usingBeholdFallback = false;
-                    allFeedPosts = data.posts;
-                    document.getElementById('feedShowingCount').textContent = allFeedPosts.length;
-                    feedDisplayCount = Math.min(FEED_DEFAULT_COUNT, allFeedPosts.length);
-                    feedShowingAll = false;
-                    renderFeedPosts(allFeedPosts.slice(0, feedDisplayCount), container);
-                    
-                    if (allFeedPosts.length > feedDisplayCount) {
-                        seeMoreWrap.style.display = 'flex';
-                        seeMoreWrap.style.gap = '12px';
-                        seeMoreWrap.style.justifyContent = 'center';
-                        updateFeedButton();
-                    } else {
-                        seeMoreWrap.style.display = 'none';
-                    }
-                    return;
-                }
-            } catch (error) {
-                console.log('Posts API error:', error);
-            }
-
-            // Fallback to Behold if no posts in database
-            await fetchBeholdFeed();
-        }
-
-        // ==========================================
-        // FETCH BEHOLD FEED (Fallback)
-        // ==========================================
-        async function fetchBeholdFeed() {
-            const container = document.getElementById('instagramFeed');
-            const seeMoreWrap = document.getElementById('feedSeeMore');
-
-            try {
-                const response = await fetch(FEED_URL);
-                if (!response.ok) throw new Error(`Failed to load feed: ${response.status}`);
-                
-                const data = await response.json();
-                const posts = data.posts || data;
-                if (!posts || posts.length === 0) {
-                    container.innerHTML = `<div class="feed-empty"><p>No posts found. Check back later!</p></div>`;
-                    seeMoreWrap.style.display = 'none';
-                    return;
-                }
-                
-                usingBeholdFallback = true;
-                allFeedPosts = posts;
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            if (data.success && data.posts && data.posts.length > 0) {
+                allFeedPosts = data.posts;
                 document.getElementById('feedShowingCount').textContent = allFeedPosts.length;
                 feedDisplayCount = Math.min(FEED_DEFAULT_COUNT, allFeedPosts.length);
                 feedShowingAll = false;
-                renderBeholdPosts(allFeedPosts.slice(0, feedDisplayCount), container);
+                renderFeedPosts(allFeedPosts.slice(0, feedDisplayCount), container);
                 
                 if (allFeedPosts.length > feedDisplayCount) {
                     seeMoreWrap.style.display = 'flex';
@@ -459,17 +407,23 @@
                 } else {
                     seeMoreWrap.style.display = 'none';
                 }
-                
-            } catch (error) {
-                console.error('Feed error:', error);
-                container.innerHTML = `
-                    <div class="feed-error">
-                        <p>⚠️ Unable to load posts. Please refresh or try again later.</p>
-                    </div>
-                `;
+            } else {
+                // No posts found - show empty state
+                container.innerHTML = `<div class="feed-empty"><p>No posts yet. Check back later!</p></div>`;
                 seeMoreWrap.style.display = 'none';
             }
+        } catch (error) {
+            console.error('Load posts error:', error);
+            container.innerHTML = `
+                <div class="feed-error">
+                    <p>⚠️ Unable to load posts. Please refresh or try again later.</p>
+                </div>
+            `;
+            seeMoreWrap.style.display = 'none';
         }
+    }
+
+
 
         // ==========================================
         // RENDER FEED POSTS (from database)
@@ -493,12 +447,15 @@
                 
                 let mediaHtml = '';
                 if (post.is_video && post.video_url) {
+                    // Video with autoplay, muted, loop, playsinline
                     mediaHtml = `
-                        <img src="${post.image_url}" alt="${caption.substring(0, 50)}" loading="lazy" />
+                        <video autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover;">
+                            <source src="${post.video_url}" type="video/mp4">
+                        </video>
                         <span class="feed-play"><i class="fa-solid fa-play"></i></span>
                     `;
                 } else {
-                    mediaHtml = `<img src="${post.image_url}" alt="${caption.substring(0, 50)}" loading="lazy" />`;
+                    mediaHtml = `<img src="${post.image_url}" alt="${caption.substring(0, 50)}" loading="lazy" style="width:100%; height:100%; object-fit:cover;" />`;
                 }
                 
                 return `
@@ -535,85 +492,7 @@
             });
         }
 
-        // ==========================================
-        // RENDER BEHOLD POSTS (Fallback)
-        // ==========================================
-        function renderBeholdPosts(posts, container) {
-            container.innerHTML = posts.map((post, index) => {
-                let imageUrl = '';
-                let videoUrl = '';
-                let isVideo = post.mediaType === 'VIDEO' || post.isReel === true;
-                
-                if (isVideo && post.mediaUrl) {
-                    videoUrl = post.mediaUrl;
-                }
-                
-                if (post.sizes?.large?.mediaUrl) {
-                    imageUrl = post.sizes.large.mediaUrl;
-                } else if (post.mediaUrl && !isVideo) {
-                    imageUrl = post.mediaUrl;
-                } else if (post.sizes?.medium?.mediaUrl) {
-                    imageUrl = post.sizes.medium.mediaUrl;
-                }
-                
-                if (post.mediaType === 'CAROUSEL_ALBUM' && post.children?.length > 0) {
-                    const child = post.children[0];
-                    if (child.sizes?.large?.mediaUrl) imageUrl = child.sizes.large.mediaUrl;
-                    else if (child.mediaUrl) imageUrl = child.mediaUrl;
-                    isVideo = false;
-                }
-                
-                const caption = post.prunedCaption || post.caption || '';
-                const truncatedCaption = caption.length > 120 ? caption.substring(0, 120) + '...' : caption;
-                const date = post.timestamp ? new Date(post.timestamp).toLocaleDateString('en-US', {
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric'
-                }) : '';
-                const writer = "100 HUB";
-                const hasArticle = false; // Behold posts don't have article links
-                
-                let mediaHtml = '';
-                if (isVideo && videoUrl) {
-                    mediaHtml = `
-                        <img src="${imageUrl}" alt="${caption.substring(0, 50)}" loading="lazy" />
-                        <span class="feed-play"><i class="fa-solid fa-play"></i></span>
-                    `;
-                } else {
-                    mediaHtml = `<img src="${imageUrl}" alt="${caption.substring(0, 50)}" loading="lazy" />`;
-                }
-                
-                return `
-                    <div class="feed-item" data-post='${JSON.stringify({...post, image_url: imageUrl, is_video: isVideo, video_url: videoUrl, caption: caption, writer: writer, article_url: null, published_at: post.timestamp}).replace(/'/g, "&#39;")}'>
-                        <div class="feed-image">
-                            ${mediaHtml}
-                        </div>
-                        <div class="feed-content">
-                            <p class="feed-caption">${truncatedCaption}</p>
-                            <div class="feed-meta">
-                                <span class="feed-writer"><i class="fa-regular fa-user"></i> ${writer}</span>
-                                <span class="feed-date"><i class="fa-regular fa-calendar"></i> ${date}</span>
-                            </div>
-                            <div class="feed-actions">
-                                <button class="feed-link" onclick="openPostModal(this)">
-                                    View Post <i class="fa-solid fa-arrow-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
 
-            document.querySelectorAll('.feed-item').forEach(item => {
-                item.addEventListener('click', function(e) {
-                    if (e.target.closest('.feed-link')) return;
-                    const link = this.querySelector('.feed-link');
-                    if (link) {
-                        openPostModal(link);
-                    }
-                });
-            });
-        }
 
         // ==========================================
         // FEED CONTROLS
@@ -652,11 +531,9 @@
             }
             
             // Render with current display count
+            // Render with current display count
             const postsToShow = allFeedPosts.slice(0, feedDisplayCount);
-            if (usingBeholdFallback) {
-                renderBeholdPosts(postsToShow, container);
-            } else {
-                renderFeedPosts(postsToShow, container);
+            renderFeedPosts(postsToShow, container);
             }
             updateFeedButton();
 
@@ -674,12 +551,8 @@
             feedDisplayCount = FEED_DEFAULT_COUNT;
             feedShowingAll = false;
             const container = document.getElementById('instagramFeed');
-            const postsToShow = allFeedPosts.slice(0, feedDisplayCount);
-            if (usingBeholdFallback) {
-                renderBeholdPosts(postsToShow, container);
-            } else {
-                renderFeedPosts(postsToShow, container);
-            }
+           const postsToShow = allFeedPosts.slice(0, feedDisplayCount);
+            renderFeedPosts(postsToShow, container);
             updateFeedButton();
             document.getElementById('feed').scrollIntoView({ behavior: 'smooth' });
         }
