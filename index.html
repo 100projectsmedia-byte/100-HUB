@@ -679,9 +679,7 @@
             if (partnerLogos.length === 0) {
                 track.innerHTML = `
                     <div class="partner-logo-item">
-                        <div style="padding:20px 40px; color:#999; font-style:italic; text-align:center; white-space:nowrap;">
-                            Partner logos coming soon
-                        </div>
+                        <span style="color:rgba(255,255,255,0.3); font-size:13px; letter-spacing:1px;">PARTNER LOGOS COMING SOON</span>
                     </div>
                 `;
                 return;
@@ -695,8 +693,8 @@
                         alt="${logo.name}" 
                         title="${logo.name}" 
                         loading="lazy" 
-                        style="max-height:50px; max-width:120px; width:auto; height:auto; object-fit:contain;"
-                        onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'color:rgba(255,255,255,0.5);font-size:12px;\\'>${logo.name}</span>';"
+                        style="max-height:40px; max-width:130px; width:auto; height:auto; object-fit:contain; filter:none !important;"
+                        onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'color:rgba(255,255,255,0.3);font-size:12px;letter-spacing:0.5px;\\'>${logo.name}</span>';"
                     />
                 </div>
             `).join('');

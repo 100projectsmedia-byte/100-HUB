@@ -1402,26 +1402,31 @@ section {
 }
 
 /* ==========================================
-   PARTNER LOGOS — Infinite Scroll
+   PARTNER LOGOS — Clean, No Cards
    ========================================== */
 .partners-section {
     background: transparent;
     overflow: hidden;
+    padding: 50px 0 30px;
 }
 
 .partners-wrapper {
     position: relative;
     width: 100%;
     overflow: hidden;
-    padding: 20px 0;
+    padding: 10px 0;
 }
 
 .partners-track {
     display: flex;
-    gap: 40px;
+    gap: 60px;
     align-items: center;
-    animation: scrollPartnerLogos 25s linear infinite;
+    animation: scrollPartnerLogos 30s linear infinite;
     width: fit-content;
+}
+
+.partners-track:hover {
+    animation-play-state: paused;
 }
 
 .partner-logo-item {
@@ -1429,41 +1434,78 @@ section {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.04);
-    border-radius: var(--radius-sm);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    min-height: 70px;
-    min-width: 120px;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(8px);
+    padding: 8px 16px;
+    min-height: 50px;
+    min-width: 80px;
+    transition: transform 0.3s ease;
 }
+
 .partner-logo-item:hover {
-    border-color: rgba(227, 30, 36, 0.3);
-    box-shadow: var(--shadow-red);
-    transform: scale(1.05);
+    transform: scale(1.08);
 }
+
 .partner-logo-item img {
-    max-height: 50px;
-    max-width: 120px;
+    max-height: 40px;
+    max-width: 130px;
     width: auto;
     height: auto;
     object-fit: contain;
-    /* REMOVED: filter: brightness(0) invert(1); */
-    opacity: 0.85;
-    transition: opacity 0.3s ease;
+    opacity: 0.6;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    filter: none !important;
 }
+
 .partner-logo-item:hover img {
     opacity: 1;
+    transform: scale(1.05);
 }
+
 .partner-logo-item span {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.25);
     font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
 }
 
 @keyframes scrollPartnerLogos {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .partners-track {
+        gap: 40px;
+    }
+    .partner-logo-item {
+        padding: 5px 10px;
+        min-height: 40px;
+        min-width: 60px;
+    }
+    .partner-logo-item img {
+        max-height: 30px;
+        max-width: 90px;
+    }
+}
+
+@media (max-width: 480px) {
+    .partners-track {
+        gap: 30px;
+    }
+    .partner-logo-item {
+        padding: 4px 8px;
+        min-height: 30px;
+        min-width: 50px;
+    }
+    .partner-logo-item img {
+        max-height: 25px;
+        max-width: 70px;
+    }
+    .partner-logo-item span {
+        font-size: 9px;
+        letter-spacing: 1px;
+    }
 }
 
 /* ==========================================
