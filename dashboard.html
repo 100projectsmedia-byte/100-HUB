@@ -854,6 +854,44 @@
             flex-wrap: wrap;
         }
 
+        /* File upload styling */
+        .file-upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .file-upload-area:hover {
+            border-color: var(--red);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .file-upload-area.dragover {
+            border-color: var(--red);
+            background: rgba(227, 30, 36, 0.05);
+        }
+        .file-upload-area i {
+            font-size: 32px;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 8px;
+        }
+        .file-upload-area p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0;
+        }
+        .file-upload-area .file-name {
+            font-size: 12px;
+            color: var(--red);
+            margin-top: 4px;
+        }
+        .file-upload-area input[type="file"] {
+            display: none;
+        }
+
         @media (max-width: 900px) {
             .impact-grid { grid-template-columns: repeat(2, 1fr); }
             .impact-edit-form { grid-template-columns: 1fr; }
@@ -869,7 +907,6 @@
             .add-partner-form input { min-width: 100%; }
             .mediakit-current { flex-wrap: wrap; }
             .mediakit-actions { margin-left: 0; width: 100%; }
-            #mediaKitForm input { min-width: 100%; }
             .table-wrap table { min-width: 600px; }
             .table-wrap .action-cell { flex-wrap: wrap; }
             .edit-modal-content { padding: 20px; }
@@ -1193,14 +1230,20 @@
 
                 <h3 style="font-family:'Playfair Display',serif; font-size:20px; margin-top:30px; margin-bottom:16px;">Add New Partner</h3>
                 <div class="add-partner-form">
-                    <input type="text" id="partnerName" placeholder="Partner Name (e.g., Adidas)" />
-                    <input type="url" id="partnerUrl" placeholder="Logo URL (Cloudinary or image URL)" />
+                    <input type="text" id="partnerName" placeholder="Partner Name (e.g., Adidas)" style="flex:1; min-width:200px; padding:12px 18px; border:1px solid rgba(255,255,255,0.1); border-radius:10px; background:rgba(255,255,255,0.04); color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif;" />
+                    <div class="file-upload-area" id="partnerUploadArea" onclick="document.getElementById('partnerFileInput').click()">
+                        <i class="fa-regular fa-image"></i>
+                        <p>Click to upload partner logo</p>
+                        <div class="file-name" id="partnerFileName">No file selected</div>
+                        <input type="file" id="partnerFileInput" accept="image/*" />
+                    </div>
+                    <input type="hidden" id="partnerUrl" />
                     <button class="btn-primary" onclick="addPartner()">
                         <i class="fa-regular fa-plus"></i> Add Partner
                     </button>
                 </div>
                 <p style="font-size:12px; color:rgba(255,255,255,0.5); margin-top:8px;">
-                    💡 Upload images to Cloudinary, then copy the image URL and paste it here.
+                    💡 Upload a logo image (PNG, JPG, SVG) - it will be saved to Cloudinary automatically.
                 </p>
             </div>
 
@@ -1253,7 +1296,7 @@
             <!-- Tab: Media Kit -->
             <div class="tab-content" id="tab-mediakit">
                 <h3 style="font-family:'Playfair Display',serif; font-size:20px; margin-bottom:16px;">Media Kit</h3>
-                <p style="color:rgba(255,255,255,0.7); margin-bottom:20px;">Upload your Media Kit PDF to Cloudinary, then paste the URL here.</p>
+                <p style="color:rgba(255,255,255,0.7); margin-bottom:20px;">Upload your Media Kit PDF to Cloudinary.</p>
                 
                 <div class="mediakit-section">
                     <div class="mediakit-current">
@@ -1273,9 +1316,14 @@
                     </div>
 
                     <form id="mediaKitForm">
-                        <input type="url" id="mediaKitUrl" placeholder="Paste Cloudinary PDF URL" required />
-                        <button type="submit" class="btn-primary">
-                            <i class="fa-regular fa-upload"></i> Save URL
+                        <div class="file-upload-area" id="mediaKitUploadArea" onclick="document.getElementById('mediaKitFileInput').click()">
+                            <i class="fa-regular fa-file-pdf"></i>
+                            <p>Click to upload Media Kit PDF</p>
+                            <div class="file-name" id="mediaKitFileName">No file selected</div>
+                            <input type="file" id="mediaKitFileInput" accept=".pdf" />
+                        </div>
+                        <button type="submit" class="btn-primary" style="margin-top:12px;">
+                            <i class="fa-regular fa-upload"></i> Save Media Kit
                         </button>
                     </form>
                     <div id="mediaKitProgress">
@@ -1425,7 +1473,12 @@
                     <h4 style="font-size:13px; color:var(--text-primary); margin-bottom:8px;">📷 Step 2: Upload Media File</h4>
                     <div class="form-group" style="margin-bottom:8px;">
                         <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Choose Image or Video *</label>
-                        <input type="file" id="postMediaFile" accept="image/*,video/*" style="width:100%; padding:10px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif;" />
+                        <div class="file-upload-area" id="postUploadArea" onclick="document.getElementById('postMediaFile').click()">
+                            <i class="fa-regular fa-image"></i>
+                            <p>Click to upload image or video</p>
+                            <div class="file-name" id="postFileName">No file selected</div>
+                            <input type="file" id="postMediaFile" accept="image/*,video/*" />
+                        </div>
                         <small style="color:rgba(255,255,255,0.4); font-size:11px;">Supported: JPG, PNG, GIF, MP4, MOV (Max 10MB)</small>
                     </div>
                     <div id="mediaPreview" style="display:none; margin-top:12px; border-radius:10px; overflow:hidden; background:var(--bg-tertiary); max-height:300px;"></div>
@@ -1503,9 +1556,14 @@
                     <textarea id="workDescription" rows="2" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif; resize:vertical;"></textarea>
                 </div>
                 <div class="form-group">
-                    <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Media URL *</label>
-                    <input type="url" id="workMediaUrl" placeholder="https://res.cloudinary.com/..." />
-                    <small style="color:rgba(255,255,255,0.4); font-size:11px;">Upload to Cloudinary and paste the URL</small>
+                    <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Upload Media *</label>
+                    <div class="file-upload-area" id="workUploadArea" onclick="document.getElementById('workMediaFile').click()">
+                        <i class="fa-regular fa-image"></i>
+                        <p>Click to upload image or video</p>
+                        <div class="file-name" id="workFileName">No file selected</div>
+                        <input type="file" id="workMediaFile" accept="image/*,video/*" />
+                    </div>
+                    <small style="color:rgba(255,255,255,0.4); font-size:11px;">Upload an image or video for this work item</small>
                 </div>
                 <div class="form-group">
                     <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Media Type</label>
@@ -1526,6 +1584,16 @@
                         <option value="true">Yes</option>
                     </select>
                 </div>
+                <div id="workUploadProgress" style="display:none; margin-top:8px;">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div style="flex:1; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden;">
+                            <div id="workUploadProgressBar" style="width:0%; height:100%; background:var(--red); border-radius:2px; transition:width 0.3s ease;"></div>
+                        </div>
+                        <span id="workUploadProgressText" style="font-size:11px; color:rgba(255,255,255,0.4); white-space:nowrap;">0%</span>
+                    </div>
+                </div>
+                <div id="workUploadStatus" style="margin-top:6px; font-size:12px; min-height:20px;"></div>
+                <input type="hidden" id="workMediaUrl" />
                 <div class="edit-actions">
                     <button type="button" class="btn-primary" onclick="saveWorkItem()" id="workSubmitBtn">
                         <i class="fa-regular fa-floppy-disk"></i> Save Work
@@ -2409,6 +2477,7 @@
             document.getElementById('uploadProgress').style.display = 'none';
             document.getElementById('fetchedDetails').style.display = 'none';
             document.getElementById('fetchStatus').innerHTML = '';
+            document.getElementById('postFileName').textContent = 'No file selected';
             uploadedMediaUrl = '';
             fetchedPostData = {};
             
@@ -2505,7 +2574,7 @@
         // ==========================================
         // UPLOAD MEDIA TO CLOUDINARY
         // ==========================================
-        async function uploadMediaFile(file) {
+        async function uploadMediaFile(file, type = 'image') {
             return new Promise((resolve, reject) => {
                 const progressDiv = document.getElementById('uploadProgress');
                 const progressBar = document.getElementById('uploadProgressBar');
@@ -2947,6 +3016,7 @@
         // ==========================================
         let allWorkItems = [];
         let editingWorkId = null;
+        let workUploadedMediaUrl = '';
 
         async function loadWorkItems() {
             const grid = document.getElementById('workGrid');
@@ -2980,7 +3050,7 @@
                 <div class="work-card">
                     <div class="work-media">
                         ${item.media_type === 'video' 
-                            ? `<video muted><source src="${item.media_url}"></video>`
+                            ? `<video muted autoplay loop playsinline><source src="${item.media_url}"></video>`
                             : `<img src="${item.media_url}" alt="${item.title}" loading="lazy" />`
                         }
                         ${item.featured ? '<span class="work-featured-badge">⭐ Featured</span>' : ''}
@@ -3008,10 +3078,15 @@
             document.getElementById('workTitle').value = '';
             document.getElementById('workCategory').value = '';
             document.getElementById('workDescription').value = '';
-            document.getElementById('workMediaUrl').value = '';
+            document.getElementById('workMediaFile').value = '';
             document.getElementById('workMediaType').value = 'image';
             document.getElementById('workDisplayOrder').value = '0';
             document.getElementById('workFeatured').value = 'false';
+            document.getElementById('workMediaUrl').value = '';
+            document.getElementById('workFileName').textContent = 'No file selected';
+            document.getElementById('workUploadStatus').innerHTML = '';
+            document.getElementById('workUploadProgress').style.display = 'none';
+            workUploadedMediaUrl = '';
             document.getElementById('workModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -3028,6 +3103,8 @@
             document.getElementById('workMediaType').value = item.media_type || 'image';
             document.getElementById('workDisplayOrder').value = item.display_order || 0;
             document.getElementById('workFeatured').value = item.featured ? 'true' : 'false';
+            document.getElementById('workFileName').textContent = 'Current: ' + (item.media_url ? 'File uploaded' : 'No file');
+            workUploadedMediaUrl = item.media_url || '';
             document.getElementById('workModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -3041,17 +3118,113 @@
         document.getElementById('workModalClose').addEventListener('click', closeWorkModal);
         document.getElementById('workModalOverlay').addEventListener('click', closeWorkModal);
 
+        // ==========================================
+        // WORK MEDIA UPLOAD
+        // ==========================================
+        async function uploadWorkMediaFile(file) {
+            return new Promise((resolve, reject) => {
+                const progressDiv = document.getElementById('workUploadProgress');
+                const progressBar = document.getElementById('workUploadProgressBar');
+                const progressText = document.getElementById('workUploadProgressText');
+                const status = document.getElementById('workUploadStatus');
+                
+                progressDiv.style.display = 'block';
+                status.innerHTML = '<span style="color:#ffd700;">⏳ Uploading to Cloudinary...</span>';
+                
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', 'members');
+                formData.append('folder', '100 TRUSTEES');
+                
+                const isVideo = file.type.startsWith('video/');
+                const uploadUrl = isVideo 
+                    ? 'https://api.cloudinary.com/v1_1/dfozevcbl/video/upload'
+                    : 'https://api.cloudinary.com/v1_1/dfozevcbl/image/upload';
+                
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', uploadUrl);
+                
+                xhr.upload.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                        const percent = Math.round((e.loaded / e.total) * 100);
+                        progressBar.style.width = percent + '%';
+                        progressText.textContent = percent + '%';
+                    }
+                };
+                
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        const data = JSON.parse(xhr.responseText);
+                        const mediaUrl = data.secure_url;
+                        document.getElementById('workMediaUrl').value = mediaUrl;
+                        workUploadedMediaUrl = mediaUrl;
+                        status.innerHTML = '<span style="color:#4ADE80;">✅ Upload complete!</span>';
+                        progressBar.style.width = '100%';
+                        progressText.textContent = '100%';
+                        resolve(mediaUrl);
+                    } else {
+                        let errorMsg = 'Upload failed.';
+                        try {
+                            const errorData = JSON.parse(xhr.responseText);
+                            errorMsg = errorData.error?.message || errorMsg;
+                        } catch(e) {}
+                        status.innerHTML = `<span style="color:#ff6b6b;">❌ ${errorMsg}</span>`;
+                        reject(new Error(errorMsg));
+                    }
+                };
+                
+                xhr.onerror = () => {
+                    status.innerHTML = '<span style="color:#ff6b6b;">❌ Network error. Please check your connection.</span>';
+                    reject(new Error('Network error'));
+                };
+                
+                xhr.send(formData);
+            });
+        }
+
+        // ==========================================
+        // SAVE WORK ITEM
+        // ==========================================
         async function saveWorkItem() {
             const title = document.getElementById('workTitle').value.trim();
             const category = document.getElementById('workCategory').value.trim();
             const description = document.getElementById('workDescription').value.trim();
-            const media_url = document.getElementById('workMediaUrl').value.trim();
             const media_type = document.getElementById('workMediaType').value;
             const display_order = parseInt(document.getElementById('workDisplayOrder').value) || 0;
             const featured = document.getElementById('workFeatured').value === 'true';
-
-            if (!title || !media_url) {
-                showToast('Title and Media URL are required.', 'error');
+            const fileInput = document.getElementById('workMediaFile');
+            const file = fileInput.files[0];
+            
+            if (!title) {
+                showToast('Title is required.', 'error');
+                return;
+            }
+            
+            let media_url = document.getElementById('workMediaUrl').value.trim();
+            
+            // If there's a new file, upload it
+            if (file) {
+                if (file.size > 10 * 1024 * 1024) {
+                    showToast('⚠️ File is too large. Maximum 10MB.', 'error');
+                    return;
+                }
+                
+                const submitBtn = document.getElementById('workSubmitBtn');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+                
+                try {
+                    media_url = await uploadWorkMediaFile(file);
+                } catch (error) {
+                    showToast('❌ Upload failed. Please try again.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Work';
+                    return;
+                }
+            }
+            
+            if (!media_url) {
+                showToast('Media URL is required. Please upload a file.', 'error');
                 return;
             }
 
@@ -3088,6 +3261,144 @@
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Work';
         }
+
+        // ==========================================
+        // PARTNERS - WITH FILE UPLOAD
+        // ==========================================
+        async function uploadPartnerLogo(file) {
+            return new Promise((resolve, reject) => {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', 'members');
+                formData.append('folder', '100 TRUSTEES');
+                
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', 'https://api.cloudinary.com/v1_1/dfozevcbl/image/upload');
+                
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        const data = JSON.parse(xhr.responseText);
+                        resolve(data.secure_url);
+                    } else {
+                        reject(new Error('Upload failed'));
+                    }
+                };
+                
+                xhr.onerror = () => {
+                    reject(new Error('Network error'));
+                };
+                
+                xhr.send(formData);
+            });
+        }
+
+        async function addPartner() {
+            const name = document.getElementById('partnerName').value.trim();
+            const fileInput = document.getElementById('partnerFileInput');
+            const file = fileInput.files[0];
+            
+            if (!name) {
+                showToast('Please enter a partner name.', 'error');
+                return;
+            }
+            
+            if (!file) {
+                showToast('Please select a logo image.', 'error');
+                return;
+            }
+            
+            try {
+                // Upload to Cloudinary
+                const url = await uploadPartnerLogo(file);
+                
+                // Save to Supabase
+                const response = await fetch(`${API_BASE}/partners`, {
+                    method: 'POST',
+                    headers: adminHeaders(),
+                    body: JSON.stringify({ name, url })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showToast('Partner added!', 'success');
+                    document.getElementById('partnerName').value = '';
+                    document.getElementById('partnerFileInput').value = '';
+                    document.getElementById('partnerFileName').textContent = 'No file selected';
+                    loadPartners();
+                } else {
+                    showToast(result.error || 'Failed to add partner.', 'error');
+                }
+            } catch (error) {
+                showToast('Error uploading partner logo.', 'error');
+            }
+        }
+
+        // ==========================================
+        // MEDIA KIT - WITH FILE UPLOAD
+        // ==========================================
+        document.getElementById('mediaKitForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('mediaKitFileInput');
+            const file = fileInput.files[0];
+            const progress = document.getElementById('mediaKitProgress');
+            
+            if (!file) {
+                showToast('Please select a PDF file.', 'error');
+                return;
+            }
+            
+            if (file.type !== 'application/pdf') {
+                showToast('Please upload a PDF file.', 'error');
+                return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) {
+                showToast('File is too large. Maximum 10MB.', 'error');
+                return;
+            }
+            
+            progress.style.display = 'block';
+            
+            try {
+                // Upload to Cloudinary
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', 'members');
+                formData.append('folder', '100 TRUSTEES');
+                formData.append('resource_type', 'raw');
+                
+                const uploadResponse = await fetch('https://api.cloudinary.com/v1_1/dfozevcbl/raw/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!uploadResponse.ok) throw new Error('Upload failed');
+                const data = await uploadResponse.json();
+                const url = data.secure_url;
+                
+                // Save to Supabase
+                const response = await fetch(`${API_BASE}/media-kit`, {
+                    method: 'POST',
+                    headers: adminHeaders(),
+                    body: JSON.stringify({ url })
+                });
+                
+                const result = await response.json();
+                progress.style.display = 'none';
+                
+                if (result.success) {
+                    showToast('Media Kit uploaded successfully!', 'success');
+                    document.getElementById('mediaKitFileInput').value = '';
+                    document.getElementById('mediaKitFileName').textContent = 'No file selected';
+                    checkMediaKit();
+                } else {
+                    showToast(result.error || 'Failed to save media kit.', 'error');
+                }
+            } catch (error) {
+                progress.style.display = 'none';
+                showToast('Error uploading media kit.', 'error');
+            }
+        });
 
         // ==========================================
         // DELETE CONFIRMATION
@@ -3160,7 +3471,7 @@
         }
 
         // ==========================================
-        // PARTNERS
+        // PARTNERS - Load
         // ==========================================
         async function loadPartners() {
             try {
@@ -3192,37 +3503,6 @@
             } catch (error) {
                 console.error('Error loading partners:', error);
                 showToast('Error loading partners.', 'error');
-            }
-        }
-
-        async function addPartner() {
-            const nameInput = document.getElementById('partnerName');
-            const urlInput = document.getElementById('partnerUrl');
-            const name = nameInput.value.trim();
-            const url = urlInput.value.trim();
-            
-            if (!name || !url) {
-                showToast('Please enter both name and URL.', 'error');
-                return;
-            }
-            
-            try {
-                const response = await fetch(`${API_BASE}/partners`, {
-                    method: 'POST',
-                    headers: adminHeaders(),
-                    body: JSON.stringify({ name, url })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    showToast('Partner added!', 'success');
-                    nameInput.value = '';
-                    urlInput.value = '';
-                    loadPartners();
-                } else {
-                    showToast(result.error || 'Failed to add partner.', 'error');
-                }
-            } catch (error) {
-                showToast('Error adding partner.', 'error');
             }
         }
 
@@ -3259,7 +3539,7 @@
         }
 
         // ==========================================
-        // MEDIA KIT
+        // MEDIA KIT - Check
         // ==========================================
         async function checkMediaKit() {
             const status = document.getElementById('mediaKitStatus');
@@ -3276,54 +3556,13 @@
                         return;
                     }
                 }
-                status.innerHTML = `<span style="color:#ff9800;">⚠️ No Media Kit URL set</span>`;
+                status.innerHTML = `<span style="color:#ff9800;">⚠️ No Media Kit uploaded</span>`;
                 downloadLink.style.display = 'none';
             } catch (error) {
                 status.innerHTML = `<span style="color:#ff4444;">❌ Could not check</span>`;
                 downloadLink.style.display = 'none';
             }
         }
-
-        document.getElementById('mediaKitForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const urlInput = document.getElementById('mediaKitUrl');
-            const url = urlInput.value.trim();
-            
-            if (!url) {
-                showToast('Please enter a URL.', 'error');
-                return;
-            }
-            
-            try { new URL(url); } catch (e) {
-                showToast('Please enter a valid URL.', 'error');
-                return;
-            }
-            
-            const progress = document.getElementById('mediaKitProgress');
-            progress.style.display = 'block';
-            
-            fetch(`${API_BASE}/media-kit`, {
-                method: 'POST',
-                headers: adminHeaders(),
-                body: JSON.stringify({ url })
-            })
-            .then(response => response.json())
-            .then(result => {
-                progress.style.display = 'none';
-                if (result.success) {
-                    showToast('Media Kit URL saved!', 'success');
-                    checkMediaKit();
-                    urlInput.value = '';
-                } else {
-                    showToast(result.error || 'Failed to save.', 'error');
-                }
-            })
-            .catch(error => {
-                progress.style.display = 'none';
-                showToast('Error saving.', 'error');
-            });
-        });
 
         // ==========================================
         // EXPORT CSV
@@ -3386,15 +3625,22 @@
             loadPosts();
             loadWorkItems();
 
-            // Handle file input change
-            const fileInput = document.getElementById('postMediaFile');
-            if (fileInput) {
-                fileInput.addEventListener('change', function() {
+            // ==========================================
+            // FILE INPUT HANDLERS
+            // ==========================================
+            
+            // Post file input
+            const postFileInput = document.getElementById('postMediaFile');
+            if (postFileInput) {
+                postFileInput.addEventListener('change', function() {
+                    const fileName = this.files[0] ? this.files[0].name : 'No file selected';
+                    document.getElementById('postFileName').textContent = fileName;
                     if (this.files.length > 0) {
                         const file = this.files[0];
                         if (file.size > 10 * 1024 * 1024) {
                             showToast('⚠️ File is too large. Maximum 10MB.', 'error');
                             this.value = '';
+                            document.getElementById('postFileName').textContent = 'No file selected';
                             return;
                         }
                         uploadMediaFile(file).catch(() => {
@@ -3403,13 +3649,50 @@
                     }
                 });
             }
+            
+            // Work file input
+            const workFileInput = document.getElementById('workMediaFile');
+            if (workFileInput) {
+                workFileInput.addEventListener('change', function() {
+                    const fileName = this.files[0] ? this.files[0].name : 'No file selected';
+                    document.getElementById('workFileName').textContent = fileName;
+                    if (this.files.length > 0) {
+                        const file = this.files[0];
+                        if (file.size > 10 * 1024 * 1024) {
+                            showToast('⚠️ File is too large. Maximum 10MB.', 'error');
+                            this.value = '';
+                            document.getElementById('workFileName').textContent = 'No file selected';
+                            return;
+                        }
+                        // Auto-upload work file
+                        uploadWorkMediaFile(file).catch(() => {
+                            showToast('❌ Upload failed. Please try again.', 'error');
+                        });
+                    }
+                });
+            }
+            
+            // Partner file input
+            const partnerFileInput = document.getElementById('partnerFileInput');
+            if (partnerFileInput) {
+                partnerFileInput.addEventListener('change', function() {
+                    const fileName = this.files[0] ? this.files[0].name : 'No file selected';
+                    document.getElementById('partnerFileName').textContent = fileName;
+                });
+            }
+            
+            // Media Kit file input
+            const mediaKitFileInput = document.getElementById('mediaKitFileInput');
+            if (mediaKitFileInput) {
+                mediaKitFileInput.addEventListener('change', function() {
+                    const fileName = this.files[0] ? this.files[0].name : 'No file selected';
+                    document.getElementById('mediaKitFileName').textContent = fileName;
+                });
+            }
         });
 
         console.log('📊 100 HUB Dashboard loaded.');
-        console.log('📝 Articles tab includes Post ID Tool - fetch posts from Instagram to see all post IDs.');
-        console.log('📸 Posts tab - manage Instagram posts with file upload.');
-        console.log('🎬 Work tab - manage work items displayed on the Work page.');
+        console.log('📝 All tabs with file upload support.');
     </script>
-
 </body>
 </html>
