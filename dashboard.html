@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="/style.css" />
     <style>
-        /* Dashboard-specific styles */
         .dashboard-layout {
             padding: 140px 0 100px;
             min-height: 100vh;
@@ -618,7 +617,6 @@
             border-color: rgba(255, 107, 107, 0.3);
         }
 
-        /* Delete confirmation modal */
         .confirm-modal {
             position: fixed;
             inset: 0;
@@ -694,7 +692,6 @@
             color: var(--red);
         }
 
-        /* Article specific */
         .article-post-id {
             font-family: 'Space Mono', monospace;
             font-size: 12px;
@@ -703,17 +700,7 @@
             padding: 2px 8px;
             border-radius: 4px;
         }
-        .post-id-tooltip {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.3);
-            margin-top: 8px;
-            display: block;
-        }
-        .post-id-tooltip i {
-            color: var(--red);
-        }
 
-        /* Posts Grid Styles */
         .post-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -789,7 +776,6 @@
             flex-wrap: wrap;
         }
 
-        /* Work Grid Styles */
         .work-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -854,7 +840,6 @@
             flex-wrap: wrap;
         }
 
-        /* File upload styling */
         .file-upload-area {
             border: 2px dashed rgba(255, 255, 255, 0.15);
             border-radius: 10px;
@@ -867,10 +852,6 @@
         .file-upload-area:hover {
             border-color: var(--red);
             background: rgba(255, 255, 255, 0.05);
-        }
-        .file-upload-area.dragover {
-            border-color: var(--red);
-            background: rgba(227, 30, 36, 0.05);
         }
         .file-upload-area i {
             font-size: 32px;
@@ -892,9 +873,6 @@
             display: none;
         }
 
-        /* ==========================================
-           SEARCH BAR - STYLED
-           ========================================== */
         .search-bar {
             display: flex;
             gap: 12px;
@@ -975,25 +953,6 @@
             padding: 0 12px;
             white-space: nowrap;
         }
-        @media (max-width: 600px) {
-            .search-bar {
-                flex-wrap: wrap;
-                padding: 8px;
-            }
-            .search-bar input {
-                min-width: 100%;
-                padding: 10px 0;
-            }
-            .search-bar .search-actions {
-                width: 100%;
-                justify-content: flex-end;
-            }
-            .search-bar .search-count {
-                width: 100%;
-                text-align: center;
-                padding: 4px 0;
-            }
-        }
 
         @media (max-width: 900px) {
             .impact-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1015,6 +974,10 @@
             .edit-modal-content { padding: 20px; }
             .post-grid { grid-template-columns: 1fr; }
             .work-grid { grid-template-columns: 1fr; }
+            .search-bar { flex-wrap: wrap; padding: 8px; }
+            .search-bar input { min-width: 100%; padding: 10px 0; }
+            .search-bar .search-actions { width: 100%; justify-content: flex-end; }
+            .search-bar .search-count { width: 100%; text-align: center; padding: 4px 0; }
         }
     </style>
 </head>
@@ -1165,7 +1128,7 @@
                 </div>
             </div>
 
-            <!-- Tab: Articles (Post ID Tool) -->
+            <!-- Tab: Articles -->
             <div class="tab-content" id="tab-articles">
                 <div class="dashboard-actions">
                     <button class="btn-outline" onclick="refreshArticles()">
@@ -1179,7 +1142,6 @@
                     </button>
                 </div>
 
-                <!-- Post ID Tool Info -->
                 <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px 16px; margin-bottom:16px;">
                     <p style="font-size:12px; color:rgba(255,255,255,0.5);">
                         <i class="fa-regular fa-circle-info" style="color:var(--red);"></i>
@@ -1212,7 +1174,6 @@
                     </table>
                 </div>
 
-                <!-- Behold Posts Display (fetched from Instagram) -->
                 <div id="beholdPostsContainer" style="display:none; margin-top:20px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                         <h4 style="font-family:'Playfair Display',serif; font-size:18px; color:var(--text-primary);">
@@ -1264,7 +1225,6 @@
                     </button>
                 </div>
 
-                <!-- Search Bar - Styled -->
                 <div class="search-bar">
                     <span class="search-icon"><i class="fa-solid fa-search"></i></span>
                     <input type="text" id="postSearchInput" placeholder="Search posts by caption or post ID..." />
@@ -1275,7 +1235,6 @@
                     <span class="search-count">Total: <span id="postTotalCount">0</span></span>
                 </div>
 
-                <!-- Posts Grid -->
                 <div class="post-grid" id="postGrid">
                     <div class="empty-state" style="grid-column:1/-1; padding:60px 20px;">
                         <i class="fa-regular fa-images"></i>
@@ -1283,7 +1242,6 @@
                     </div>
                 </div>
 
-                <!-- Show More / Show Less -->
                 <div class="see-more-container" id="postSeeMore" style="display:none;">
                     <button class="see-more-btn" onclick="loadMorePosts()" id="loadMorePostsBtn">
                         Show More <i class="fa-solid fa-arrow-down"></i>
@@ -1336,7 +1294,7 @@
                         <div class="file-name" id="partnerFileName">No file selected</div>
                         <input type="file" id="partnerFileInput" accept="image/*" />
                     </div>
-                    <button class="btn-primary" onclick="addPartner()">
+                    <button class="btn-primary" id="addPartnerBtn" onclick="addPartner()">
                         <i class="fa-regular fa-plus"></i> Add Partner
                     </button>
                 </div>
@@ -1774,12 +1732,48 @@
 
     <script>
         // ==========================================
-        // API HELPER - Consolidated API Calls
+        // API HELPER
         // ==========================================
         function apiUrl(path, params = {}) {
             const queryParams = new URLSearchParams({ path, ...params });
             return `/api?${queryParams.toString()}`;
         }
+
+        function adminHeaders() {
+            const token = sessionStorage.getItem('adminToken');
+            return {
+                'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+            };
+        }
+
+        // ==========================================
+        // CACHE SYSTEM
+        // ==========================================
+        const CACHE = {
+            members: null,
+            articles: null,
+            timestamp: null,
+            duration: 1000,
+            
+            get(key) {
+                if (!this[key] || !this.timestamp) return null;
+                if (Date.now() - this.timestamp > this.duration) return null;
+                return this[key];
+            },
+            
+            set(key, data) {
+                this[key] = data;
+                this.timestamp = Date.now();
+            },
+            
+            clear() {
+                this.members = null;
+                this.articles = null;
+                this.timestamp = null;
+                console.log('🧹 Cache cleared');
+            }
+        };
 
         // ==========================================
         // PIN PROTECTION
@@ -1968,46 +1962,6 @@
         mobileMenuClose.addEventListener('click', closeMobileMenu);
 
         // ==========================================
-        // API BASE
-        // ==========================================
-        const API_BASE = '/api';
-
-        function adminHeaders() {
-            const token = sessionStorage.getItem('adminToken');
-            return {
-                'Content-Type': 'application/json',
-                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-            };
-        }
-
-        // ==========================================
-        // CACHE SYSTEM
-        // ==========================================
-        const CACHE = {
-            members: null,
-            articles: null,
-            timestamp: null,
-            duration: 30000,
-            
-            get(key) {
-                if (!this[key] || !this.timestamp) return null;
-                if (Date.now() - this.timestamp > this.duration) return null;
-                return this[key];
-            },
-            
-            set(key, data) {
-                this[key] = data;
-                this.timestamp = Date.now();
-            },
-            
-            clear() {
-                this.members = null;
-                this.articles = null;
-                this.timestamp = null;
-            }
-        };
-
-        // ==========================================
         // OPTIMIZED IMAGE LOADING
         // ==========================================
         function getOptimizedImage(url, width = 400, height = 400) {
@@ -2042,9 +1996,14 @@
         let allMembers = [];
         let currentFilter = 'all';
 
-        async function fetchMembers() {
+        async function fetchMembers(forceRefresh = false) {
+            if (forceRefresh) {
+                CACHE.members = null;
+                CACHE.timestamp = null;
+            }
+            
             const cached = CACHE.get('members');
-            if (cached) {
+            if (cached && !forceRefresh) {
                 console.log('📦 Using cached members data');
                 return cached;
             }
@@ -2077,57 +2036,78 @@
 
         async function renderMembers() {
             const tbody = document.getElementById('membersTableBody');
-            CACHE.clear();
-            const data = await fetchMembers();
-            allMembers = data.members || [];
             
-            const total = allMembers.length;
-            const pending = allMembers.filter(m => m.status === 'pending').length;
-            const accepted = allMembers.filter(m => m.status === 'accepted').length;
-            document.getElementById('totalMembers').textContent = total;
-            document.getElementById('pendingMembers').textContent = pending;
-            document.getElementById('acceptedMembers').textContent = accepted;
+            CACHE.members = null;
+            CACHE.timestamp = null;
             
-            let filtered = allMembers;
-            if (currentFilter !== 'all') {
-                filtered = allMembers.filter(m => m.status === currentFilter);
-            }
-            
-            if (filtered.length === 0) {
+            try {
+                const response = await fetch(apiUrl('members'));
+                const data = await response.json();
+                
+                allMembers = data.members || [];
+                
+                const total = allMembers.length;
+                const pending = allMembers.filter(m => m.status === 'pending').length;
+                const accepted = allMembers.filter(m => m.status === 'accepted').length;
+                document.getElementById('totalMembers').textContent = total;
+                document.getElementById('pendingMembers').textContent = pending;
+                document.getElementById('acceptedMembers').textContent = accepted;
+                
+                let filtered = allMembers;
+                if (currentFilter !== 'all') {
+                    filtered = allMembers.filter(m => m.status === currentFilter);
+                }
+                
+                if (filtered.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="6">
+                                <div class="empty-state">
+                                    <i class="fa-regular fa-users"></i>
+                                    <p>${allMembers.length === 0 ? 'No members yet.' : 'No members with status: ' + currentFilter}</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                tbody.innerHTML = filtered.map((member, index) => {
+                    return `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td><strong style="color:var(--text-primary);">${member.name}</strong></td>
+                            <td><a href="mailto:${member.email}" style="color:rgba(255,255,255,0.7); text-decoration:none;">${member.email}</a></td>
+                            <td><span class="member-role">${member.role || '-'}</span></td>
+                            <td><span class="status-badge ${member.status || 'pending'}">${member.status || 'pending'}</span></td>
+                            <td>
+                                <div class="action-cell">
+                                    <button class="btn-outline btn-sm" onclick="openEditModal('${member.id}')" title="Edit">
+                                        <i class="fa-regular fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="btn-outline btn-sm danger" onclick="confirmDelete('member', '${member.id}', '${member.name}')" title="Delete">
+                                        <i class="fa-regular fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+                
+                console.log('✅ Members rendered:', allMembers.length);
+            } catch (error) {
+                console.error('Render members error:', error);
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="6">
                             <div class="empty-state">
                                 <i class="fa-regular fa-users"></i>
-                                <p>${allMembers.length === 0 ? 'No members yet.' : 'No members with status: ' + currentFilter}</p>
+                                <p>Error loading members.</p>
                             </div>
                         </td>
                     </tr>
                 `;
-                return;
             }
-            
-            tbody.innerHTML = filtered.map((member, index) => {
-                return `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td><strong style="color:var(--text-primary);">${member.name}</strong></td>
-                        <td><a href="mailto:${member.email}" style="color:rgba(255,255,255,0.7); text-decoration:none;">${member.email}</a></td>
-                        <td><span class="member-role">${member.role || '-'}</span></td>
-                        <td><span class="status-badge ${member.status || 'pending'}">${member.status || 'pending'}</span></td>
-                        <td>
-                            <div class="action-cell">
-                                <button class="btn-outline btn-sm" onclick="openEditModal('${member.id}')" title="Edit">
-                                    <i class="fa-regular fa-pen-to-square"></i>
-                                </button>
-                                <button class="btn-outline btn-sm danger" onclick="confirmDelete('member', '${member.id}', '${member.name}')" title="Delete">
-                                    <i class="fa-regular fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
         }
 
         function refreshMembers() { 
@@ -2289,7 +2269,6 @@
                             <div class="empty-state">
                                 <i class="fa-regular fa-file-lines"></i>
                                 <p>No articles added yet. Click "Add Article" to link a post to an article.</p>
-                                <p style="font-size:12px; margin-top:8px;">💡 Click "Fetch Posts from Instagram" to see all posts and their IDs.</p>
                             </div>
                         </td>
                     </tr>
@@ -2334,7 +2313,7 @@
         }
 
         // ==========================================
-        // FETCH BEHOLD POSTS (Instagram Feed)
+        // FETCH BEHOLD POSTS
         // ==========================================
         async function fetchBeholdPosts() {
             const container = document.getElementById('beholdPostsContainer');
@@ -2381,13 +2360,11 @@
                     return;
                 }
                 
-                // Map articles by post_id for quick lookup
                 const articleMap = {};
                 allArticles.forEach(a => {
                     articleMap[a.post_id] = a;
                 });
                 
-                // Get first 20 posts
                 const displayPosts = posts.slice(0, 20);
                 
                 body.innerHTML = displayPosts.map((post, index) => {
@@ -2423,7 +2400,6 @@
                         <td colspan="5">
                             <div class="empty-state" style="padding:30px 20px;">
                                 <p style="color:#ff6b6b;">⚠️ Failed to load posts: ${error.message}</p>
-                                <p style="font-size:12px; margin-top:8px;">Make sure the Behold feed ID is correct.</p>
                             </div>
                         </td>
                     </tr>
@@ -2432,26 +2408,17 @@
             
             btn.disabled = false;
             btn.innerHTML = '<i class="fa-brands fa-instagram"></i> Fetch Posts from Instagram';
-            
-            // Scroll to the container
             container.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // ==========================================
-        // QUICK ADD ARTICLE FROM POST ID
-        // ==========================================
         function quickAddArticle(postId) {
             openAddArticleModal();
             document.getElementById('articlePostId').value = postId;
             document.getElementById('articleUrl').focus();
         }
 
-        // ==========================================
-        // COPY POST ID TO CLIPBOARD
-        // ==========================================
         function copyPostId(postId) {
             if (!postId) return;
-            
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(postId)
                     .then(() => showToast('✅ Copied: ' + postId, 'success'))
@@ -2475,9 +2442,6 @@
             }
         }
 
-        // ==========================================
-        // ARTICLE MODAL
-        // ==========================================
         function openAddArticleModal() {
             editingArticleId = null;
             document.getElementById('articleModalTitle').textContent = 'Add Article';
@@ -2491,7 +2455,6 @@
         function openEditArticleModal(id) {
             const article = allArticles.find(a => a.id === id);
             if (!article) return;
-            
             editingArticleId = id;
             document.getElementById('articleModalTitle').textContent = 'Edit Article';
             document.getElementById('articleModalSubtitle').textContent = 'Update the article URL for this post';
@@ -2548,7 +2511,7 @@
         }
 
         // ==========================================
-        // POSTS - CRUD Operations (WITH FILE UPLOAD)
+        // POSTS
         // ==========================================
         let allPosts = [];
         let filteredPosts = [];
@@ -2577,7 +2540,6 @@
             document.getElementById('postFileName').textContent = 'No file selected';
             uploadedMediaUrl = '';
             fetchedPostData = {};
-            
             document.getElementById('postModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -2587,9 +2549,6 @@
             document.body.style.overflow = '';
         }
 
-        // ==========================================
-        // FETCH POST DETAILS FROM INSTAGRAM URL
-        // ==========================================
         async function fetchPostDetails() {
             const url = document.getElementById('postInstagramUrl').value.trim();
             const status = document.getElementById('fetchStatus');
@@ -2661,9 +2620,6 @@
             btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-down"></i> Fetch Details';
         }
 
-        // ==========================================
-        // UPLOAD MEDIA TO CLOUDINARY
-        // ==========================================
         async function uploadMediaFile(file) {
             return new Promise((resolve, reject) => {
                 const progressDiv = document.getElementById('uploadProgress');
@@ -2704,7 +2660,6 @@
                         status.innerHTML = '<span style="color:#4ADE80;">✅ Upload complete!</span>';
                         progressBar.style.width = '100%';
                         progressText.textContent = '100%';
-                        
                         showMediaPreview(file, mediaUrl);
                         resolve(mediaUrl);
                     } else {
@@ -2730,12 +2685,10 @@
         function showMediaPreview(file, imageUrl) {
             const previewDiv = document.getElementById('mediaPreview');
             previewDiv.style.display = 'block';
-            
             if (file.type.startsWith('video/')) {
                 previewDiv.innerHTML = `
                     <video controls style="width:100%; max-height:300px; object-fit:contain; background:var(--bg-tertiary);">
                         <source src="${imageUrl}" type="${file.type}">
-                        Your browser does not support the video tag.
                     </video>
                 `;
             } else {
@@ -2776,10 +2729,7 @@
             
             try {
                 const imageUrl = await uploadMediaFile(file);
-                
-                if (!imageUrl) {
-                    throw new Error('Upload failed');
-                }
+                if (!imageUrl) throw new Error('Upload failed');
                 
                 submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
                 
@@ -2982,13 +2932,9 @@
             btn.innerHTML = '<i class="fa-brands fa-instagram"></i> Sync All';
         }
 
-        // ==========================================
-        // LINK ARTICLE TO POST
-        // ==========================================
         function openLinkArticleModal(postId) {
             const post = allPosts.find(p => p.id === postId);
             if (!post) return;
-            
             document.getElementById('linkPostId').value = postId;
             document.getElementById('linkPostDisplay').textContent = `Post ID: ${post.post_id}`;
             document.getElementById('linkArticleUrl').value = post.article_url || '';
@@ -3004,24 +2950,17 @@
         async function saveArticleLink() {
             const postId = document.getElementById('linkPostId').value;
             const articleUrl = document.getElementById('linkArticleUrl').value.trim();
-            
             if (!articleUrl) {
                 showToast('Please enter an article URL.', 'error');
                 return;
             }
-            
             try {
                 const response = await fetch(apiUrl('posts'), {
                     method: 'PUT',
                     headers: adminHeaders(),
-                    body: JSON.stringify({ 
-                        id: postId,
-                        article_url: articleUrl
-                    })
+                    body: JSON.stringify({ id: postId, article_url: articleUrl })
                 });
-                
                 const result = await response.json();
-                
                 if (result.success) {
                     showToast('Article linked successfully!', 'success');
                     closeLinkArticleModal();
@@ -3035,13 +2974,9 @@
             }
         }
 
-        // ==========================================
-        // EDIT POST MODAL
-        // ==========================================
         function openEditPostModal(postId) {
             const post = allPosts.find(p => p.id === postId);
             if (!post) return;
-            
             document.getElementById('editPostId').value = post.id;
             document.getElementById('editPostCaption').value = post.caption || '';
             document.getElementById('editPostWriter').value = post.writer || '100 HUB';
@@ -3060,16 +2995,13 @@
             const caption = document.getElementById('editPostCaption').value.trim();
             const writer = document.getElementById('editPostWriter').value.trim();
             const article_url = document.getElementById('editPostArticleUrl').value.trim();
-            
             try {
                 const response = await fetch(apiUrl('posts'), {
                     method: 'PUT',
                     headers: adminHeaders(),
                     body: JSON.stringify({ id, caption, writer, article_url })
                 });
-                
                 const result = await response.json();
-                
                 if (result.success) {
                     showToast('Post updated successfully!', 'success');
                     closeEditPostModal();
@@ -3084,7 +3016,7 @@
         }
 
         // ==========================================
-        // WORK ITEMS - CRUD Operations
+        // WORK ITEMS
         // ==========================================
         let allWorkItems = [];
         let editingWorkId = null;
@@ -3273,11 +3205,9 @@
                     showToast('⚠️ File is too large. Maximum 10MB.', 'error');
                     return;
                 }
-                
                 const submitBtn = document.getElementById('workSubmitBtn');
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
-                
                 try {
                     media_url = await uploadWorkMediaFile(file);
                 } catch (error) {
@@ -3365,7 +3295,7 @@
             const fileInput = document.getElementById('partnerFileInput');
             const file = fileInput.files[0];
             const status = document.getElementById('partnerUploadStatus');
-            const btn = document.getElementById('addPartnerBtn') || event.target;
+            const btn = document.getElementById('addPartnerBtn');
             
             if (!name) {
                 showToast('Please enter a partner name.', 'error');
@@ -3377,7 +3307,6 @@
                 return;
             }
             
-            // Check file size (5MB max for logos)
             if (file.size > 5 * 1024 * 1024) {
                 showToast('Logo file is too large. Maximum 5MB.', 'error');
                 return;
@@ -3388,18 +3317,13 @@
             status.innerHTML = '<span style="color:#ffd700;">⏳ Uploading to Cloudinary...</span>';
             
             try {
-                // Step 1: Upload to Cloudinary
                 const url = await uploadPartnerLogo(file);
-                
-                if (!url) {
-                    throw new Error('Failed to get URL from Cloudinary');
-                }
+                if (!url) throw new Error('Failed to get URL from Cloudinary');
                 
                 console.log('📤 Cloudinary URL:', url);
                 status.innerHTML = '<span style="color:#4ADE80;">✅ Uploaded to Cloudinary! Saving to database...</span>';
                 
-                // Step 2: Save to Supabase using the consolidated API
-                const response = await fetch('/api?path=partners', {
+                const response = await fetch(apiUrl('partners'), {
                     method: 'POST',
                     headers: adminHeaders(),
                     body: JSON.stringify({ name, url })
@@ -3431,7 +3355,7 @@
 
         async function loadPartners() {
             try {
-                const response = await fetch('/api?path=partners');
+                const response = await fetch(apiUrl('partners'));
                 const data = await response.json();
                 const grid = document.getElementById('partnerGrid');
                 
@@ -3609,6 +3533,8 @@
         document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
             if (!deleteTarget.id) return;
             
+            console.log('🗑️ Delete target:', deleteTarget);
+            
             try {
                 let endpoint = '';
                 let body = { id: deleteTarget.id };
@@ -3635,17 +3561,25 @@
                 });
                 
                 const result = await response.json();
+                console.log('📥 Delete response:', result);
                 
                 if (result.success) {
                     showToast(`${deleteTarget.type} deleted successfully!`, 'success');
                     closeConfirmModal();
+                    
                     CACHE.clear();
                     
-                    if (deleteTarget.type === 'member') renderMembers();
-                    else if (deleteTarget.type === 'article') renderArticles();
-                    else if (deleteTarget.type === 'partner') loadPartners();
-                    else if (deleteTarget.type === 'post') loadPosts();
-                    else if (deleteTarget.type === 'work') loadWorkItems();
+                    if (deleteTarget.type === 'member') {
+                        await renderMembers();
+                    } else if (deleteTarget.type === 'article') {
+                        await refreshArticles();
+                    } else if (deleteTarget.type === 'partner') {
+                        await loadPartners();
+                    } else if (deleteTarget.type === 'post') {
+                        await loadPosts();
+                    } else if (deleteTarget.type === 'work') {
+                        await loadWorkItems();
+                    }
                 } else {
                     showToast(result.error || `Failed to delete ${deleteTarget.type}.`, 'error');
                 }
@@ -3669,7 +3603,7 @@
         // ==========================================
         async function exportCSV() {
             try {
-                const data = await fetchMembers();
+                const data = await fetchMembers(true);
                 if (!data.members || data.members.length === 0) {
                     showToast('No members to export.', 'error');
                     return;
@@ -3786,6 +3720,7 @@
 
         console.log('📊 100 HUB Dashboard loaded.');
         console.log('📝 All tabs with consolidated API and file upload support.');
+        console.log('🧹 Cache duration set to 1 second for immediate updates.');
     </script>
 </body>
 </html>
