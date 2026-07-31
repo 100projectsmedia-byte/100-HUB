@@ -1,6 +1,5 @@
 // api/posts.js
 // Manages posts with auto-fetch from Instagram
-// NOTE: lives at /api/posts.js at the project ROOT
 
 import { createClient } from '@supabase/supabase-js';
 import { requireAdmin } from '../lib/adminAuth.js';
@@ -44,14 +43,13 @@ async function fetchInstagramData(url) {
 // Helper: Upload image to Cloudinary
 async function uploadToCloudinary(imageUrl) {
     try {
-        // Fetch the image
         const response = await fetch(imageUrl);
         const buffer = await response.arrayBuffer();
         const base64 = Buffer.from(buffer).toString('base64');
         
         const formData = new FormData();
         formData.append('file', `data:image/jpeg;base64,${base64}`);
-        formData.append('upload_preset', 'members'); // Use existing preset
+        formData.append('upload_preset', 'members');
         formData.append('folder', '100 TRUSTEES');
         
         const uploadResponse = await fetch('https://api.cloudinary.com/v1_1/dfozevcbl/image/upload', {
@@ -90,7 +88,6 @@ export default async function handler(req, res) {
                 .select('*', { count: 'exact' })
                 .order('published_at', { ascending: false });
 
-            // Apply search filter if provided
             if (search && search.trim()) {
                 const searchTerm = search.trim();
                 query = query.or(`caption.ilike.%${searchTerm}%,post_id.ilike.%${searchTerm}%`);
@@ -120,18 +117,58 @@ export default async function handler(req, res) {
         }
     }
 
-    // ==================== POST - Add from URL ====================
+    // ==================== POST ====================
     if (req.method === 'POST') {
         if (!requireAdmin(req, res)) return;
         
         try {
-            const { url, article_url } = req.body || {};
+            const { url, post_id, image_url, caption, permalink, writer, article_url, is_video, published_at } = req.body || {};
 
-            if (!url) {
-                return res.status(400).json({ error: 'Instagram URL is required' });
+            // CASE 1: Manual entry with post_id and image_url
+            if (post_id && image_url) {
+                // Check if post already exists
+                const { data: existing } = await supabase
+                    .from('posts')
+                    .select('id')
+                    .eq('post_id', post_id)
+                    .single();
+
+                if (existing) {
+                    return res.status(400).json({ error: 'This post already exists in the database' });
+                }
+
+                const { data: post, error } = await supabase
+                    .from('posts')
+                    .insert({
+                        post_id: post_id,
+                        image_url: image_url,
+                        caption: caption || '',
+                        permalink: permalink || `https://www.instagram.com/p/${post_id}/`,
+                        writer: writer || '100 HUB',
+                        is_video: is_video || false,
+                        article_url: article_url || '',
+                        published_at: published_at || new Date().toISOString()
+                    })
+                    .select()
+                    .single();
+
+                if (error) {
+                    console.error('Supabase insert error:', error);
+                    return res.status(500).json({ error: 'Database error: ' + error.message });
+                }
+
+                return res.status(200).json({
+                    success: true,
+                    message: 'Post added successfully!',
+                    post: post
+                });
             }
 
-            // Extract post ID
+            // CASE 2: Auto-fetch from Instagram URL (original code)
+            if (!url) {
+                return res.status(400).json({ error: 'Instagram URL or manual post data is required' });
+            }
+
             const postId = extractPostId(url);
             if (!postId) {
                 return res.status(400).json({ error: 'Invalid Instagram URL' });
@@ -145,18 +182,14 @@ export default async function handler(req, res) {
                 .single();
 
             if (existing) {
-                return res.status(400).json({ 
-                    error: 'This post already exists in the database' 
-                });
+                return res.status(400).json({ error: 'This post already exists in the database' });
             }
 
-            // Fetch Instagram data
             const instagramData = await fetchInstagramData(url);
             if (!instagramData) {
                 return res.status(400).json({ error: 'Failed to fetch Instagram data' });
             }
 
-            // Upload image to Cloudinary
             let imageUrl = instagramData.thumbnail_url;
             if (imageUrl) {
                 const cloudinaryUrl = await uploadToCloudinary(imageUrl);
@@ -165,10 +198,8 @@ export default async function handler(req, res) {
                 }
             }
 
-            // Check if it's a video
             const isVideo = url.includes('/reel/') || instagramData.html?.includes('video');
 
-            // Save to database
             const { data: post, error } = await supabase
                 .from('posts')
                 .insert({

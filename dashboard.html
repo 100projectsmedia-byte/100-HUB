@@ -2227,6 +2227,8 @@
         }
 
         async function savePost() {
+            const submitBtn = document.getElementById('postSubmitBtn');
+            
             // Manual entry
             const postId = document.getElementById('manualPostId').value.trim();
             const imageUrl = document.getElementById('manualImageUrl').value.trim();
@@ -2241,7 +2243,6 @@
             }
             
             try {
-                const submitBtn = document.getElementById('postSubmitBtn');
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
                 
