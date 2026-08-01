@@ -83,6 +83,170 @@
             .social-group .social-row select,
             .social-group .social-row input { width: 100%; flex: none; min-width: unset; }
         }
+
+        /* Member Modal Styles */
+        .member-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 4000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.35s ease;
+        }
+        .member-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .member-modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
+        }
+        .member-modal-content {
+            position: relative;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            width: 92%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+            transform: translateY(20px) scale(0.97);
+            transition: transform 0.35s ease;
+            padding: 0;
+            border: 1px solid var(--border-medium);
+        }
+        .member-modal.active .member-modal-content {
+            transform: translateY(0) scale(1);
+        }
+        .member-modal-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            z-index: 10;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--border-medium);
+            color: var(--text-primary);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, transform 0.2s;
+            backdrop-filter: blur(4px);
+        }
+        .member-modal-close:hover {
+            background: var(--red);
+            color: white;
+            transform: rotate(90deg);
+            border-color: var(--red);
+        }
+        .member-modal-photo {
+            width: 100%;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            border-radius: 16px 16px 0 0;
+            background: var(--bg-tertiary);
+        }
+        .member-modal-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .member-modal-details {
+            padding: 24px 28px 28px;
+        }
+        .member-modal-name {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 4px;
+            line-height: 1.2;
+        }
+        .member-modal-email {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 8px;
+            word-break: break-all;
+        }
+        .member-modal-role {
+            display: inline-block;
+            background: rgba(227,30,36,0.12);
+            color: var(--red);
+            font-size: 13px;
+            font-weight: 500;
+            padding: 4px 14px;
+            border-radius: 100px;
+            margin-bottom: 12px;
+        }
+        .member-modal-date {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+        .member-modal-skills {
+            margin-bottom: 16px;
+        }
+        .member-modal-label {
+            display: block;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .member-modal-skills p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+        .member-modal-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-subtle);
+        }
+        .member-social-link,
+        .member-website-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 10px 16px;
+            border: 1px solid var(--border-medium);
+            border-radius: 40px;
+            transition: all 0.2s ease;
+            width: fit-content;
+        }
+        .member-social-link:hover,
+        .member-website-link:hover {
+            border-color: var(--red);
+            color: var(--red);
+            background: rgba(227,30,36,0.06);
+        }
+        .member-social-link i,
+        .member-website-link i {
+            font-size: 16px;
+            width: 18px;
+            text-align: center;
+        }
     </style>
 </head>
 <body class="page-profiles">
@@ -165,8 +329,8 @@
             <a href="/">Home</a>
             <a href="/about.html">About</a>
             <a href="/work.html">Our Work</a>
-            <a href="/profiles.html">Profiles</a>
-            <a href="/games.html" class="active">Games</a>
+            <a href="/profiles.html" class="active">Profiles</a>
+            <a href="/games.html">Games</a>
             <a href="/rewards.html">Rewards</a>
             <a href="/contact.html">Contact</a>
         </div>
@@ -176,7 +340,7 @@
         </div>
     </div>
 
-    <!-- ==================== PROFILES (HUB) SECTION ==================== -->
+    <!-- ==================== HUB SECTION ==================== -->
     <section class="hub-section" id="hub" data-animate>
         <div class="container">
             <div class="section-header">
@@ -228,7 +392,6 @@
                         <li><i class="fa-regular fa-circle-check"></i> Industry Conversations</li>
                         <li><i class="fa-regular fa-circle-check"></i> Brand Collaborations</li>
                     </ul>
-                    <!-- JOIN BUTTON -->
                     <div style="margin-top: 24px;">
                         <a href="#community-form" class="btn-primary" onclick="document.getElementById('community-form').scrollIntoView({behavior:'smooth'}); return false;">
                             <i class="fa-regular fa-paper-plane"></i> Join the Community
@@ -286,6 +449,15 @@
         </div>
     </section>
 
+    <!-- ==================== MEMBER PROFILE MODAL ==================== -->
+    <div class="member-modal" id="memberModal">
+        <div class="member-modal-overlay" id="memberModalOverlay"></div>
+        <div class="member-modal-content">
+            <button class="member-modal-close" id="memberModalClose"><i class="fa-solid fa-xmark"></i></button>
+            <div id="memberModalBody"></div>
+        </div>
+    </div>
+
     <!-- ==================== FOOTER ==================== -->
     <footer class="footer">
         <div class="container">
@@ -326,10 +498,32 @@
 
     <script>
         // ==========================================
-        // API BASE
+        // API HELPER - Consolidated API Calls
         // ==========================================
-        const API_BASE = '/api';
-        const MAX_MEMBERS = 100;
+        function apiUrl(path, params = {}) {
+            const queryParams = new URLSearchParams({ path, ...params });
+            return `/api?${queryParams.toString()}`;
+        }
+
+        // ==========================================
+        // SOCIAL META
+        // ==========================================
+        const SOCIAL_META = {
+            instagram: { icon: 'fa-brands fa-instagram', label: 'Instagram', url: (h) => `https://instagram.com/${h}` },
+            tiktok:    { icon: 'fa-brands fa-tiktok',    label: 'TikTok',    url: (h) => `https://tiktok.com/@${h}` },
+            twitter:   { icon: 'fa-brands fa-x-twitter', label: 'Twitter/X', url: (h) => `https://x.com/${h}` },
+            linkedin:  { icon: 'fa-brands fa-linkedin-in',label: 'LinkedIn', url: (h) => `https://linkedin.com/in/${h}` },
+            youtube:   { icon: 'fa-brands fa-youtube',   label: 'YouTube',   url: (h) => `https://youtube.com/@${h}` },
+            facebook:  { icon: 'fa-brands fa-facebook-f',label: 'Facebook',  url: (h) => `https://facebook.com/${h}` },
+            behance:   { icon: 'fa-brands fa-behance',   label: 'Behance',   url: (h) => `https://behance.net/${h}` },
+            pinterest: { icon: 'fa-brands fa-pinterest-p',label:'Pinterest', url: (h) => `https://pinterest.com/${h}` },
+        };
+
+        function optimizeImage(url, width = 400) {
+            if (!url) return url;
+            if (!url.includes('res.cloudinary.com')) return url;
+            return url.replace('/upload/', `/upload/f_auto,q_auto:good,w_${width},c_limit/`);
+        }
 
         // ==========================================
         // HAMBURGER MENU
@@ -338,11 +532,6 @@
         const mobileMenu = document.getElementById('mobileMenu');
         const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
         const mobileMenuClose = document.getElementById('mobileMenuClose');
-
-        function apiUrl(path, params = {}) {
-        const queryParams = new URLSearchParams({ path, ...params });
-        return `/api?${queryParams.toString()}`;
-}
 
         function toggleMobileMenu() {
             hamburgerBtn.classList.toggle('active');
@@ -367,6 +556,8 @@
         // ==========================================
         // MEMBER COUNT
         // ==========================================
+        const MAX_MEMBERS = 100;
+
         async function getMemberCount() {
             try {
                 const response = await fetch(apiUrl('members', { status: 'all' }));
@@ -404,23 +595,6 @@
         let hubShowingAll = false;
         const HUB_INITIAL = 6;
 
-        const SOCIAL_META = {
-            instagram: { icon: 'fa-brands fa-instagram', label: 'Instagram', url: (h) => `https://instagram.com/${h}` },
-            tiktok:    { icon: 'fa-brands fa-tiktok',    label: 'TikTok',    url: (h) => `https://tiktok.com/@${h}` },
-            twitter:   { icon: 'fa-brands fa-x-twitter', label: 'Twitter/X', url: (h) => `https://x.com/${h}` },
-            linkedin:  { icon: 'fa-brands fa-linkedin-in',label: 'LinkedIn', url: (h) => `https://linkedin.com/in/${h}` },
-            youtube:   { icon: 'fa-brands fa-youtube',   label: 'YouTube',   url: (h) => `https://youtube.com/@${h}` },
-            facebook:  { icon: 'fa-brands fa-facebook-f',label: 'Facebook',  url: (h) => `https://facebook.com/${h}` },
-            behance:   { icon: 'fa-brands fa-behance',   label: 'Behance',   url: (h) => `https://behance.net/${h}` },
-            pinterest: { icon: 'fa-brands fa-pinterest-p',label:'Pinterest', url: (h) => `https://pinterest.com/${h}` },
-        };
-
-        function optimizeImage(url, width = 400) {
-            if (!url) return url;
-            if (!url.includes('res.cloudinary.com')) return url;
-            return url.replace('/upload/', `/upload/f_auto,q_auto:good,w_${width},c_limit/`);
-        }
-
         async function loadHubMembers(reset = true) {
             try {
                 const response = await fetch(apiUrl('members', { status: 'accepted', limit: 200 }));
@@ -453,13 +627,13 @@
                     : '';
 
                 let socialLinkHtml = '';
-                if (member.socialPlatform && member.socialHandle) {
-                    const meta = SOCIAL_META[member.socialPlatform];
+                if (member.social_platform && member.social_handle) {
+                    const meta = SOCIAL_META[member.social_platform];
                     if (meta) {
-                        const url = meta.url(member.socialHandle);
+                        const url = meta.url(member.social_handle);
                         socialLinkHtml = `
-                            <a href="${url}" target="_blank" rel="noopener">
-                                <i class="${meta.icon}"></i> @${member.socialHandle}
+                            <a href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
+                                <i class="${meta.icon}"></i> @${member.social_handle}
                             </a>
                         `;
                     }
@@ -469,14 +643,14 @@
                 if (member.website) {
                     const display = member.website.replace(/^https?:\/\//, '').replace(/\/$/, '');
                     websiteLinkHtml = `
-                        <a href="${member.website}" target="_blank" rel="noopener">
+                        <a href="${member.website}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
                             <i class="fa-solid fa-link"></i> ${display}
                         </a>
                     `;
                 }
 
                 return `
-                    <div class="hub-card" onclick="openMemberModal('${member.email}')">
+                    <div class="hub-card" onclick='openMemberModal(${JSON.stringify(member).replace(/'/g, "&#39;")})'>
                         <div class="hub-image">
                             <img src="${img}" alt="${member.name}" loading="lazy" />
                         </div>
@@ -521,24 +695,23 @@
         // ==========================================
         // MEMBER PROFILE MODAL
         // ==========================================
-        function openMemberModal(email) {
-            const member = allHubMembers.find(m => m.email === email);
-            if (!member) return;
-
+        function openMemberModal(member) {
             const img = optimizeImage(member.selectedImage || member.image1 || 'assets/100_Logo.png', 800);
             const joinDate = member.created_at || member.timestamp
                 ? new Date(member.created_at || member.timestamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
                 : '';
 
+            const images = [member.image1, member.image2, member.image3].filter(img => img);
+            
             let socialHtml = '';
-            if (member.socialPlatform && member.socialHandle) {
-                const meta = SOCIAL_META[member.socialPlatform];
+            if (member.social_platform && member.social_handle) {
+                const meta = SOCIAL_META[member.social_platform];
                 if (meta) {
-                    const url = meta.url(member.socialHandle);
+                    const url = meta.url(member.social_handle);
                     socialHtml = `
                         <a href="${url}" target="_blank" rel="noopener" class="member-social-link">
                             <i class="${meta.icon}"></i>
-                            <span>${meta.label}: @${member.socialHandle}</span>
+                            <span>${meta.label}: @${member.social_handle}</span>
                         </a>
                     `;
                 }
@@ -559,7 +732,7 @@
             if (member.skills) {
                 skillsHtml = `
                     <div class="member-modal-skills">
-                        <span class="member-modal-label">Description</span>
+                        <span class="member-modal-label">About</span>
                         <p>${member.skills}</p>
                     </div>
                 `;
@@ -575,25 +748,17 @@
                 emailHtml = `<div class="member-modal-email"><i class="fa-regular fa-envelope"></i> ${member.email}</div>`;
             }
 
-            let modal = document.getElementById('memberModal');
-            if (!modal) {
-                modal = document.createElement('div');
-                modal.id = 'memberModal';
-                modal.className = 'member-modal';
-                modal.innerHTML = `
-                    <div class="member-modal-overlay" id="memberModalOverlay"></div>
-                    <div class="member-modal-content">
-                        <button class="member-modal-close" id="memberModalClose"><i class="fa-solid fa-xmark"></i></button>
-                        <div id="memberModalBody"></div>
+            let galleryHtml = '';
+            if (images.length > 0) {
+                galleryHtml = `
+                    <div style="display:grid; grid-template-columns:repeat(${Math.min(images.length, 3)}, 1fr); gap:8px; margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.06);">
+                        ${images.map(img => `
+                            <div style="border-radius:8px; overflow:hidden; aspect-ratio:1; background:var(--bg-tertiary);">
+                                <img src="${optimizeImage(img, 200, 200)}" alt="Profile photo" style="width:100%; height:100%; object-fit:cover;" loading="lazy" />
+                            </div>
+                        `).join('')}
                     </div>
                 `;
-                document.body.appendChild(modal);
-
-                document.getElementById('memberModalClose').addEventListener('click', closeMemberModal);
-                document.getElementById('memberModalOverlay').addEventListener('click', closeMemberModal);
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape') closeMemberModal();
-                });
             }
 
             document.getElementById('memberModalBody').innerHTML = `
@@ -612,126 +777,130 @@
                             ${websiteHtml}
                         </div>
                     ` : ''}
+                    ${galleryHtml}
                 </div>
             `;
 
-            modal.classList.add('active');
+            document.getElementById('memberModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
         function closeMemberModal() {
-            const modal = document.getElementById('memberModal');
-            if (modal) {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
+            document.getElementById('memberModal').classList.remove('active');
+            document.body.style.overflow = '';
         }
 
-            // ==========================================
-            // SIGNUP FORM
-            // ==========================================
-            document.getElementById('signupForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
+        document.getElementById('memberModalClose').addEventListener('click', closeMemberModal);
+        document.getElementById('memberModalOverlay').addEventListener('click', closeMemberModal);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMemberModal();
+        });
 
-                const name = document.getElementById('memberName').value;
-                const email = document.getElementById('memberEmail').value;
-                const role = document.getElementById('memberRole').value;
-                const website = document.getElementById('memberWebsite').value;
-                const socialPlatform = document.getElementById('socialPlatform').value;
-                const socialHandle = document.getElementById('socialHandle').value.trim().replace(/^@/, '');
-                const fileInput = document.getElementById('memberPhotos');
-                const files = fileInput.files;
+        // ==========================================
+        // SIGNUP FORM
+        // ==========================================
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-                if (!name || !email || !role) {
-                    alert('Please fill in all required fields.');
-                    return;
-                }
+            const name = document.getElementById('memberName').value;
+            const email = document.getElementById('memberEmail').value;
+            const role = document.getElementById('memberRole').value;
+            const website = document.getElementById('memberWebsite').value;
+            const socialPlatform = document.getElementById('socialPlatform').value;
+            const socialHandle = document.getElementById('socialHandle').value.trim().replace(/^@/, '');
+            const fileInput = document.getElementById('memberPhotos');
+            const files = fileInput.files;
 
-                if (files.length === 0) {
-                    alert('Please upload at least one photo.');
-                    return;
-                }
+            if (!name || !email || !role) {
+                alert('Please fill in all required fields.');
+                return;
+            }
 
-                if (files.length > 3) {
-                    alert('Please upload a maximum of 3 photos.');
-                    return;
-                }
+            if (files.length === 0) {
+                alert('Please upload at least one photo.');
+                return;
+            }
 
-                const submitBtn = document.getElementById('signupSubmitBtn');
-                const form = document.getElementById('signupForm');
-                const successDiv = document.getElementById('signupSuccess');
+            if (files.length > 3) {
+                alert('Please upload a maximum of 3 photos.');
+                return;
+            }
 
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+            const submitBtn = document.getElementById('signupSubmitBtn');
+            const form = document.getElementById('signupForm');
+            const successDiv = document.getElementById('signupSuccess');
 
-                try {
-                    const imageUrls = [];
-                    for (const file of files) {
-                        const formData = new FormData();
-                        formData.append('file', file);
-                        formData.append('upload_preset', 'members');
-                        formData.append('folder', '100 TRUSTEES');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
 
-                        const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/dfozevcbl/image/upload`, {
-                            method: 'POST',
-                            body: formData
-                        });
+            try {
+                const imageUrls = [];
+                for (const file of files) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', 'members');
+                    formData.append('folder', '100 TRUSTEES');
 
-                        if (uploadResponse.ok) {
-                            const data = await uploadResponse.json();
-                            imageUrls.push(data.secure_url);
-                        } else {
-                            console.error('Upload failed:', await uploadResponse.text());
-                        }
-                    }
-
-                    if (imageUrls.length === 0) {
-                        alert('Failed to upload images. Please try again.');
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Application';
-                        return;
-                    }
-
-                    // ✅ FIXED: Use consolidated API endpoint
-                    const response = await fetch(apiUrl('signup'), {
+                    const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/dfozevcbl/image/upload`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            name,
-                            email,
-                            role,
-                            website,
-                            socialPlatform: socialPlatform || '',
-                            socialHandle: socialHandle || '',
-                            image1: imageUrls[0] || '',
-                            image2: imageUrls[1] || '',
-                            image3: imageUrls[2] || '',
-                            status: 'pending'
-                        })
+                        body: formData
                     });
 
-                    const result = await response.json();
-
-                    if (result.success) {
-                        form.style.display = 'none';
-                        successDiv.style.display = 'block';
-                        fileInput.value = '';
-
-                        // Refresh member count
-                        const count = await getMemberCount();
-                        updateCounterDisplay(count);
-                        loadHubMembers();
+                    if (uploadResponse.ok) {
+                        const data = await uploadResponse.json();
+                        imageUrls.push(data.secure_url);
                     } else {
-                        alert(result.error || 'Something went wrong. Please try again.');
+                        console.error('Upload failed:', await uploadResponse.text());
                     }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('❌ ' + error.message);
                 }
 
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Application';
-            });
+                if (imageUrls.length === 0) {
+                    alert('Failed to upload images. Please try again.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Application';
+                    return;
+                }
+
+                // ✅ Consolidated API endpoint
+                const response = await fetch(apiUrl('signup'), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        role,
+                        website,
+                        socialPlatform: socialPlatform || '',
+                        socialHandle: socialHandle || '',
+                        image1: imageUrls[0] || '',
+                        image2: imageUrls[1] || '',
+                        image3: imageUrls[2] || '',
+                        status: 'pending'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    form.style.display = 'none';
+                    successDiv.style.display = 'block';
+                    fileInput.value = '';
+
+                    // Refresh member count
+                    const count = await getMemberCount();
+                    updateCounterDisplay(count);
+                    loadHubMembers();
+                } else {
+                    alert(result.error || 'Something went wrong. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ ' + error.message);
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Application';
+        });
 
         // ==========================================
         // SCROLL REVEAL
@@ -759,7 +928,7 @@
         // ==========================================
         async function updateCreatorsCount() {
             try {
-                const response = await fetch('/api?path=members&status=accepted&limit=1');
+                const response = await fetch(apiUrl('members', { status: 'accepted', limit: 1 }));
                 if (response.ok) {
                     const data = await response.json();
                     const count = data.count || 0;
@@ -768,6 +937,7 @@
                 }
             } catch (e) {}
         }
+
         // ==========================================
         // NAVBAR SCROLL
         // ==========================================
@@ -800,7 +970,7 @@
         import * as THREE from 'three';
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-        // (Same 3D globe code - condensed)
+        // (Same 3D globe code as home page)
         const canvas = document.getElementById('globe-canvas');
         const scene = new THREE.Scene();
 
@@ -866,6 +1036,7 @@
         const nodeDefs = [
             { label: 'JHB-008', radius: 6500, speed: 0.006, theta: 0, tilt: new THREE.Euler(Math.PI * 0.15, 0, Math.PI * 0.1) },
             { label: 'LON-041', radius: 8500, speed: -0.005, theta: Math.PI * 1.2, tilt: new THREE.Euler(-Math.PI * 0.25, 0, Math.PI * 0.15) },
+            { label: 'NYC-105', radius: 10500, speed: 0.004, theta: Math.PI * 1.7, tilt: new THREE.Euler(Math.PI * 0.35, 0, -Math.PI * 0.2) },
             { label: '100 HUB', radius: 5500, speed: 0.009, theta: Math.PI * 0.9, tilt: new THREE.Euler(Math.PI * 0.1, 0, Math.PI * 0.05) }
         ];
         const nodeObjects = [];
@@ -873,7 +1044,7 @@
         const nodeSphereMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
         const redNodeMat = new THREE.MeshBasicMaterial({ color: 0xe31e24 });
         nodeDefs.forEach((def, index) => {
-            const mesh = new THREE.Mesh(nodeSphereGeo, index === 2 ? redNodeMat : nodeSphereMat);
+            const mesh = new THREE.Mesh(nodeSphereGeo, index === 3 ? redNodeMat : nodeSphereMat);
             scene.add(mesh);
             const badge = document.createElement('div');
             badge.className = 'globe-node-badge';
