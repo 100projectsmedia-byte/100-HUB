@@ -621,7 +621,9 @@
             const toShow = hubShowingAll ? allHubMembers : allHubMembers.slice(0, HUB_INITIAL);
 
             container.innerHTML = toShow.map(member => {
-                const img = optimizeImage(member.selectedImage || member.image1 || 'assets/100_Logo.png', 400);
+                // Use selectedImage, fallback to image1
+                const displayImage = member.selectedImage || member.image1 || 'assets/100_Logo.png';
+                const img = optimizeImage(displayImage, 400);
                 const joinDate = member.created_at || member.timestamp
                     ? new Date(member.created_at || member.timestamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
                     : '';
@@ -695,13 +697,16 @@
         // ==========================================
         // MEMBER PROFILE MODAL
         // ==========================================
+
         function openMemberModal(member) {
-            const img = optimizeImage(member.selectedImage || member.image1 || 'assets/100_Logo.png', 800);
+            // Use selectedImage, fallback to image1 if not set
+            const selectedImage = member.selectedImage || member.image1 || 'assets/100_Logo.png';
+            const img = optimizeImage(selectedImage, 800);
             const joinDate = member.created_at || member.timestamp
                 ? new Date(member.created_at || member.timestamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
                 : '';
 
-            const images = [member.image1, member.image2, member.image3].filter(img => img);
+            // REMOVED: The gallery of all images - only show the selected one
             
             let socialHtml = '';
             if (member.social_platform && member.social_handle) {
@@ -748,19 +753,6 @@
                 emailHtml = `<div class="member-modal-email"><i class="fa-regular fa-envelope"></i> ${member.email}</div>`;
             }
 
-            let galleryHtml = '';
-            if (images.length > 0) {
-                galleryHtml = `
-                    <div style="display:grid; grid-template-columns:repeat(${Math.min(images.length, 3)}, 1fr); gap:8px; margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.06);">
-                        ${images.map(img => `
-                            <div style="border-radius:8px; overflow:hidden; aspect-ratio:1; background:var(--bg-tertiary);">
-                                <img src="${optimizeImage(img, 200, 200)}" alt="Profile photo" style="width:100%; height:100%; object-fit:cover;" loading="lazy" />
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }
-
             document.getElementById('memberModalBody').innerHTML = `
                 <div class="member-modal-photo">
                     <img src="${img}" alt="${member.name}" />
@@ -777,7 +769,6 @@
                             ${websiteHtml}
                         </div>
                     ` : ''}
-                    ${galleryHtml}
                 </div>
             `;
 
