@@ -526,7 +526,8 @@
             margin-bottom: 4px;
         }
         .edit-modal .form-group input,
-        .edit-modal .form-group textarea {
+        .edit-modal .form-group textarea,
+        .edit-modal .form-group select {
             width: 100%;
             padding: 12px 16px;
             background: rgba(255, 255, 255, 0.04);
@@ -539,6 +540,16 @@
         .edit-modal .form-group input:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+        }
+        .edit-modal .form-group select option {
+            background: #1a1a1a;
+            color: white;
+        }
+        .edit-modal .form-group input:focus,
+        .edit-modal .form-group textarea:focus,
+        .edit-modal .form-group select:focus {
+            outline: none;
+            border-color: var(--red);
         }
         .image-select-grid {
             display: grid;
@@ -832,7 +843,13 @@
         .work-card .work-description {
             font-size: 12px;
             color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 4px;
+        }
+        .work-card .work-agency {
+            font-size: 11px;
+            color: var(--red);
             margin-bottom: 8px;
+            font-weight: 500;
         }
         .work-card .work-actions {
             display: flex;
@@ -954,6 +971,21 @@
             white-space: nowrap;
         }
 
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 12px;
+            transition: color 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .back-link:hover {
+            color: var(--red);
+        }
+
         @media (max-width: 900px) {
             .impact-grid { grid-template-columns: repeat(2, 1fr); }
             .impact-edit-form { grid-template-columns: 1fr; }
@@ -978,6 +1010,7 @@
             .search-bar input { min-width: 100%; padding: 10px 0; }
             .search-bar .search-actions { width: 100%; justify-content: flex-end; }
             .search-bar .search-count { width: 100%; text-align: center; padding: 4px 0; }
+            .dashboard-tabs button { padding: 8px 12px; font-size: 12px; }
         }
     </style>
 </head>
@@ -1035,6 +1068,12 @@
         <button class="mobile-menu-close" id="mobileMenuClose"><i class="fa-solid fa-xmark"></i></button>
         <div class="mobile-menu-links">
             <a href="/">Home</a>
+            <a href="/work.html">Our Work</a>
+            <a href="/profiles.html">Profiles</a>
+            <a href="/games.html">Games</a>
+            <a href="/rewards.html">Rewards</a>
+            <a href="/about.html">About</a>
+            <a href="/contact.html">Contact</a>
             <a href="/dashboard.html" style="color:var(--red);">Dashboard</a>
         </div>
         <div class="mobile-menu-social">
@@ -1072,15 +1111,20 @@
                         <span class="number" id="totalPartners">0</span>
                         <span class="label">Partners</span>
                     </div>
+                    <div class="stat-card">
+                        <span class="number" id="totalSubscriptions">0</span>
+                        <span class="label">Subscribers</span>
+                    </div>
                 </div>
             </div>
 
             <div class="dashboard-tabs">
                 <button class="active" data-tab="members">Members</button>
-                <button data-tab="articles">Articles <span style="font-size:10px; opacity:0.5;">(Post ID Tool)</span></button>
+                <button data-tab="articles">Articles</button>
                 <button data-tab="posts">Posts</button>
                 <button data-tab="work">Work</button>
                 <button data-tab="partners">Partners</button>
+                <button data-tab="subscriptions">Subscriptions</button>
                 <button data-tab="impact">Impact Numbers</button>
                 <button data-tab="mediakit">Media Kit</button>
                 <button data-tab="settings">Settings</button>
@@ -1137,16 +1181,13 @@
                     <button class="btn-primary" onclick="openAddArticleModal()">
                         <i class="fa-regular fa-plus"></i> Add Article
                     </button>
-                    <button class="btn-outline" onclick="fetchBeholdPosts()" id="fetchBeholdBtn">
-                        <i class="fa-brands fa-instagram"></i> Fetch Posts from Instagram
-                    </button>
                 </div>
 
                 <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px 16px; margin-bottom:16px;">
                     <p style="font-size:12px; color:rgba(255,255,255,0.5);">
                         <i class="fa-regular fa-circle-info" style="color:var(--red);"></i>
                         <strong>Post ID Tool:</strong> The <strong>Post ID</strong> is the Instagram post identifier (e.g., <code>17991679634800377</code>). 
-                        Use it when adding articles. Click <strong>"Fetch Posts from Instagram"</strong> to see all posts and their IDs.
+                        Use it when adding articles.
                     </p>
                 </div>
 
@@ -1173,42 +1214,6 @@
                         </tbody>
                     </table>
                 </div>
-
-                <div id="beholdPostsContainer" style="display:none; margin-top:20px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                        <h4 style="font-family:'Playfair Display',serif; font-size:18px; color:var(--text-primary);">
-                            <i class="fa-brands fa-instagram" style="color:var(--red);"></i> Instagram Posts
-                        </h4>
-                        <button class="btn-outline btn-sm" onclick="document.getElementById('beholdPostsContainer').style.display='none'">
-                            <i class="fa-solid fa-xmark"></i> Close
-                        </button>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; overflow-x:auto; max-height:400px; overflow-y:auto;">
-                        <table style="width:100%; border-collapse:collapse; min-width:500px;">
-                            <thead>
-                                <tr>
-                                    <th style="text-align:left; padding:12px 16px; font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); border-bottom:1px solid rgba(255,255,255,0.06);">#</th>
-                                    <th style="text-align:left; padding:12px 16px; font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); border-bottom:1px solid rgba(255,255,255,0.06);">Post ID</th>
-                                    <th style="text-align:left; padding:12px 16px; font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); border-bottom:1px solid rgba(255,255,255,0.06);">Caption Preview</th>
-                                    <th style="text-align:left; padding:12px 16px; font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); border-bottom:1px solid rgba(255,255,255,0.06);">Status</th>
-                                    <th style="text-align:center; padding:12px 16px; font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); border-bottom:1px solid rgba(255,255,255,0.06);">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="beholdPostsBody">
-                                <tr>
-                                    <td colspan="5">
-                                        <div class="empty-state" style="padding:30px 20px;">
-                                            <p>Loading posts from Instagram...</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p style="font-size:11px; color:rgba(255,255,255,0.3); margin-top:8px;">
-                        <i class="fa-regular fa-copy"></i> Click the Post ID to copy it, or use the "Add Article" button to link a post to an article.
-                    </p>
-                </div>
             </div>
 
             <!-- Tab: Posts -->
@@ -1219,9 +1224,6 @@
                     </button>
                     <button class="btn-primary" onclick="openAddPostModal()">
                         <i class="fa-regular fa-plus"></i> Add Post
-                    </button>
-                    <button class="btn-outline" onclick="syncAllPosts()" id="syncPostsBtn">
-                        <i class="fa-brands fa-instagram"></i> Sync All
                     </button>
                 </div>
 
@@ -1302,6 +1304,43 @@
                 <p style="font-size:12px; color:rgba(255,255,255,0.5); margin-top:8px;">
                     💡 Upload a logo image (PNG, JPG, SVG) - it will be saved to Cloudinary automatically.
                 </p>
+            </div>
+
+            <!-- Tab: Subscriptions -->
+            <div class="tab-content" id="tab-subscriptions">
+                <div class="dashboard-actions">
+                    <button class="btn-outline" onclick="loadSubscriptions()">
+                        <i class="fa-solid fa-rotate"></i> Refresh
+                    </button>
+                    <button class="btn-outline" onclick="exportSubscriptionsCSV()">
+                        <i class="fa-solid fa-download"></i> Export CSV
+                    </button>
+                    <span style="margin-left:auto; font-size:14px; color:rgba(255,255,255,0.6);">
+                        Total: <strong id="subscriptionTotal">0</strong>
+                    </span>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Email</th>
+                                <th>Subscribed</th>
+                                <th style="text-align:center;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subscriptionsTableBody">
+                            <tr>
+                                <td colspan="4">
+                                    <div class="empty-state">
+                                        <i class="fa-regular fa-envelope"></i>
+                                        <p>Loading subscriptions...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Tab: Impact Numbers -->
@@ -1499,33 +1538,11 @@
         <div class="edit-modal-content">
             <button class="edit-modal-close" id="postModalClose" onclick="closePostModal()"><i class="fa-solid fa-xmark"></i></button>
             <h3 id="postModalTitle">Add Instagram Post</h3>
-            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;" id="postModalSubtitle">Upload your media and paste the Instagram URL</p>
+            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;" id="postModalSubtitle">Upload your media and enter post details</p>
             <div>
-                <!-- Step 1: Instagram URL -->
+                <!-- Step 1: Upload Media -->
                 <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:16px; margin-bottom:16px;">
-                    <h4 style="font-size:13px; color:var(--text-primary); margin-bottom:8px;">🔗 Step 1: Instagram URL</h4>
-                    <div class="form-group" style="margin-bottom:8px;">
-                        <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Paste Instagram URL</label>
-                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                            <input type="url" id="postInstagramUrl" placeholder="https://www.instagram.com/p/..." style="flex:1; min-width:200px; padding:10px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif;" />
-                            <button type="button" class="btn-outline btn-sm" onclick="fetchPostDetails()" id="fetchDetailsBtn">
-                                <i class="fa-solid fa-cloud-arrow-down"></i> Fetch Details
-                            </button>
-                        </div>
-                        <div id="fetchStatus" style="margin-top:6px; font-size:12px; min-height:20px;"></div>
-                    </div>
-                    <div id="fetchedDetails" style="display:none; background:rgba(74,222,128,0.05); border:1px solid rgba(74,222,128,0.2); border-radius:8px; padding:12px; margin-top:8px;">
-                        <div style="font-size:12px; color:#4ADE80; margin-bottom:4px;">✅ Post details fetched!</div>
-                        <div style="font-size:11px; color:rgba(255,255,255,0.5);">
-                            <span id="fetchedPostId">ID: ---</span> · 
-                            <span id="fetchedCaptionPreview">Caption: ---</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Step 2: Upload Media -->
-                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:16px; margin-bottom:16px;">
-                    <h4 style="font-size:13px; color:var(--text-primary); margin-bottom:8px;">📷 Step 2: Upload Media File</h4>
+                    <h4 style="font-size:13px; color:var(--text-primary); margin-bottom:8px;">📷 Step 1: Upload Media File</h4>
                     <div class="form-group" style="margin-bottom:8px;">
                         <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Choose Image or Video *</label>
                         <div class="file-upload-area" id="postUploadArea" onclick="document.getElementById('postMediaFile').click()">
@@ -1548,13 +1565,13 @@
                     <div id="uploadStatus" style="margin-top:6px; font-size:12px; min-height:20px;"></div>
                 </div>
 
-                <!-- Step 3: Post Details -->
+                <!-- Step 2: Post Details -->
                 <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:16px; margin-bottom:16px;">
-                    <h4 style="font-size:13px; color:var(--text-primary); margin-bottom:8px;">✏️ Step 3: Review & Save</h4>
+                    <h4 style="font-size:13px; color:var(--text-primary); margin-bottom:8px;">✏️ Step 2: Post Details</h4>
                     <div class="form-group">
                         <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Post ID *</label>
                         <input type="text" id="manualPostId" placeholder="e.g., DFC7m0lIkxP" required />
-                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">Auto-filled from URL, or enter manually</small>
+                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">The Instagram post identifier</small>
                     </div>
                     <div class="form-group">
                         <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Image URL (auto-filled after upload)</label>
@@ -1563,12 +1580,10 @@
                     <div class="form-group">
                         <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Caption</label>
                         <textarea id="manualCaption" rows="2" style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'Inter',sans-serif; resize:vertical;"></textarea>
-                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">Auto-fetched from Instagram, or enter manually</small>
                     </div>
                     <div class="form-group">
                         <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Permalink</label>
                         <input type="url" id="manualPermalink" placeholder="https://www.instagram.com/p/..." />
-                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">Full Instagram URL</small>
                     </div>
                     <div class="form-group">
                         <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Writer</label>
@@ -1577,6 +1592,13 @@
                     <div class="form-group">
                         <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Article URL (Optional)</label>
                         <input type="url" id="postArticleUrl" placeholder="https://substack.com/..." />
+                    </div>
+                    <div class="form-group">
+                        <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Is Video</label>
+                        <select id="postIsVideo">
+                            <option value="false">No (Image)</option>
+                            <option value="true">Yes (Video)</option>
+                        </select>
                     </div>
                 </div>
 
@@ -1611,6 +1633,16 @@
                     <textarea id="workDescription" rows="2"></textarea>
                 </div>
                 <div class="form-group">
+                    <label>Agency / Client</label>
+                    <input type="text" id="workAgencyClient" placeholder="e.g., Nike, Converse, H&M" />
+                    <small style="color:rgba(255,255,255,0.4); font-size:11px;">The brand or client name</small>
+                </div>
+                <div class="form-group">
+                    <label>Link URL</label>
+                    <input type="url" id="workLinkUrl" placeholder="https://example.com/work" />
+                    <small style="color:rgba(255,255,255,0.4); font-size:11px;">This will be used for the "View Work" button</small>
+                </div>
+                <div class="form-group">
                     <label>Upload Media *</label>
                     <div class="file-upload-area" id="workUploadArea" onclick="document.getElementById('workMediaFile').click()">
                         <i class="fa-regular fa-image"></i>
@@ -1638,6 +1670,14 @@
                         <option value="false">No</option>
                         <option value="true">Yes</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label>Featured Main Card</label>
+                    <select id="workFeaturedMain">
+                        <option value="false">No</option>
+                        <option value="true">Yes (Main Hero Card)</option>
+                    </select>
+                    <small style="color:rgba(255,255,255,0.4); font-size:11px;">Only one item can be featured as the main card</small>
                 </div>
                 <div id="workUploadProgress" style="display:none; margin-top:8px;">
                     <div style="display:flex; align-items:center; gap:12px;">
@@ -1987,6 +2027,7 @@
                 if (this.dataset.tab === 'articles') renderArticles();
                 if (this.dataset.tab === 'posts') loadPosts();
                 if (this.dataset.tab === 'work') loadWorkItems();
+                if (this.dataset.tab === 'subscriptions') loadSubscriptions();
             });
         });
 
@@ -2235,7 +2276,6 @@
         // ==========================================
         let allArticles = [];
         let editingArticleId = null;
-        let beholdPosts = [];
 
         async function fetchArticles() {
             const cached = CACHE.get('articles');
@@ -2310,111 +2350,6 @@
             CACHE.clear();
             renderArticles();
             showToast('Refreshed!', 'success');
-        }
-
-        // ==========================================
-        // FETCH BEHOLD POSTS
-        // ==========================================
-        async function fetchBeholdPosts() {
-            const container = document.getElementById('beholdPostsContainer');
-            const body = document.getElementById('beholdPostsBody');
-            const btn = document.getElementById('fetchBeholdBtn');
-            
-            container.style.display = 'block';
-            body.innerHTML = `
-                <tr>
-                    <td colspan="5">
-                        <div class="empty-state" style="padding:30px 20px;">
-                            <div class="loader" style="margin:0 auto 12px;"></div>
-                            <p>Fetching posts from Instagram...</p>
-                        </div>
-                    </td>
-                </tr>
-            `;
-            
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
-            
-            try {
-                const BEHOLD_FEED_ID = 'qBmSl39X4hdPVipZS1UR';
-                const FEED_URL = `https://feeds.behold.so/${BEHOLD_FEED_ID}`;
-                
-                const response = await fetch(FEED_URL);
-                if (!response.ok) throw new Error('Failed to load feed');
-                
-                const data = await response.json();
-                const posts = data.posts || data;
-                
-                if (!posts || posts.length === 0) {
-                    body.innerHTML = `
-                        <tr>
-                            <td colspan="5">
-                                <div class="empty-state" style="padding:30px 20px;">
-                                    <p>No posts found from Instagram.</p>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fa-brands fa-instagram"></i> Fetch Posts from Instagram';
-                    return;
-                }
-                
-                const articleMap = {};
-                allArticles.forEach(a => {
-                    articleMap[a.post_id] = a;
-                });
-                
-                const displayPosts = posts.slice(0, 20);
-                
-                body.innerHTML = displayPosts.map((post, index) => {
-                    const postId = post.id || post.postId || '';
-                    const caption = post.prunedCaption || post.caption || '';
-                    const truncatedCaption = caption.length > 60 ? caption.substring(0, 60) + '...' : caption;
-                    const hasArticle = articleMap[postId];
-                    const statusHtml = hasArticle ? 
-                        '<span class="status-badge linked">✅ Linked</span>' : 
-                        '<span class="status-badge pending-article">⏳ Pending</span>';
-                    
-                    const actionHtml = hasArticle ? 
-                        `<button class="btn-outline btn-sm" onclick="openEditArticleModal('${hasArticle.id}')" title="Edit Article"><i class="fa-regular fa-pen-to-square"></i></button>` :
-                        `<button class="btn-primary btn-sm" onclick="quickAddArticle('${postId}')"><i class="fa-regular fa-plus"></i> Add Article</button>`;
-                    
-                    return `
-                        <tr>
-                            <td style="padding:10px 16px; color:rgba(255,255,255,0.4);">${index + 1}</td>
-                            <td style="padding:10px 16px;">
-                                <span class="article-post-id" onclick="copyPostId('${postId}')" style="cursor:pointer;" title="Click to copy">${postId}</span>
-                            </td>
-                            <td style="padding:10px 16px; color:rgba(255,255,255,0.6); font-size:13px;">${truncatedCaption || 'No caption'}</td>
-                            <td style="padding:10px 16px;">${statusHtml}</td>
-                            <td style="padding:10px 16px; text-align:center;">${actionHtml}</td>
-                        </tr>
-                    `;
-                }).join('');
-                
-            } catch (error) {
-                console.error('Fetch Behold error:', error);
-                body.innerHTML = `
-                    <tr>
-                        <td colspan="5">
-                            <div class="empty-state" style="padding:30px 20px;">
-                                <p style="color:#ff6b6b;">⚠️ Failed to load posts: ${error.message}</p>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }
-            
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fa-brands fa-instagram"></i> Fetch Posts from Instagram';
-            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        function quickAddArticle(postId) {
-            openAddArticleModal();
-            document.getElementById('articlePostId').value = postId;
-            document.getElementById('articleUrl').focus();
         }
 
         function copyPostId(postId) {
@@ -2500,7 +2435,6 @@
                     closeArticleModal();
                     CACHE.clear();
                     renderArticles();
-                    document.getElementById('beholdPostsContainer').style.display = 'none';
                 } else {
                     showToast(result.error || 'Failed to save article.', 'error');
                 }
@@ -2520,26 +2454,22 @@
         const POST_INCREMENT = 3;
 
         let uploadedMediaUrl = '';
-        let fetchedPostData = {};
 
         function openAddPostModal() {
-            document.getElementById('postInstagramUrl').value = '';
             document.getElementById('manualPostId').value = '';
             document.getElementById('manualImageUrl').value = '';
             document.getElementById('manualCaption').value = '';
             document.getElementById('manualPermalink').value = '';
             document.getElementById('manualWriter').value = '100 HUB';
             document.getElementById('postArticleUrl').value = '';
+            document.getElementById('postIsVideo').value = 'false';
             document.getElementById('postMediaFile').value = '';
             document.getElementById('mediaPreview').style.display = 'none';
             document.getElementById('mediaPreview').innerHTML = '';
             document.getElementById('uploadStatus').innerHTML = '';
             document.getElementById('uploadProgress').style.display = 'none';
-            document.getElementById('fetchedDetails').style.display = 'none';
-            document.getElementById('fetchStatus').innerHTML = '';
             document.getElementById('postFileName').textContent = 'No file selected';
             uploadedMediaUrl = '';
-            fetchedPostData = {};
             document.getElementById('postModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -2547,77 +2477,6 @@
         function closePostModal() {
             document.getElementById('postModal').classList.remove('active');
             document.body.style.overflow = '';
-        }
-
-        async function fetchPostDetails() {
-            const url = document.getElementById('postInstagramUrl').value.trim();
-            const status = document.getElementById('fetchStatus');
-            const detailsDiv = document.getElementById('fetchedDetails');
-            
-            if (!url) {
-                status.innerHTML = '<span style="color:#ff6b6b;">⚠️ Please enter an Instagram URL.</span>';
-                return;
-            }
-            
-            let postId = '';
-            const patterns = [
-                /instagram\.com\/p\/([A-Za-z0-9_-]+)/,
-                /instagram\.com\/reel\/([A-Za-z0-9_-]+)/,
-                /instagram\.com\/tv\/([A-Za-z0-9_-]+)/
-            ];
-            for (const pattern of patterns) {
-                const match = url.match(pattern);
-                if (match) {
-                    postId = match[1];
-                    break;
-                }
-            }
-            
-            if (!postId) {
-                status.innerHTML = '<span style="color:#ff6b6b;">⚠️ Could not extract Post ID from URL.</span>';
-                return;
-            }
-            
-            const btn = document.getElementById('fetchDetailsBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Fetching...';
-            status.innerHTML = '<span style="color:#ffd700;">⏳ Fetching post details...</span>';
-            
-            try {
-                const oembedUrl = `https://api.instagram.com/oembed?url=${encodeURIComponent(url)}`;
-                const response = await fetch(oembedUrl);
-                let caption = '';
-                let author = '100 HUB';
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    caption = data.title || '';
-                    author = data.author_name || '100 HUB';
-                } else {
-                    caption = `Instagram post ${postId}`;
-                }
-                
-                document.getElementById('manualPostId').value = postId;
-                document.getElementById('manualCaption').value = caption;
-                document.getElementById('manualPermalink').value = url;
-                document.getElementById('manualWriter').value = author;
-                
-                fetchedPostData = { postId, caption, author, url };
-                
-                detailsDiv.style.display = 'block';
-                document.getElementById('fetchedPostId').textContent = `ID: ${postId}`;
-                const captionPreview = caption.length > 50 ? caption.substring(0, 50) + '...' : caption;
-                document.getElementById('fetchedCaptionPreview').textContent = `Caption: ${captionPreview}`;
-                status.innerHTML = '<span style="color:#4ADE80;">✅ Post details fetched! Review below.</span>';
-                
-            } catch (error) {
-                console.error('Fetch error:', error);
-                status.innerHTML = '<span style="color:#ff6b6b;">⚠️ Could not fetch post details. Please enter manually.</span>';
-                document.getElementById('manualPostId').value = postId;
-            }
-            
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-down"></i> Fetch Details';
         }
 
         async function uploadMediaFile(file) {
@@ -2708,6 +2567,7 @@
             const permalink = document.getElementById('manualPermalink').value.trim();
             const writer = document.getElementById('manualWriter').value.trim() || '100 HUB';
             const articleUrl = document.getElementById('postArticleUrl').value.trim();
+            const isVideo = document.getElementById('postIsVideo').value === 'true';
             
             if (!postId) {
                 showToast('⚠️ Please enter a Post ID.', 'error');
@@ -2743,8 +2603,8 @@
                         permalink: permalink || `https://www.instagram.com/p/${postId}/`,
                         writer: writer,
                         article_url: articleUrl,
-                        is_video: file.type.startsWith('video/'),
-                        video_url: file.type.startsWith('video/') ? imageUrl : '',
+                        is_video: isVideo,
+                        video_url: isVideo ? imageUrl : '',
                         published_at: new Date().toISOString()
                     })
                 });
@@ -2904,34 +2764,6 @@
             renderPostGrid();
         }
 
-        async function syncAllPosts() {
-            const btn = document.getElementById('syncPostsBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Syncing...';
-            
-            try {
-                const response = await fetch(apiUrl('posts-sync'), {
-                    method: 'POST',
-                    headers: adminHeaders()
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showToast(`✅ Synced ${result.synced} posts, skipped ${result.skipped} existing`, 'success');
-                    loadPosts();
-                } else {
-                    showToast(result.error || 'Sync failed.', 'error');
-                }
-            } catch (error) {
-                console.error('Sync error:', error);
-                showToast('Error syncing posts.', 'error');
-            }
-            
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fa-brands fa-instagram"></i> Sync All';
-        }
-
         function openLinkArticleModal(postId) {
             const post = allPosts.find(p => p.id === postId);
             if (!post) return;
@@ -3058,11 +2890,14 @@
                             : `<img src="${item.media_url}" alt="${item.title}" loading="lazy" />`
                         }
                         ${item.featured ? '<span class="work-featured-badge">⭐ Featured</span>' : ''}
+                        ${item.is_featured_main ? '<span class="work-featured-badge" style="background:#E8B84B;">🌟 Main</span>' : ''}
                     </div>
                     <div class="work-info">
                         <div class="work-title">${item.title}</div>
                         <div class="work-category">${item.category || 'Uncategorized'}</div>
+                        ${item.agency_client ? `<div class="work-agency">${item.agency_client}</div>` : ''}
                         <div class="work-description">${item.description || ''}</div>
+                        ${item.link_url ? `<div style="font-size:11px; color:rgba(255,255,255,0.3); margin-bottom:8px;">🔗 ${item.link_url}</div>` : ''}
                         <div class="work-actions">
                             <button class="btn-outline btn-sm" onclick="openEditWorkModal('${item.id}')" title="Edit">
                                 <i class="fa-regular fa-pen-to-square"></i>
@@ -3082,10 +2917,13 @@
             document.getElementById('workTitle').value = '';
             document.getElementById('workCategory').value = '';
             document.getElementById('workDescription').value = '';
+            document.getElementById('workAgencyClient').value = '';
+            document.getElementById('workLinkUrl').value = '';
             document.getElementById('workMediaFile').value = '';
             document.getElementById('workMediaType').value = 'image';
             document.getElementById('workDisplayOrder').value = '0';
             document.getElementById('workFeatured').value = 'false';
+            document.getElementById('workFeaturedMain').value = 'false';
             document.getElementById('workMediaUrl').value = '';
             document.getElementById('workFileName').textContent = 'No file selected';
             document.getElementById('workUploadStatus').innerHTML = '';
@@ -3103,10 +2941,13 @@
             document.getElementById('workTitle').value = item.title || '';
             document.getElementById('workCategory').value = item.category || '';
             document.getElementById('workDescription').value = item.description || '';
+            document.getElementById('workAgencyClient').value = item.agency_client || '';
+            document.getElementById('workLinkUrl').value = item.link_url || '';
             document.getElementById('workMediaUrl').value = item.media_url || '';
             document.getElementById('workMediaType').value = item.media_type || 'image';
             document.getElementById('workDisplayOrder').value = item.display_order || 0;
             document.getElementById('workFeatured').value = item.featured ? 'true' : 'false';
+            document.getElementById('workFeaturedMain').value = item.is_featured_main ? 'true' : 'false';
             document.getElementById('workFileName').textContent = 'Current: ' + (item.media_url ? 'File uploaded' : 'No file');
             workUploadedMediaUrl = item.media_url || '';
             document.getElementById('workModal').classList.add('active');
@@ -3187,9 +3028,12 @@
             const title = document.getElementById('workTitle').value.trim();
             const category = document.getElementById('workCategory').value.trim();
             const description = document.getElementById('workDescription').value.trim();
+            const agency_client = document.getElementById('workAgencyClient').value.trim();
+            const link_url = document.getElementById('workLinkUrl').value.trim();
             const media_type = document.getElementById('workMediaType').value;
             const display_order = parseInt(document.getElementById('workDisplayOrder').value) || 0;
             const featured = document.getElementById('workFeatured').value === 'true';
+            const is_featured_main = document.getElementById('workFeaturedMain').value === 'true';
             const fileInput = document.getElementById('workMediaFile');
             const file = fileInput.files[0];
             
@@ -3231,8 +3075,8 @@
                 const url = apiUrl('work-items');
                 const method = editingWorkId ? 'PUT' : 'POST';
                 const body = editingWorkId 
-                    ? { id: editingWorkId, title, category, description, media_url, media_type, display_order, featured }
-                    : { title, category, description, media_url, media_type, display_order, featured };
+                    ? { id: editingWorkId, title, category, description, agency_client, link_url, media_url, media_type, display_order, featured, is_featured_main }
+                    : { title, category, description, agency_client, link_url, media_url, media_type, display_order, featured, is_featured_main };
 
                 const response = await fetch(url, {
                     method: method,
@@ -3397,6 +3241,92 @@
         }
 
         // ==========================================
+        // SUBSCRIPTIONS
+        // ==========================================
+        let allSubscriptions = [];
+
+        async function loadSubscriptions() {
+            const tbody = document.getElementById('subscriptionsTableBody');
+            const totalEl = document.getElementById('subscriptionTotal');
+            
+            try {
+                const response = await fetch(apiUrl('subscriptions'), {
+                    headers: adminHeaders()
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    allSubscriptions = data.subscriptions || [];
+                    totalEl.textContent = allSubscriptions.length;
+                    document.getElementById('totalSubscriptions').textContent = allSubscriptions.length;
+                    
+                    if (allSubscriptions.length === 0) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="4">
+                                    <div class="empty-state">
+                                        <i class="fa-regular fa-envelope"></i>
+                                        <p>No subscribers yet.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                        return;
+                    }
+                    
+                    tbody.innerHTML = allSubscriptions.map((sub, index) => `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td><a href="mailto:${sub.email}" style="color:rgba(255,255,255,0.8); text-decoration:none;">${sub.email}</a></td>
+                            <td>${sub.subscribed_at ? new Date(sub.subscribed_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-'}</td>
+                            <td>
+                                <div class="action-cell">
+                                    <button class="btn-outline btn-sm danger" onclick="confirmDelete('subscription', '${sub.id}', '${sub.email}')" title="Delete">
+                                        <i class="fa-regular fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Load subscriptions error:', error);
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4">
+                            <div class="empty-state">
+                                <i class="fa-regular fa-envelope"></i>
+                                <p>Error loading subscriptions.</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function exportSubscriptionsCSV() {
+            if (!allSubscriptions || allSubscriptions.length === 0) {
+                showToast('No subscribers to export.', 'error');
+                return;
+            }
+            
+            const headers = ['Email', 'Subscribed Date'];
+            const rows = allSubscriptions.map(s => [
+                `"${s.email}"`,
+                `"${s.subscribed_at ? new Date(s.subscribed_at).toLocaleString() : ''}"`
+            ]);
+            const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `100HUB_Subscriptions_${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('CSV exported!', 'success');
+        }
+
+        // ==========================================
         // IMPACT NUMBERS
         // ==========================================
         function loadImpactNumbers() {
@@ -3548,6 +3478,8 @@
                     endpoint = 'posts';
                 } else if (deleteTarget.type === 'work') {
                     endpoint = 'work-items';
+                } else if (deleteTarget.type === 'subscription') {
+                    endpoint = 'subscriptions';
                 } else {
                     showToast('Unknown item type.', 'error');
                     return;
@@ -3578,6 +3510,8 @@
                         await loadPosts();
                     } else if (deleteTarget.type === 'work') {
                         await loadWorkItems();
+                    } else if (deleteTarget.type === 'subscription') {
+                        await loadSubscriptions();
                     }
                 } else {
                     showToast(result.error || `Failed to delete ${deleteTarget.type}.`, 'error');
@@ -3657,6 +3591,7 @@
             loadImpactNumbers();
             loadPosts();
             loadWorkItems();
+            loadSubscriptions();
 
             // File input handlers
             const postFileInput = document.getElementById('postMediaFile');
@@ -3672,9 +3607,6 @@
                             document.getElementById('postFileName').textContent = 'No file selected';
                             return;
                         }
-                        uploadMediaFile(file).catch(() => {
-                            showToast('❌ Upload failed. Please try again.', 'error');
-                        });
                     }
                 });
             }
@@ -3692,9 +3624,6 @@
                             document.getElementById('workFileName').textContent = 'No file selected';
                             return;
                         }
-                        uploadWorkMediaFile(file).catch(() => {
-                            showToast('❌ Upload failed. Please try again.', 'error');
-                        });
                     }
                 });
             }
@@ -3719,6 +3648,8 @@
 
         console.log('📊 100 HUB Dashboard loaded.');
         console.log('📝 All tabs with consolidated API and file upload support.');
+        console.log('📬 Subscriptions tab added for managing newsletter subscribers.');
+        console.log('🎯 Work items updated with agency/client and link URL fields.');
         console.log('🧹 Cache duration set to 1 second for immediate updates.');
     </script>
 </body>

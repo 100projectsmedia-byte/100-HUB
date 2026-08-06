@@ -37,14 +37,14 @@
         }
 
         /* Visual Strip */
-        .visual-strip { padding: 140px 7% 120px; }
+        .visual-strip { padding: 140px 7% 60px; }
         .video-wrapper {
             position: relative;
             height: 560px;
             border-radius: 36px;
             overflow: hidden;
-            cursor: pointer;
             background: var(--bg-tertiary);
+            cursor: default;
         }
         .video-wrapper video {
             width: 100%;
@@ -57,7 +57,7 @@
             background: linear-gradient(to top, rgba(0,0,0,0.92), rgba(0,0,0,0.15));
             pointer-events: none;
         }
-        .video-controls {
+        .visual-controls {
             position: absolute;
             top: 20px;
             right: 20px;
@@ -65,7 +65,7 @@
             gap: 10px;
             z-index: 10;
         }
-        .video-controls button {
+        .visual-controls button {
             background: rgba(0,0,0,0.55);
             border: 1px solid rgba(255,255,255,0.15);
             color: white;
@@ -77,7 +77,7 @@
             backdrop-filter: blur(10px);
             transition: 0.3s;
         }
-        .video-controls button:hover { background: var(--red); }
+        .visual-controls button:hover { background: var(--red); }
         .visual-content {
             position: absolute;
             bottom: 60px;
@@ -96,6 +96,29 @@
             line-height: 1.7;
             color: rgba(255,255,255,0.75);
             max-width: 480px;
+        }
+        .visual-content .work-link-btn {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 12px 28px;
+            background: var(--red);
+            color: white;
+            border-radius: 60px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .visual-content .work-link-btn:hover {
+            background: var(--red-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-red);
+        }
+        .visual-content .work-agency {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
         }
 
         /* Creator Section - Dynamic Work Items */
@@ -118,7 +141,7 @@
         }
         .creator-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 26px;
         }
         .creator-card {
@@ -126,8 +149,8 @@
             overflow: hidden;
             border-radius: 28px;
             background: #111;
-            height: 520px;
-            cursor: pointer;
+            height: 420px;
+            cursor: default;
         }
         .creator-card video {
             width: 100%;
@@ -136,6 +159,13 @@
             transition: 1s ease;
         }
         .creator-card:hover video { transform: scale(1.08); }
+        .creator-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 1s ease;
+        }
+        .creator-card:hover img { transform: scale(1.08); }
         .creator-overlay {
             position: absolute;
             inset: 0;
@@ -151,19 +181,42 @@
             font-size: 11px;
             letter-spacing: 3px;
             opacity: 0.65;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             color: var(--red);
         }
         .creator-info h3 {
-            font-size: 28px;
-            margin-bottom: 10px;
+            font-size: 24px;
+            margin-bottom: 4px;
             color: var(--white);
+        }
+        .creator-info .work-agency {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 8px;
         }
         .creator-info p {
             font-size: 14px;
-            line-height: 1.7;
+            line-height: 1.6;
             opacity: 0.75;
             color: rgba(255,255,255,0.75);
+            margin-bottom: 8px;
+        }
+        .creator-info .work-link-btn {
+            display: inline-block;
+            padding: 8px 20px;
+            background: var(--red);
+            color: white;
+            border-radius: 60px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .creator-info .work-link-btn:hover {
+            background: var(--red-dark);
+            transform: translateY(-2px);
         }
 
         /* Feature Strip */
@@ -444,6 +497,164 @@
             color: white;
         }
 
+        /* Subscribe Float Button */
+        .subscribe-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .subscribe-float .subscribe-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--red);
+            color: white;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(227, 30, 36, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .subscribe-float .subscribe-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(227, 30, 36, 0.5);
+        }
+        .subscribe-float .subscribe-label {
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Subscribe Modal */
+        .subscribe-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .subscribe-modal.active {
+            display: flex;
+        }
+        .subscribe-modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
+        }
+        .subscribe-modal-content {
+            position: relative;
+            background: var(--bg-secondary);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        .subscribe-modal-content .modal-icon {
+            font-size: 48px;
+            color: var(--red);
+            margin-bottom: 12px;
+            display: block;
+        }
+        .subscribe-modal-content h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 8px;
+        }
+        .subscribe-modal-content p {
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .subscribe-modal-content .subscribe-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .subscribe-modal-content .subscribe-form input {
+            padding: 14px 18px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+        }
+        .subscribe-modal-content .subscribe-form input:focus {
+            outline: none;
+            border-color: var(--red);
+        }
+        .subscribe-modal-content .subscribe-form button {
+            padding: 14px;
+            background: var(--red);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .subscribe-modal-content .subscribe-form button:hover {
+            background: var(--red-dark);
+            transform: translateY(-2px);
+        }
+        .subscribe-modal-content .subscribe-form button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .subscribe-modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .subscribe-modal-close:hover {
+            background: var(--red);
+            color: white;
+        }
+        .subscribe-modal-content .subscribe-status {
+            margin-top: 12px;
+            font-size: 13px;
+            min-height: 24px;
+        }
+        .subscribe-modal-content .subscribe-status.success {
+            color: #4ADE80;
+        }
+        .subscribe-modal-content .subscribe-status.error {
+            color: #FF6B6B;
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .contact-grid-work { grid-template-columns: 1fr; gap: 40px; }
@@ -453,6 +664,7 @@
             .video-wrapper { height: 420px; }
             .visual-content { left: 30px; right: 30px; bottom: 30px; }
             .visual-content h2 { font-size: 32px; }
+            .creator-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 768px) {
             .visual-strip, .creator-section, .feature-strip, .partners-section-work, .contact-section-work {
@@ -460,17 +672,20 @@
                 padding-right: 24px;
             }
             .visual-strip { padding-top: 100px; }
-            .creator-card { height: 420px; }
+            .creator-card { height: 360px; }
             .community-card-work { grid-template-columns: 1fr 1fr; }
             .contact-form-wrap-work { padding: 24px; }
             .contact-form-work .form-row { grid-template-columns: 1fr; }
             .partners-section-work .section-title { font-size: 28px; }
             .partners-track { gap: 40px; }
             .partner-logo-item img { max-height: 30px; max-width: 90px; }
+            .subscribe-float .subscribe-btn { width: 50px; height: 50px; font-size: 22px; }
+            .subscribe-float { bottom: 20px; right: 20px; }
+            .subscribe-modal-content { padding: 30px 24px; }
         }
         @media (max-width: 600px) {
             .creator-grid { grid-template-columns: 1fr; }
-            .creator-card { height: 320px; }
+            .creator-card { height: 300px; }
             .video-wrapper { height: 320px; }
             .visual-content { left: 20px; right: 20px; bottom: 20px; }
             .visual-content h2 { font-size: 24px; }
@@ -481,6 +696,8 @@
             .partners-section-work .section-title { font-size: 24px; }
             .partners-track { gap: 30px; }
             .partner-logo-item img { max-height: 25px; max-width: 70px; }
+            .subscribe-float .subscribe-btn { width: 44px; height: 44px; font-size: 18px; }
+            .subscribe-float .subscribe-label { font-size: 8px; }
         }
     </style>
 </head>
@@ -549,11 +766,11 @@
         <button class="mobile-menu-close" id="mobileMenuClose"><i class="fa-solid fa-xmark"></i></button>
         <div class="mobile-menu-links">
             <a href="/">Home</a>
-            <a href="/about.html">About</a>
             <a href="/work.html">Our Work</a>
             <a href="/profiles.html">Profiles</a>
-            <a href="/games.html" class="active">Games</a>
+            <a href="/games.html">Games</a>
             <a href="/rewards.html">Rewards</a>
+            <a href="/about.html">About</a>
             <a href="/contact.html">Contact</a>
         </div>
         <div class="mobile-menu-social">
@@ -562,25 +779,25 @@
         </div>
     </div>
 
-    <!-- ==================== VISUAL STRIP ==================== -->
-    <section class="visual-strip">
+    <!-- ==================== VISUAL STRIP (Dynamic Main Card) ==================== -->
+    <section class="visual-strip" id="mainWork">
         <div class="video-wrapper" id="videoWrapper">
-            <video id="visualVideo" autoplay muted loop playsinline>
-                <source src="assets/entertainment/g-star.mp4" type="video/mp4">
-            </video>
+            <div id="mainWorkContent">
+                <!-- Dynamically loaded from Supabase -->
+                <div style="display:flex; align-items:center; justify-content:center; height:100%; color:rgba(255,255,255,0.3);">
+                    <div class="loader"></div>
+                    <span style="margin-left:16px;">Loading featured work...</span>
+                </div>
+            </div>
             <div class="visual-overlay"></div>
-            <div class="video-controls">
+            <div class="visual-controls">
                 <button id="soundBtn">🔇</button>
                 <button id="fullBtn">⛶</button>
-            </div>
-            <div class="visual-content">
-                <h2>We Don't Just<br>Shoot Content.<br>We Build Atmosphere.</h2>
-                <p>Every frame is designed to feel cinematic, modern and culturally connected. Built for social media, campaigns, launch events and digital storytelling.</p>
             </div>
         </div>
     </section>
 
-    <!-- ==================== CREATOR GRID (DYNAMIC) ==================== -->
+    <!-- ==================== CREATOR GRID (3 Small Cards) ==================== -->
     <section class="creator-section" id="creators">
         <div class="section-tag">FEATURED VISUALS</div>
         <h2 class="section-title">Creative Energy<br>Captured In Motion</h2>
@@ -612,7 +829,7 @@
         </div>
     </section>
 
-    <!-- ==================== PARTNER LOGOS - DYNAMIC ==================== -->
+    <!-- ==================== PARTNER LOGOS ==================== -->
     <section class="partners-section-work" id="partners">
         <div class="container">
             <div class="section-header">
@@ -684,6 +901,30 @@
             </div>
         </div>
     </section>
+
+    <!-- ==================== SUBSCRIBE FLOAT BUTTON ==================== -->
+    <div class="subscribe-float" id="subscribeFloat">
+        <button class="subscribe-btn" id="subscribeFloatBtn" aria-label="Subscribe">
+            <i class="fa-regular fa-envelope"></i>
+        </button>
+        <span class="subscribe-label">Subscribe</span>
+    </div>
+
+    <!-- ==================== SUBSCRIBE MODAL ==================== -->
+    <div class="subscribe-modal" id="subscribeModal">
+        <div class="subscribe-modal-overlay" id="subscribeModalOverlay"></div>
+        <div class="subscribe-modal-content">
+            <button class="subscribe-modal-close" id="subscribeModalClose"><i class="fa-solid fa-xmark"></i></button>
+            <span class="modal-icon"><i class="fa-regular fa-envelope"></i></span>
+            <h2>Subscribe to 100 HUB</h2>
+            <p>Get updates on new projects, events, and creative opportunities delivered to your inbox.</p>
+            <form class="subscribe-form" id="subscribeForm">
+                <input type="email" id="subscribeEmail" placeholder="Enter your email" required />
+                <button type="submit" id="subscribeSubmitBtn">Subscribe</button>
+            </form>
+            <div class="subscribe-status" id="subscribeStatus"></div>
+        </div>
+    </div>
 
     <!-- ==================== FOOTER ==================== -->
     <footer class="footer">
@@ -789,20 +1030,11 @@
             });
         }
 
-        if (wrapper) {
-            wrapper.addEventListener("click", () => {
-                if (!document.fullscreenElement) {
-                    wrapper.requestFullscreen();
-                } else {
-                    document.exitFullscreen();
-                }
-            });
-        }
-
         // ==========================================
         // LOAD WORK ITEMS FROM SUPABASE
         // ==========================================
         async function loadWorkItems() {
+            const mainContainer = document.getElementById('mainWorkContent');
             const grid = document.getElementById('workItemsGrid');
             
             try {
@@ -810,73 +1042,168 @@
                 const data = await response.json();
                 
                 if (data.success && data.items && data.items.length > 0) {
-                    renderWorkItems(data.items, grid);
+                    const items = data.items;
+                    
+                    // Find featured main item
+                    const mainItem = items.find(item => item.is_featured_main === true);
+                    // Get other items (not featured main)
+                    const otherItems = items.filter(item => item.id !== (mainItem ? mainItem.id : null));
+                    
+                    // Render main card
+                    if (mainItem) {
+                        renderMainWorkItem(mainItem, mainContainer);
+                    } else {
+                        // If no featured main, use the first item as main
+                        if (items.length > 0) {
+                            renderMainWorkItem(items[0], mainContainer);
+                        } else {
+                            mainContainer.innerHTML = `
+                                <div style="display:flex; align-items:center; justify-content:center; height:100%; color:rgba(255,255,255,0.3);">
+                                    <p>No featured work available</p>
+                                </div>
+                            `;
+                        }
+                    }
+                    
+                    // Render grid items (first 3 non-main items)
+                    const gridItems = otherItems.slice(0, 3);
+                    if (gridItems.length > 0) {
+                        renderWorkGridItems(gridItems, grid);
+                    } else {
+                        // If no other items, use some from the main list
+                        const fallbackItems = items.filter(item => item.id !== (mainItem ? mainItem.id : null));
+                        if (fallbackItems.length > 0) {
+                            renderWorkGridItems(fallbackItems.slice(0, 3), grid);
+                        } else {
+                            grid.innerHTML = `
+                                <div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:rgba(255,255,255,0.3);">
+                                    <p>No additional work items available</p>
+                                </div>
+                            `;
+                        }
+                    }
                 } else {
-                    // Fallback to hardcoded content if no items in database
-                    renderFallbackWorkItems(grid);
+                    // Fallback to hardcoded content
+                    renderFallbackWorkItems(mainContainer, grid);
                 }
             } catch (error) {
                 console.error('Load work items error:', error);
-                renderFallbackWorkItems(grid);
+                renderFallbackWorkItems(mainContainer, grid);
             }
         }
 
-        function renderWorkItems(items, grid) {
+        function renderMainWorkItem(item, container) {
+            const isVideo = item.media_type === 'video';
+            const mediaHtml = isVideo
+                ? `<video id="visualVideo" autoplay muted loop playsinline><source src="${item.media_url}" type="video/mp4"></video>`
+                : `<img src="${item.media_url}" alt="${item.title}" style="width:100%; height:100%; object-fit:cover;" />`;
+            
+            container.innerHTML = `
+                ${mediaHtml}
+                <div class="visual-overlay"></div>
+                <div class="visual-controls">
+                    <button id="soundBtn">🔇</button>
+                    <button id="fullBtn">⛶</button>
+                </div>
+                <div class="visual-content">
+                    ${item.agency_client ? `<div class="work-agency">${item.agency_client}</div>` : ''}
+                    <h2>${item.title}</h2>
+                    <p>${item.description || ''}</p>
+                    ${item.link_url ? `<a href="${item.link_url}" target="_blank" class="work-link-btn">View Work <i class="fa-solid fa-arrow-right"></i></a>` : ''}
+                </div>
+            `;
+            
+            // Re-bind video controls
+            const newVideo = container.querySelector('#visualVideo');
+            const newSoundBtn = container.querySelector('#soundBtn');
+            const newFullBtn = container.querySelector('#fullBtn');
+            const wrapper = document.getElementById('videoWrapper');
+            
+            if (newSoundBtn && newVideo) {
+                newSoundBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    newVideo.muted = !newVideo.muted;
+                    newSoundBtn.textContent = newVideo.muted ? "🔇" : "🔊";
+                });
+            }
+            
+            if (newFullBtn && wrapper) {
+                newFullBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    if (!document.fullscreenElement) {
+                        wrapper.requestFullscreen();
+                        newFullBtn.textContent = "⤢";
+                    } else {
+                        document.exitFullscreen();
+                        newFullBtn.textContent = "⛶";
+                    }
+                });
+            }
+        }
+
+        function renderWorkGridItems(items, grid) {
             grid.innerHTML = items.map(item => `
-                <div class="creator-card" onclick="window.open('${item.media_url}', '_blank')">
+                <div class="creator-card">
                     ${item.media_type === 'video' 
                         ? `<video autoplay muted loop playsinline><source src="${item.media_url}" type="video/mp4"></video>`
-                        : `<img src="${item.media_url}" alt="${item.title}" loading="lazy" style="width:100%; height:100%; object-fit:cover;" />`
+                        : `<img src="${item.media_url}" alt="${item.title}" loading="lazy" />`
                     }
                     <div class="creator-overlay"></div>
                     <div class="creator-info">
                         <div class="creator-role">${item.category || 'FEATURED'}</div>
                         <h3>${item.title}</h3>
+                        ${item.agency_client ? `<div class="work-agency">${item.agency_client}</div>` : ''}
                         <p>${item.description || ''}</p>
+                        ${item.link_url ? `<a href="${item.link_url}" target="_blank" class="work-link-btn">View Work <i class="fa-solid fa-arrow-right"></i></a>` : ''}
                     </div>
                 </div>
             `).join('');
         }
 
-        function renderFallbackWorkItems(grid) {
+        function renderFallbackWorkItems(mainContainer, grid) {
             // Hardcoded fallback content
+            const mainItem = {
+                title: 'We Don\'t Just Shoot Content. We Build Atmosphere.',
+                description: 'Every frame is designed to feel cinematic, modern and culturally connected. Built for social media, campaigns, launch events and digital storytelling.',
+                media_url: 'assets/entertainment/g-star.mp4',
+                media_type: 'video',
+                agency_client: 'G-STAR RAW',
+                link_url: '#'
+            };
+            
+            renderMainWorkItem(mainItem, mainContainer);
+            
             const fallbackItems = [
                 {
                     title: 'Street Editorial',
                     category: 'FASHION VISUALS',
                     description: 'Fashion-driven visuals inspired by music, youth culture and nightlife energy.',
                     media_url: 'assets/entertainment/h&m.mp4',
-                    media_type: 'video'
+                    media_type: 'video',
+                    agency_client: 'H&M',
+                    link_url: '#'
                 },
                 {
                     title: 'Digital Campaigns',
                     category: 'CREATOR CONTENT',
                     description: 'Viral-ready visuals designed for creators, artists and online storytelling.',
                     media_url: 'assets/entertainment/maxhosa.mp4',
-                    media_type: 'video'
+                    media_type: 'video',
+                    agency_client: 'MAXHOSA',
+                    link_url: '#'
                 },
                 {
                     title: 'Nightlife Moments',
                     category: 'EVENT CULTURE',
                     description: 'Capturing raw atmosphere, movement and the feeling of being there.',
                     media_url: 'assets/entertainment/redbull.mp4',
-                    media_type: 'video'
+                    media_type: 'video',
+                    agency_client: 'RED BULL',
+                    link_url: '#'
                 }
             ];
             
-            grid.innerHTML = fallbackItems.map(item => `
-                <div class="creator-card">
-                    <video autoplay muted loop playsinline>
-                        <source src="${item.media_url}" type="video/mp4">
-                    </video>
-                    <div class="creator-overlay"></div>
-                    <div class="creator-info">
-                        <div class="creator-role">${item.category}</div>
-                        <h3>${item.title}</h3>
-                        <p>${item.description}</p>
-                    </div>
-                </div>
-            `).join('');
+            renderWorkGridItems(fallbackItems, grid);
         }
 
         // ==========================================
@@ -924,6 +1251,88 @@
                 </div>
             `).join('');
         }
+
+        // ==========================================
+        // SUBSCRIBE FLOAT BUTTON
+        // ==========================================
+        const subscribeFloatBtn = document.getElementById('subscribeFloatBtn');
+        const subscribeModal = document.getElementById('subscribeModal');
+        const subscribeModalOverlay = document.getElementById('subscribeModalOverlay');
+        const subscribeModalClose = document.getElementById('subscribeModalClose');
+        const subscribeForm = document.getElementById('subscribeForm');
+        const subscribeEmail = document.getElementById('subscribeEmail');
+        const subscribeStatus = document.getElementById('subscribeStatus');
+        const subscribeSubmitBtn = document.getElementById('subscribeSubmitBtn');
+
+        function openSubscribeModal() {
+            subscribeModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            subscribeEmail.focus();
+            subscribeStatus.textContent = '';
+            subscribeStatus.className = 'subscribe-status';
+        }
+
+        function closeSubscribeModal() {
+            subscribeModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        subscribeFloatBtn.addEventListener('click', openSubscribeModal);
+        subscribeModalOverlay.addEventListener('click', closeSubscribeModal);
+        subscribeModalClose.addEventListener('click', closeSubscribeModal);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeSubscribeModal();
+        });
+
+        subscribeForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = subscribeEmail.value.trim();
+            if (!email || !email.includes('@')) {
+                subscribeStatus.textContent = 'Please enter a valid email address.';
+                subscribeStatus.className = 'subscribe-status error';
+                return;
+            }
+            
+            subscribeSubmitBtn.disabled = true;
+            subscribeSubmitBtn.textContent = 'Subscribing...';
+            subscribeStatus.textContent = '';
+            subscribeStatus.className = 'subscribe-status';
+            
+            try {
+                const response = await fetch(apiUrl('subscriptions'), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    if (result.alreadySubscribed) {
+                        subscribeStatus.textContent = 'You\'re already subscribed!';
+                        subscribeStatus.className = 'subscribe-status success';
+                    } else {
+                        subscribeStatus.textContent = '✅ Successfully subscribed! Check your email.';
+                        subscribeStatus.className = 'subscribe-status success';
+                        subscribeEmail.value = '';
+                    }
+                    setTimeout(() => {
+                        closeSubscribeModal();
+                    }, 3000);
+                } else {
+                    subscribeStatus.textContent = result.error || 'Something went wrong. Please try again.';
+                    subscribeStatus.className = 'subscribe-status error';
+                }
+            } catch (error) {
+                console.error('Subscribe error:', error);
+                subscribeStatus.textContent = 'Network error. Please try again.';
+                subscribeStatus.className = 'subscribe-status error';
+            }
+            
+            subscribeSubmitBtn.disabled = false;
+            subscribeSubmitBtn.textContent = 'Subscribe';
+        });
 
         // ==========================================
         // SCROLL REVEAL
@@ -979,6 +1388,7 @@
             console.log('🎬 100 HUB — Our Work Page Loaded');
             console.log('📋 Work items loaded from database with dynamic rendering');
             console.log('🤝 Partner logos loaded from database');
+            console.log('📬 Subscribe button active');
         });
     </script>
 

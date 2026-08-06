@@ -12,6 +12,7 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANO
 
 const EMAIL_FROM = 'noreply@100hub.co.za';
 const REPLY_TO_EMAIL = '100projectsmedia@gmail.com';
+const ADMIN_EMAIL = '100projectsmedia@gmail.com';
 
 async function sendEmail({ to, subject, html }) {
     const apiKey = process.env.RESEND_API_KEY;
@@ -77,6 +78,37 @@ async function sendConfirmationEmail(email, name) {
     });
 }
 
+async function sendAdminMemberNotification(memberData) {
+    const html = `
+        <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1A1A1A;">
+            <h1 style="font-size:24px;font-weight:700;margin-bottom:16px;">🔔 New Member Application</h1>
+            <p style="font-size:16px;color:#4A4A4A;margin-bottom:20px;">A new member has applied to join the 100 HUB community.</p>
+            
+            <div style="background:#F5F5F5;border-radius:10px;padding:20px 24px;margin-bottom:24px;">
+                <p style="margin:0 0 10px;font-size:12px;color:#8A8A8A;text-transform:uppercase;letter-spacing:1px;">Applicant Details</p>
+                <p style="margin:4px 0;"><strong>Name:</strong> ${memberData.name}</p>
+                <p style="margin:4px 0;"><strong>Email:</strong> <a href="mailto:${memberData.email}">${memberData.email}</a></p>
+                <p style="margin:4px 0;"><strong>Role:</strong> ${memberData.role || 'Not specified'}</p>
+                <p style="margin:4px 0;"><strong>Skills:</strong> ${memberData.skills || 'Not specified'}</p>
+                ${memberData.website ? `<p style="margin:4px 0;"><strong>Website:</strong> <a href="${memberData.website}" target="_blank">${memberData.website}</a></p>` : ''}
+                ${memberData.social_platform && memberData.social_handle ? `<p style="margin:4px 0;"><strong>Social:</strong> ${memberData.social_platform} - @${memberData.social_handle}</p>` : ''}
+            </div>
+            
+            <p style="font-size:14px;color:#4A4A4A;line-height:1.7;">
+                <a href="https://100hub.co.za/dashboard" style="color:#E31E24;font-weight:600;">View in Dashboard →</a>
+            </p>
+            
+            <hr style="border:none;border-top:1px solid #E8E4DE;margin:32px 0;" />
+            <p style="font-size:12px;color:#B8B0A8;">100 HUB · Broadcasting &amp; Media Production Company</p>
+        </div>
+    `;
+    await sendEmail({
+        to: ADMIN_EMAIL,
+        subject: '🔔 New Member Application - 100 HUB',
+        html
+    });
+}
+
 async function sendAcceptedEmail(email, name) {
     const html = `
         <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1A1A1A;">
@@ -134,6 +166,64 @@ async function sendDeclinedEmail(email, name) {
     await sendEmail({
         to: email,
         subject: 'Update on your 100 HUB Application',
+        html
+    });
+}
+
+// ==========================================
+// SUBSCRIPTION FUNCTIONS
+// ==========================================
+
+async function sendSubscriptionConfirmation(email) {
+    const html = `
+        <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1A1A1A;">
+            <h1 style="font-size:26px;font-weight:700;margin-bottom:8px;">✅ You're Subscribed!</h1>
+            <p style="font-size:16px;color:#4A4A4A;line-height:1.7;margin-bottom:24px;">
+                Thank you for subscribing to the 100 HUB newsletter. You'll receive updates on new projects, events, and creative opportunities.
+            </p>
+            <div style="background:#F5F5F5;border-radius:10px;padding:20px 24px;margin-bottom:28px;">
+                <p style="margin:0 0 10px;font-size:12px;color:#8A8A8A;text-transform:uppercase;letter-spacing:1px;">What to expect</p>
+                <ul style="margin:0;padding-left:18px;font-size:14px;color:#4A4A4A;line-height:2;">
+                    <li>Monthly newsletter with updates</li>
+                    <li>Exclusive event invitations</li>
+                    <li>New project announcements</li>
+                    <li>Creative opportunities</li>
+                </ul>
+            </div>
+            <p style="font-size:14px;color:#8A8A8A;line-height:1.7;">
+                Follow us on Instagram 
+                <a href="https://instagram.com/100projectsmedia" style="color:#E31E24;">@100projectsmedia</a>.
+            </p>
+            <hr style="border:none;border-top:1px solid #E8E4DE;margin:32px 0;" />
+            <p style="font-size:12px;color:#B8B0A8;">100 HUB · Broadcasting &amp; Media Production Company</p>
+        </div>
+    `;
+    await sendEmail({
+        to: email,
+        subject: "✅ You're subscribed to 100 HUB!",
+        html
+    });
+}
+
+async function sendAdminSubscriptionNotification(email) {
+    const html = `
+        <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1A1A1A;">
+            <h1 style="font-size:24px;font-weight:700;margin-bottom:16px;">📬 New Subscriber</h1>
+            <p style="font-size:16px;color:#4A4A4A;margin-bottom:20px;">A new user has subscribed to the 100 HUB newsletter.</p>
+            <div style="background:#F5F5F5;border-radius:10px;padding:20px 24px;margin-bottom:24px;">
+                <p style="margin:4px 0;"><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+                <p style="margin:4px 0;"><strong>Subscribed:</strong> ${new Date().toLocaleString()}</p>
+            </div>
+            <p style="font-size:14px;color:#4A4A4A;line-height:1.7;">
+                <a href="https://100hub.co.za/dashboard" style="color:#E31E24;font-weight:600;">View all subscribers →</a>
+            </p>
+            <hr style="border:none;border-top:1px solid #E8E4DE;margin:32px 0;" />
+            <p style="font-size:12px;color:#B8B0A8;">100 HUB · Broadcasting &amp; Media Production Company</p>
+        </div>
+    `;
+    await sendEmail({
+        to: ADMIN_EMAIL,
+        subject: '📬 New Subscriber - 100 HUB',
         html
     });
 }
@@ -282,8 +372,11 @@ async function handleSignup(req, res) {
 
         if (error) throw error;
 
-        // Send confirmation email
+        // Send confirmation email to member
         await sendConfirmationEmail(email, name);
+        
+        // Send notification email to admin
+        await sendAdminMemberNotification({ name, email, role, skills, website, social_platform: socialPlatform, social_handle: socialHandle });
 
         return res.status(200).json({ success: true, message: 'Successfully joined the community!', member: data });
     } catch (error) {
@@ -382,6 +475,89 @@ async function handlePartners(req, res) {
     }
 }
 
+// SUBSCRIPTIONS
+async function handleSubscriptions(req, res) {
+    if (req.method === 'GET') {
+        if (!requireAdmin(req, res)) return;
+        try {
+            const { data, error } = await supabase
+                .from('subscriptions')
+                .select('*')
+                .order('subscribed_at', { ascending: false });
+            if (error) throw error;
+            
+            const total = data ? data.length : 0;
+            return res.status(200).json({ 
+                success: true, 
+                subscriptions: data || [],
+                count: total
+            });
+        } catch (error) {
+            return res.status(200).json({ subscriptions: [], count: 0 });
+        }
+    }
+
+    if (req.method === 'POST') {
+        try {
+            const { email } = req.body || {};
+            if (!email) return res.status(400).json({ error: 'Email is required' });
+            if (!email.includes('@')) return res.status(400).json({ error: 'Invalid email format' });
+
+            // Check if already subscribed
+            const { data: existing } = await supabase
+                .from('subscriptions')
+                .select('email')
+                .eq('email', email)
+                .single();
+
+            if (existing) {
+                return res.status(200).json({ 
+                    success: true, 
+                    message: 'Already subscribed!',
+                    alreadySubscribed: true 
+                });
+            }
+
+            const { data, error } = await supabase
+                .from('subscriptions')
+                .insert({ email, status: 'active' })
+                .select()
+                .single();
+
+            if (error) throw error;
+
+            // Send confirmation email to subscriber
+            await sendSubscriptionConfirmation(email);
+            
+            // Send notification email to admin
+            await sendAdminSubscriptionNotification(email);
+
+            return res.status(200).json({ 
+                success: true, 
+                message: 'Successfully subscribed!',
+                subscription: data 
+            });
+        } catch (error) {
+            return res.status(500).json({ error: 'Failed to subscribe: ' + error.message });
+        }
+    }
+
+    if (req.method === 'DELETE') {
+        if (!requireAdmin(req, res)) return;
+        try {
+            const { id } = req.body || {};
+            if (!id) return res.status(400).json({ error: 'ID is required' });
+            
+            const { error } = await supabase.from('subscriptions').delete().eq('id', id);
+            if (error) throw error;
+            
+            return res.status(200).json({ success: true, message: 'Subscriber deleted!' });
+        } catch (error) {
+            return res.status(500).json({ error: 'Failed to delete subscriber: ' + error.message });
+        }
+    }
+}
+
 // POSTS
 async function handlePosts(req, res) {
     if (req.method === 'GET') {
@@ -405,62 +581,25 @@ async function handlePosts(req, res) {
     if (req.method === 'POST') {
         if (!requireAdmin(req, res)) return;
         try {
-            const { url, post_id, image_url, caption, permalink, writer, article_url, is_video, video_url, published_at } = req.body || {};
+            const { post_id, image_url, caption, permalink, writer, article_url, is_video, video_url, published_at } = req.body || {};
 
-            // Manual entry
-            if (post_id && image_url) {
-                const { data: existing } = await supabase.from('posts').select('id').eq('post_id', post_id).single();
-                if (existing) return res.status(400).json({ error: 'This post already exists in the database' });
-
-                const { data: post, error } = await supabase.from('posts').insert({
-                    instagram_url: permalink || `https://www.instagram.com/p/${post_id}/`,
-                    post_id: post_id,
-                    image_url: image_url,
-                    caption: caption || '',
-                    permalink: permalink || `https://www.instagram.com/p/${post_id}/`,
-                    writer: writer || '100 HUB',
-                    is_video: is_video || false,
-                    video_url: video_url || '',
-                    article_url: article_url || '',
-                    published_at: published_at || new Date().toISOString(),
-                    status: 'published'
-                }).select().single();
-
-                if (error) throw error;
-                return res.status(200).json({ success: true, message: 'Post added successfully!', post: post });
+            if (!post_id || !image_url) {
+                return res.status(400).json({ error: 'Post ID and image URL are required' });
             }
 
-            // Auto-fetch from Instagram
-            if (!url) return res.status(400).json({ error: 'Instagram URL or manual post data is required' });
-            const postId = extractPostId(url);
-            if (!postId) return res.status(400).json({ error: 'Invalid Instagram URL' });
-
-            const { data: existing } = await supabase.from('posts').select('id').eq('post_id', postId).single();
+            const { data: existing } = await supabase.from('posts').select('id').eq('post_id', post_id).single();
             if (existing) return res.status(400).json({ error: 'This post already exists in the database' });
 
-            const instagramData = await fetchInstagramData(url);
-            if (!instagramData) return res.status(400).json({ error: 'Failed to fetch Instagram data' });
-
-            let imageUrl = instagramData.thumbnail_url;
-            if (imageUrl) {
-                const cloudinaryUrl = await uploadToCloudinary(imageUrl);
-                if (cloudinaryUrl) imageUrl = cloudinaryUrl;
-            }
-
-            const isVideo = url.includes('/reel/') || instagramData.html?.includes('video');
-            const videoUrl = isVideo ? (instagramData.media_url || '') : '';
-
             const { data: post, error } = await supabase.from('posts').insert({
-                instagram_url: url,
-                post_id: postId,
-                image_url: imageUrl || '',
-                caption: instagramData.title || '',
-                permalink: url,
-                writer: instagramData.author_name || '100 HUB',
-                is_video: isVideo,
-                video_url: videoUrl,
+                post_id: post_id,
+                image_url: image_url,
+                caption: caption || '',
+                permalink: permalink || `https://www.instagram.com/p/${post_id}/`,
+                writer: writer || '100 HUB',
+                is_video: is_video || false,
+                video_url: video_url || '',
                 article_url: article_url || '',
-                published_at: new Date().toISOString(),
+                published_at: published_at || new Date().toISOString(),
                 status: 'published'
             }).select().single();
 
@@ -510,7 +649,11 @@ async function handlePosts(req, res) {
 async function handleWorkItems(req, res) {
     if (req.method === 'GET') {
         try {
-            const { data, error } = await supabase.from('work_items').select('*').order('display_order', { ascending: true });
+            const { data, error } = await supabase
+                .from('work_items')
+                .select('*')
+                .order('display_order', { ascending: true })
+                .order('created_at', { ascending: true });
             if (error) throw error;
             return res.status(200).json({ success: true, items: data || [] });
         } catch (error) {
@@ -521,12 +664,24 @@ async function handleWorkItems(req, res) {
     if (req.method === 'POST') {
         if (!requireAdmin(req, res)) return;
         try {
-            const { title, description, media_url, media_type, category, display_order, featured } = req.body || {};
+            const { 
+                title, description, media_url, media_type, category, 
+                display_order, featured, agency_client, link_url, is_featured_main 
+            } = req.body || {};
+            
             if (!title || !media_url) return res.status(400).json({ error: 'Title and media URL are required' });
 
             const { data, error } = await supabase.from('work_items').insert({
-                title, description: description || '', media_url, media_type: media_type || 'image',
-                category: category || '', display_order: display_order || 0, featured: featured || false,
+                title, 
+                description: description || '', 
+                media_url, 
+                media_type: media_type || 'image',
+                category: category || '', 
+                display_order: display_order || 0, 
+                featured: featured || false,
+                agency_client: agency_client || '',
+                link_url: link_url || '',
+                is_featured_main: is_featured_main || false,
                 published_at: new Date().toISOString()
             }).select().single();
 
@@ -540,7 +695,11 @@ async function handleWorkItems(req, res) {
     if (req.method === 'PUT') {
         if (!requireAdmin(req, res)) return;
         try {
-            const { id, title, description, media_url, media_type, category, display_order, featured } = req.body || {};
+            const { 
+                id, title, description, media_url, media_type, category, 
+                display_order, featured, agency_client, link_url, is_featured_main 
+            } = req.body || {};
+            
             if (!id) return res.status(400).json({ error: 'ID is required' });
 
             const updates = {};
@@ -551,6 +710,9 @@ async function handleWorkItems(req, res) {
             if (category !== undefined) updates.category = category;
             if (display_order !== undefined) updates.display_order = display_order;
             if (featured !== undefined) updates.featured = featured;
+            if (agency_client !== undefined) updates.agency_client = agency_client;
+            if (link_url !== undefined) updates.link_url = link_url;
+            if (is_featured_main !== undefined) updates.is_featured_main = is_featured_main;
             updates.updated_at = new Date().toISOString();
 
             const { data, error } = await supabase.from('work_items').update(updates).eq('id', id).select().single();
@@ -730,94 +892,12 @@ async function handleUpdatePin(req, res) {
     }
 }
 
-// POSTS SYNC
-async function handlePostsSync(req, res) {
-    if (!requireAdmin(req, res)) return;
-    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-    
-    try {
-        const { feed_id = 'qBmSl39X4hdPVipZS1UR' } = req.body || {};
-        const FEED_URL = `https://feeds.behold.so/${feed_id}`;
-
-        const response = await fetch(FEED_URL);
-        if (!response.ok) throw new Error('Failed to fetch Instagram feed');
-        const data = await response.json();
-        const posts = data.posts || data;
-        if (!posts || posts.length === 0) {
-            return res.status(200).json({ success: true, message: 'No posts found in feed', synced: 0, skipped: 0 });
-        }
-
-        let synced = 0, skipped = 0;
-        const errors = [];
-
-        for (const post of posts) {
-            try {
-                const postId = post.id || post.postId || '';
-                if (!postId) { skipped++; continue; }
-
-                const { data: existing } = await supabase.from('posts').select('id').eq('post_id', postId).single();
-                if (existing) { skipped++; continue; }
-
-                let imageUrl = '';
-                if (post.sizes?.large?.mediaUrl) imageUrl = post.sizes.large.mediaUrl;
-                else if (post.mediaUrl) imageUrl = post.mediaUrl;
-                else if (post.sizes?.medium?.mediaUrl) imageUrl = post.sizes.medium.mediaUrl;
-
-                if (post.mediaType === 'CAROUSEL_ALBUM' && post.children?.length > 0) {
-                    const child = post.children[0];
-                    if (child.sizes?.large?.mediaUrl) imageUrl = child.sizes.large.mediaUrl;
-                    else if (child.mediaUrl) imageUrl = child.mediaUrl;
-                }
-
-                let cloudinaryUrl = '';
-                if (imageUrl) {
-                    cloudinaryUrl = await uploadToCloudinary(imageUrl);
-                }
-
-                const isVideo = post.mediaType === 'VIDEO' || post.isReel === true;
-                const videoUrl = isVideo ? (post.mediaUrl || '') : '';
-                const caption = post.prunedCaption || post.caption || '';
-                const permalink = post.permalink || `https://www.instagram.com/p/${postId}/`;
-
-                const { error } = await supabase.from('posts').insert({
-                    post_id: postId,
-                    image_url: cloudinaryUrl || imageUrl || '',
-                    caption: caption,
-                    permalink: permalink,
-                    writer: '100 HUB',
-                    is_video: isVideo,
-                    video_url: videoUrl,
-                    published_at: post.timestamp ? new Date(post.timestamp).toISOString() : new Date().toISOString(),
-                    status: 'published'
-                });
-
-                if (error) {
-                    errors.push({ postId, error: error.message });
-                } else {
-                    synced++;
-                }
-            } catch (error) {
-                errors.push({ postId: post.id || 'unknown', error: error.message });
-            }
-        }
-
-        return res.status(200).json({
-            success: true,
-            message: `Synced ${synced} posts, skipped ${skipped} existing posts`,
-            synced, skipped, total: posts.length,
-            errors: errors.length > 0 ? errors : undefined
-        });
-    } catch (error) {
-        return res.status(500).json({ error: 'Failed to sync posts: ' + error.message });
-    }
-}
-
 // ==========================================
 // MAIN HANDLER
 // ==========================================
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 
     if (req.method === 'OPTIONS') {
@@ -835,10 +915,10 @@ export default async function handler(req, res) {
             return handleUpdateMember(req, res);
         case 'partners':
             return handlePartners(req, res);
+        case 'subscriptions':
+            return handleSubscriptions(req, res);
         case 'posts':
             return handlePosts(req, res);
-        case 'posts-sync':
-            return handlePostsSync(req, res);
         case 'work-items':
             return handleWorkItems(req, res);
         case 'media-kit':
