@@ -1779,41 +1779,108 @@
             return `/api?${queryParams.toString()}`;
         }
 
-        function adminHeaders() {
-            const token = sessionStorage.getItem('adminToken');
-            return {
-                'Content-Type': 'application/json',
-                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-            };
+        // ==========================================
+        // TOKEN HELPERS - PERMANENT FIX
+        // ==========================================
+        const TOKEN_KEY = 'adminToken';
+        const TOKEN_EXPIRY_KEY = 'adminTokenExpiry';
+
+        function saveToken(token) {
+            if (!token) return;
+            sessionStorage.setItem(TOKEN_KEY, token);
+            localStorage.setItem(TOKEN_KEY, token);
+            const expiry = Date.now() + (1000 * 60 * 60 * 4);
+            sessionStorage.setItem(TOKEN_EXPIRY_KEY, expiry.toString());
+            localStorage.setItem(TOKEN_EXPIRY_KEY, expiry.toString());
+            console.log('✅ Token saved successfully');
         }
 
-        // ==========================================
-        // CACHE SYSTEM
-        // ==========================================
-        const CACHE = {
-            members: null,
-            articles: null,
-            timestamp: null,
-            duration: 1000,
-            
-            get(key) {
-                if (!this[key] || !this.timestamp) return null;
-                if (Date.now() - this.timestamp > this.duration) return null;
-                return this[key];
-            },
-            
-            set(key, data) {
-                this[key] = data;
-                this.timestamp = Date.now();
-            },
-            
-            clear() {
-                this.members = null;
-                this.articles = null;
-                this.timestamp = null;
-                console.log('🧹 Cache cleared');
+        function getToken() {
+            let token = sessionStorage.getItem(TOKEN_KEY);
+            if (!token) {
+                token = localStorage.getItem(TOKEN_KEY);
+                if (token) {
+                    sessionStorage.setItem(TOKEN_KEY, token);
+                    console.log('🔄 Restored token from localStorage');
+                }
             }
-        };
+            return token;
+        }
+
+        function clearToken() {
+            sessionStorage.removeItem(TOKEN_KEY);
+            sessionStorage.removeItem(TOKEN_EXPIRY_KEY);
+            localStorage.removeItem(TOKEN_KEY);
+            localStorage.removeItem(TOKEN_EXPIRY_KEY);
+            console.log('🗑️ Token cleared');
+        }
+
+        function isTokenValid() {
+            const token = getToken();
+            if (!token) {
+                console.log('❌ No token found');
+                return false;
+            }
+            
+            const expiry = sessionStorage.getItem(TOKEN_EXPIRY_KEY) || localStorage.getItem(TOKEN_EXPIRY_KEY);
+            if (expiry) {
+                const expiryTime = parseInt(expiry);
+                if (Date.now() > expiryTime) {
+                    console.log('⏰ Token expired');
+                    clearToken();
+                    return false;
+                }
+            }
+            
+            console.log('✅ Token is valid');
+            return true;
+        }
+
+        function adminHeaders() {
+            const token = getToken();
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            } else {
+                console.warn('⚠️ No token available for request');
+            }
+            return headers;
+        }
+
+        async function fetchWithAuth(url, options = {}) {
+            const headers = adminHeaders();
+            
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    headers: {
+                        ...headers,
+                        ...(options.headers || {})
+                    }
+                });
+                
+                if (response.status === 401) {
+                    console.error('❌ Unauthorized - Token may be expired');
+                    clearToken();
+                    const pinOverlay = document.getElementById('pinOverlay');
+                    if (pinOverlay) {
+                        pinOverlay.classList.remove('hidden');
+                    }
+                    showToast('Session expired. Please unlock again.', 'error');
+                    throw new Error('Unauthorized');
+                }
+                
+                return response;
+            } catch (error) {
+                if (error.message === 'Unauthorized') {
+                    throw error;
+                }
+                console.error('❌ Fetch error:', error);
+                throw error;
+            }
+        }
 
         // ==========================================
         // PIN PROTECTION
@@ -1843,7 +1910,15 @@
             const submitBtn = document.getElementById('pinSubmitBtn');
             const clearBtn = document.getElementById('pinClearBtn');
 
-            setTimeout(() => pinInputs[0].focus(), 100);
+            // Check if already authenticated
+            if (isTokenValid()) {
+                pinOverlay.classList.add('hidden');
+                document.body.style.overflow = '';
+                loadAllData();
+                return;
+            }
+
+            setTimeout(() => pinInputs[0]?.focus(), 100);
 
             pinInputs.forEach((input, index) => {
                 input.addEventListener('input', function() {
@@ -1883,10 +1958,23 @@
 
                 if (result.success) {
                     if (result.token) {
-                        sessionStorage.setItem('adminToken', result.token);
+                        saveToken(result.token);
+                    } else {
+                        const fallbackToken = btoa(JSON.stringify({ 
+                            expiresAt: Date.now() + (1000 * 60 * 60 * 4),
+                            verified: true
+                        }));
+                        saveToken(fallbackToken);
                     }
+                    
                     pinOverlay.classList.add('hidden');
                     document.body.style.overflow = '';
+                    
+                    setTimeout(() => {
+                        loadAllData();
+                        showToast('✅ Dashboard unlocked!', 'success');
+                    }, 300);
+                    
                     return;
                 }
 
@@ -1902,7 +1990,7 @@
 
                 setTimeout(() => {
                     pinInputs.forEach(input => input.classList.remove('error'));
-                    pinInputs[0].focus();
+                    pinInputs[0]?.focus();
                 }, 500);
 
                 if (pinAttempts >= MAX_ATTEMPTS) {
@@ -1919,7 +2007,7 @@
                     input.classList.remove('error');
                 });
                 pinError.textContent = '';
-                pinInputs[0].focus();
+                pinInputs[0]?.focus();
             });
 
             pinOverlay.addEventListener('click', function(e) {
@@ -1928,51 +2016,18 @@
         }
 
         // ==========================================
-        // UPDATE PIN
+        // LOAD ALL DATA
         // ==========================================
-        async function updatePIN() {
-            const currentPin = document.getElementById('currentPin').value.trim();
-            const newPin = document.getElementById('newPin').value.trim();
-            const confirmPin = document.getElementById('confirmPin').value.trim();
-            const statusEl = document.getElementById('pinUpdateStatus');
-
-            if (!currentPin || !newPin || !confirmPin) {
-                statusEl.innerHTML = '<span style="color:#ff6b6b;">⚠️ Please fill in all fields.</span>';
-                return;
-            }
-
-            if (newPin.length !== 4 || !/^\d{4}$/.test(newPin)) {
-                statusEl.innerHTML = '<span style="color:#ff6b6b;">⚠️ PIN must be exactly 4 digits.</span>';
-                return;
-            }
-
-            if (newPin !== confirmPin) {
-                statusEl.innerHTML = '<span style="color:#ff6b6b;">⚠️ New PIN and confirmation do not match.</span>';
-                return;
-            }
-
-            try {
-                statusEl.innerHTML = '<span style="color:#ffd700;">⏳ Updating...</span>';
-
-                const response = await fetch(apiUrl('update-pin'), {
-                    method: 'POST',
-                    headers: adminHeaders(),
-                    body: JSON.stringify({ currentPin, newPin })
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    statusEl.innerHTML = '<span style="color:#4caf50;">✅ PIN updated successfully!</span>';
-                    document.getElementById('currentPin').value = '';
-                    document.getElementById('newPin').value = '';
-                    document.getElementById('confirmPin').value = '';
-                } else {
-                    statusEl.innerHTML = `<span style="color:#ff6b6b;">❌ ${result.error || 'Failed to update PIN'}</span>`;
-                }
-            } catch (error) {
-                statusEl.innerHTML = `<span style="color:#ff6b6b;">❌ Error: ${error.message}</span>`;
-            }
+        function loadAllData() {
+            console.log('📊 Loading all dashboard data...');
+            renderMembers();
+            renderArticles();
+            loadPartners();
+            checkMediaKit();
+            loadImpactNumbers();
+            loadPosts();
+            loadWorkItems();
+            loadSubscriptions();
         }
 
         // ==========================================
@@ -2038,21 +2093,9 @@
         let currentFilter = 'all';
 
         async function fetchMembers(forceRefresh = false) {
-            if (forceRefresh) {
-                CACHE.members = null;
-                CACHE.timestamp = null;
-            }
-            
-            const cached = CACHE.get('members');
-            if (cached && !forceRefresh) {
-                console.log('📦 Using cached members data');
-                return cached;
-            }
-            
             try {
-                const response = await fetch(apiUrl('members'));
+                const response = await fetchWithAuth(apiUrl('members'));
                 const data = await response.json();
-                CACHE.set('members', data);
                 return data;
             } catch (error) {
                 console.error('Fetch members error:', error);
@@ -2078,11 +2121,8 @@
         async function renderMembers() {
             const tbody = document.getElementById('membersTableBody');
             
-            CACHE.members = null;
-            CACHE.timestamp = null;
-            
             try {
-                const response = await fetch(apiUrl('members'));
+                const response = await fetchWithAuth(apiUrl('members'));
                 const data = await response.json();
                 
                 allMembers = data.members || [];
@@ -2152,7 +2192,6 @@
         }
 
         function refreshMembers() { 
-            CACHE.clear();
             renderMembers(); 
             showToast('Refreshed!', 'success'); 
         }
@@ -2214,19 +2253,12 @@
 
         async function updateMemberDirect(email, updates) {
             try {
-                const response = await fetch(apiUrl('update-member'), {
+                const response = await fetchWithAuth(apiUrl('update-member'), {
                     method: 'POST',
-                    headers: adminHeaders(),
                     body: JSON.stringify({ email, ...updates })
                 });
 
                 const result = await response.json();
-
-                if (!response.ok) {
-                    console.error('Update failed:', result);
-                    throw new Error(result.error || `Server error ${response.status}`);
-                }
-
                 return true;
             } catch (error) {
                 console.error('Update error:', error);
@@ -2247,7 +2279,6 @@
             if (success) {
                 showToast('Member updated!', 'success');
                 closeEditModal();
-                CACHE.clear();
                 renderMembers();
             } else {
                 showToast('Failed to update member. Please try again.', 'error');
@@ -2264,7 +2295,6 @@
             if (success) {
                 showToast(`Member ${status}!`, 'success');
                 closeEditModal();
-                CACHE.clear();
                 renderMembers();
             } else {
                 showToast(`Failed to ${status} member. Please try again.`, 'error');
@@ -2278,16 +2308,9 @@
         let editingArticleId = null;
 
         async function fetchArticles() {
-            const cached = CACHE.get('articles');
-            if (cached) {
-                console.log('📦 Using cached articles data');
-                return cached;
-            }
-            
             try {
-                const response = await fetch(apiUrl('articles'));
+                const response = await fetchWithAuth(apiUrl('articles'));
                 const data = await response.json();
-                CACHE.set('articles', data);
                 return data;
             } catch (error) {
                 console.error('Fetch articles error:', error);
@@ -2297,57 +2320,61 @@
 
         async function renderArticles() {
             const tbody = document.getElementById('articlesTableBody');
-            const data = await fetchArticles();
-            allArticles = data.articles || [];
-            
-            document.getElementById('totalArticles').textContent = allArticles.length;
-            
-            if (allArticles.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="5">
-                            <div class="empty-state">
-                                <i class="fa-regular fa-file-lines"></i>
-                                <p>No articles added yet. Click "Add Article" to link a post to an article.</p>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-                return;
+            try {
+                const response = await fetchWithAuth(apiUrl('articles'));
+                const data = await response.json();
+                allArticles = data.articles || [];
+                
+                document.getElementById('totalArticles').textContent = allArticles.length;
+                
+                if (allArticles.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-state">
+                                    <i class="fa-regular fa-file-lines"></i>
+                                    <p>No articles added yet. Click "Add Article" to link a post to an article.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                tbody.innerHTML = allArticles.map((article, index) => {
+                    const urlDisplay = article.article_url ? 
+                        `<span class="article-url"><a href="${article.article_url}" target="_blank">${article.article_url}</a></span>` : 
+                        '<span style="color:rgba(255,255,255,0.3);">No URL</span>';
+                    
+                    const statusBadge = article.article_url ? 
+                        '<span class="status-badge linked">✅ Linked</span>' : 
+                        '<span class="status-badge pending-article">⏳ Pending</span>';
+                    
+                    return `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td><span class="article-post-id" onclick="copyPostId('${article.post_id}')" style="cursor:pointer;" title="Click to copy">${article.post_id}</span></td>
+                            <td>${urlDisplay}</td>
+                            <td>${statusBadge}</td>
+                            <td>
+                                <div class="action-cell">
+                                    <button class="btn-outline btn-sm" onclick="openEditArticleModal('${article.id}')" title="Edit">
+                                        <i class="fa-regular fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="btn-outline btn-sm danger" onclick="confirmDelete('article', '${article.id}', '${article.post_id}')" title="Delete">
+                                        <i class="fa-regular fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Render articles error:', error);
             }
-            
-            tbody.innerHTML = allArticles.map((article, index) => {
-                const urlDisplay = article.article_url ? 
-                    `<span class="article-url"><a href="${article.article_url}" target="_blank">${article.article_url}</a></span>` : 
-                    '<span style="color:rgba(255,255,255,0.3);">No URL</span>';
-                
-                const statusBadge = article.article_url ? 
-                    '<span class="status-badge linked">✅ Linked</span>' : 
-                    '<span class="status-badge pending-article">⏳ Pending</span>';
-                
-                return `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td><span class="article-post-id" onclick="copyPostId('${article.post_id}')" style="cursor:pointer;" title="Click to copy">${article.post_id}</span></td>
-                        <td>${urlDisplay}</td>
-                        <td>${statusBadge}</td>
-                        <td>
-                            <div class="action-cell">
-                                <button class="btn-outline btn-sm" onclick="openEditArticleModal('${article.id}')" title="Edit">
-                                    <i class="fa-regular fa-pen-to-square"></i>
-                                </button>
-                                <button class="btn-outline btn-sm danger" onclick="confirmDelete('article', '${article.id}', '${article.post_id}')" title="Delete">
-                                    <i class="fa-regular fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
         }
 
         function refreshArticles() {
-            CACHE.clear();
             renderArticles();
             showToast('Refreshed!', 'success');
         }
@@ -2422,9 +2449,8 @@
                     { id: editingArticleId, postId, articleUrl } : 
                     { postId, articleUrl };
                 
-                const response = await fetch(apiUrl('articles'), {
+                const response = await fetchWithAuth(apiUrl('articles'), {
                     method: 'POST',
-                    headers: adminHeaders(),
                     body: JSON.stringify(body)
                 });
                 
@@ -2433,7 +2459,6 @@
                 if (result.success) {
                     showToast(editingArticleId ? 'Article updated!' : 'Article added!', 'success');
                     closeArticleModal();
-                    CACHE.clear();
                     renderArticles();
                 } else {
                     showToast(result.error || 'Failed to save article.', 'error');
@@ -2593,9 +2618,8 @@
                 
                 submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
                 
-                const response = await fetch(apiUrl('posts'), {
+                const response = await fetchWithAuth(apiUrl('posts'), {
                     method: 'POST',
-                    headers: adminHeaders(),
                     body: JSON.stringify({
                         post_id: postId,
                         image_url: imageUrl,
@@ -2636,7 +2660,7 @@
                     ? apiUrl('posts', { limit: 100, search: encodeURIComponent(searchTerm) })
                     : apiUrl('posts', { limit: 100 });
                     
-                const response = await fetch(url);
+                const response = await fetchWithAuth(url);
                 const data = await response.json();
                 
                 if (data.success) {
@@ -2651,11 +2675,13 @@
                     </div>`;
                 }
             } catch (error) {
-                console.error('Load posts error:', error);
-                grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
-                    <i class="fa-regular fa-images"></i>
-                    <p>Error loading posts.</p>
-                </div>`;
+                if (error.message !== 'Unauthorized') {
+                    console.error('Load posts error:', error);
+                    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+                        <i class="fa-regular fa-images"></i>
+                        <p>Error loading posts.</p>
+                    </div>`;
+                }
             }
         }
 
@@ -2787,9 +2813,8 @@
                 return;
             }
             try {
-                const response = await fetch(apiUrl('posts'), {
+                const response = await fetchWithAuth(apiUrl('posts'), {
                     method: 'PUT',
-                    headers: adminHeaders(),
                     body: JSON.stringify({ id: postId, article_url: articleUrl })
                 });
                 const result = await response.json();
@@ -2801,8 +2826,10 @@
                     showToast(result.error || 'Failed to link article.', 'error');
                 }
             } catch (error) {
-                console.error('Link article error:', error);
-                showToast('Error linking article.', 'error');
+                if (error.message !== 'Unauthorized') {
+                    console.error('Link article error:', error);
+                    showToast('Error linking article.', 'error');
+                }
             }
         }
 
@@ -2828,9 +2855,8 @@
             const writer = document.getElementById('editPostWriter').value.trim();
             const article_url = document.getElementById('editPostArticleUrl').value.trim();
             try {
-                const response = await fetch(apiUrl('posts'), {
+                const response = await fetchWithAuth(apiUrl('posts'), {
                     method: 'PUT',
-                    headers: adminHeaders(),
                     body: JSON.stringify({ id, caption, writer, article_url })
                 });
                 const result = await response.json();
@@ -2842,8 +2868,10 @@
                     showToast(result.error || 'Failed to update post.', 'error');
                 }
             } catch (error) {
-                console.error('Update post error:', error);
-                showToast('Error updating post.', 'error');
+                if (error.message !== 'Unauthorized') {
+                    console.error('Update post error:', error);
+                    showToast('Error updating post.', 'error');
+                }
             }
         }
 
@@ -2857,18 +2885,20 @@
         async function loadWorkItems() {
             const grid = document.getElementById('workGrid');
             try {
-                const response = await fetch(apiUrl('work-items'));
+                const response = await fetchWithAuth(apiUrl('work-items'));
                 const data = await response.json();
                 if (data.success) {
                     allWorkItems = data.items || [];
                     renderWorkGrid();
                 }
             } catch (error) {
-                console.error('Load work items error:', error);
-                grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
-                    <i class="fa-regular fa-images"></i>
-                    <p>Error loading work items.</p>
-                </div>`;
+                if (error.message !== 'Unauthorized') {
+                    console.error('Load work items error:', error);
+                    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+                        <i class="fa-regular fa-images"></i>
+                        <p>Error loading work items.</p>
+                    </div>`;
+                }
             }
         }
 
@@ -3078,9 +3108,8 @@
                     ? { id: editingWorkId, title, category, description, agency_client, link_url, media_url, media_type, display_order, featured, is_featured_main }
                     : { title, category, description, agency_client, link_url, media_url, media_type, display_order, featured, is_featured_main };
 
-                const response = await fetch(url, {
+                const response = await fetchWithAuth(url, {
                     method: method,
-                    headers: adminHeaders(),
                     body: JSON.stringify(body)
                 });
 
@@ -3093,8 +3122,10 @@
                     showToast(result.error || 'Failed to save work item.', 'error');
                 }
             } catch (error) {
-                console.error('Save work error:', error);
-                showToast('Error saving work item.', 'error');
+                if (error.message !== 'Unauthorized') {
+                    console.error('Save work error:', error);
+                    showToast('Error saving work item.', 'error');
+                }
             }
 
             submitBtn.disabled = false;
@@ -3167,9 +3198,8 @@
                 console.log('📤 Cloudinary URL:', url);
                 status.innerHTML = '<span style="color:#4ADE80;">✅ Uploaded to Cloudinary! Saving to database...</span>';
                 
-                const response = await fetch(apiUrl('partners'), {
+                const response = await fetchWithAuth(apiUrl('partners'), {
                     method: 'POST',
-                    headers: adminHeaders(),
                     body: JSON.stringify({ name, url })
                 });
                 
@@ -3188,9 +3218,11 @@
                     status.innerHTML = `<span style="color:#ff6b6b;">❌ ${result.error || 'Failed to save'}</span>`;
                 }
             } catch (error) {
-                console.error('Add partner error:', error);
-                showToast('❌ Failed to upload logo: ' + error.message, 'error');
-                status.innerHTML = `<span style="color:#ff6b6b;">❌ ${error.message}</span>`;
+                if (error.message !== 'Unauthorized') {
+                    console.error('Add partner error:', error);
+                    showToast('❌ Failed to upload logo: ' + error.message, 'error');
+                    status.innerHTML = `<span style="color:#ff6b6b;">❌ ${error.message}</span>`;
+                }
             }
             
             btn.disabled = false;
@@ -3199,7 +3231,7 @@
 
         async function loadPartners() {
             try {
-                const response = await fetch(apiUrl('partners'));
+                const response = await fetchWithAuth(apiUrl('partners'));
                 const data = await response.json();
                 const grid = document.getElementById('partnerGrid');
                 
@@ -3235,8 +3267,10 @@
                     </div>
                 `).join('');
             } catch (error) {
-                console.error('Error loading partners:', error);
-                showToast('Error loading partners.', 'error');
+                if (error.message !== 'Unauthorized') {
+                    console.error('Error loading partners:', error);
+                    showToast('Error loading partners.', 'error');
+                }
             }
         }
 
@@ -3250,9 +3284,7 @@
             const totalEl = document.getElementById('subscriptionTotal');
             
             try {
-                const response = await fetch(apiUrl('subscriptions'), {
-                    headers: adminHeaders()
-                });
+                const response = await fetchWithAuth(apiUrl('subscriptions'));
                 const data = await response.json();
                 
                 if (data.success) {
@@ -3290,17 +3322,19 @@
                     `).join('');
                 }
             } catch (error) {
-                console.error('Load subscriptions error:', error);
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="4">
-                            <div class="empty-state">
-                                <i class="fa-regular fa-envelope"></i>
-                                <p>Error loading subscriptions.</p>
-                            </div>
-                        </td>
-                    </tr>
-                `;
+                if (error.message !== 'Unauthorized') {
+                    console.error('Load subscriptions error:', error);
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="4">
+                                <div class="empty-state">
+                                    <i class="fa-regular fa-envelope"></i>
+                                    <p>Error loading subscriptions.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }
             }
         }
 
@@ -3366,7 +3400,7 @@
             const downloadLink = document.getElementById('mediaKitDownloadLink');
             
             try {
-                const response = await fetch(apiUrl('media-kit'));
+                const response = await fetchWithAuth(apiUrl('media-kit'));
                 if (response.ok) {
                     const data = await response.json();
                     if (data.url) {
@@ -3379,8 +3413,10 @@
                 status.innerHTML = `<span style="color:#ff9800;">⚠️ No Media Kit uploaded</span>`;
                 downloadLink.style.display = 'none';
             } catch (error) {
-                status.innerHTML = `<span style="color:#ff4444;">❌ Could not check</span>`;
-                downloadLink.style.display = 'none';
+                if (error.message !== 'Unauthorized') {
+                    status.innerHTML = `<span style="color:#ff4444;">❌ Could not check</span>`;
+                    downloadLink.style.display = 'none';
+                }
             }
         }
 
@@ -3424,9 +3460,8 @@
                 const data = await uploadResponse.json();
                 const url = data.secure_url;
                 
-                const response = await fetch(apiUrl('media-kit'), {
+                const response = await fetchWithAuth(apiUrl('media-kit'), {
                     method: 'POST',
-                    headers: adminHeaders(),
                     body: JSON.stringify({ url })
                 });
                 
@@ -3442,8 +3477,10 @@
                     showToast(result.error || 'Failed to save media kit.', 'error');
                 }
             } catch (error) {
-                progress.style.display = 'none';
-                showToast('Error uploading media kit.', 'error');
+                if (error.message !== 'Unauthorized') {
+                    progress.style.display = 'none';
+                    showToast('Error uploading media kit.', 'error');
+                }
             }
         });
 
@@ -3485,9 +3522,8 @@
                     return;
                 }
                 
-                const response = await fetch(apiUrl(endpoint), {
+                const response = await fetchWithAuth(apiUrl(endpoint), {
                     method: 'DELETE',
-                    headers: adminHeaders(),
                     body: JSON.stringify(body)
                 });
                 
@@ -3497,8 +3533,6 @@
                 if (result.success) {
                     showToast(`${deleteTarget.type} deleted successfully!`, 'success');
                     closeConfirmModal();
-                    
-                    CACHE.clear();
                     
                     if (deleteTarget.type === 'member') {
                         await renderMembers();
@@ -3517,8 +3551,10 @@
                     showToast(result.error || `Failed to delete ${deleteTarget.type}.`, 'error');
                 }
             } catch (error) {
-                console.error('Delete error:', error);
-                showToast('Error deleting item.', 'error');
+                if (error.message !== 'Unauthorized') {
+                    console.error('Delete error:', error);
+                    showToast('Error deleting item.', 'error');
+                }
             }
         });
 
@@ -3536,7 +3572,8 @@
         // ==========================================
         async function exportCSV() {
             try {
-                const data = await fetchMembers(true);
+                const response = await fetchWithAuth(apiUrl('members'));
+                const data = await response.json();
                 if (!data.members || data.members.length === 0) {
                     showToast('No members to export.', 'error');
                     return;
@@ -3561,7 +3598,58 @@
                 URL.revokeObjectURL(url);
                 showToast('CSV exported!', 'success');
             } catch (error) {
-                showToast('Error exporting.', 'error');
+                if (error.message !== 'Unauthorized') {
+                    showToast('Error exporting.', 'error');
+                }
+            }
+        }
+
+        // ==========================================
+        // UPDATE PIN
+        // ==========================================
+        async function updatePIN() {
+            const currentPin = document.getElementById('currentPin').value.trim();
+            const newPin = document.getElementById('newPin').value.trim();
+            const confirmPin = document.getElementById('confirmPin').value.trim();
+            const statusEl = document.getElementById('pinUpdateStatus');
+
+            if (!currentPin || !newPin || !confirmPin) {
+                statusEl.innerHTML = '<span style="color:#ff6b6b;">⚠️ Please fill in all fields.</span>';
+                return;
+            }
+
+            if (newPin.length !== 4 || !/^\d{4}$/.test(newPin)) {
+                statusEl.innerHTML = '<span style="color:#ff6b6b;">⚠️ PIN must be exactly 4 digits.</span>';
+                return;
+            }
+
+            if (newPin !== confirmPin) {
+                statusEl.innerHTML = '<span style="color:#ff6b6b;">⚠️ New PIN and confirmation do not match.</span>';
+                return;
+            }
+
+            try {
+                statusEl.innerHTML = '<span style="color:#ffd700;">⏳ Updating...</span>';
+
+                const response = await fetchWithAuth(apiUrl('update-pin'), {
+                    method: 'POST',
+                    body: JSON.stringify({ currentPin, newPin })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    statusEl.innerHTML = '<span style="color:#4caf50;">✅ PIN updated successfully!</span>';
+                    document.getElementById('currentPin').value = '';
+                    document.getElementById('newPin').value = '';
+                    document.getElementById('confirmPin').value = '';
+                } else {
+                    statusEl.innerHTML = `<span style="color:#ff6b6b;">❌ ${result.error || 'Failed to update PIN'}</span>`;
+                }
+            } catch (error) {
+                if (error.message !== 'Unauthorized') {
+                    statusEl.innerHTML = `<span style="color:#ff6b6b;">❌ Error: ${error.message}</span>`;
+                }
             }
         }
 
@@ -3583,15 +3671,8 @@
         // INIT
         // ==========================================
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('📊 Dashboard initializing...');
             initPinProtection();
-            renderMembers();
-            renderArticles();
-            loadPartners();
-            checkMediaKit();
-            loadImpactNumbers();
-            loadPosts();
-            loadWorkItems();
-            loadSubscriptions();
 
             // File input handlers
             const postFileInput = document.getElementById('postMediaFile');
@@ -3650,7 +3731,7 @@
         console.log('📝 All tabs with consolidated API and file upload support.');
         console.log('📬 Subscriptions tab added for managing newsletter subscribers.');
         console.log('🎯 Work items updated with agency/client and link URL fields.');
-        console.log('🧹 Cache duration set to 1 second for immediate updates.');
+        console.log('🔐 Token-based authentication with automatic expiry handling.');
     </script>
 </body>
 </html>

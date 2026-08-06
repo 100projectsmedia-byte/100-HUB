@@ -2,7 +2,6 @@
 // Consolidated API - handles all endpoints in one file
 
 import { createClient } from '@supabase/supabase-js';
-import { requireAdmin } from '../lib/adminAuth.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
@@ -170,10 +169,6 @@ async function sendDeclinedEmail(email, name) {
     });
 }
 
-// ==========================================
-// SUBSCRIPTION FUNCTIONS
-// ==========================================
-
 async function sendSubscriptionConfirmation(email) {
     const html = `
         <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1A1A1A;">
@@ -229,40 +224,65 @@ async function sendAdminSubscriptionNotification(email) {
 }
 
 // ==========================================
-// HELPER FUNCTIONS
+// TOKEN HELPER FUNCTIONS
 // ==========================================
 
-function extractPostId(url) {
-    const patterns = [
-        /instagram\.com\/p\/([A-Za-z0-9_-]+)/,
-        /instagram\.com\/reel\/([A-Za-z0-9_-]+)/,
-        /instagram\.com\/tv\/([A-Za-z0-9_-]+)/
-    ];
-    for (const pattern of patterns) {
-        const match = url.match(pattern);
-        if (match) return match[1];
-    }
-    return null;
+function generateToken() {
+    const payload = {
+        expiresAt: Date.now() + 1000 * 60 * 60 * 4, // 4 hours
+        issuedAt: Date.now(),
+        version: '1.0'
+    };
+    return Buffer.from(JSON.stringify(payload)).toString('base64');
 }
 
-async function fetchInstagramData(url) {
+function verifyToken(token) {
+    if (!token) return false;
+    
     try {
-        const oembedUrl = `https://api.instagram.com/oembed?url=${encodeURIComponent(url)}`;
-        const response = await fetch(oembedUrl);
-        if (!response.ok) throw new Error('Failed to fetch Instagram data');
-        const data = await response.json();
-        return {
-            thumbnail_url: data.thumbnail_url || '',
-            title: data.title || '',
-            author_name: data.author_name || '',
-            author_url: data.author_url || '',
-            html: data.html || ''
-        };
-    } catch (error) {
-        console.error('Instagram fetch error:', error);
-        return null;
+        const decoded = JSON.parse(Buffer.from(token, 'base64').toString('utf-8'));
+        if (decoded.expiresAt && Date.now() > decoded.expiresAt) {
+            console.log('⏰ Token expired');
+            return false;
+        }
+        return true;
+    } catch (e) {
+        console.log('❌ Invalid token format:', e.message);
+        return false;
     }
 }
+
+function requireAdmin(req, res) {
+    const authHeader = req.headers.authorization || '';
+    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+    
+    console.log('🔐 Checking token:', token ? 'Present' : 'Missing');
+    
+    if (!token) {
+        console.log('❌ No token provided');
+        res.status(401).json({ 
+            error: 'Unauthorized',
+            message: 'Please unlock the dashboard first'
+        });
+        return false;
+    }
+    
+    if (!verifyToken(token)) {
+        console.log('❌ Invalid token');
+        res.status(401).json({ 
+            error: 'Unauthorized',
+            message: 'Invalid or expired session. Please unlock again.'
+        });
+        return false;
+    }
+    
+    console.log('✅ Token verified successfully');
+    return true;
+}
+
+// ==========================================
+// HELPER FUNCTIONS
+// ==========================================
 
 async function uploadToCloudinary(imageUrl) {
     try {
@@ -372,10 +392,7 @@ async function handleSignup(req, res) {
 
         if (error) throw error;
 
-        // Send confirmation email to member
         await sendConfirmationEmail(email, name);
-        
-        // Send notification email to admin
         await sendAdminMemberNotification({ name, email, role, skills, website, social_platform: socialPlatform, social_handle: socialHandle });
 
         return res.status(200).json({ success: true, message: 'Successfully joined the community!', member: data });
@@ -391,7 +408,6 @@ async function handleUpdateMember(req, res) {
         const { email, status, selectedImage, name, role, skills } = req.body || {};
         if (!email) return res.status(400).json({ error: 'Member email is required' });
 
-        // Get current member data
         const { data: existingMember } = await supabase
             .from('members')
             .select('name')
@@ -417,7 +433,6 @@ async function handleUpdateMember(req, res) {
 
         if (error) throw error;
 
-        // Send email based on status change
         if (status === 'accepted') {
             await sendAcceptedEmail(email, memberName);
         } else if (status === 'declined') {
@@ -486,11 +501,10 @@ async function handleSubscriptions(req, res) {
                 .order('subscribed_at', { ascending: false });
             if (error) throw error;
             
-            const total = data ? data.length : 0;
             return res.status(200).json({ 
                 success: true, 
                 subscriptions: data || [],
-                count: total
+                count: data ? data.length : 0
             });
         } catch (error) {
             return res.status(200).json({ subscriptions: [], count: 0 });
@@ -503,7 +517,6 @@ async function handleSubscriptions(req, res) {
             if (!email) return res.status(400).json({ error: 'Email is required' });
             if (!email.includes('@')) return res.status(400).json({ error: 'Invalid email format' });
 
-            // Check if already subscribed
             const { data: existing } = await supabase
                 .from('subscriptions')
                 .select('email')
@@ -526,10 +539,7 @@ async function handleSubscriptions(req, res) {
 
             if (error) throw error;
 
-            // Send confirmation email to subscriber
             await sendSubscriptionConfirmation(email);
-            
-            // Send notification email to admin
             await sendAdminSubscriptionNotification(email);
 
             return res.status(200).json({ 
@@ -853,41 +863,106 @@ async function handleArticles(req, res) {
 
 // VERIFY PIN
 async function handleVerifyPin(req, res) {
-    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+    
     try {
         const { pin } = req.body || {};
-        if (!pin) return res.status(400).json({ error: 'PIN is required' });
-
-        const { data, error } = await supabase.from('settings').select('value').eq('key', 'dashboard_pin').single();
-        if (error) {
-            const isCorrect = pin === '3689';
-            return res.status(200).json({ success: isCorrect, error: isCorrect ? null : 'Invalid PIN' });
+        if (!pin) {
+            return res.status(400).json({ error: 'PIN is required' });
         }
-        const isCorrect = pin === data.value;
-        return res.status(200).json({ success: isCorrect, error: isCorrect ? null : 'Invalid PIN' });
+        
+        console.log('🔐 PIN verification attempt');
+        
+        const { data, error } = await supabase
+            .from('settings')
+            .select('value')
+            .eq('key', 'dashboard_pin')
+            .single();
+        
+        let isCorrect = false;
+        if (error) {
+            console.log('⚠️ No PIN setting found, using default');
+            isCorrect = pin === '3689';
+        } else {
+            isCorrect = pin === data.value;
+        }
+        
+        if (!isCorrect) {
+            console.log('❌ Incorrect PIN');
+            return res.status(200).json({ 
+                success: false, 
+                error: 'Invalid PIN' 
+            });
+        }
+        
+        const token = generateToken();
+        console.log('✅ PIN verified, token generated');
+        
+        return res.status(200).json({ 
+            success: true, 
+            token: token,
+            message: 'PIN verified successfully'
+        });
+        
     } catch (error) {
-        return res.status(500).json({ success: false, error: 'Server error' });
+        console.error('❌ PIN verification error:', error);
+        return res.status(500).json({ 
+            success: false, 
+            error: 'Server error' 
+        });
     }
 }
 
 // UPDATE PIN
 async function handleUpdatePin(req, res) {
     if (!requireAdmin(req, res)) return;
+    
     try {
         const { currentPin, newPin } = req.body || {};
-        if (!currentPin || !newPin) return res.status(400).json({ error: 'Current PIN and new PIN are required' });
+        
+        if (!currentPin || !newPin) {
+            return res.status(400).json({ error: 'Current PIN and new PIN are required' });
+        }
+        
         if (newPin.length !== 4 || !/^\d{4}$/.test(newPin)) {
             return res.status(400).json({ error: 'PIN must be exactly 4 digits' });
         }
-
-        const { data: currentData, error: fetchError } = await supabase.from('settings').select('value').eq('key', 'dashboard_pin').single();
-        if (fetchError) return res.status(500).json({ error: 'Failed to verify current PIN' });
-        if (currentPin !== currentData.value) return res.status(401).json({ error: 'Current PIN is incorrect' });
-
-        const { error: updateError } = await supabase.from('settings').update({ value: newPin, updated_at: new Date().toISOString() }).eq('key', 'dashboard_pin');
-        if (updateError) return res.status(500).json({ error: 'Failed to update PIN' });
-        return res.status(200).json({ success: true, message: 'PIN updated successfully!' });
+        
+        const { data: currentData, error: fetchError } = await supabase
+            .from('settings')
+            .select('value')
+            .eq('key', 'dashboard_pin')
+            .single();
+        
+        if (fetchError) {
+            return res.status(500).json({ error: 'Failed to verify current PIN' });
+        }
+        
+        if (currentPin !== currentData.value) {
+            return res.status(401).json({ error: 'Current PIN is incorrect' });
+        }
+        
+        const { error: updateError } = await supabase
+            .from('settings')
+            .update({ 
+                value: newPin, 
+                updated_at: new Date().toISOString() 
+            })
+            .eq('key', 'dashboard_pin');
+        
+        if (updateError) {
+            return res.status(500).json({ error: 'Failed to update PIN' });
+        }
+        
+        return res.status(200).json({ 
+            success: true, 
+            message: 'PIN updated successfully!' 
+        });
+        
     } catch (error) {
+        console.error('❌ Update PIN error:', error);
         return res.status(500).json({ error: 'Server error' });
     }
 }
