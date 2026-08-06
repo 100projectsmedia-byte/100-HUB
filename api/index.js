@@ -2,6 +2,7 @@
 // Consolidated API - handles all endpoints in one file
 
 import { createClient } from '@supabase/supabase-js';
+import crypto from 'crypto';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
@@ -281,6 +282,140 @@ function requireAdmin(req, res) {
 }
 
 // ==========================================
+// CLOUDINARY HELPER FUNCTIONS
+// ==========================================
+
+const CLOUDINARY_CLOUD_NAME = 'dfozevcbl';
+const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
+const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;
+
+/**
+ * Extract the public ID from a Cloudinary URL
+ * Example: https://res.cloudinary.com/dfozevcbl/image/upload/v1234567890/folder/filename.jpg
+ * Returns: folder/filename
+ */
+function extractCloudinaryPublicId(url) {
+    if (!url) return null;
+    
+    // Check if it's a Cloudinary URL
+    if (!url.includes('cloudinary.com') && !url.includes('res.cloudinary.com')) {
+        return null;
+    }
+    
+    try {
+        // Remove everything before /upload/
+        const uploadIndex = url.indexOf('/upload/');
+        if (uploadIndex === -1) return null;
+        
+        let path = url.substring(uploadIndex + 8); // +8 for '/upload/'
+        
+        // Remove version prefix (v1234567890/)
+        if (path.startsWith('v') && path.includes('/')) {
+            path = path.substring(path.indexOf('/') + 1);
+        }
+        
+        // Remove file extension
+        const extIndex = path.lastIndexOf('.');
+        if (extIndex !== -1) {
+            path = path.substring(0, extIndex);
+        }
+        
+        // Also remove any query parameters
+        const queryIndex = path.indexOf('?');
+        if (queryIndex !== -1) {
+            path = path.substring(0, queryIndex);
+        }
+        
+        return path;
+    } catch (error) {
+        console.error('Error extracting public ID:', error);
+        return null;
+    }
+}
+
+/**
+ * Delete a file from Cloudinary
+ * @param {string} url - The full Cloudinary URL
+ * @returns {Promise<boolean>} - True if deleted successfully
+ */
+async function deleteFromCloudinary(url) {
+    if (!url) {
+        console.log('ℹ️ No URL provided for Cloudinary deletion');
+        return true; // Nothing to delete
+    }
+    
+    const publicId = extractCloudinaryPublicId(url);
+    if (!publicId) {
+        console.log('ℹ️ URL is not a Cloudinary URL, skipping deletion:', url.substring(0, 100));
+        return true; // Not a Cloudinary URL, nothing to delete
+    }
+    
+    // Check for API credentials
+    if (!CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET) {
+        console.warn('⚠️ Cloudinary API credentials not set, cannot delete file');
+        return false;
+    }
+    
+    try {
+        const timestamp = Math.round(Date.now() / 1000);
+        const signature = crypto
+            .createHash('sha256')
+            .update(`public_id=${publicId}&timestamp=${timestamp}${CLOUDINARY_API_SECRET}`)
+            .digest('hex');
+        
+        const formData = new FormData();
+        formData.append('public_id', publicId);
+        formData.append('signature', signature);
+        formData.append('api_key', CLOUDINARY_API_KEY);
+        formData.append('timestamp', timestamp);
+        formData.append('invalidate', 'true');
+        
+        const response = await fetch(
+            `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/destroy`,
+            {
+                method: 'POST',
+                body: formData
+            }
+        );
+        
+        const result = await response.json();
+        
+        if (result.result === 'ok') {
+            console.log(`✅ Deleted from Cloudinary: ${publicId}`);
+            return true;
+        } else {
+            console.warn(`⚠️ Cloudinary deletion returned: ${result.result} - ${JSON.stringify(result)}`);
+            return false;
+        }
+    } catch (error) {
+        console.error('❌ Cloudinary deletion error:', error);
+        return false;
+    }
+}
+
+/**
+ * Delete multiple files from Cloudinary
+ * @param {string[]} urls - Array of Cloudinary URLs
+ * @returns {Promise<{success: number, failed: number}>}
+ */
+async function deleteMultipleFromCloudinary(urls) {
+    const results = { success: 0, failed: 0 };
+    
+    for (const url of urls) {
+        if (url) {
+            const deleted = await deleteFromCloudinary(url);
+            if (deleted) {
+                results.success++;
+            } else {
+                results.failed++;
+            }
+        }
+    }
+    
+    return results;
+}
+
+// ==========================================
 // HELPER FUNCTIONS
 // ==========================================
 
@@ -353,11 +488,41 @@ async function handleMembers(req, res) {
             const { id } = req.body || {};
             if (!id) return res.status(400).json({ error: 'Member ID is required' });
             
+            // Get the member data first to get image URLs
+            const { data: member, error: fetchError } = await supabase
+                .from('members')
+                .select('image1, image2, image3, selected_image')
+                .eq('id', id)
+                .single();
+            
+            if (fetchError) {
+                console.error('Error fetching member:', fetchError);
+                // Continue with deletion even if we can't get images
+            }
+            
+            // Delete the member from database
             const { error } = await supabase.from('members').delete().eq('id', id);
             if (error) throw error;
             
+            // Delete images from Cloudinary (if they exist)
+            if (member) {
+                const imageUrls = [
+                    member.image1,
+                    member.image2,
+                    member.image3,
+                    member.selected_image
+                ].filter(url => url);
+                
+                if (imageUrls.length > 0) {
+                    console.log(`🗑️ Deleting ${imageUrls.length} images from Cloudinary for member ${id}`);
+                    const result = await deleteMultipleFromCloudinary(imageUrls);
+                    console.log(`📊 Cloudinary deletion results: ${result.success} deleted, ${result.failed} failed`);
+                }
+            }
+            
             return res.status(200).json({ success: true, message: 'Member deleted successfully!' });
         } catch (error) {
+            console.error('Delete member error:', error);
             return res.status(500).json({ error: 'Failed to delete member: ' + error.message });
         }
     }
@@ -479,12 +644,34 @@ async function handlePartners(req, res) {
             const { id } = req.body || {};
             if (!id) return res.status(400).json({ error: 'ID is required' });
             
+            // Get the partner data first to get logo URL
+            const { data: partner, error: fetchError } = await supabase
+                .from('partners')
+                .select('url')
+                .eq('id', id)
+                .single();
+            
+            if (fetchError) {
+                console.error('Error fetching partner:', fetchError);
+                // Continue with deletion even if we can't get images
+            }
+            
+            // Delete the partner from database
             const { error } = await supabase.from('partners').delete().eq('id', id);
             if (error) throw error;
             
+            // Delete logo from Cloudinary (if it exists)
+            if (partner && partner.url) {
+                console.log(`🗑️ Deleting partner logo from Cloudinary for ${id}`);
+                const deleted = await deleteFromCloudinary(partner.url);
+                console.log(`📊 Cloudinary deletion result: ${deleted ? 'success' : 'failed'}`);
+            }
+            
+            // Return updated list
             const { data: allPartners } = await supabase.from('partners').select('*').order('created_at', { ascending: true });
             return res.status(200).json({ success: true, logos: allPartners || [] });
         } catch (error) {
+            console.error('Delete partner error:', error);
             return res.status(500).json({ error: 'Failed to delete partner: ' + error.message });
         }
     }
@@ -646,10 +833,36 @@ async function handlePosts(req, res) {
         try {
             const { id } = req.body || {};
             if (!id) return res.status(400).json({ error: 'Post ID is required' });
+            
+            // Get the post data first to get image URL
+            const { data: post, error: fetchError } = await supabase
+                .from('posts')
+                .select('image_url, video_url')
+                .eq('id', id)
+                .single();
+            
+            if (fetchError) {
+                console.error('Error fetching post:', fetchError);
+                // Continue with deletion even if we can't get images
+            }
+            
+            // Delete the post from database
             const { error } = await supabase.from('posts').delete().eq('id', id);
             if (error) throw error;
+            
+            // Delete images from Cloudinary (if they exist)
+            if (post) {
+                const urls = [post.image_url, post.video_url].filter(url => url);
+                if (urls.length > 0) {
+                    console.log(`🗑️ Deleting ${urls.length} files from Cloudinary for post ${id}`);
+                    const result = await deleteMultipleFromCloudinary(urls);
+                    console.log(`📊 Cloudinary deletion results: ${result.success} deleted, ${result.failed} failed`);
+                }
+            }
+            
             return res.status(200).json({ success: true, message: 'Post deleted successfully!' });
         } catch (error) {
+            console.error('Delete post error:', error);
             return res.status(500).json({ error: 'Failed to delete post: ' + error.message });
         }
     }
@@ -738,10 +951,33 @@ async function handleWorkItems(req, res) {
         try {
             const { id } = req.body || {};
             if (!id) return res.status(400).json({ error: 'ID is required' });
+            
+            // Get the work item data first to get media URL
+            const { data: workItem, error: fetchError } = await supabase
+                .from('work_items')
+                .select('media_url')
+                .eq('id', id)
+                .single();
+            
+            if (fetchError) {
+                console.error('Error fetching work item:', fetchError);
+                // Continue with deletion even if we can't get images
+            }
+            
+            // Delete the work item from database
             const { error } = await supabase.from('work_items').delete().eq('id', id);
             if (error) throw error;
+            
+            // Delete media from Cloudinary (if it exists)
+            if (workItem && workItem.media_url) {
+                console.log(`🗑️ Deleting file from Cloudinary for work item ${id}`);
+                const deleted = await deleteFromCloudinary(workItem.media_url);
+                console.log(`📊 Cloudinary deletion result: ${deleted ? 'success' : 'failed'}`);
+            }
+            
             return res.status(200).json({ success: true, message: 'Work item deleted!' });
         } catch (error) {
+            console.error('Delete work item error:', error);
             return res.status(500).json({ error: 'Failed to delete work item: ' + error.message });
         }
     }
