@@ -24,8 +24,8 @@
 
     <link rel="stylesheet" href="style.css" />
 
+    <!-- PRELOAD ONLY THE LOGO THAT EXISTS -->
     <link rel="preload" as="image" href="assets/Logo.png">
-    <link rel="preload" as="image" href="assets/100.png">
 
     <style>
         .page-home .feed-section { padding: 80px 0; }
@@ -208,6 +208,7 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-brand-header">
+                    <!-- FIXED: Changed from 100.png to Logo.png -->
                     <img src="assets/Logo.png" alt="100 HUB" class="hero-img" />
                 </div>
                 <span class="section-number">01 // BROADCASTING & MEDIA PRODUCTION</span>
@@ -784,14 +785,6 @@
             const adLink = document.getElementById('adCardLink');
             const closeBtn = document.getElementById('adCardClose');
             
-            // REMOVED: sessionStorage check - ad will show every time on page load
-            // if (sessionStorage.getItem('adClosed') === 'true') {
-            //     adCard.style.display = 'none';
-            //     return;
-            // }
-            
-            console.log('📬 adClosed status:', sessionStorage.getItem('adClosed')); // For debugging only
-            
             try {
                 console.log('📬 Fetching ad...');
                 const response = await fetch('/api?path=ads');
@@ -807,10 +800,8 @@
                 const ad = data.ad;
                 console.log('📬 Loading ad:', ad.title);
                 
-                // Set the link (hidden from user)
                 adLink.href = ad.link_url;
                 
-                // Render media with 16:9 aspect ratio
                 if (ad.media_type === 'video') {
                     adContent.innerHTML = `
                         <div style="position:relative; width:100%; padding-bottom:56.25%; background:#000;">
@@ -827,19 +818,15 @@
                     `;
                 }
                 
-                // Show the ad with a slight delay
                 setTimeout(() => {
                     adCard.style.display = 'block';
                     adCard.style.animation = 'slideUp 0.5s ease';
                 }, 1500);
                 
-                // Close button handler - only hides for this page view
-                // Does NOT save to sessionStorage so it reappears on refresh
                 closeBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     adCard.style.display = 'none';
-                    // REMOVED: sessionStorage.setItem('adClosed', 'true');
                     console.log('📬 Ad closed for this page view');
                 });
                 
@@ -893,7 +880,6 @@
             updateCreatorsCount();
             loadPosts();
             
-            // Load ad after a slight delay to ensure DOM is ready
             setTimeout(() => {
                 loadAd();
             }, 500);
