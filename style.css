@@ -234,7 +234,7 @@ body {
 }
 
 /* ==========================================
-   NAVIGATION
+   NAVIGATION - FIXED LOGO
    ========================================== */
 .navbar {
     position: fixed;
@@ -276,12 +276,15 @@ body {
     text-decoration: none;
     flex-shrink: 0;
 }
+
+/* FIXED: Removed filter that was hiding the logo */
 .logo-img {
     height: 100px;
     width: auto;
     display: block;
-    filter: brightness(0) invert(1);
+    /* FILTER REMOVED - was: filter: brightness(0) invert(1); */
 }
+
 .logo-text {
     font-family: 'Space Grotesk', -apple-system, sans-serif;
     font-size: 26px;
@@ -291,6 +294,7 @@ body {
     letter-spacing: -0.5px;
     padding-bottom: 4px;
 }
+
 .logo-text .highlight-red {
     color: var(--red);
 }
@@ -534,7 +538,7 @@ section {
 }
 
 /* ==========================================
-   HERO
+   HERO - FIXED LOGO
    ========================================== */
 .hero {
     background: transparent;
@@ -561,10 +565,12 @@ section {
 .hero-brand-header {
     margin-bottom: 16px;
 }
+
+/* FIXED: Removed filter that was hiding the hero logo */
 .hero-img {
     height: 65px;
     width: auto;
-    filter: brightness(0) invert(1);
+    /* FILTER REMOVED - was: filter: brightness(0) invert(1); */
     opacity: 0.9;
 }
 
@@ -1402,7 +1408,7 @@ section {
 }
 
 /* ==========================================
-   PARTNER LOGOS — Clean, No Cards
+   PARTNER LOGOS — Improved Visibility
    ========================================== */
 .partners-section {
     background: transparent;
@@ -1434,9 +1440,9 @@ section {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 8px 16px;
-    min-height: 50px;
-    min-width: 80px;
+    padding: 12px 20px;
+    min-height: 60px;
+    min-width: 100px;
     transition: transform 0.3s ease;
 }
 
@@ -1444,19 +1450,21 @@ section {
     transform: scale(1.08);
 }
 
+/* FIXED: Partner logos - larger and fully visible */
 .partner-logo-item img {
-    max-height: 40px;
-    max-width: 130px;
+    max-height: 55px !important;
+    max-width: 150px !important;
     width: auto;
     height: auto;
     object-fit: contain;
-    opacity: 0.6;
+    opacity: 1 !important;
     transition: opacity 0.3s ease, transform 0.3s ease;
     filter: none !important;
+    image-rendering: auto;
 }
 
 .partner-logo-item:hover img {
-    opacity: 1;
+    opacity: 1 !important;
     transform: scale(1.05);
 }
 
@@ -1473,19 +1481,19 @@ section {
     100% { transform: translateX(-50%); }
 }
 
-/* Responsive */
+/* Responsive Partner Logos */
 @media (max-width: 768px) {
     .partners-track {
         gap: 40px;
     }
     .partner-logo-item {
-        padding: 5px 10px;
-        min-height: 40px;
-        min-width: 60px;
+        padding: 8px 14px;
+        min-height: 50px;
+        min-width: 80px;
     }
     .partner-logo-item img {
-        max-height: 30px;
-        max-width: 90px;
+        max-height: 40px !important;
+        max-width: 110px !important;
     }
 }
 
@@ -1494,13 +1502,13 @@ section {
         gap: 30px;
     }
     .partner-logo-item {
-        padding: 4px 8px;
-        min-height: 30px;
-        min-width: 50px;
+        padding: 6px 10px;
+        min-height: 40px;
+        min-width: 60px;
     }
     .partner-logo-item img {
-        max-height: 25px;
-        max-width: 70px;
+        max-height: 32px !important;
+        max-width: 90px !important;
     }
     .partner-logo-item span {
         font-size: 9px;
@@ -1895,7 +1903,7 @@ section {
 }
 
 /* ==========================================
-   FOOTER - COMPACT
+   FOOTER - FIXED LOGO
    ========================================== */
 .footer {
     background: rgba(10, 10, 10, 0.7);
@@ -1922,10 +1930,11 @@ section {
     width: 100%;
 }
 
+/* FIXED: Removed filter that was hiding the footer logo */
 .footer-logo {
     height: 36px;
     width: auto;
-    filter: brightness(0) invert(1);
+    /* FILTER REMOVED - was: filter: brightness(0) invert(1); */
 }
 
 .footer-social {
@@ -2441,7 +2450,7 @@ section {
 }
 
 /* ==========================================
-   SITE 3D PRELOADER
+   SITE 3D PRELOADER - FIXED LOGO
    ========================================== */
 .site-preloader {
     position: fixed;
@@ -2501,13 +2510,14 @@ section {
     animation: preloaderSpinRev 1.7s linear infinite;
 }
 
+/* FIXED: Removed filter from preloader logo */
 .preloader-logo {
     width: 44px;
     height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    filter: brightness(0) invert(1);
+    /* FILTER REMOVED - was: filter: brightness(0) invert(1); */
     animation: preloaderPulse 2s ease-in-out infinite;
 }
 
@@ -2571,48 +2581,6 @@ section {
 @keyframes preloaderPulse {
     0%, 100% { transform: scale(1); opacity: 0.8; }
     50% { transform: scale(1.08); opacity: 1; }
-}
-
-/* ==========================================
-   PRINT
-   ========================================== */
-@media print {
-    #globe-canvas,
-    .globe-fade-overlay,
-    .navbar,
-    .post-modal,
-    #postIdTool,
-    .signup-modal,
-    .pin-overlay {
-        display: none !important;
-    }
-    body {
-        background: white;
-        color: black;
-    }
-    .container {
-        max-width: 100%;
-        padding: 0 20px;
-    }
-    section {
-        background: white !important;
-        border-bottom: 1px solid #ddd;
-        padding: 40px 0;
-    }
-    .feed-item {
-        break-inside: avoid;
-        border: 1px solid #ddd;
-        background: #f9f9f9;
-    }
-    .partner-logo-item {
-        border: 1px solid #ddd;
-    }
-    .logo-img, .hero-img, .footer-logo {
-        filter: none;
-    }
-    .partner-logo-item img {
-        filter: none;
-    }
 }
 
 /* ==========================================
@@ -2772,51 +2740,44 @@ section {
 }
 
 /* ==========================================
-   PARTNER LOGOS - Improved Visibility
+   PRINT
    ========================================== */
-.partner-logo-item img {
-    max-height: 55px !important;
-    max-width: 150px !important;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    opacity: 1 !important;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    filter: none !important;
-    image-rendering: auto;
-}
-
-.partner-logo-item:hover img {
-    opacity: 1 !important;
-    transform: scale(1.08);
-}
-
-.partner-logo-item {
-    padding: 12px 20px !important;
-    min-height: 60px !important;
-    min-width: 100px !important;
-}
-
-@media (max-width: 768px) {
-    .partner-logo-item img {
-        max-height: 40px !important;
-        max-width: 110px !important;
+@media print {
+    #globe-canvas,
+    .globe-fade-overlay,
+    .navbar,
+    .post-modal,
+    #postIdTool,
+    .signup-modal,
+    .pin-overlay,
+    .ad-card {
+        display: none !important;
+    }
+    body {
+        background: white;
+        color: black;
+    }
+    .container {
+        max-width: 100%;
+        padding: 0 20px;
+    }
+    section {
+        background: white !important;
+        border-bottom: 1px solid #ddd;
+        padding: 40px 0;
+    }
+    .feed-item {
+        break-inside: avoid;
+        border: 1px solid #ddd;
+        background: #f9f9f9;
     }
     .partner-logo-item {
-        padding: 8px 14px !important;
-        min-height: 50px !important;
-        min-width: 80px !important;
+        border: 1px solid #ddd;
     }
-}
-
-@media (max-width: 480px) {
+    .logo-img, .hero-img, .footer-logo {
+        filter: none;
+    }
     .partner-logo-item img {
-        max-height: 32px !important;
-        max-width: 90px !important;
-    }
-    .partner-logo-item {
-        padding: 6px 10px !important;
-        min-height: 40px !important;
-        min-width: 60px !important;
+        filter: none;
     }
 }
