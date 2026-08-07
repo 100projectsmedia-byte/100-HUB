@@ -528,6 +528,8 @@ async function handleMembers(req, res) {
     }
 }
 
+
+
 // SIGNUP
 async function handleSignup(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -1203,6 +1205,114 @@ async function handleUpdatePin(req, res) {
     }
 }
 
+
+
+// ADS HANDLER
+
+
+async function handleAds(req, res) {
+    if (req.method === 'GET') {
+        try {
+            // Public endpoint - only returns active ads
+            const { data, error } = await supabase
+                .from('ads')
+                .select('*')
+                .eq('is_active', true)
+                .order('display_order', { ascending: true })
+                .limit(1);
+            
+            if (error) throw error;
+            
+            const ad = data && data.length > 0 ? data[0] : null;
+            return res.status(200).json({ success: true, ad });
+        } catch (error) {
+            return res.status(200).json({ success: true, ad: null });
+        }
+    }
+
+    if (req.method === 'POST') {
+        if (!requireAdmin(req, res)) return;
+        try {
+            const { title, media_url, media_type, link_url, is_active, display_order } = req.body || {};
+            
+            if (!title || !media_url || !link_url) {
+                return res.status(400).json({ error: 'Title, media URL, and link URL are required' });
+            }
+
+            const { data, error } = await supabase.from('ads').insert({
+                title,
+                media_url,
+                media_type: media_type || 'image',
+                link_url,
+                is_active: is_active !== undefined ? is_active : true,
+                display_order: display_order || 0
+            }).select().single();
+
+            if (error) throw error;
+            return res.status(200).json({ success: true, ad: data });
+        } catch (error) {
+            return res.status(500).json({ error: 'Failed to add ad: ' + error.message });
+        }
+    }
+
+    if (req.method === 'PUT') {
+        if (!requireAdmin(req, res)) return;
+        try {
+            const { id, title, media_url, media_type, link_url, is_active, display_order } = req.body || {};
+            
+            if (!id) return res.status(400).json({ error: 'ID is required' });
+
+            const updates = {};
+            if (title !== undefined) updates.title = title;
+            if (media_url !== undefined) updates.media_url = media_url;
+            if (media_type !== undefined) updates.media_type = media_type;
+            if (link_url !== undefined) updates.link_url = link_url;
+            if (is_active !== undefined) updates.is_active = is_active;
+            if (display_order !== undefined) updates.display_order = display_order;
+            updates.updated_at = new Date().toISOString();
+
+            const { data, error } = await supabase.from('ads').update(updates).eq('id', id).select().single();
+            if (error) throw error;
+            return res.status(200).json({ success: true, ad: data });
+        } catch (error) {
+            return res.status(500).json({ error: 'Failed to update ad: ' + error.message });
+        }
+    }
+
+    if (req.method === 'DELETE') {
+        if (!requireAdmin(req, res)) return;
+        try {
+            const { id } = req.body || {};
+            if (!id) return res.status(400).json({ error: 'ID is required' });
+            
+            // Get ad data to delete media from Cloudinary
+            const { data: ad, error: fetchError } = await supabase
+                .from('ads')
+                .select('media_url')
+                .eq('id', id)
+                .single();
+            
+            if (fetchError) {
+                console.error('Error fetching ad:', fetchError);
+            }
+            
+            const { error } = await supabase.from('ads').delete().eq('id', id);
+            if (error) throw error;
+            
+            // Delete media from Cloudinary if it exists
+            if (ad && ad.media_url) {
+                await deleteFromCloudinary(ad.media_url);
+            }
+            
+            // Return updated list
+            const { data: allAds } = await supabase.from('ads').select('*').order('display_order', { ascending: true });
+            return res.status(200).json({ success: true, ads: allAds || [] });
+        } catch (error) {
+            return res.status(500).json({ error: 'Failed to delete ad: ' + error.message });
+        }
+    }
+}
+
 // ==========================================
 // MAIN HANDLER
 // ==========================================
@@ -1230,6 +1340,8 @@ export default async function handler(req, res) {
             return handleSubscriptions(req, res);
         case 'posts':
             return handlePosts(req, res);
+        case 'ads':
+            return handleAds(req, res);
         case 'work-items':
             return handleWorkItems(req, res);
         case 'media-kit':

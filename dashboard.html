@@ -1042,7 +1042,7 @@
         <div class="container">
             <div class="nav-inner">
                 <a href="/" class="nav-logo">
-                    <img src="assets/100_Logo.png" alt="100 HUB" class="logo-img" />
+                    <img src="assets/Logo.png" alt="100 HUB" class="logo-img" />
                     <span class="logo-text"><span class="highlight-red">HUB</span></span>
                 </a>
                 <div class="nav-right">
@@ -1123,6 +1123,7 @@
                 <button data-tab="articles">Articles</button>
                 <button data-tab="posts">Posts</button>
                 <button data-tab="work">Work</button>
+                <button data-tab="ads">Ads</button>
                 <button data-tab="partners">Partners</button>
                 <button data-tab="subscriptions">Subscriptions</button>
                 <button data-tab="impact">Impact Numbers</button>
@@ -1253,6 +1254,34 @@
                     </button>
                 </div>
             </div>
+
+            <!-- Tab: Ads -->
+        <div class="tab-content" id="tab-ads">
+            <div class="dashboard-actions">
+                <button class="btn-outline" onclick="loadAds()">
+                    <i class="fa-solid fa-rotate"></i> Refresh
+                </button>
+                <button class="btn-primary" onclick="openAddAdModal()">
+                    <i class="fa-regular fa-plus"></i> Add Ad
+                </button>
+            </div>
+
+            <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px 16px; margin-bottom:16px;">
+                <p style="font-size:12px; color:rgba(255,255,255,0.5);">
+                    <i class="fa-regular fa-circle-info" style="color:var(--red);"></i>
+                    <strong>Ad Card:</strong> This ad will appear in the bottom right corner of all pages.
+                    The link URL is hidden from users - clicking the ad card redirects to the link.
+                    Only one active ad is shown at a time.
+                </p>
+            </div>
+
+            <div class="ad-grid" id="adGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:16px;">
+                <div class="empty-state" style="grid-column:1/-1;">
+                    <i class="fa-regular fa-image"></i>
+                    <p>Loading ads...</p>
+                </div>
+            </div>
+        </div>
 
             <!-- Tab: Work -->
             <div class="tab-content" id="tab-work">
@@ -1607,6 +1636,77 @@
                         <i class="fa-regular fa-floppy-disk"></i> Save Post
                     </button>
                     <button type="button" class="btn-outline" onclick="closePostModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Ad Modal -->
+    <div class="edit-modal" id="adModal">
+        <div class="edit-modal-overlay" id="adModalOverlay"></div>
+        <div class="edit-modal-content">
+            <button class="edit-modal-close" id="adModalClose" onclick="closeAdModal()"><i class="fa-solid fa-xmark"></i></button>
+            <h3 id="adModalTitle">Add Ad</h3>
+            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;">Create an ad card that appears on all pages</p>
+            <div>
+                <div class="form-group">
+                    <label>Title (Internal name)</label>
+                    <input type="text" id="adTitle" placeholder="e.g., Summer Campaign 2024" />
+                </div>
+                <div class="form-group">
+                    <label>Upload Media *</label>
+                    <div class="file-upload-area" id="adUploadArea" onclick="document.getElementById('adMediaFile').click()">
+                        <i class="fa-regular fa-image"></i>
+                        <p>Click to upload image or video</p>
+                        <div class="file-name" id="adFileName">No file selected</div>
+                        <input type="file" id="adMediaFile" accept="image/*,video/*" />
+                    </div>
+                    <small style="color:rgba(255,255,255,0.4); font-size:11px;">Supported: JPG, PNG, GIF, MP4, MOV (Max 10MB)</small>
+                </div>
+                <div id="adMediaPreview" style="display:none; margin-top:12px; border-radius:10px; overflow:hidden; background:var(--bg-tertiary); max-height:200px;">
+                    <img id="adPreviewImage" src="" alt="Preview" style="width:100%; max-height:200px; object-fit:contain;" />
+                    <video id="adPreviewVideo" controls style="width:100%; max-height:200px; object-fit:contain; display:none;"></video>
+                </div>
+                <div class="form-group">
+                    <label>Link URL *</label>
+                    <input type="url" id="adLinkUrl" placeholder="https://example.com/campaign" />
+                    <small style="color:rgba(255,255,255,0.4); font-size:11px;">This link is hidden from users - clicking the ad card redirects here</small>
+                </div>
+                <div class="form-group">
+                    <label>Media Type</label>
+                    <select id="adMediaType">
+                        <option value="image">Image</option>
+                        <option value="video">Video</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Display Order</label>
+                    <input type="number" id="adDisplayOrder" value="0" />
+                    <small style="color:rgba(255,255,255,0.4); font-size:11px;">Lower numbers appear first</small>
+                </div>
+                <div class="form-group">
+                    <label>Active</label>
+                    <select id="adIsActive">
+                        <option value="true">Yes (Show on site)</option>
+                        <option value="false">No (Hide)</option>
+                    </select>
+                </div>
+                <div id="adUploadProgress" style="display:none; margin-top:8px;">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div style="flex:1; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden;">
+                            <div id="adUploadProgressBar" style="width:0%; height:100%; background:var(--red); border-radius:2px; transition:width 0.3s ease;"></div>
+                        </div>
+                        <span id="adUploadProgressText" style="font-size:11px; color:rgba(255,255,255,0.4); white-space:nowrap;">0%</span>
+                    </div>
+                </div>
+                <div id="adUploadStatus" style="margin-top:6px; font-size:12px; min-height:20px;"></div>
+                <input type="hidden" id="adMediaUrl" />
+                <input type="hidden" id="adEditId" />
+                <div class="edit-actions">
+                    <button type="button" class="btn-primary" onclick="saveAd()" id="adSubmitBtn">
+                        <i class="fa-regular fa-floppy-disk"></i> Save Ad
+                    </button>
+                    <button type="button" class="btn-outline" onclick="closeAdModal()">Cancel</button>
                 </div>
             </div>
         </div>
@@ -2081,6 +2181,7 @@
                 if (this.dataset.tab === 'impact') loadImpactNumbers();
                 if (this.dataset.tab === 'articles') renderArticles();
                 if (this.dataset.tab === 'posts') loadPosts();
+                if (this.dataset.tab === 'ads') loadAds();
                 if (this.dataset.tab === 'work') loadWorkItems();
                 if (this.dataset.tab === 'subscriptions') loadSubscriptions();
             });
@@ -2875,6 +2976,334 @@
             }
         }
 
+                // ==========================================
+        // ADS
+        // ==========================================
+        let allAds = [];
+        let editingAdId = null;
+        let adUploadedMediaUrl = '';
+
+        async function loadAds() {
+            const grid = document.getElementById('adGrid');
+            try {
+                const response = await fetchWithAuth(apiUrl('ads'));
+                const data = await response.json();
+                
+                if (data.success) {
+                    allAds = data.ads || [];
+                    renderAdGrid();
+                }
+            } catch (error) {
+                if (error.message !== 'Unauthorized') {
+                    console.error('Load ads error:', error);
+                    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+                        <i class="fa-regular fa-image"></i>
+                        <p>Error loading ads.</p>
+                    </div>`;
+                }
+            }
+        }
+
+        function renderAdGrid() {
+            const grid = document.getElementById('adGrid');
+            if (allAds.length === 0) {
+                grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+                    <i class="fa-regular fa-image"></i>
+                    <p>No ads added yet. Click "Add Ad" to get started.</p>
+                </div>`;
+                return;
+            }
+
+            grid.innerHTML = allAds.map(ad => `
+                <div class="ad-card-item" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; overflow:hidden; transition:all 0.3s ease;">
+                    <div style="position:relative; aspect-ratio:16/9; overflow:hidden; background:var(--bg-tertiary);">
+                        ${ad.media_type === 'video' 
+                            ? `<video muted autoplay loop playsinline style="width:100%; height:100%; object-fit:cover;"><source src="${ad.media_url}"></video>`
+                            : `<img src="${ad.media_url}" alt="${ad.title}" style="width:100%; height:100%; object-fit:cover;" />`
+                        }
+                        <span style="position:absolute; top:10px; right:10px; background:${ad.is_active ? 'rgba(74,222,128,0.2)' : 'rgba(255,107,107,0.2)'}; color:${ad.is_active ? '#4ADE80' : '#FF6B6B'}; padding:4px 12px; border-radius:20px; font-size:10px; font-weight:600;">
+                            ${ad.is_active ? '● Active' : '○ Inactive'}
+                        </span>
+                    </div>
+                    <div style="padding:12px 14px;">
+                        <div style="font-size:13px; font-weight:600; color:var(--text-primary); margin-bottom:4px;">${ad.title}</div>
+                        <div style="font-size:11px; color:rgba(255,255,255,0.4); margin-bottom:2px;">Link: ${ad.link_url}</div>
+                        <div style="font-size:11px; color:rgba(255,255,255,0.3); margin-bottom:8px;">Order: ${ad.display_order || 0} · ${ad.media_type}</div>
+                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                            <button class="btn-outline btn-sm" onclick="openEditAdModal('${ad.id}')" title="Edit">
+                                <i class="fa-regular fa-pen-to-square"></i>
+                            </button>
+                            <button class="btn-outline btn-sm danger" onclick="confirmDelete('ad', '${ad.id}', '${ad.title}')" title="Delete">
+                                <i class="fa-regular fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openAddAdModal() {
+            editingAdId = null;
+            document.getElementById('adModalTitle').textContent = 'Add Ad';
+            document.getElementById('adTitle').value = '';
+            document.getElementById('adLinkUrl').value = '';
+            document.getElementById('adMediaType').value = 'image';
+            document.getElementById('adDisplayOrder').value = '0';
+            document.getElementById('adIsActive').value = 'true';
+            document.getElementById('adMediaFile').value = '';
+            document.getElementById('adMediaUrl').value = '';
+            document.getElementById('adEditId').value = '';
+            document.getElementById('adFileName').textContent = 'No file selected';
+            document.getElementById('adMediaPreview').style.display = 'none';
+            document.getElementById('adUploadStatus').innerHTML = '';
+            document.getElementById('adUploadProgress').style.display = 'none';
+            adUploadedMediaUrl = '';
+            document.getElementById('adModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function openEditAdModal(id) {
+            const ad = allAds.find(a => a.id === id);
+            if (!ad) return;
+            editingAdId = id;
+            document.getElementById('adModalTitle').textContent = 'Edit Ad';
+            document.getElementById('adTitle').value = ad.title || '';
+            document.getElementById('adLinkUrl').value = ad.link_url || '';
+            document.getElementById('adMediaType').value = ad.media_type || 'image';
+            document.getElementById('adDisplayOrder').value = ad.display_order || 0;
+            document.getElementById('adIsActive').value = ad.is_active ? 'true' : 'false';
+            document.getElementById('adMediaUrl').value = ad.media_url || '';
+            document.getElementById('adEditId').value = id;
+            document.getElementById('adFileName').textContent = 'Current: ' + (ad.media_url ? 'File uploaded' : 'No file');
+            adUploadedMediaUrl = ad.media_url || '';
+            
+            // Show preview
+            if (ad.media_url) {
+                const preview = document.getElementById('adMediaPreview');
+                preview.style.display = 'block';
+                if (ad.media_type === 'video') {
+                    document.getElementById('adPreviewImage').style.display = 'none';
+                    const video = document.getElementById('adPreviewVideo');
+                    video.style.display = 'block';
+                    video.src = ad.media_url;
+                    video.load();
+                } else {
+                    document.getElementById('adPreviewVideo').style.display = 'none';
+                    const img = document.getElementById('adPreviewImage');
+                    img.style.display = 'block';
+                    img.src = ad.media_url;
+                }
+            }
+            
+            document.getElementById('adModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAdModal() {
+            document.getElementById('adModal').classList.remove('active');
+            document.body.style.overflow = '';
+            editingAdId = null;
+        }
+
+        document.getElementById('adModalClose').addEventListener('click', closeAdModal);
+        document.getElementById('adModalOverlay').addEventListener('click', closeAdModal);
+
+        async function uploadAdMediaFile(file) {
+            return new Promise((resolve, reject) => {
+                const progressDiv = document.getElementById('adUploadProgress');
+                const progressBar = document.getElementById('adUploadProgressBar');
+                const progressText = document.getElementById('adUploadProgressText');
+                const status = document.getElementById('adUploadStatus');
+                
+                progressDiv.style.display = 'block';
+                status.innerHTML = '<span style="color:#ffd700;">⏳ Uploading to Cloudinary...</span>';
+                
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', 'members');
+                formData.append('folder', '100 TRUSTEES');
+                
+                const isVideo = file.type.startsWith('video/');
+                const uploadUrl = isVideo 
+                    ? 'https://api.cloudinary.com/v1_1/dfozevcbl/video/upload'
+                    : 'https://api.cloudinary.com/v1_1/dfozevcbl/image/upload';
+                
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', uploadUrl);
+                
+                xhr.upload.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                        const percent = Math.round((e.loaded / e.total) * 100);
+                        progressBar.style.width = percent + '%';
+                        progressText.textContent = percent + '%';
+                    }
+                };
+                
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        const data = JSON.parse(xhr.responseText);
+                        const mediaUrl = data.secure_url;
+                        document.getElementById('adMediaUrl').value = mediaUrl;
+                        adUploadedMediaUrl = mediaUrl;
+                        status.innerHTML = '<span style="color:#4ADE80;">✅ Upload complete!</span>';
+                        progressBar.style.width = '100%';
+                        progressText.textContent = '100%';
+                        showAdMediaPreview(file, mediaUrl);
+                        resolve(mediaUrl);
+                    } else {
+                        let errorMsg = 'Upload failed.';
+                        try {
+                            const errorData = JSON.parse(xhr.responseText);
+                            errorMsg = errorData.error?.message || errorMsg;
+                        } catch(e) {}
+                        status.innerHTML = `<span style="color:#ff6b6b;">❌ ${errorMsg}</span>`;
+                        reject(new Error(errorMsg));
+                    }
+                };
+                
+                xhr.onerror = () => {
+                    status.innerHTML = '<span style="color:#ff6b6b;">❌ Network error. Please check your connection.</span>';
+                    reject(new Error('Network error'));
+                };
+                
+                xhr.send(formData);
+            });
+        }
+
+        function showAdMediaPreview(file, mediaUrl) {
+            const preview = document.getElementById('adMediaPreview');
+            preview.style.display = 'block';
+            if (file.type.startsWith('video/')) {
+                document.getElementById('adPreviewImage').style.display = 'none';
+                const video = document.getElementById('adPreviewVideo');
+                video.style.display = 'block';
+                video.src = mediaUrl;
+                video.load();
+            } else {
+                document.getElementById('adPreviewVideo').style.display = 'none';
+                const img = document.getElementById('adPreviewImage');
+                img.style.display = 'block';
+                img.src = mediaUrl;
+            }
+        }
+
+        async function saveAd() {
+            const title = document.getElementById('adTitle').value.trim();
+            const linkUrl = document.getElementById('adLinkUrl').value.trim();
+            const media_type = document.getElementById('adMediaType').value;
+            const display_order = parseInt(document.getElementById('adDisplayOrder').value) || 0;
+            const is_active = document.getElementById('adIsActive').value === 'true';
+            const fileInput = document.getElementById('adMediaFile');
+            const file = fileInput.files[0];
+            
+            if (!title) {
+                showToast('Title is required.', 'error');
+                return;
+            }
+            if (!linkUrl) {
+                showToast('Link URL is required.', 'error');
+                return;
+            }
+            
+            let media_url = document.getElementById('adMediaUrl').value.trim();
+            
+            if (file) {
+                if (file.size > 10 * 1024 * 1024) {
+                    showToast('⚠️ File is too large. Maximum 10MB.', 'error');
+                    return;
+                }
+                const submitBtn = document.getElementById('adSubmitBtn');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+                try {
+                    media_url = await uploadAdMediaFile(file);
+                } catch (error) {
+                    showToast('❌ Upload failed. Please try again.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Ad';
+                    return;
+                }
+            }
+            
+            if (!media_url) {
+                showToast('Media URL is required. Please upload a file.', 'error');
+                return;
+            }
+
+            const submitBtn = document.getElementById('adSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+            try {
+                const url = apiUrl('ads');
+                const method = editingAdId ? 'PUT' : 'POST';
+                const body = editingAdId 
+                    ? { id: editingAdId, title, link_url, media_url, media_type, display_order, is_active }
+                    : { title, link_url, media_url, media_type, display_order, is_active };
+
+                const response = await fetchWithAuth(url, {
+                    method: method,
+                    body: JSON.stringify(body)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showToast(editingAdId ? 'Ad updated!' : 'Ad added!', 'success');
+                    closeAdModal();
+                    loadAds();
+                } else {
+                    showToast(result.error || 'Failed to save ad.', 'error');
+                }
+            } catch (error) {
+                if (error.message !== 'Unauthorized') {
+                    console.error('Save ad error:', error);
+                    showToast('Error saving ad.', 'error');
+                }
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Ad';
+        }
+
+        // Add ad file input handler
+        document.addEventListener('DOMContentLoaded', function() {
+            const adFileInput = document.getElementById('adMediaFile');
+            if (adFileInput) {
+                adFileInput.addEventListener('change', function() {
+                    const fileName = this.files[0] ? this.files[0].name : 'No file selected';
+                    document.getElementById('adFileName').textContent = fileName;
+                    if (this.files.length > 0) {
+                        const file = this.files[0];
+                        if (file.size > 10 * 1024 * 1024) {
+                            showToast('⚠️ File is too large. Maximum 10MB.', 'error');
+                            this.value = '';
+                            document.getElementById('adFileName').textContent = 'No file selected';
+                            return;
+                        }
+                        // Show preview immediately
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const preview = document.getElementById('adMediaPreview');
+                            preview.style.display = 'block';
+                            if (file.type.startsWith('video/')) {
+                                document.getElementById('adPreviewImage').style.display = 'none';
+                                const video = document.getElementById('adPreviewVideo');
+                                video.style.display = 'block';
+                                video.src = e.target.result;
+                                video.load();
+                            } else {
+                                document.getElementById('adPreviewVideo').style.display = 'none';
+                                const img = document.getElementById('adPreviewImage');
+                                img.style.display = 'block';
+                                img.src = e.target.result;
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+
         // ==========================================
         // WORK ITEMS
         // ==========================================
@@ -3513,6 +3942,8 @@
                     endpoint = 'partners';
                 } else if (deleteTarget.type === 'post') {
                     endpoint = 'posts';
+                } else if (deleteTarget.type === 'ad') {
+                    endpoint = 'ads';
                 } else if (deleteTarget.type === 'work') {
                     endpoint = 'work-items';
                 } else if (deleteTarget.type === 'subscription') {

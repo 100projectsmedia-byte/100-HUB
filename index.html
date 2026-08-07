@@ -12,15 +12,20 @@
     <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
+    
+    <!-- Garet Font for Paalalabas -->
+    <link href="https://fonts.cdnfonts.com/css/garet" rel="stylesheet">
 
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'" />
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" /></noscript>
 
     <link rel="stylesheet" href="style.css" />
 
-    <link rel="preload" as="image" href="assets/100_Logo.png">
-    <link rel="preload" as="image" href="assets/100_Hero.png">
+    <link rel="preload" as="image" href="assets/Logo.png">
+    <link rel="preload" as="image" href="assets/100.png">
 
     <style>
         .page-home .feed-section { padding: 80px 0; }
@@ -116,7 +121,7 @@
                 <div class="preloader-ring ring-outer"></div>
                 <div class="preloader-ring ring-inner"></div>
                 <div class="preloader-logo">
-                    <img src="assets/100_Logo.png" alt="100 HUB" />
+                    <img src="assets/Logo.png" alt="100 HUB" />
                 </div>
             </div>
             <div class="preloader-text-box">
@@ -161,7 +166,7 @@
         <div class="container">
             <div class="nav-inner">
                 <a href="/" class="nav-logo">
-                    <img src="assets/100_Logo.png" alt="100 HUB" class="logo-img" />
+                    <img src="assets/Logo.png" alt="100 HUB" class="logo-img" />
                     <span class="logo-text"><span class="highlight-red">HUB</span></span>
                 </a>
                 <div class="nav-right">
@@ -203,7 +208,7 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-brand-header">
-                    <img src="assets/100_Hero.png" alt="100 HUB" class="hero-img" />
+                    <img src="assets/100.png" alt="100 HUB" class="hero-img" />
                 </div>
                 <span class="section-number">01 // BROADCASTING & MEDIA PRODUCTION</span>
                 <h1 class="hero-title">
@@ -214,11 +219,11 @@
                 </p>
                 <div class="hero-nav">
                    <a href="/">Home</a>
-                   <a href="/about.html">About</a>
                    <a href="/work.html">Our Work</a>
                    <a href="/profiles.html">Profiles</a>
                    <a href="/games.html">Games</a>
                    <a href="/rewards.html">Rewards</a>
+                   <a href="/about.html">About</a>
                    <a href="/contact.html">Contact</a>
                 </div>
                 <!-- NEW: Buttons under nav links -->
@@ -336,7 +341,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-top">
-                    <img src="assets/100_Logo.png" alt="100 HUB" class="footer-logo" loading="lazy" />
+                    <img src="assets/Logo.png" alt="100 HUB" class="footer-logo" loading="lazy" />
                     <div class="footer-social">
                         <a href="https://www.instagram.com/100projectsmedia" target="_blank"><i class="fa-brands fa-instagram"></i></a>
                         <a href="https://vt.tiktok.com/ZSQ4FhnXc/" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
@@ -359,6 +364,20 @@
             </div>
         </div>
     </footer>
+
+    <!-- ==================== AD CARD ==================== -->
+    <div class="ad-card" id="adCard" style="display:none;">
+        <button class="ad-card-close" id="adCardClose" aria-label="Close ad">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <a href="#" id="adCardLink" target="_blank" rel="noopener">
+            <div class="ad-card-content" id="adCardContent"></div>
+            <div class="ad-card-cta">
+                <span>Learn More</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </div>
+        </a>
+    </div>
 
     <script type="importmap">
     {
@@ -706,7 +725,7 @@
                         alt="${logo.name}" 
                         title="${logo.name}" 
                         loading="lazy" 
-                        style="max-height:40px; max-width:130px; width:auto; height:auto; object-fit:contain; filter:none !important;"
+                        style="max-height:55px; max-width:150px; width:auto; height:auto; object-fit:contain; filter:none !important;"
                         onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'color:rgba(255,255,255,0.3);font-size:12px;letter-spacing:0.5px;\\'>${logo.name}</span>';"
                     />
                 </div>
@@ -757,6 +776,68 @@
         }
 
         // ==========================================
+        // AD CARD - Load from Database (Home Page Only)
+        // ==========================================
+        async function loadAd() {
+            const adCard = document.getElementById('adCard');
+            const adContent = document.getElementById('adCardContent');
+            const adLink = document.getElementById('adCardLink');
+            const closeBtn = document.getElementById('adCardClose');
+            
+            // Check if ad was closed this session
+            if (sessionStorage.getItem('adClosed') === 'true') {
+                adCard.style.display = 'none';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api?path=ads');
+                const data = await response.json();
+                
+                if (!data.success || !data.ad) {
+                    adCard.style.display = 'none';
+                    return;
+                }
+                
+                const ad = data.ad;
+                
+                // Set the link (hidden from user)
+                adLink.href = ad.link_url;
+                
+                // Render media
+                if (ad.media_type === 'video') {
+                    adContent.innerHTML = `
+                        <video autoplay muted loop playsinline>
+                            <source src="${ad.media_url}" type="video/mp4">
+                        </video>
+                    `;
+                } else {
+                    adContent.innerHTML = `
+                        <img src="${ad.media_url}" alt="${ad.title || 'Advertisement'}" loading="lazy" />
+                    `;
+                }
+                
+                // Show the ad with a slight delay
+                setTimeout(() => {
+                    adCard.style.display = 'block';
+                    adCard.style.animation = 'slideUp 0.5s ease';
+                }, 1500);
+                
+                // Close button handler
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    adCard.style.display = 'none';
+                    sessionStorage.setItem('adClosed', 'true');
+                });
+                
+            } catch (error) {
+                console.error('Failed to load ad:', error);
+                adCard.style.display = 'none';
+            }
+        }
+
+        // ==========================================
         // SCROLL REVEAL
         // ==========================================
         const animatedElements = document.querySelectorAll('[data-animate]');
@@ -799,10 +880,12 @@
             loadPartners();
             updateCreatorsCount();
             loadPosts();
+            loadAd();
             console.log('🏠 100 HUB — Home Page Loaded');
             console.log('📸 Feed System: Database Posts');
             console.log('🔍 Search: Search posts by caption or keyword');
             console.log('📄 Default: 9 posts, See More loads 3 more');
+            console.log('📬 Ad Card: Loaded from database');
         });
     </script>
 
@@ -1108,4 +1191,4 @@
     </script>
 
 </body>
-</html> 
+</html>

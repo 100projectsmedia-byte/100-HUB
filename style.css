@@ -2614,3 +2614,209 @@ section {
         filter: none;
     }
 }
+
+/* ==========================================
+   AD CARD - Bottom Right Popup
+   ========================================== */
+.ad-card {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 300px;
+    max-width: 90vw;
+    max-height: 420px;
+    background: #1a1a1a;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    overflow: hidden;
+    display: none;
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ad-card a {
+    display: block;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+.ad-card-content {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    background: #0a0a0a;
+}
+
+.ad-card-content img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+.ad-card-content video {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    background: #0a0a0a;
+}
+
+.ad-card-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 10;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+}
+
+.ad-card-close:hover {
+    background: var(--red);
+    color: white;
+    transform: rotate(90deg);
+}
+
+.ad-card-cta {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.85);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.ad-card-cta i {
+    font-size: 10px;
+    transition: transform 0.3s ease;
+}
+
+.ad-card a:hover .ad-card-cta i {
+    transform: translateX(4px);
+}
+
+@keyframes slideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Responsive Ad Card */
+@media (max-width: 768px) {
+    .ad-card {
+        width: 260px;
+        bottom: 80px;
+        right: 20px;
+        max-height: 360px;
+    }
+}
+
+@media (max-width: 480px) {
+    .ad-card {
+        width: calc(100vw - 40px);
+        max-width: 340px;
+        bottom: 70px;
+        right: 20px;
+        max-height: 320px;
+        border-radius: 12px;
+    }
+    .ad-card-close {
+        top: 6px;
+        right: 6px;
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+    }
+    .ad-card-cta {
+        bottom: 10px;
+        right: 10px;
+        padding: 4px 12px;
+        font-size: 10px;
+    }
+}
+
+/* ==========================================
+   GARET FONT - Paalalabas
+   ========================================== */
+.font-garet {
+    font-family: 'Garet', sans-serif;
+}
+
+/* ==========================================
+   PARTNER LOGOS - Improved Visibility
+   ========================================== */
+.partner-logo-item img {
+    max-height: 55px !important;
+    max-width: 150px !important;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    opacity: 1 !important;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    filter: none !important;
+    image-rendering: auto;
+}
+
+.partner-logo-item:hover img {
+    opacity: 1 !important;
+    transform: scale(1.08);
+}
+
+.partner-logo-item {
+    padding: 12px 20px !important;
+    min-height: 60px !important;
+    min-width: 100px !important;
+}
+
+@media (max-width: 768px) {
+    .partner-logo-item img {
+        max-height: 40px !important;
+        max-width: 110px !important;
+    }
+    .partner-logo-item {
+        padding: 8px 14px !important;
+        min-height: 50px !important;
+        min-width: 80px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .partner-logo-item img {
+        max-height: 32px !important;
+        max-width: 90px !important;
+    }
+    .partner-logo-item {
+        padding: 6px 10px !important;
+        min-height: 40px !important;
+        min-width: 60px !important;
+    }
+}
