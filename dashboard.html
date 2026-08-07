@@ -2988,9 +2988,14 @@
             try {
                 const response = await fetchWithAuth(apiUrl('ads'));
                 const data = await response.json();
+                console.log('📥 Ads loaded:', data);
                 
                 if (data.success) {
+                    // Check if data.ads exists, otherwise use empty array
                     allAds = data.ads || [];
+                    renderAdGrid();
+                } else {
+                    allAds = [];
                     renderAdGrid();
                 }
             } catch (error) {
@@ -3006,7 +3011,7 @@
 
         function renderAdGrid() {
             const grid = document.getElementById('adGrid');
-            if (allAds.length === 0) {
+            if (!allAds || allAds.length === 0) {
                 grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
                     <i class="fa-regular fa-image"></i>
                     <p>No ads added yet. Click "Add Ad" to get started.</p>
@@ -3065,10 +3070,11 @@
         function openEditAdModal(id) {
             const ad = allAds.find(a => a.id === id);
             if (!ad) return;
+            
             editingAdId = id;
             document.getElementById('adModalTitle').textContent = 'Edit Ad';
             document.getElementById('adTitle').value = ad.title || '';
-            document.getElementById('adLinkUrl').value = ad.link_url || '';
+            document.getElementById('adLinkUrl').value = ad.link_url || '';  // Use link_url from database
             document.getElementById('adMediaType').value = ad.media_type || 'image';
             document.getElementById('adDisplayOrder').value = ad.display_order || 0;
             document.getElementById('adIsActive').value = ad.is_active ? 'true' : 'false';
@@ -3196,6 +3202,10 @@
             const fileInput = document.getElementById('adMediaFile');
             const file = fileInput.files[0];
             
+            // Get existing media URL if editing
+            let media_url = document.getElementById('adMediaUrl').value.trim();
+            
+            // Validate required fields
             if (!title) {
                 showToast('Title is required.', 'error');
                 return;
@@ -3205,8 +3215,7 @@
                 return;
             }
             
-            let media_url = document.getElementById('adMediaUrl').value.trim();
-            
+            // Handle file upload if a new file is selected
             if (file) {
                 if (file.size > 10 * 1024 * 1024) {
                     showToast('⚠️ File is too large. Maximum 10MB.', 'error');
@@ -3225,6 +3234,7 @@
                 }
             }
             
+            // Make sure we have a media URL
             if (!media_url) {
                 showToast('Media URL is required. Please upload a file.', 'error');
                 return;
@@ -3237,9 +3247,23 @@
             try {
                 const url = apiUrl('ads');
                 const method = editingAdId ? 'PUT' : 'POST';
-                const body = editingAdId 
-                    ? { id: editingAdId, title, link_url, media_url, media_type, display_order, is_active }
-                    : { title, link_url, media_url, media_type, display_order, is_active };
+                
+                // Build the request body with the correct field names
+                const body = {
+                    title: title,
+                    link_url: linkUrl,  // IMPORTANT: Use link_url (with underscore) for the API
+                    media_url: media_url,
+                    media_type: media_type,
+                    display_order: display_order,
+                    is_active: is_active
+                };
+                
+                // If editing, include the ID
+                if (editingAdId) {
+                    body.id = editingAdId;
+                }
+
+                console.log('📤 Saving ad with body:', body);
 
                 const response = await fetchWithAuth(url, {
                     method: method,
@@ -3247,6 +3271,8 @@
                 });
 
                 const result = await response.json();
+                console.log('📥 Save ad response:', result);
+                
                 if (result.success) {
                     showToast(editingAdId ? 'Ad updated!' : 'Ad added!', 'success');
                     closeAdModal();
@@ -3257,7 +3283,7 @@
             } catch (error) {
                 if (error.message !== 'Unauthorized') {
                     console.error('Save ad error:', error);
-                    showToast('Error saving ad.', 'error');
+                    showToast('Error saving ad: ' + error.message, 'error');
                 }
             }
 
