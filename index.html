@@ -784,36 +784,46 @@
             const adLink = document.getElementById('adCardLink');
             const closeBtn = document.getElementById('adCardClose');
             
-            // Check if ad was closed this session
-            if (sessionStorage.getItem('adClosed') === 'true') {
-                adCard.style.display = 'none';
-                return;
-            }
+            // REMOVED: sessionStorage check - ad will show every time on page load
+            // if (sessionStorage.getItem('adClosed') === 'true') {
+            //     adCard.style.display = 'none';
+            //     return;
+            // }
+            
+            console.log('📬 adClosed status:', sessionStorage.getItem('adClosed')); // For debugging only
             
             try {
+                console.log('📬 Fetching ad...');
                 const response = await fetch('/api?path=ads');
                 const data = await response.json();
+                console.log('📬 Ad response:', data);
                 
                 if (!data.success || !data.ad) {
+                    console.log('📬 No active ad found');
                     adCard.style.display = 'none';
                     return;
                 }
                 
                 const ad = data.ad;
+                console.log('📬 Loading ad:', ad.title);
                 
                 // Set the link (hidden from user)
                 adLink.href = ad.link_url;
                 
-                // Render media
+                // Render media with 16:9 aspect ratio
                 if (ad.media_type === 'video') {
                     adContent.innerHTML = `
-                        <video autoplay muted loop playsinline>
-                            <source src="${ad.media_url}" type="video/mp4">
-                        </video>
+                        <div style="position:relative; width:100%; padding-bottom:56.25%; background:#000;">
+                            <video autoplay muted loop playsinline style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;">
+                                <source src="${ad.media_url}" type="video/mp4">
+                            </video>
+                        </div>
                     `;
                 } else {
                     adContent.innerHTML = `
-                        <img src="${ad.media_url}" alt="${ad.title || 'Advertisement'}" loading="lazy" />
+                        <div style="position:relative; width:100%; padding-bottom:56.25%; background:#000;">
+                            <img src="${ad.media_url}" alt="${ad.title || 'Advertisement'}" loading="lazy" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;" />
+                        </div>
                     `;
                 }
                 
@@ -823,12 +833,14 @@
                     adCard.style.animation = 'slideUp 0.5s ease';
                 }, 1500);
                 
-                // Close button handler
+                // Close button handler - only hides for this page view
+                // Does NOT save to sessionStorage so it reappears on refresh
                 closeBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     adCard.style.display = 'none';
-                    sessionStorage.setItem('adClosed', 'true');
+                    // REMOVED: sessionStorage.setItem('adClosed', 'true');
+                    console.log('📬 Ad closed for this page view');
                 });
                 
             } catch (error) {
@@ -880,7 +892,12 @@
             loadPartners();
             updateCreatorsCount();
             loadPosts();
-            loadAd();
+            
+            // Load ad after a slight delay to ensure DOM is ready
+            setTimeout(() => {
+                loadAd();
+            }, 500);
+            
             console.log('🏠 100 HUB — Home Page Loaded');
             console.log('📸 Feed System: Database Posts');
             console.log('🔍 Search: Search posts by caption or keyword');

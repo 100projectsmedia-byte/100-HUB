@@ -2986,13 +2986,14 @@
         async function loadAds() {
             const grid = document.getElementById('adGrid');
             try {
+                console.log('📬 Fetching ads...');
                 const response = await fetchWithAuth(apiUrl('ads'));
                 const data = await response.json();
-                console.log('📥 Ads loaded:', data);
+                console.log('📬 Ads response:', data);
                 
                 if (data.success) {
-                    // Check if data.ads exists, otherwise use empty array
                     allAds = data.ads || [];
+                    console.log('📬 Ads loaded:', allAds.length);
                     renderAdGrid();
                 } else {
                     allAds = [];
@@ -3003,7 +3004,7 @@
                     console.error('Load ads error:', error);
                     grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
                         <i class="fa-regular fa-image"></i>
-                        <p>Error loading ads.</p>
+                        <p>Error loading ads: ${error.message}</p>
                     </div>`;
                 }
             }
