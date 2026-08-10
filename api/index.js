@@ -712,17 +712,22 @@ async function handlePosts(req, res) {
     if (req.method === 'POST') {
         if (!requireAdmin(req, res)) return;
         try {
-            const { post_id, image_url, caption, permalink, writer, article_url, is_video, video_url, published_at } = req.body || {};
+            const { post_id, image_url, caption, permalink, instagram_url, writer, article_url, is_video, video_url, published_at } = req.body || {};
             if (!post_id || !image_url) {
                 return res.status(400).json({ error: 'Post ID and image URL are required' });
             }
             const { data: existing } = await supabase.from('posts').select('id').eq('post_id', post_id).single();
             if (existing) return res.status(400).json({ error: 'This post already exists in the database' });
+            
+            // Generate instagram_url if not provided
+            const finalInstagramUrl = instagram_url || permalink || `https://www.instagram.com/p/${post_id}/`;
+            
             const { data: post, error } = await supabase.from('posts').insert({
                 post_id: post_id,
                 image_url: image_url,
                 caption: caption || '',
                 permalink: permalink || `https://www.instagram.com/p/${post_id}/`,
+                instagram_url: finalInstagramUrl,  // ← FIX: Added this required field
                 writer: writer || '100 HUB',
                 is_video: is_video || false,
                 video_url: video_url || '',
@@ -733,6 +738,7 @@ async function handlePosts(req, res) {
             if (error) throw error;
             return res.status(200).json({ success: true, message: 'Post added successfully!', post: post });
         } catch (error) {
+            console.error('❌ Error adding post:', error);
             return res.status(500).json({ error: 'Failed to add post: ' + error.message });
         }
     }
