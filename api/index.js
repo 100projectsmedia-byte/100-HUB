@@ -370,24 +370,65 @@ async function deleteMultipleFromCloudinary(urls) {
 // HELPER FUNCTIONS
 // ==========================================
 
-async function uploadToCloudinary(imageUrl) {
+async function uploadToCloudinary(mediaUrl, options = {}) {
+    const { publicId = null, resourceType = 'image' } = options;
     try {
-        const response = await fetch(imageUrl);
+        const response = await fetch(mediaUrl);
+        if (!response.ok) throw new Error(`Failed to fetch source media (${response.status})`);
         const buffer = await response.arrayBuffer();
         const base64 = Buffer.from(buffer).toString('base64');
+        const mimePrefix = resourceType === 'video' ? 'video/mp4' : 'image/jpeg';
+
+        const apiKey = process.env.CLOUDINARY_API_KEY;
+        const apiSecret = process.env.CLOUDINARY_API_SECRET;
+        const cloudName = 'dfozevcbl';
+        const folder = '100 TRUSTEES';
+        const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
         const formData = new FormData();
-        formData.append('file', `data:image/jpeg;base64,${base64}`);
-        formData.append('upload_preset', 'members');
-        formData.append('folder', '100 TRUSTEES');
-        const uploadResponse = await fetch('https://api.cloudinary.com/v1_1/dfozevcbl/image/upload', {
-            method: 'POST',
-            body: formData
-        });
-        if (!uploadResponse.ok) throw new Error('Cloudinary upload failed');
+        formData.append('file', `data:${mimePrefix};base64,${base64}`);
+        formData.append('folder', folder);
+
+        if (apiKey && apiSecret) {
+            // Signed upload — gives us full control (explicit public_id, no random
+            // suffix appended, ok to overwrite) regardless of the unsigned preset's
+            // "Unique filename" setting.
+            const crypto = await import('crypto');
+            const timestamp = Math.floor(Date.now() / 1000);
+            const params = {
+                folder,
+                timestamp,
+                overwrite: true,
+                unique_filename: false,
+                ...(publicId ? { public_id: publicId } : {})
+            };
+            const toSign = Object.keys(params)
+                .sort()
+                .map(key => `${key}=${params[key]}`)
+                .join('&');
+            const signature = crypto.createHash('sha1').update(toSign + apiSecret).digest('hex');
+
+            formData.append('timestamp', timestamp);
+            formData.append('overwrite', 'true');
+            formData.append('unique_filename', 'false');
+            if (publicId) formData.append('public_id', publicId);
+            formData.append('api_key', apiKey);
+            formData.append('signature', signature);
+        } else {
+            // Fallback: unsigned preset (random suffix risk remains unless the
+            // "members" preset itself has "Unique filename" turned off in Cloudinary).
+            formData.append('upload_preset', 'members');
+            if (publicId) formData.append('public_id', publicId);
+        }
+
+        const uploadResponse = await fetch(uploadUrl, { method: 'POST', body: formData });
+        if (!uploadResponse.ok) {
+            const errBody = await uploadResponse.text().catch(() => '');
+            throw new Error(`Cloudinary upload failed (${uploadResponse.status}): ${errBody}`);
+        }
         const result = await uploadResponse.json();
         return result.secure_url;
     } catch (error) {
-        console.error('Cloudinary upload error:', error);
+        console.error(`Cloudinary ${resourceType} upload error:`, error);
         return null;
     }
 }
@@ -746,13 +787,15 @@ async function handlePosts(req, res) {
     if (req.method === 'PUT') {
         if (!requireAdmin(req, res)) return;
         try {
-            const { id, caption, writer, article_url, published_at } = req.body || {};
+            const { id, caption, writer, article_url, published_at, image_url, video_url } = req.body || {};
             if (!id) return res.status(400).json({ error: 'Post ID is required' });
             const updates = {};
             if (caption !== undefined) updates.caption = caption;
             if (writer !== undefined) updates.writer = writer;
             if (article_url !== undefined) updates.article_url = article_url;
             if (published_at !== undefined) updates.published_at = published_at;
+            if (image_url !== undefined) updates.image_url = image_url;
+            if (video_url !== undefined) updates.video_url = video_url;
             updates.updated_at = new Date().toISOString();
             const { data: post, error } = await supabase.from('posts').update(updates).eq('id', id).select().single();
             if (error) throw error;
@@ -1145,13 +1188,13 @@ async function handleAds(req, res) {
         if (!requireAdmin(req, res)) return;
         try {
             const { title, media_url, media_type, link_url, is_active, display_order } = req.body || {};
-            if (!title || !media_url || !link_url) {
-                return res.status(400).json({ error: 'Title, media URL, and link URL are required' });
+            if (!media_url || !link_url) {
+                return res.status(400).json({ error: 'Media URL and link URL are required' });
             }
             const { data, error } = await supabase.from('ads').insert({
-                title,
+                title: title || `Ad ${new Date().toISOString().slice(0, 10)}`,
                 media_url,
-                media_type: media_type || 'image',
+                media_type: media_type || 'video',
                 link_url,
                 is_active: is_active !== undefined ? is_active : true,
                 display_order: display_order || 0
