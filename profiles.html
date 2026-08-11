@@ -2055,9 +2055,15 @@
             updateCreatorsCount();
             console.log('👥 100 HUB — Profiles Page Loaded');
             
-            // Check if we need to open the signup modal (from homepage redirect)
+            // Check if we need to open the signup modal (from homepage "Join Us" button)
             if (window.location.hash === '#join') {
-                setTimeout(openSignupModal, 500);
+                setTimeout(function() {
+                    const modal = document.getElementById('signupModalOverlay');
+                    if (modal) {
+                        modal.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
+                }, 500);
                 window.location.hash = '';
             }
         });
