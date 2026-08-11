@@ -21,6 +21,7 @@
     <link rel="preload" as="image" href="assets/Logo.png">
 
     <style>
+        /* ===== PAGE & SECTION STYLES ===== */
         .page-profiles .hub-section { padding: 140px 0 80px; }
         .page-profiles .community-section { padding: 80px 0 100px; }
 
@@ -90,7 +91,161 @@
             .social-group .social-row input { width: 100%; flex: none; min-width: unset; }
         }
 
-        /* Member Modal Styles */
+        /* ===== HUB GRID ===== */
+        .hub-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ===== HUB CARD (SIMPLIFIED) ===== */
+        .hub-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .hub-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--red);
+            box-shadow: 0 20px 60px rgba(227, 30, 36, 0.08);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .hub-card:active {
+            transform: scale(0.98);
+        }
+
+        .hub-image {
+            width: 100%;
+            aspect-ratio: 1/1;
+            overflow: hidden;
+            background: var(--bg-tertiary);
+            position: relative;
+        }
+
+        .hub-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: block;
+        }
+
+        .hub-card:hover .hub-image img {
+            transform: scale(1.04);
+        }
+
+        /* Optional role badge overlay on image */
+        .hub-image-badge {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background: rgba(227, 30, 36, 0.85);
+            backdrop-filter: blur(8px);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-family: 'Inter', sans-serif;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hub-info {
+            padding: 16px 20px 20px;
+        }
+
+        .hub-name {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 4px;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+
+        .hub-role {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 13px;
+            color: var(--red);
+            font-weight: 500;
+            margin: 0;
+            opacity: 0.85;
+            letter-spacing: 0.02em;
+        }
+
+        /* Fallback avatar if no image */
+        .hub-image .avatar-fallback {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(227,30,36,0.1), rgba(227,30,36,0.03));
+            font-size: 64px;
+            color: var(--red);
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .hub-loading {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 0;
+            gap: 16px;
+            color: var(--text-muted);
+        }
+
+        .hub-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 0;
+            color: var(--text-secondary);
+            font-size: 18px;
+        }
+
+        .see-more-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .see-more-btn {
+            background: transparent;
+            border: 1px solid var(--border-medium);
+            color: var(--text-primary);
+            padding: 12px 36px;
+            border-radius: 100px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .see-more-btn:hover {
+            border-color: var(--red);
+            color: var(--red);
+            background: rgba(227, 30, 36, 0.06);
+            transform: translateY(-2px);
+        }
+
+        /* ===== MEMBER MODAL ===== */
         .member-modal {
             position: fixed;
             inset: 0;
@@ -253,6 +408,663 @@
             width: 18px;
             text-align: center;
         }
+
+        /* ===== COMMUNITY ===== */
+        .community-content h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+        .community-content p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        .road-to-100 {
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-subtle);
+        }
+        .road-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .road-counter {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            margin: 4px 0 8px;
+        }
+        .road-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .road-total {
+            font-size: 16px;
+            color: var(--text-muted);
+        }
+        .road-progress {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 8px 0 4px;
+        }
+        .road-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--red), #ff4d4d);
+            border-radius: 4px;
+            transition: width 0.6s ease;
+            width: 0%;
+        }
+        .road-status {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin: 4px 0 0;
+        }
+        .community-benefits {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 16px;
+        }
+        .community-benefits li {
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .community-benefits li i {
+            color: var(--red);
+            font-size: 14px;
+        }
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--red);
+            color: #fff;
+            padding: 14px 32px;
+            border-radius: 100px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            background: #c41a20;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(227,30,36,0.25);
+        }
+        .btn-primary.full-width {
+            width: 100%;
+            justify-content: center;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.04);
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--red);
+        }
+        .form-group input::placeholder {
+            color: var(--text-muted);
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        .form-group small {
+            color: var(--text-muted);
+            font-size: 11px;
+            display: block;
+            margin-top: 4px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hub-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 20px;
+            }
+            .hub-name {
+                font-size: 16px;
+            }
+            .hub-role {
+                font-size: 12px;
+            }
+            .hub-info {
+                padding: 12px 14px 16px;
+            }
+            .community-benefits {
+                grid-template-columns: 1fr;
+            }
+            .member-modal-content {
+                max-width: 95%;
+            }
+            .member-modal-details {
+                padding: 18px 20px 20px;
+            }
+            .member-modal-name {
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hub-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+            .hub-name {
+                font-size: 14px;
+            }
+            .hub-role {
+                font-size: 11px;
+            }
+            .hub-info {
+                padding: 10px 10px 12px;
+            }
+            .hub-image-badge {
+                font-size: 8px;
+                padding: 2px 10px;
+                bottom: 8px;
+                right: 8px;
+            }
+        }
+
+        /* ===== LOADER ===== */
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.06);
+            border-top: 3px solid var(--red);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ===== GLOBE NODE BADGES ===== */
+        .globe-node-badge {
+            position: fixed;
+            pointer-events: none;
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            color: rgba(255,255,255,0.7);
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(6px);
+            padding: 4px 12px;
+            border-radius: 100px;
+            border: 1px solid rgba(255,255,255,0.06);
+            display: none;
+            align-items: center;
+            gap: 6px;
+            z-index: 100;
+            white-space: nowrap;
+            transform: translate(-50%, -50%);
+            letter-spacing: 0.5px;
+        }
+        .node-pulse-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--red);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.7); }
+        }
+
+        /* ===== HUD OVERLAYS ===== */
+        .tech-hud {
+            position: fixed;
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            color: rgba(255,255,255,0.25);
+            letter-spacing: 0.5px;
+            z-index: 50;
+            pointer-events: none;
+            line-height: 1.8;
+            text-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+        .tech-hud .highlight-red { color: var(--red); }
+        .hud-top-left { top: 80px; left: 24px; text-align: left; }
+        .hud-top-right { top: 80px; right: 24px; text-align: right; }
+        .hud-bottom-left { bottom: 24px; left: 24px; }
+        .hud-bottom-right { bottom: 24px; right: 24px; text-align: right; }
+
+        @media (max-width: 768px) {
+            .tech-hud { display: none; }
+        }
+
+        /* ===== FADE OVERLAY ===== */
+        .globe-fade-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(10,10,10,0.6) 100%);
+        }
+
+        /* ===== PRELOADER ===== */
+        .site-preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #0a0a0a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        .site-preloader.loaded {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .preloader-inner {
+            text-align: center;
+        }
+        .preloader-spinner-box {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 24px;
+        }
+        .preloader-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid transparent;
+        }
+        .ring-outer {
+            border-top-color: var(--red);
+            animation: spin 1.2s linear infinite;
+        }
+        .ring-inner {
+            inset: 16px;
+            border-bottom-color: rgba(255,255,255,0.15);
+            animation: spin 0.8s linear infinite reverse;
+        }
+        .preloader-logo {
+            position: absolute;
+            inset: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .preloader-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .preloader-text-box {
+            margin-top: 8px;
+        }
+        .preloader-counter {
+            font-family: 'Space Mono', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: block;
+        }
+        .preloader-status {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        .preloader-bar-track {
+            width: 200px;
+            height: 2px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 4px;
+            margin: 16px auto 0;
+            overflow: hidden;
+        }
+        .preloader-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--red);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 60px 0 30px;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 40px;
+        }
+        .footer-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .footer-logo {
+            height: 40px;
+            width: auto;
+        }
+        .footer-social {
+            display: flex;
+            gap: 16px;
+        }
+        .footer-social a {
+            color: var(--text-muted);
+            font-size: 20px;
+            transition: color 0.2s;
+        }
+        .footer-social a:hover { color: var(--red); }
+        .footer-divider {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 24px 0;
+        }
+        .footer-divider .divider-line-short {
+            flex: 1;
+            height: 1px;
+            background: var(--border-subtle);
+        }
+        .footer-divider .divider-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--border-medium);
+        }
+        .footer-bottom {
+            text-align: center;
+        }
+        .footer-tagline {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0 0 4px;
+        }
+        .footer-copy {
+            font-size: 12px;
+            color: var(--text-muted);
+            opacity: 0.5;
+            margin: 0;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 0;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+        .navbar.nav-scrolled {
+            background: rgba(10,10,10,0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            padding: 10px 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        .nav-logo .logo-img {
+            height: 32px;
+            width: auto;
+        }
+        .nav-logo .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .nav-logo .logo-text .highlight-red { color: var(--red); }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .nav-social {
+            display: flex;
+            gap: 12px;
+        }
+        .nav-social a {
+            color: var(--text-muted);
+            font-size: 18px;
+            transition: color 0.2s;
+        }
+        .nav-social a:hover { color: var(--red); }
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--text-primary);
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        /* ===== MOBILE MENU ===== */
+        .mobile-menu-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background: rgba(0,0,0,0.6);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 300px;
+            height: 100%;
+            z-index: 3000;
+            background: #0a0a0a;
+            border-left: 1px solid var(--border-subtle);
+            padding: 40px 28px;
+            transition: right 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: flex;
+            flex-direction: column;
+        }
+        .mobile-menu.open {
+            right: 0;
+        }
+        .mobile-menu-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+        }
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 40px;
+        }
+        .mobile-menu-links a {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            transition: color 0.2s;
+        }
+        .mobile-menu-links a:hover { color: var(--red); }
+        .mobile-menu-social {
+            margin-top: auto;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .mobile-menu-social a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.2s;
+        }
+        .mobile-menu-social a:hover { color: var(--red); }
+
+        /* ===== SECTION HEADERS ===== */
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .section-number {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            color: var(--red);
+            letter-spacing: 2px;
+            font-weight: 400;
+        }
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 8px 0 12px;
+            line-height: 1.1;
+        }
+        .section-title .highlight-red { color: var(--red); }
+        .section-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* ===== ROOT VARIABLES ===== */
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #121212;
+            --bg-tertiary: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255,255,255,0.7);
+            --text-muted: rgba(255,255,255,0.35);
+            --red: #e31e24;
+            --border-subtle: rgba(255,255,255,0.06);
+            --border-medium: rgba(255,255,255,0.1);
+            --radius: 16px;
+            --radius-sm: 8px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        #globe-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hub-section,
+        .community-section,
+        .footer {
+            position: relative;
+            z-index: 2;
+        }
+
+        [data-animate] {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        [data-animate].visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="page-profiles">
@@ -305,7 +1117,7 @@
     </div>
 
     <!-- ==================== HEADER ==================== -->
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div class="container">
             <div class="nav-inner">
                 <a href="/" class="nav-logo">
@@ -408,9 +1220,9 @@
                     <h3>Apply to Join</h3>
                     <form id="signupForm">
                         <div class="form-group">
-                            <label style="display:block; font-size:12px; color:var(--text-muted); margin-bottom:4px;">Professional Photo (1-3 images)</label>
+                            <label>Professional Photo (1-3 images)</label>
                             <input type="file" id="memberPhotos" accept="image/*" multiple required />
-                            <small style="color:var(--text-muted); font-size:11px;">Upload 1 to 3 images (PNG, JPG, JPEG)</small>
+                            <small>Upload 1 to 3 images (PNG, JPG, JPEG)</small>
                         </div>
                         <div class="form-group">
                             <input type="text" id="memberName" placeholder="Full Name" required />
@@ -425,7 +1237,7 @@
                             <input type="url" id="memberWebsite" placeholder="Website or Portfolio Link (optional)" />
                         </div>
                         <div class="form-group social-group">
-                            <label style="font-size:12px; color:var(--text-muted); margin-bottom:6px; display:block;">Social Media (optional)</label>
+                            <label>Social Media (optional)</label>
                             <div class="social-row">
                                 <select id="socialPlatform">
                                     <option value="">Platform</option>
@@ -595,7 +1407,7 @@
         }
 
         // ==========================================
-        // HUB MEMBERS
+        // HUB MEMBERS - SIMPLIFIED CARDS
         // ==========================================
         let allHubMembers = [];
         let hubShowingAll = false;
@@ -627,52 +1439,31 @@
             const toShow = hubShowingAll ? allHubMembers : allHubMembers.slice(0, HUB_INITIAL);
 
             container.innerHTML = toShow.map(member => {
-                // Use selectedImage, fallback to image1
-                const displayImage = member.selectedImage || member.image1 || 'assets/100_Logo.png';
-                const img = optimizeImage(displayImage, 400);
-                const joinDate = member.created_at || member.timestamp
-                    ? new Date(member.created_at || member.timestamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
-                    : '';
+                const displayImage = member.selectedImage || member.image1 || '';
+                const img = displayImage ? optimizeImage(displayImage, 400) : '';
+                const name = member.name || 'Anonymous';
+                const role = member.role || 'Creative';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 
-                let socialLinkHtml = '';
-                if (member.social_platform && member.social_handle) {
-                    const meta = SOCIAL_META[member.social_platform];
-                    if (meta) {
-                        const url = meta.url(member.social_handle);
-                        socialLinkHtml = `
-                            <a href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
-                                <i class="${meta.icon}"></i> @${member.social_handle}
-                            </a>
-                        `;
-                    }
+                // Build image HTML with fallback
+                let imageHtml = '';
+                if (img) {
+                    imageHtml = `<img src="${img}" alt="${name}" loading="lazy" />`;
+                } else {
+                    imageHtml = `<div class="avatar-fallback">${initials || '?'}</div>`;
                 }
 
-                let websiteLinkHtml = '';
-                if (member.website) {
-                    const display = member.website.replace(/^https?:\/\//, '').replace(/\/$/, '');
-                    websiteLinkHtml = `
-                        <a href="${member.website}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
-                            <i class="fa-solid fa-link"></i> ${display}
-                        </a>
-                    `;
-                }
+                // Optional badge if they have a special status (e.g., featured)
+                // We'll only show if there's a status field, otherwise skip
 
                 return `
                     <div class="hub-card" onclick='openMemberModal(${JSON.stringify(member).replace(/'/g, "&#39;")})'>
                         <div class="hub-image">
-                            <img src="${img}" alt="${member.name}" loading="lazy" />
+                            ${imageHtml}
                         </div>
                         <div class="hub-info">
-                            <h3 class="hub-name">${member.name}</h3>
-                            ${member.email ? `<div class="hub-email"><i class="fa-regular fa-envelope"></i> ${member.email}</div>` : ''}
-                            ${joinDate ? `<div class="hub-date"><i class="fa-regular fa-calendar"></i> Joined ${joinDate}</div>` : ''}
-                            ${member.skills ? `<div class="hub-skills">${member.skills}</div>` : ''}
-                            ${(socialLinkHtml || websiteLinkHtml) ? `
-                                <div class="hub-links">
-                                    ${socialLinkHtml}
-                                    ${websiteLinkHtml}
-                                </div>
-                            ` : ''}
+                            <h3 class="hub-name">${name}</h3>
+                            <p class="hub-role">${role}</p>
                         </div>
                     </div>
                 `;
@@ -700,19 +1491,25 @@
         }
 
         // ==========================================
-        // MEMBER PROFILE MODAL
+        // MEMBER PROFILE MODAL - FULL DETAILS
         // ==========================================
 
         function openMemberModal(member) {
-            // Use selectedImage, fallback to image1 if not set
-            const selectedImage = member.selectedImage || member.image1 || 'assets/100_Logo.png';
-            const img = optimizeImage(selectedImage, 800);
+            const selectedImage = member.selectedImage || member.image1 || '';
+            const img = selectedImage ? optimizeImage(selectedImage, 800) : '';
             const joinDate = member.created_at || member.timestamp
                 ? new Date(member.created_at || member.timestamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
                 : '';
 
-            // REMOVED: The gallery of all images - only show the selected one
-            
+            // Build image with fallback
+            let imageHtml = '';
+            if (img) {
+                imageHtml = `<img src="${img}" alt="${member.name}" />`;
+            } else {
+                const initials = (member.name || '?').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+                imageHtml = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg-tertiary);font-size:80px;color:var(--red);font-weight:700;font-family:'Space Grotesk',sans-serif;">${initials}</div>`;
+            }
+
             let socialHtml = '';
             if (member.social_platform && member.social_handle) {
                 const meta = SOCIAL_META[member.social_platform];
@@ -760,10 +1557,10 @@
 
             document.getElementById('memberModalBody').innerHTML = `
                 <div class="member-modal-photo">
-                    <img src="${img}" alt="${member.name}" />
+                    ${imageHtml}
                 </div>
                 <div class="member-modal-details">
-                    <h2 class="member-modal-name">${member.name}</h2>
+                    <h2 class="member-modal-name">${member.name || 'Anonymous'}</h2>
                     ${emailHtml}
                     ${roleHtml}
                     ${joinDate ? `<span class="member-modal-date">Joined ${joinDate}</span>` : ''}
@@ -857,7 +1654,6 @@
                     return;
                 }
 
-                // ✅ Consolidated API endpoint
                 const response = await fetch(apiUrl('signup'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -882,7 +1678,6 @@
                     successDiv.style.display = 'block';
                     fileInput.value = '';
 
-                    // Refresh member count
                     const count = await getMemberCount();
                     updateCounterDisplay(count);
                     loadHubMembers();
@@ -937,7 +1732,7 @@
         // ==========================================
         // NAVBAR SCROLL
         // ==========================================
-        const navbar = document.querySelector('.navbar');
+        const navbar = document.getElementById('navbar');
         if (navbar) {
             window.addEventListener('scroll', () => {
                 if (window.scrollY <= 50) {
@@ -966,7 +1761,6 @@
         import * as THREE from 'three';
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-        // (Same 3D globe code as home page)
         const canvas = document.getElementById('globe-canvas');
         const scene = new THREE.Scene();
 
