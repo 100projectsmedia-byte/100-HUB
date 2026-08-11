@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <span class="section-number">01 // THE HUB</span>
+    <title>100 HUB — The Hub</title>
     <meta name="description" content="100 HUB - Creative Network & Community" />
     <meta name="theme-color" content="#0a0a0a" />
 
@@ -100,7 +100,7 @@
             margin: 0 auto;
         }
 
-        /* ===== HUB CARD (SIMPLIFIED) ===== */
+        /* ===== HUB CARD (SIMPLIFIED WITH DESCRIPTION) ===== */
         .hub-card {
             background: rgba(255, 255, 255, 0.03);
             border-radius: 16px;
@@ -142,24 +142,6 @@
             transform: scale(1.04);
         }
 
-        /* Optional role badge overlay on image */
-        .hub-image-badge {
-            position: absolute;
-            bottom: 12px;
-            right: 12px;
-            background: rgba(227, 30, 36, 0.85);
-            backdrop-filter: blur(8px);
-            padding: 4px 12px;
-            border-radius: 100px;
-            font-size: 10px;
-            font-weight: 600;
-            color: #fff;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            font-family: 'Inter', sans-serif;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
         .hub-info {
             padding: 16px 20px 20px;
         }
@@ -179,9 +161,35 @@
             font-size: 13px;
             color: var(--red);
             font-weight: 500;
-            margin: 0;
+            margin: 0 0 6px;
             opacity: 0.85;
             letter-spacing: 0.02em;
+        }
+
+        /* ===== DESCRIPTION ON CARD - 2 LINES MAX ===== */
+        .hub-description {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.65);
+            line-height: 1.5;
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: 38px;
+        }
+
+        .hub-description-empty {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.25);
+            font-style: italic;
+            margin: 0;
+            min-height: 38px;
+            display: flex;
+            align-items: center;
         }
 
         /* Fallback avatar if no image */
@@ -355,7 +363,7 @@
             color: var(--text-muted);
             margin-bottom: 16px;
         }
-        .member-modal-skills {
+        .member-modal-description {
             margin-bottom: 16px;
         }
         .member-modal-label {
@@ -366,6 +374,16 @@
             color: var(--text-muted);
             font-weight: 600;
             margin-bottom: 4px;
+        }
+        .member-modal-description p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin: 0;
+            white-space: pre-wrap;
+        }
+        .member-modal-skills {
+            margin-bottom: 16px;
         }
         .member-modal-skills p {
             font-size: 14px;
@@ -519,7 +537,8 @@
         .form-group {
             margin-bottom: 16px;
         }
-        .form-group input {
+        .form-group input,
+        .form-group textarea {
             width: 100%;
             padding: 12px 14px;
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -529,12 +548,19 @@
             background: rgba(255, 255, 255, 0.04);
             font-family: 'Inter', sans-serif;
             transition: border-color 0.2s;
+            resize: vertical;
         }
-        .form-group input:focus {
+        .form-group textarea {
+            min-height: 80px;
+            max-height: 200px;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: var(--red);
         }
-        .form-group input::placeholder {
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
             color: var(--text-muted);
         }
         .form-group label {
@@ -562,6 +588,11 @@
             }
             .hub-role {
                 font-size: 12px;
+            }
+            .hub-description {
+                font-size: 12px;
+                min-height: 32px;
+                -webkit-line-clamp: 1;
             }
             .hub-info {
                 padding: 12px 14px 16px;
@@ -591,14 +622,13 @@
             .hub-role {
                 font-size: 11px;
             }
+            .hub-description {
+                font-size: 11px;
+                min-height: 28px;
+                -webkit-line-clamp: 1;
+            }
             .hub-info {
                 padding: 10px 10px 12px;
-            }
-            .hub-image-badge {
-                font-size: 8px;
-                padding: 2px 10px;
-                bottom: 8px;
-                right: 8px;
             }
         }
 
@@ -1065,6 +1095,60 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* ===== SIGNUP MODAL ===== */
+        .signup-modal-overlay-custom {
+            position: fixed;
+            inset: 0;
+            z-index: 5000;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .signup-modal-overlay-custom.active {
+            display: flex;
+        }
+        .signup-modal-content-custom {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius);
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 32px;
+            position: relative;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+        }
+        .signup-modal-close-custom {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .signup-modal-close-custom:hover {
+            color: var(--red);
+        }
+        .signup-modal-content-custom h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .signup-modal-content-custom p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
     </style>
 </head>
 <body class="page-profiles">
@@ -1145,8 +1229,8 @@
         <button class="mobile-menu-close" id="mobileMenuClose"><i class="fa-solid fa-xmark"></i></button>
         <div class="mobile-menu-links">
             <a href="/">Home</a>
-            <a href="/work.html">Our Work</a>
             <a href="/profiles.html">Hub</a>
+            <a href="/work.html">Our Work</a>
             <a href="/games.html">Games</a>
             <a href="/rewards.html">Rewards</a>
             <a href="/about.html">About</a>
@@ -1162,7 +1246,7 @@
     <section class="hub-section" id="hub" data-animate>
         <div class="container">
             <div class="section-header">
-                <span class="section-number">01 // PROFILES</span>
+                <span class="section-number">01 // THE HUB</span>
                 <h2 class="section-title">The Hub Roster<span class="highlight-red">.</span></h2>
                 <p class="section-subtitle">Discover independent directors, designers, producers, and cultural strategists.</p>
             </div>
@@ -1234,6 +1318,10 @@
                             <input type="text" id="memberRole" placeholder="Role/Title (e.g., Photographer, Writer, Brand Strategist)" required />
                         </div>
                         <div class="form-group">
+                            <textarea id="memberDescription" placeholder="Forte Description &amp; Qualifications" rows="3"></textarea>
+                            <small>Tell us about your creative focus, skills, and qualifications</small>
+                        </div>
+                        <div class="form-group">
                             <input type="url" id="memberWebsite" placeholder="Website or Portfolio Link (optional)" />
                         </div>
                         <div class="form-group social-group">
@@ -1273,6 +1361,63 @@
         <div class="member-modal-content">
             <button class="member-modal-close" id="memberModalClose"><i class="fa-solid fa-xmark"></i></button>
             <div id="memberModalBody"></div>
+        </div>
+    </div>
+
+    <!-- ==================== SIGNUP MODAL (for homepage "Join Us" button) ==================== -->
+    <div class="signup-modal-overlay-custom" id="signupModalOverlay">
+        <div class="signup-modal-content-custom">
+            <button class="signup-modal-close-custom" id="signupModalClose"><i class="fa-solid fa-xmark"></i></button>
+            <h2>Join the 100 HUB Community</h2>
+            <p>Apply to become a member of our creative network.</p>
+            <form id="signupModalForm">
+                <div class="form-group">
+                    <label>Professional Photo (1-3 images)</label>
+                    <input type="file" id="modalMemberPhotos" accept="image/*" multiple required />
+                    <small>Upload 1 to 3 images (PNG, JPG, JPEG)</small>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="modalMemberName" placeholder="Full Name" required />
+                </div>
+                <div class="form-group">
+                    <input type="email" id="modalMemberEmail" placeholder="Email Address" required />
+                </div>
+                <div class="form-group">
+                    <input type="text" id="modalMemberRole" placeholder="Role/Title (e.g., Photographer, Writer, Brand Strategist)" required />
+                </div>
+                <div class="form-group">
+                    <textarea id="modalMemberDescription" placeholder="Forte Description &amp; Qualifications" rows="3"></textarea>
+                    <small>Tell us about your creative focus, skills, and qualifications</small>
+                </div>
+                <div class="form-group">
+                    <input type="url" id="modalMemberWebsite" placeholder="Website or Portfolio Link (optional)" />
+                </div>
+                <div class="form-group social-group">
+                    <label>Social Media (optional)</label>
+                    <div class="social-row">
+                        <select id="modalSocialPlatform">
+                            <option value="">Platform</option>
+                            <option value="instagram">Instagram</option>
+                            <option value="tiktok">TikTok</option>
+                            <option value="twitter">Twitter/X</option>
+                            <option value="linkedin">LinkedIn</option>
+                            <option value="youtube">YouTube</option>
+                            <option value="facebook">Facebook</option>
+                            <option value="behance">Behance</option>
+                            <option value="pinterest">Pinterest</option>
+                        </select>
+                        <input type="text" id="modalSocialHandle" placeholder="@yourhandle" />
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary full-width" id="modalSignupSubmitBtn">
+                    <i class="fa-regular fa-paper-plane"></i> Submit Application
+                </button>
+            </form>
+            <div id="modalSignupSuccess" style="display:none; text-align:center; padding:20px 0;">
+                <i class="fa-regular fa-circle-check" style="font-size:40px; color:var(--red); display:block; margin-bottom:12px;"></i>
+                <h4 style="font-size:20px; margin-bottom:8px; color:var(--text-primary);">Application Submitted!</h4>
+                <p style="color:var(--text-secondary); font-size:14px;">We'll review your profile and be in touch soon.</p>
+            </div>
         </div>
     </div>
 
@@ -1372,6 +1517,27 @@
         }
 
         // ==========================================
+        // SIGNUP MODAL (for homepage "Join Us" button)
+        // ==========================================
+        const signupModalOverlay = document.getElementById('signupModalOverlay');
+        const signupModalClose = document.getElementById('signupModalClose');
+
+        function openSignupModal() {
+            signupModalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSignupModal() {
+            signupModalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        signupModalClose.addEventListener('click', closeSignupModal);
+        signupModalOverlay.addEventListener('click', function(e) {
+            if (e.target === this) closeSignupModal();
+        });
+
+        // ==========================================
         // MEMBER COUNT
         // ==========================================
         const MAX_MEMBERS = 100;
@@ -1407,7 +1573,7 @@
         }
 
         // ==========================================
-        // HUB MEMBERS - SIMPLIFIED CARDS
+        // HUB MEMBERS - SIMPLIFIED CARDS WITH DESCRIPTION
         // ==========================================
         let allHubMembers = [];
         let hubShowingAll = false;
@@ -1443,6 +1609,7 @@
                 const img = displayImage ? optimizeImage(displayImage, 400) : '';
                 const name = member.name || 'Anonymous';
                 const role = member.role || 'Creative';
+                const description = member.description || '';
                 const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 
                 // Build image HTML with fallback
@@ -1453,8 +1620,13 @@
                     imageHtml = `<div class="avatar-fallback">${initials || '?'}</div>`;
                 }
 
-                // Optional badge if they have a special status (e.g., featured)
-                // We'll only show if there's a status field, otherwise skip
+                // Description HTML - show 2 lines max
+                let descriptionHtml = '';
+                if (description && description.trim()) {
+                    descriptionHtml = `<p class="hub-description">${description}</p>`;
+                } else {
+                    descriptionHtml = `<p class="hub-description-empty">No description provided</p>`;
+                }
 
                 return `
                     <div class="hub-card" onclick='openMemberModal(${JSON.stringify(member).replace(/'/g, "&#39;")})'>
@@ -1464,6 +1636,7 @@
                         <div class="hub-info">
                             <h3 class="hub-name">${name}</h3>
                             <p class="hub-role">${role}</p>
+                            ${descriptionHtml}
                         </div>
                     </div>
                 `;
@@ -1535,11 +1708,22 @@
                 `;
             }
 
+            // Description - full text
+            let descriptionHtml = '';
+            if (member.description && member.description.trim()) {
+                descriptionHtml = `
+                    <div class="member-modal-description">
+                        <span class="member-modal-label">About</span>
+                        <p>${member.description}</p>
+                    </div>
+                `;
+            }
+
             let skillsHtml = '';
             if (member.skills) {
                 skillsHtml = `
                     <div class="member-modal-skills">
-                        <span class="member-modal-label">About</span>
+                        <span class="member-modal-label">Skills &amp; Focus</span>
                         <p>${member.skills}</p>
                     </div>
                 `;
@@ -1564,6 +1748,7 @@
                     ${emailHtml}
                     ${roleHtml}
                     ${joinDate ? `<span class="member-modal-date">Joined ${joinDate}</span>` : ''}
+                    ${descriptionHtml}
                     ${skillsHtml}
                     ${(socialHtml || websiteHtml) ? `
                         <div class="member-modal-links">
@@ -1590,7 +1775,7 @@
         });
 
         // ==========================================
-        // SIGNUP FORM
+        // SIGNUP FORM (main page)
         // ==========================================
         document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -1598,6 +1783,7 @@
             const name = document.getElementById('memberName').value;
             const email = document.getElementById('memberEmail').value;
             const role = document.getElementById('memberRole').value;
+            const description = document.getElementById('memberDescription').value;
             const website = document.getElementById('memberWebsite').value;
             const socialPlatform = document.getElementById('socialPlatform').value;
             const socialHandle = document.getElementById('socialHandle').value.trim().replace(/^@/, '');
@@ -1661,6 +1847,8 @@
                         name,
                         email,
                         role,
+                        description: description || '',
+                        skills: '',
                         website,
                         socialPlatform: socialPlatform || '',
                         socialHandle: socialHandle || '',
@@ -1681,6 +1869,119 @@
                     const count = await getMemberCount();
                     updateCounterDisplay(count);
                     loadHubMembers();
+                } else {
+                    alert(result.error || 'Something went wrong. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ ' + error.message);
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Application';
+        });
+
+        // ==========================================
+        // SIGNUP MODAL FORM (for homepage "Join Us" button)
+        // ==========================================
+        document.getElementById('signupModalForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('modalMemberName').value;
+            const email = document.getElementById('modalMemberEmail').value;
+            const role = document.getElementById('modalMemberRole').value;
+            const description = document.getElementById('modalMemberDescription').value;
+            const website = document.getElementById('modalMemberWebsite').value;
+            const socialPlatform = document.getElementById('modalSocialPlatform').value;
+            const socialHandle = document.getElementById('modalSocialHandle').value.trim().replace(/^@/, '');
+            const fileInput = document.getElementById('modalMemberPhotos');
+            const files = fileInput.files;
+
+            if (!name || !email || !role) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            if (files.length === 0) {
+                alert('Please upload at least one photo.');
+                return;
+            }
+
+            if (files.length > 3) {
+                alert('Please upload a maximum of 3 photos.');
+                return;
+            }
+
+            const submitBtn = document.getElementById('modalSignupSubmitBtn');
+            const form = document.getElementById('signupModalForm');
+            const successDiv = document.getElementById('modalSignupSuccess');
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+
+            try {
+                const imageUrls = [];
+                for (const file of files) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', 'members');
+                    formData.append('folder', '100 TRUSTEES');
+
+                    const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/dfozevcbl/image/upload`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (uploadResponse.ok) {
+                        const data = await uploadResponse.json();
+                        imageUrls.push(data.secure_url);
+                    } else {
+                        console.error('Upload failed:', await uploadResponse.text());
+                    }
+                }
+
+                if (imageUrls.length === 0) {
+                    alert('Failed to upload images. Please try again.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Application';
+                    return;
+                }
+
+                const response = await fetch(apiUrl('signup'), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        role,
+                        description: description || '',
+                        skills: '',
+                        website,
+                        socialPlatform: socialPlatform || '',
+                        socialHandle: socialHandle || '',
+                        image1: imageUrls[0] || '',
+                        image2: imageUrls[1] || '',
+                        image3: imageUrls[2] || '',
+                        status: 'pending'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    form.style.display = 'none';
+                    successDiv.style.display = 'block';
+                    fileInput.value = '';
+
+                    const count = await getMemberCount();
+                    updateCounterDisplay(count);
+                    loadHubMembers();
+                    
+                    setTimeout(() => {
+                        closeSignupModal();
+                        successDiv.style.display = 'none';
+                        form.style.display = 'block';
+                    }, 3000);
                 } else {
                     alert(result.error || 'Something went wrong. Please try again.');
                 }
@@ -1753,7 +2054,18 @@
             updateCounterDisplay(memberCount);
             updateCreatorsCount();
             console.log('👥 100 HUB — Profiles Page Loaded');
+            
+            // Check if we need to open the signup modal (from homepage redirect)
+            if (window.location.hash === '#join') {
+                setTimeout(openSignupModal, 500);
+                window.location.hash = '';
+            }
         });
+
+        // ==========================================
+        // Expose openSignupModal to global scope
+        // ==========================================
+        window.openSignupModal = openSignupModal;
     </script>
 
     <!-- Three.js for 3D Globe -->

@@ -550,6 +550,11 @@
             color: var(--text-primary);
             font-size: 14px;
             font-family: 'Inter', sans-serif;
+            resize: vertical;
+        }
+        .edit-modal .form-group textarea {
+            min-height: 60px;
+            max-height: 200px;
         }
         .edit-modal .form-group input:disabled {
             opacity: 0.5;
@@ -1082,8 +1087,8 @@
         <button class="mobile-menu-close" id="mobileMenuClose"><i class="fa-solid fa-xmark"></i></button>
         <div class="mobile-menu-links">
             <a href="/">Home</a>
-            <a href="/work.html">Our Work</a>
             <a href="/profiles.html">Hub</a>
+            <a href="/work.html">Our Work</a>
             <a href="/games.html">Games</a>
             <a href="/rewards.html">Rewards</a>
             <a href="/about.html">About</a>
@@ -1270,32 +1275,32 @@
             </div>
 
             <!-- Tab: Ads -->
-        <div class="tab-content" id="tab-ads">
-            <div class="dashboard-actions">
-                <button class="btn-outline" onclick="loadAds()">
-                    <i class="fa-solid fa-rotate"></i> Refresh
-                </button>
-                <button class="btn-primary" onclick="openAddAdModal()">
-                    <i class="fa-regular fa-plus"></i> Add Ad
-                </button>
-            </div>
+            <div class="tab-content" id="tab-ads">
+                <div class="dashboard-actions">
+                    <button class="btn-outline" onclick="loadAds()">
+                        <i class="fa-solid fa-rotate"></i> Refresh
+                    </button>
+                    <button class="btn-primary" onclick="openAddAdModal()">
+                        <i class="fa-regular fa-plus"></i> Add Ad
+                    </button>
+                </div>
 
-            <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px 16px; margin-bottom:16px;">
-                <p style="font-size:12px; color:rgba(255,255,255,0.5);">
-                    <i class="fa-regular fa-circle-info" style="color:var(--red);"></i>
-                    <strong>Ad Card:</strong> This ad will appear in the bottom right corner of all pages.
-                    The link URL is hidden from users - clicking the ad card redirects to the link.
-                    Only one active ad is shown at a time.
-                </p>
-            </div>
+                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px 16px; margin-bottom:16px;">
+                    <p style="font-size:12px; color:rgba(255,255,255,0.5);">
+                        <i class="fa-regular fa-circle-info" style="color:var(--red);"></i>
+                        <strong>Ad Card:</strong> This ad will appear in the bottom right corner of all pages.
+                        The link URL is hidden from users - clicking the ad card redirects to the link.
+                        Only one active ad is shown at a time.
+                    </p>
+                </div>
 
-            <div class="ad-grid" id="adGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:16px;">
-                <div class="empty-state" style="grid-column:1/-1;">
-                    <i class="fa-regular fa-image"></i>
-                    <p>Loading ads...</p>
+                <div class="ad-grid" id="adGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:16px;">
+                    <div class="empty-state" style="grid-column:1/-1;">
+                        <i class="fa-regular fa-image"></i>
+                        <p>Loading ads...</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
             <!-- Tab: Work -->
             <div class="tab-content" id="tab-work">
@@ -1528,6 +1533,11 @@
                     <div class="form-group">
                         <label>Creative Focus/Skillset</label>
                         <textarea id="editSkills" rows="2"></textarea>
+                    </div>
+                    <!-- NEW: Description Field -->
+                    <div class="form-group">
+                        <label>Forte Description &amp; Qualifications</label>
+                        <textarea id="editDescription" rows="3" placeholder="Tell us about their creative focus, skills, and qualifications..."></textarea>
                     </div>
                     <div class="edit-actions">
                         <button type="button" class="btn-outline success" onclick="updateMemberStatus('accepted')">
@@ -2328,6 +2338,7 @@
             document.getElementById('editEmail').value = member.email || '';
             document.getElementById('editRole').value = member.role || '';
             document.getElementById('editSkills').value = member.skills || '';
+            document.getElementById('editDescription').value = member.description || '';
 
             const grid = document.getElementById('imageSelectGrid');
             const images = [member.image1, member.image2, member.image3].filter(img => img);
@@ -2387,6 +2398,7 @@
                 name: document.getElementById('editName').value,
                 role: document.getElementById('editRole').value,
                 skills: document.getElementById('editSkills').value,
+                description: document.getElementById('editDescription').value,
                 selectedImage: selectedImage
             };
 
@@ -2633,10 +2645,6 @@
                 formData.append('file', file);
                 formData.append('upload_preset', 'members');
                 formData.append('folder', '100 TRUSTEES');
-                // NOTE: only produces a stable, predictable URL (no random suffix)
-                // if the "members" unsigned preset in Cloudinary has "Unique
-                // filename" turned OFF. Check Cloudinary dashboard → Settings →
-                // Upload → "members" preset if URLs are still random after this.
                 if (postId) {
                     formData.append('public_id', String(postId));
                 }
@@ -2997,7 +3005,7 @@
             }
         }
 
-                // ==========================================
+        // ==========================================
         // ADS
         // ==========================================
         let allAds = [];
@@ -3096,7 +3104,7 @@
             editingAdId = id;
             document.getElementById('adModalTitle').textContent = 'Edit Ad';
             document.getElementById('adTitle').value = ad.title || '';
-            document.getElementById('adLinkUrl').value = ad.link_url || '';  // Use link_url from database
+            document.getElementById('adLinkUrl').value = ad.link_url || '';
             document.getElementById('adMediaType').value = ad.media_type || 'image';
             document.getElementById('adDisplayOrder').value = ad.display_order || 0;
             document.getElementById('adIsActive').value = ad.is_active ? 'true' : 'false';
@@ -3105,7 +3113,6 @@
             document.getElementById('adFileName').textContent = 'Current: ' + (ad.media_url ? 'File uploaded' : 'No file');
             adUploadedMediaUrl = ad.media_url || '';
             
-            // Show preview
             if (ad.media_url) {
                 const preview = document.getElementById('adMediaPreview');
                 preview.style.display = 'block';
@@ -3224,10 +3231,8 @@
             const fileInput = document.getElementById('adMediaFile');
             const file = fileInput.files[0];
             
-            // Get existing media URL if editing
             let media_url = document.getElementById('adMediaUrl').value.trim();
             
-            // Validate required fields
             if (!title) {
                 showToast('Title is required.', 'error');
                 return;
@@ -3237,7 +3242,6 @@
                 return;
             }
             
-            // Handle file upload if a new file is selected
             if (file) {
                 if (file.size > 10 * 1024 * 1024) {
                     showToast('⚠️ File is too large. Maximum 10MB.', 'error');
@@ -3256,7 +3260,6 @@
                 }
             }
             
-            // Make sure we have a media URL
             if (!media_url) {
                 showToast('Media URL is required. Please upload a file.', 'error');
                 return;
@@ -3270,17 +3273,15 @@
                 const url = apiUrl('ads');
                 const method = editingAdId ? 'PUT' : 'POST';
                 
-                // Build the request body with the correct field names
                 const body = {
                     title: title,
-                    link_url: linkUrl,  // IMPORTANT: Use link_url (with underscore) for the API
+                    link_url: linkUrl,
                     media_url: media_url,
                     media_type: media_type,
                     display_order: display_order,
                     is_active: is_active
                 };
                 
-                // If editing, include the ID
                 if (editingAdId) {
                     body.id = editingAdId;
                 }
@@ -3313,7 +3314,6 @@
             submitBtn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Ad';
         }
 
-        // Add ad file input handler
         document.addEventListener('DOMContentLoaded', function() {
             const adFileInput = document.getElementById('adMediaFile');
             if (adFileInput) {
@@ -3328,7 +3328,6 @@
                             document.getElementById('adFileName').textContent = 'No file selected';
                             return;
                         }
-                        // Show preview immediately
                         const reader = new FileReader();
                         reader.onload = function(e) {
                             const preview = document.getElementById('adMediaPreview');
@@ -4057,12 +4056,13 @@
                     showToast('No members to export.', 'error');
                     return;
                 }
-                const headers = ['Name', 'Email', 'Role', 'Skills', 'Website', 'Status', 'Joined'];
+                const headers = ['Name', 'Email', 'Role', 'Skills', 'Description', 'Website', 'Status', 'Joined'];
                 const rows = data.members.map(m => [
                     `"${m.name || ''}"`,
                     `"${m.email || ''}"`,
                     `"${m.role || ''}"`,
                     `"${m.skills || ''}"`,
+                    `"${m.description || ''}"`,
                     `"${m.website || ''}"`,
                     `"${m.status || ''}"`,
                     `"${m.created_at ? new Date(m.created_at).toLocaleString() : ''}"`
@@ -4211,6 +4211,7 @@
         console.log('📬 Subscriptions tab added for managing newsletter subscribers.');
         console.log('🎯 Work items updated with agency/client and link URL fields.');
         console.log('🔐 Token-based authentication with automatic expiry handling.');
+        console.log('📝 Description field added to member profiles.');
     </script>
 </body>
 </html>
