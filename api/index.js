@@ -258,6 +258,7 @@ function requireAdmin(req, res) {
     const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
     
     console.log('🔐 Checking token:', token ? 'Present' : 'Missing');
+    console.log('🔐 Token preview:', token ? token.substring(0, 30) + '...' : 'none');
     
     if (!token) {
         console.log('❌ No token provided');
@@ -268,17 +269,50 @@ function requireAdmin(req, res) {
         return false;
     }
     
-    if (!verifyToken(token)) {
-        console.log('❌ Invalid token');
+    // Try to verify the token
+    try {
+        // Decode the base64 token
+        const decoded = JSON.parse(Buffer.from(token, 'base64').toString('utf-8'));
+        console.log('🔐 Decoded token:', decoded);
+        
+        // Check if the token has an expiresAt field
+        if (decoded.expiresAt) {
+            const now = Date.now();
+            if (now > decoded.expiresAt) {
+                console.log('⏰ Token expired at:', new Date(decoded.expiresAt));
+                console.log('⏰ Current time:', new Date(now));
+                res.status(401).json({ 
+                    error: 'Unauthorized',
+                    message: 'Token has expired. Please unlock the dashboard again.'
+                });
+                return false;
+            }
+            console.log('✅ Token verified successfully (expires at:', new Date(decoded.expiresAt), ')');
+            return true;
+        }
+        
+        // If no expiresAt, it might be a different token format
+        // Try to verify with the older method
+        if (verifyToken(token)) {
+            console.log('✅ Token verified successfully (legacy method)');
+            return true;
+        }
+        
+        console.log('❌ Invalid token format');
         res.status(401).json({ 
             error: 'Unauthorized',
-            message: 'Invalid or expired session. Please unlock again.'
+            message: 'Invalid token format. Please unlock the dashboard again.'
+        });
+        return false;
+        
+    } catch (error) {
+        console.error('❌ Token verification error:', error.message);
+        res.status(401).json({ 
+            error: 'Unauthorized',
+            message: 'Invalid token. Please unlock the dashboard again.'
         });
         return false;
     }
-    
-    console.log('✅ Token verified successfully');
-    return true;
 }
 
 // ==========================================
@@ -768,7 +802,7 @@ async function handlePosts(req, res) {
                 image_url: image_url,
                 caption: caption || '',
                 permalink: permalink || `https://www.instagram.com/p/${post_id}/`,
-                instagram_url: finalInstagramUrl,  // ← FIX: Added this required field
+                instagram_url: finalInstagramUrl,
                 writer: writer || '100 HUB',
                 is_video: is_video || false,
                 video_url: video_url || '',
@@ -1136,7 +1170,7 @@ async function handleUpdatePin(req, res) {
 }
 
 // ==========================================
-// ADS HANDLER - FIXED: Returns ALL ads for admin
+// ADS HANDLER
 // ==========================================
 
 async function handleAds(req, res) {
