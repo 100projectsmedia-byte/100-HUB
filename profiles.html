@@ -10,18 +10,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
-    
-    <!-- Garet Font for Paalalabas -->
     <link href="https://fonts.cdnfonts.com/css/garet" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="style.css" />
     <link rel="preload" as="image" href="assets/Logo.png">
 
     <style>
-        /* ===== PAGE & SECTION STYLES ===== */
         .page-profiles .hub-section { padding: 140px 0 80px; }
         .page-profiles .community-section { padding: 80px 0 100px; }
 
@@ -91,6 +86,85 @@
             .social-group .social-row input { width: 100%; flex: none; min-width: unset; }
         }
 
+        /* ===== HUB SEARCH BAR ===== */
+        .hub-search {
+            margin-bottom: 24px;
+        }
+        .hub-search .search-container {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 6px;
+        }
+        .hub-search .search-container .search-icon {
+            padding: 0 6px 0 14px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+        }
+        .hub-search .search-container input {
+            flex: 1;
+            min-width: 150px;
+            padding: 10px 6px;
+            background: transparent;
+            border: none;
+            color: #f0f0f0;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+        }
+        .hub-search .search-container input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+        .hub-search .search-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            padding-right: 4px;
+        }
+        .hub-search .search-actions .btn-search {
+            padding: 8px 16px;
+            background: var(--red);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+        .hub-search .search-actions .btn-search:hover {
+            background: var(--red-dark);
+            transform: translateY(-1px);
+        }
+        .hub-search .search-actions .btn-clear {
+            padding: 8px 12px;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+        .hub-search .search-actions .btn-clear:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+        .hub-search .search-result-count {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.35);
+            padding: 0 12px;
+            white-space: nowrap;
+        }
+
         /* ===== HUB GRID ===== */
         .hub-grid {
             display: grid;
@@ -100,7 +174,6 @@
             margin: 0 auto;
         }
 
-        /* ===== HUB CARD (SIMPLIFIED WITH DESCRIPTION) ===== */
         .hub-card {
             background: rgba(255, 255, 255, 0.03);
             border-radius: 16px;
@@ -110,17 +183,13 @@
             cursor: pointer;
             position: relative;
         }
-
         .hub-card:hover {
             transform: translateY(-6px);
             border-color: var(--red);
             box-shadow: 0 20px 60px rgba(227, 30, 36, 0.08);
             background: rgba(255, 255, 255, 0.05);
         }
-
-        .hub-card:active {
-            transform: scale(0.98);
-        }
+        .hub-card:active { transform: scale(0.98); }
 
         .hub-image {
             width: 100%;
@@ -129,7 +198,6 @@
             background: var(--bg-tertiary);
             position: relative;
         }
-
         .hub-image img {
             width: 100%;
             height: 100%;
@@ -137,15 +205,11 @@
             transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             display: block;
         }
-
-        .hub-card:hover .hub-image img {
-            transform: scale(1.04);
-        }
+        .hub-card:hover .hub-image img { transform: scale(1.04); }
 
         .hub-info {
             padding: 16px 20px 20px;
         }
-
         .hub-name {
             font-family: 'Space Grotesk', -apple-system, sans-serif;
             font-size: 19px;
@@ -155,7 +219,6 @@
             line-height: 1.2;
             letter-spacing: -0.01em;
         }
-
         .hub-role {
             font-family: 'Inter', -apple-system, sans-serif;
             font-size: 13px;
@@ -165,8 +228,6 @@
             opacity: 0.85;
             letter-spacing: 0.02em;
         }
-
-        /* ===== DESCRIPTION ON CARD - 2 LINES MAX ===== */
         .hub-description {
             font-family: 'Inter', -apple-system, sans-serif;
             font-size: 13px;
@@ -180,7 +241,6 @@
             text-overflow: ellipsis;
             min-height: 38px;
         }
-
         .hub-description-empty {
             font-family: 'Inter', -apple-system, sans-serif;
             font-size: 12px;
@@ -191,8 +251,6 @@
             display: flex;
             align-items: center;
         }
-
-        /* Fallback avatar if no image */
         .hub-image .avatar-fallback {
             width: 100%;
             height: 100%;
@@ -216,7 +274,6 @@
             gap: 16px;
             color: var(--text-muted);
         }
-
         .hub-empty {
             grid-column: 1 / -1;
             text-align: center;
@@ -229,7 +286,6 @@
             text-align: center;
             margin-top: 40px;
         }
-
         .see-more-btn {
             background: transparent;
             border: 1px solid var(--border-medium);
@@ -245,7 +301,6 @@
             align-items: center;
             gap: 12px;
         }
-
         .see-more-btn:hover {
             border-color: var(--red);
             color: var(--red);
@@ -583,56 +638,30 @@
                 grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
                 gap: 20px;
             }
-            .hub-name {
-                font-size: 16px;
-            }
-            .hub-role {
-                font-size: 12px;
-            }
-            .hub-description {
-                font-size: 12px;
-                min-height: 32px;
-                -webkit-line-clamp: 1;
-            }
-            .hub-info {
-                padding: 12px 14px 16px;
-            }
-            .community-benefits {
-                grid-template-columns: 1fr;
-            }
-            .member-modal-content {
-                max-width: 95%;
-            }
-            .member-modal-details {
-                padding: 18px 20px 20px;
-            }
-            .member-modal-name {
-                font-size: 22px;
-            }
+            .hub-name { font-size: 16px; }
+            .hub-role { font-size: 12px; }
+            .hub-description { font-size: 12px; min-height: 32px; -webkit-line-clamp: 1; }
+            .hub-info { padding: 12px 14px 16px; }
+            .community-benefits { grid-template-columns: 1fr; }
+            .member-modal-content { max-width: 95%; }
+            .member-modal-details { padding: 18px 20px 20px; }
+            .member-modal-name { font-size: 22px; }
+            .hub-search .search-container { flex-wrap: wrap; }
+            .hub-search .search-container input { min-width: 100%; padding: 10px 0; }
+            .hub-search .search-actions { width: 100%; justify-content: flex-end; }
+            .hub-search .search-result-count { width: 100%; text-align: center; padding: 4px 0; }
         }
-
         @media (max-width: 480px) {
-            .hub-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 12px;
-            }
-            .hub-name {
-                font-size: 14px;
-            }
-            .hub-role {
-                font-size: 11px;
-            }
-            .hub-description {
-                font-size: 11px;
-                min-height: 28px;
-                -webkit-line-clamp: 1;
-            }
-            .hub-info {
-                padding: 10px 10px 12px;
-            }
+            .hub-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .hub-name { font-size: 14px; }
+            .hub-role { font-size: 11px; }
+            .hub-description { font-size: 11px; min-height: 28px; -webkit-line-clamp: 1; }
+            .hub-info { padding: 10px 10px 12px; }
+            .hub-search .search-actions { justify-content: center; }
+            .hub-search .search-actions .btn-search,
+            .hub-search .search-actions .btn-clear { font-size: 11px; padding: 6px 12px; }
         }
 
-        /* ===== LOADER ===== */
         .loader {
             width: 40px;
             height: 40px;
@@ -676,7 +705,6 @@
             50% { opacity: 0.3; transform: scale(0.7); }
         }
 
-        /* ===== HUD OVERLAYS ===== */
         .tech-hud {
             position: fixed;
             font-family: 'Space Mono', monospace;
@@ -693,12 +721,8 @@
         .hud-top-right { top: 80px; right: 24px; text-align: right; }
         .hud-bottom-left { bottom: 24px; left: 24px; }
         .hud-bottom-right { bottom: 24px; right: 24px; text-align: right; }
+        @media (max-width: 768px) { .tech-hud { display: none; } }
 
-        @media (max-width: 768px) {
-            .tech-hud { display: none; }
-        }
-
-        /* ===== FADE OVERLAY ===== */
         .globe-fade-overlay {
             position: fixed;
             inset: 0;
@@ -707,7 +731,6 @@
             background: radial-gradient(ellipse at center, transparent 40%, rgba(10,10,10,0.6) 100%);
         }
 
-        /* ===== PRELOADER ===== */
         .site-preloader {
             position: fixed;
             inset: 0;
@@ -723,9 +746,7 @@
             visibility: hidden;
             pointer-events: none;
         }
-        .preloader-inner {
-            text-align: center;
-        }
+        .preloader-inner { text-align: center; }
         .preloader-spinner-box {
             position: relative;
             width: 120px;
@@ -759,9 +780,7 @@
             height: 100%;
             object-fit: contain;
         }
-        .preloader-text-box {
-            margin-top: 8px;
-        }
+        .preloader-text-box { margin-top: 8px; }
         .preloader-counter {
             font-family: 'Space Mono', monospace;
             font-size: 28px;
@@ -792,7 +811,6 @@
             transition: width 0.3s ease;
         }
 
-        /* ===== FOOTER ===== */
         .footer {
             padding: 60px 0 30px;
             border-top: 1px solid var(--border-subtle);
@@ -810,14 +828,8 @@
             flex-wrap: wrap;
             gap: 20px;
         }
-        .footer-logo {
-            height: 40px;
-            width: auto;
-        }
-        .footer-social {
-            display: flex;
-            gap: 16px;
-        }
+        .footer-logo { height: 40px; width: auto; }
+        .footer-social { display: flex; gap: 16px; }
         .footer-social a {
             color: var(--text-muted);
             font-size: 20px;
@@ -841,9 +853,7 @@
             border-radius: 50%;
             background: var(--border-medium);
         }
-        .footer-bottom {
-            text-align: center;
-        }
+        .footer-bottom { text-align: center; }
         .footer-tagline {
             font-size: 13px;
             color: var(--text-muted);
@@ -856,7 +866,6 @@
             margin: 0;
         }
 
-        /* ===== NAVBAR ===== */
         .navbar {
             position: fixed;
             top: 0;
@@ -889,10 +898,7 @@
             gap: 8px;
             text-decoration: none;
         }
-        .nav-logo .logo-img {
-            height: 32px;
-            width: auto;
-        }
+        .nav-logo .logo-img { height: 32px; width: auto; }
         .nav-logo .logo-text {
             font-family: 'Space Grotesk', sans-serif;
             font-size: 20px;
@@ -905,10 +911,7 @@
             align-items: center;
             gap: 20px;
         }
-        .nav-social {
-            display: flex;
-            gap: 12px;
-        }
+        .nav-social { display: flex; gap: 12px; }
         .nav-social a {
             color: var(--text-muted);
             font-size: 18px;
@@ -936,7 +939,6 @@
         .hamburger.active span:nth-child(2) { opacity: 0; }
         .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
-        /* ===== MOBILE MENU ===== */
         .mobile-menu-overlay {
             position: fixed;
             inset: 0;
@@ -964,9 +966,7 @@
             display: flex;
             flex-direction: column;
         }
-        .mobile-menu.open {
-            right: 0;
-        }
+        .mobile-menu.open { right: 0; }
         .mobile-menu-close {
             position: absolute;
             top: 16px;
@@ -1014,7 +1014,6 @@
         }
         .mobile-menu-social a:hover { color: var(--red); }
 
-        /* ===== SECTION HEADERS ===== */
         .section-header {
             text-align: center;
             margin-bottom: 48px;
@@ -1044,7 +1043,6 @@
             line-height: 1.6;
         }
 
-        /* ===== ROOT VARIABLES ===== */
         :root {
             --bg-primary: #0a0a0a;
             --bg-secondary: #121212;
@@ -1094,60 +1092,6 @@
         [data-animate].visible {
             opacity: 1;
             transform: translateY(0);
-        }
-
-        /* ===== SIGNUP MODAL ===== */
-        .signup-modal-overlay-custom {
-            position: fixed;
-            inset: 0;
-            z-index: 5000;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(12px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .signup-modal-overlay-custom.active {
-            display: flex;
-        }
-        .signup-modal-content-custom {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-medium);
-            border-radius: var(--radius);
-            max-width: 500px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 32px;
-            position: relative;
-            box-shadow: 0 24px 80px rgba(0,0,0,0.5);
-        }
-        .signup-modal-close-custom {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 24px;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .signup-modal-close-custom:hover {
-            color: var(--red);
-        }
-        .signup-modal-content-custom h2 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-        .signup-modal-content-custom p {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 24px;
         }
     </style>
 </head>
@@ -1250,6 +1194,22 @@
                 <h2 class="section-title">The Hub Roster<span class="highlight-red">.</span></h2>
                 <p class="section-subtitle">Discover independent directors, designers, producers, and cultural strategists.</p>
             </div>
+
+            <!-- ===== SEARCH BAR ===== -->
+            <div class="hub-search">
+                <div class="search-container">
+                    <span class="search-icon"><i class="fa-solid fa-search"></i></span>
+                    <input type="text" id="hubSearchInput" placeholder="Search by name, role, or description..." />
+                    <div class="search-actions">
+                        <button class="btn-search" onclick="searchHubMembers()"><i class="fa-solid fa-search"></i> Search</button>
+                        <button class="btn-clear" onclick="clearHubSearch()"><i class="fa-solid fa-times"></i></button>
+                    </div>
+                    <span class="search-result-count">
+                        Showing <span id="hubShowingCount">0</span> members
+                    </span>
+                </div>
+            </div>
+
             <div class="hub-grid" id="hubGrid">
                 <div class="hub-loading">
                     <div class="loader"></div>
@@ -1364,63 +1324,6 @@
         </div>
     </div>
 
-    <!-- ==================== SIGNUP MODAL (for homepage "Join Us" button) ==================== -->
-    <div class="signup-modal-overlay-custom" id="signupModalOverlay">
-        <div class="signup-modal-content-custom">
-            <button class="signup-modal-close-custom" id="signupModalClose"><i class="fa-solid fa-xmark"></i></button>
-            <h2>Join the 100 HUB Community</h2>
-            <p>Apply to become a member of our creative network.</p>
-            <form id="signupModalForm">
-                <div class="form-group">
-                    <label>Professional Photo (1-3 images)</label>
-                    <input type="file" id="modalMemberPhotos" accept="image/*" multiple required />
-                    <small>Upload 1 to 3 images (PNG, JPG, JPEG)</small>
-                </div>
-                <div class="form-group">
-                    <input type="text" id="modalMemberName" placeholder="Full Name" required />
-                </div>
-                <div class="form-group">
-                    <input type="email" id="modalMemberEmail" placeholder="Email Address" required />
-                </div>
-                <div class="form-group">
-                    <input type="text" id="modalMemberRole" placeholder="Role/Title (e.g., Photographer, Writer, Brand Strategist)" required />
-                </div>
-                <div class="form-group">
-                    <textarea id="modalMemberDescription" placeholder="Forte Description &amp; Qualifications" rows="3"></textarea>
-                    <small>Tell us about your creative focus, skills, and qualifications</small>
-                </div>
-                <div class="form-group">
-                    <input type="url" id="modalMemberWebsite" placeholder="Website or Portfolio Link (optional)" />
-                </div>
-                <div class="form-group social-group">
-                    <label>Social Media (optional)</label>
-                    <div class="social-row">
-                        <select id="modalSocialPlatform">
-                            <option value="">Platform</option>
-                            <option value="instagram">Instagram</option>
-                            <option value="tiktok">TikTok</option>
-                            <option value="twitter">Twitter/X</option>
-                            <option value="linkedin">LinkedIn</option>
-                            <option value="youtube">YouTube</option>
-                            <option value="facebook">Facebook</option>
-                            <option value="behance">Behance</option>
-                            <option value="pinterest">Pinterest</option>
-                        </select>
-                        <input type="text" id="modalSocialHandle" placeholder="@yourhandle" />
-                    </div>
-                </div>
-                <button type="submit" class="btn-primary full-width" id="modalSignupSubmitBtn">
-                    <i class="fa-regular fa-paper-plane"></i> Submit Application
-                </button>
-            </form>
-            <div id="modalSignupSuccess" style="display:none; text-align:center; padding:20px 0;">
-                <i class="fa-regular fa-circle-check" style="font-size:40px; color:var(--red); display:block; margin-bottom:12px;"></i>
-                <h4 style="font-size:20px; margin-bottom:8px; color:var(--text-primary);">Application Submitted!</h4>
-                <p style="color:var(--text-secondary); font-size:14px;">We'll review your profile and be in touch soon.</p>
-            </div>
-        </div>
-    </div>
-
     <!-- ==================== FOOTER ==================== -->
     <footer class="footer">
         <div class="container">
@@ -1461,7 +1364,7 @@
 
     <script>
         // ==========================================
-        // API HELPER - Consolidated API Calls
+        // API HELPER
         // ==========================================
         function apiUrl(path, params = {}) {
             const queryParams = new URLSearchParams({ path, ...params });
@@ -1517,27 +1420,6 @@
         }
 
         // ==========================================
-        // SIGNUP MODAL (for homepage "Join Us" button)
-        // ==========================================
-        const signupModalOverlay = document.getElementById('signupModalOverlay');
-        const signupModalClose = document.getElementById('signupModalClose');
-
-        function openSignupModal() {
-            signupModalOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeSignupModal() {
-            signupModalOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        signupModalClose.addEventListener('click', closeSignupModal);
-        signupModalOverlay.addEventListener('click', function(e) {
-            if (e.target === this) closeSignupModal();
-        });
-
-        // ==========================================
         // MEMBER COUNT
         // ==========================================
         const MAX_MEMBERS = 100;
@@ -1573,9 +1455,10 @@
         }
 
         // ==========================================
-        // HUB MEMBERS - SIMPLIFIED CARDS WITH DESCRIPTION
+        // HUB MEMBERS - WITH SEARCH AND ALPHABETICAL
         // ==========================================
         let allHubMembers = [];
+        let filteredHubMembers = [];
         let hubShowingAll = false;
         const HUB_INITIAL = 6;
 
@@ -1584,7 +1467,12 @@
                 const response = await fetch(apiUrl('members', { status: 'accepted', limit: 200 }));
                 if (response.ok) {
                     const data = await response.json();
-                    allHubMembers = data.members || [];
+                    // Sort alphabetically by name
+                    allHubMembers = (data.members || []).sort((a, b) => {
+                        return a.name.localeCompare(b.name);
+                    });
+                    filteredHubMembers = allHubMembers;
+                    document.getElementById('hubShowingCount').textContent = allHubMembers.length;
                     renderHubGrid();
                 }
             } catch (error) {
@@ -1592,19 +1480,51 @@
             }
         }
 
+        function searchHubMembers() {
+            const searchInput = document.getElementById('hubSearchInput');
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            
+            if (!searchTerm) {
+                filteredHubMembers = allHubMembers;
+            } else {
+                filteredHubMembers = allHubMembers.filter(member => {
+                    const name = (member.name || '').toLowerCase();
+                    const role = (member.role || '').toLowerCase();
+                    const description = (member.description || '').toLowerCase();
+                    const email = (member.email || '').toLowerCase();
+                    return name.includes(searchTerm) || 
+                           role.includes(searchTerm) || 
+                           description.includes(searchTerm) ||
+                           email.includes(searchTerm);
+                });
+            }
+            
+            document.getElementById('hubShowingCount').textContent = filteredHubMembers.length;
+            hubShowingAll = false;
+            renderHubGrid();
+        }
+
+        function clearHubSearch() {
+            document.getElementById('hubSearchInput').value = '';
+            filteredHubMembers = allHubMembers;
+            document.getElementById('hubShowingCount').textContent = allHubMembers.length;
+            hubShowingAll = false;
+            renderHubGrid();
+        }
+
         function renderHubGrid() {
             const container = document.getElementById('hubGrid');
             const seeMoreWrap = document.getElementById('hubSeeMore');
-
-            if (allHubMembers.length === 0) {
-                container.innerHTML = `<div class="hub-empty"><p>No members yet. Be the first to join!</p></div>`;
+            
+            const membersToShow = hubShowingAll ? filteredHubMembers : filteredHubMembers.slice(0, HUB_INITIAL);
+            
+            if (filteredHubMembers.length === 0) {
+                container.innerHTML = `<div class="hub-empty"><p>${allHubMembers.length === 0 ? 'No members yet. Be the first to join!' : 'No members match your search.'}</p></div>`;
                 seeMoreWrap.style.display = 'none';
                 return;
             }
 
-            const toShow = hubShowingAll ? allHubMembers : allHubMembers.slice(0, HUB_INITIAL);
-
-            container.innerHTML = toShow.map(member => {
+            container.innerHTML = membersToShow.map(member => {
                 const displayImage = member.selectedImage || member.image1 || '';
                 const img = displayImage ? optimizeImage(displayImage, 400) : '';
                 const name = member.name || 'Anonymous';
@@ -1612,7 +1532,6 @@
                 const description = member.description || '';
                 const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 
-                // Build image HTML with fallback
                 let imageHtml = '';
                 if (img) {
                     imageHtml = `<img src="${img}" alt="${name}" loading="lazy" />`;
@@ -1620,7 +1539,6 @@
                     imageHtml = `<div class="avatar-fallback">${initials || '?'}</div>`;
                 }
 
-                // Description HTML - show 2 lines max
                 let descriptionHtml = '';
                 if (description && description.trim()) {
                     descriptionHtml = `<p class="hub-description">${description}</p>`;
@@ -1642,7 +1560,7 @@
                 `;
             }).join('');
 
-            if (allHubMembers.length > HUB_INITIAL) {
+            if (filteredHubMembers.length > HUB_INITIAL) {
                 seeMoreWrap.style.display = 'block';
                 const btn = seeMoreWrap.querySelector('button');
                 if (btn) {
@@ -1664,7 +1582,7 @@
         }
 
         // ==========================================
-        // MEMBER PROFILE MODAL - FULL DETAILS
+        // MEMBER PROFILE MODAL
         // ==========================================
 
         function openMemberModal(member) {
@@ -1674,7 +1592,6 @@
                 ? new Date(member.created_at || member.timestamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
                 : '';
 
-            // Build image with fallback
             let imageHtml = '';
             if (img) {
                 imageHtml = `<img src="${img}" alt="${member.name}" />`;
@@ -1708,7 +1625,6 @@
                 `;
             }
 
-            // Description - full text
             let descriptionHtml = '';
             if (member.description && member.description.trim()) {
                 descriptionHtml = `
@@ -1775,7 +1691,7 @@
         });
 
         // ==========================================
-        // SIGNUP FORM (main page)
+        // SIGNUP FORM
         // ==========================================
         document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -1882,119 +1798,6 @@
         });
 
         // ==========================================
-        // SIGNUP MODAL FORM (for homepage "Join Us" button)
-        // ==========================================
-        document.getElementById('signupModalForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const name = document.getElementById('modalMemberName').value;
-            const email = document.getElementById('modalMemberEmail').value;
-            const role = document.getElementById('modalMemberRole').value;
-            const description = document.getElementById('modalMemberDescription').value;
-            const website = document.getElementById('modalMemberWebsite').value;
-            const socialPlatform = document.getElementById('modalSocialPlatform').value;
-            const socialHandle = document.getElementById('modalSocialHandle').value.trim().replace(/^@/, '');
-            const fileInput = document.getElementById('modalMemberPhotos');
-            const files = fileInput.files;
-
-            if (!name || !email || !role) {
-                alert('Please fill in all required fields.');
-                return;
-            }
-
-            if (files.length === 0) {
-                alert('Please upload at least one photo.');
-                return;
-            }
-
-            if (files.length > 3) {
-                alert('Please upload a maximum of 3 photos.');
-                return;
-            }
-
-            const submitBtn = document.getElementById('modalSignupSubmitBtn');
-            const form = document.getElementById('signupModalForm');
-            const successDiv = document.getElementById('modalSignupSuccess');
-
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
-
-            try {
-                const imageUrls = [];
-                for (const file of files) {
-                    const formData = new FormData();
-                    formData.append('file', file);
-                    formData.append('upload_preset', 'members');
-                    formData.append('folder', '100 TRUSTEES');
-
-                    const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/dfozevcbl/image/upload`, {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    if (uploadResponse.ok) {
-                        const data = await uploadResponse.json();
-                        imageUrls.push(data.secure_url);
-                    } else {
-                        console.error('Upload failed:', await uploadResponse.text());
-                    }
-                }
-
-                if (imageUrls.length === 0) {
-                    alert('Failed to upload images. Please try again.');
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Application';
-                    return;
-                }
-
-                const response = await fetch(apiUrl('signup'), {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name,
-                        email,
-                        role,
-                        description: description || '',
-                        skills: '',
-                        website,
-                        socialPlatform: socialPlatform || '',
-                        socialHandle: socialHandle || '',
-                        image1: imageUrls[0] || '',
-                        image2: imageUrls[1] || '',
-                        image3: imageUrls[2] || '',
-                        status: 'pending'
-                    })
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    form.style.display = 'none';
-                    successDiv.style.display = 'block';
-                    fileInput.value = '';
-
-                    const count = await getMemberCount();
-                    updateCounterDisplay(count);
-                    loadHubMembers();
-                    
-                    setTimeout(() => {
-                        closeSignupModal();
-                        successDiv.style.display = 'none';
-                        form.style.display = 'block';
-                    }, 3000);
-                } else {
-                    alert(result.error || 'Something went wrong. Please try again.');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('❌ ' + error.message);
-            }
-
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Application';
-        });
-
-        // ==========================================
         // SCROLL REVEAL
         // ==========================================
         const animatedElements = document.querySelectorAll('[data-animate]');
@@ -2054,24 +1857,7 @@
             updateCounterDisplay(memberCount);
             updateCreatorsCount();
             console.log('👥 100 HUB — Profiles Page Loaded');
-            
-            // Check if we need to open the signup modal (from homepage "Join Us" button)
-            if (window.location.hash === '#join') {
-                setTimeout(function() {
-                    const modal = document.getElementById('signupModalOverlay');
-                    if (modal) {
-                        modal.classList.add('active');
-                        document.body.style.overflow = 'hidden';
-                    }
-                }, 500);
-                window.location.hash = '';
-            }
         });
-
-        // ==========================================
-        // Expose openSignupModal to global scope
-        // ==========================================
-        window.openSignupModal = openSignupModal;
     </script>
 
     <!-- Three.js for 3D Globe -->

@@ -1597,16 +1597,16 @@
                 <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:16px; margin-bottom:16px;">
                     <h4 style="font-size:13px; color:var(--text-primary); margin-bottom:8px;">📷 Step 1: Upload Media File</h4>
                     <div class="form-group" style="margin-bottom:8px;">
-                        <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Choose Image or Video *</label>
+                        <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Choose Images or a Video *</label>
                         <div class="file-upload-area" id="postUploadArea" onclick="document.getElementById('postMediaFile').click()">
-                            <i class="fa-regular fa-image"></i>
-                            <p>Click to upload image or video</p>
-                            <div class="file-name" id="postFileName">No file selected</div>
-                            <input type="file" id="postMediaFile" accept="image/*,video/*" />
+                            <i class="fa-regular fa-images"></i>
+                            <p>Click to upload one or more images, or a single video</p>
+                            <div class="file-name" id="postFileName">No files selected</div>
+                            <input type="file" id="postMediaFile" accept="image/*,video/*" multiple />
                         </div>
-                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">Supported: JPG, PNG, GIF, MP4, MOV (Max 10MB)</small>
+                        <small style="color:rgba(255,255,255,0.4); font-size:11px;">Supported: JPG, PNG, GIF, MP4, MOV (Max 10MB each). Select multiple images for a carousel post, or a single video.</small>
                     </div>
-                    <div id="mediaPreview" style="display:none; margin-top:12px; border-radius:10px; overflow:hidden; background:var(--bg-tertiary); max-height:300px;"></div>
+                    <div id="mediaPreview" style="display:none; margin-top:12px; border-radius:10px; overflow:hidden; background:var(--bg-tertiary);"></div>
                     <div id="uploadProgress" style="display:none; margin-top:8px;">
                         <div style="display:flex; align-items:center; gap:12px;">
                             <div style="flex:1; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden;">
@@ -1647,11 +1647,8 @@
                         <input type="url" id="postArticleUrl" placeholder="https://substack.com/..." />
                     </div>
                     <div class="form-group">
-                        <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Is Video</label>
-                        <select id="postIsVideo">
-                            <option value="false">No (Image)</option>
-                            <option value="true">Yes (Video)</option>
-                        </select>
+                        <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Media Type</label>
+                        <div style="font-size:12px; color:rgba(255,255,255,0.4); padding:10px 0;">Auto-detected from your uploaded file(s) — multiple images become a carousel, a single video stays a video.</div>
                     </div>
                 </div>
 
@@ -2152,6 +2149,27 @@
             loadPosts();
             loadWorkItems();
             loadSubscriptions();
+            applyDeepLinkParams();
+        }
+
+        // ==========================================
+        // DEEP LINKING (e.g. from admin notification emails)
+        // Supports links like dashboard.html?tab=members&filter=pending
+        // ==========================================
+        function applyDeepLinkParams() {
+            const params = new URLSearchParams(window.location.search);
+            const tab = params.get('tab');
+            const filter = params.get('filter');
+
+            if (tab) {
+                const tabBtn = document.querySelector(`.dashboard-tabs button[data-tab="${tab}"]`);
+                if (tabBtn) tabBtn.click();
+            }
+
+            if (filter && ['all', 'pending', 'accepted', 'declined'].includes(filter)) {
+                // renderMembers() call above is async; give it a tick before filtering
+                setTimeout(() => filterMembers(filter), 300);
+            }
         }
 
         // ==========================================
@@ -2606,6 +2624,7 @@
         const POST_INCREMENT = 3;
 
         let uploadedMediaUrl = '';
+        let selectedPostFiles = [];
 
         function openAddPostModal() {
             document.getElementById('manualPostId').value = '';
@@ -2614,14 +2633,14 @@
             document.getElementById('manualPermalink').value = '';
             document.getElementById('manualWriter').value = '100 HUB';
             document.getElementById('postArticleUrl').value = '';
-            document.getElementById('postIsVideo').value = 'false';
             document.getElementById('postMediaFile').value = '';
             document.getElementById('mediaPreview').style.display = 'none';
             document.getElementById('mediaPreview').innerHTML = '';
             document.getElementById('uploadStatus').innerHTML = '';
             document.getElementById('uploadProgress').style.display = 'none';
-            document.getElementById('postFileName').textContent = 'No file selected';
+            document.getElementById('postFileName').textContent = 'No files selected';
             uploadedMediaUrl = '';
+            selectedPostFiles = [];
             document.getElementById('postModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -2631,83 +2650,103 @@
             document.body.style.overflow = '';
         }
 
-        async function uploadMediaFile(file, postId = null) {
+        async function uploadMediaFile(file, publicId = null) {
             return new Promise((resolve, reject) => {
-                const progressDiv = document.getElementById('uploadProgress');
-                const progressBar = document.getElementById('uploadProgressBar');
-                const progressText = document.getElementById('uploadProgressText');
-                const status = document.getElementById('uploadStatus');
-                
-                progressDiv.style.display = 'block';
-                status.innerHTML = '<span style="color:#ffd700;">⏳ Uploading to Cloudinary...</span>';
-                
                 const formData = new FormData();
                 formData.append('file', file);
                 formData.append('upload_preset', 'members');
                 formData.append('folder', '100 TRUSTEES');
-                if (postId) {
-                    formData.append('public_id', String(postId));
+                if (publicId) {
+                    formData.append('public_id', String(publicId));
                 }
-                
+
                 const isVideo = file.type.startsWith('video/');
-                const uploadUrl = isVideo 
+                const uploadUrl = isVideo
                     ? 'https://api.cloudinary.com/v1_1/dfozevcbl/video/upload'
                     : 'https://api.cloudinary.com/v1_1/dfozevcbl/image/upload';
-                
+
                 const xhr = new XMLHttpRequest();
                 xhr.open('POST', uploadUrl);
-                
+
                 xhr.upload.onprogress = (e) => {
-                    if (e.lengthComputable) {
-                        const percent = Math.round((e.loaded / e.total) * 100);
-                        progressBar.style.width = percent + '%';
-                        progressText.textContent = percent + '%';
+                    if (e.lengthComputable && typeof uploadMediaFile._onProgress === 'function') {
+                        uploadMediaFile._onProgress(e.loaded / e.total);
                     }
                 };
-                
+
                 xhr.onload = () => {
                     if (xhr.status === 200) {
                         const data = JSON.parse(xhr.responseText);
-                        const mediaUrl = data.secure_url;
-                        document.getElementById('manualImageUrl').value = mediaUrl;
-                        uploadedMediaUrl = mediaUrl;
-                        status.innerHTML = '<span style="color:#4ADE80;">✅ Upload complete!</span>';
-                        progressBar.style.width = '100%';
-                        progressText.textContent = '100%';
-                        showMediaPreview(file, mediaUrl);
-                        resolve(mediaUrl);
+                        resolve({ url: data.secure_url, isVideo, type: file.type });
                     } else {
                         let errorMsg = 'Upload failed.';
                         try {
                             const errorData = JSON.parse(xhr.responseText);
                             errorMsg = errorData.error?.message || errorMsg;
                         } catch(e) {}
-                        status.innerHTML = `<span style="color:#ff6b6b;">❌ ${errorMsg}</span>`;
                         reject(new Error(errorMsg));
                     }
                 };
-                
-                xhr.onerror = () => {
-                    status.innerHTML = '<span style="color:#ff6b6b;">❌ Network error. Please check your connection.</span>';
-                    reject(new Error('Network error'));
-                };
-                
+
+                xhr.onerror = () => reject(new Error('Network error. Please check your connection.'));
+
                 xhr.send(formData);
             });
         }
 
-        function showMediaPreview(file, imageUrl) {
+        // Uploads every selected file in sequence, reporting combined progress
+        // across all files via the shared progress bar.
+        async function uploadMultipleMediaFiles(files, postId) {
+            const progressDiv = document.getElementById('uploadProgress');
+            const progressBar = document.getElementById('uploadProgressBar');
+            const progressText = document.getElementById('uploadProgressText');
+            const status = document.getElementById('uploadStatus');
+
+            progressDiv.style.display = 'block';
+            const results = [];
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                status.innerHTML = `<span style="color:#ffd700;">⏳ Uploading ${i + 1} of ${files.length} to Cloudinary...</span>`;
+
+                uploadMediaFile._onProgress = (fraction) => {
+                    const overall = ((i + fraction) / files.length) * 100;
+                    progressBar.style.width = overall + '%';
+                    progressText.textContent = Math.round(overall) + '%';
+                };
+
+                const publicId = files.length > 1 ? `${postId}_${i + 1}` : postId;
+                const result = await uploadMediaFile(file, publicId);
+                results.push(result);
+            }
+
+            uploadMediaFile._onProgress = null;
+            status.innerHTML = '<span style="color:#4ADE80;">✅ Upload complete!</span>';
+            progressBar.style.width = '100%';
+            progressText.textContent = '100%';
+            showMediaPreview(results);
+            return results;
+        }
+
+        function showMediaPreview(results) {
             const previewDiv = document.getElementById('mediaPreview');
             previewDiv.style.display = 'block';
-            if (file.type.startsWith('video/')) {
-                previewDiv.innerHTML = `
-                    <video controls style="width:100%; max-height:300px; object-fit:contain; background:var(--bg-tertiary);">
-                        <source src="${imageUrl}" type="${file.type}">
-                    </video>
-                `;
+
+            if (results.length === 1) {
+                const { url, isVideo, type } = results[0];
+                previewDiv.innerHTML = isVideo
+                    ? `<video controls style="width:100%; max-height:300px; object-fit:contain; background:var(--bg-tertiary);"><source src="${url}" type="${type}"></video>`
+                    : `<img src="${url}" alt="Post preview" style="width:100%; max-height:300px; object-fit:contain; background:var(--bg-tertiary);" />`;
             } else {
                 previewDiv.innerHTML = `
-                    <img src="${imageUrl}" alt="Post preview" style="width:100%; max-height:300px; object-fit:contain; background:var(--bg-tertiary);" />
+                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(90px, 1fr)); gap:8px; padding:8px;">
+                        ${results.map((r, i) => `
+                            <div style="position:relative; aspect-ratio:1; border-radius:8px; overflow:hidden; background:var(--bg-tertiary);">
+                                <img src="${r.url}" alt="Image ${i + 1}" style="width:100%; height:100%; object-fit:cover;" />
+                                <span style="position:absolute; top:4px; left:4px; background:rgba(0,0,0,0.7); color:#fff; font-size:10px; padding:1px 6px; border-radius:8px;">${i + 1}</span>
+                            </div>
+                        `).join('')}
+                    </div>
                 `;
             }
         }
@@ -2715,56 +2754,73 @@
         async function savePostWithUpload() {
             const submitBtn = document.getElementById('postSubmitBtn');
             const fileInput = document.getElementById('postMediaFile');
-            const file = fileInput.files[0];
-            
+            const files = Array.from(fileInput.files || []);
+
             const postId = document.getElementById('manualPostId').value.trim();
             const caption = document.getElementById('manualCaption').value.trim();
             const permalink = document.getElementById('manualPermalink').value.trim();
             const writer = document.getElementById('manualWriter').value.trim() || '100 HUB';
             const articleUrl = document.getElementById('postArticleUrl').value.trim();
-            const isVideo = document.getElementById('postIsVideo').value === 'true';
-            
+
             if (!postId) {
                 showToast('⚠️ Please enter a Post ID.', 'error');
                 return;
             }
-            
-            if (!file) {
-                showToast('⚠️ Please select an image or video file.', 'error');
+
+            if (files.length === 0) {
+                showToast('⚠️ Please select at least one image, or a single video.', 'error');
                 return;
             }
-            
-            if (file.size > 10 * 1024 * 1024) {
-                showToast('⚠️ File is too large. Maximum 10MB.', 'error');
+
+            const videoCount = files.filter(f => f.type.startsWith('video/')).length;
+            if (videoCount > 0 && files.length > 1) {
+                showToast('⚠️ Videos can only be uploaded one at a time — for a carousel, select multiple images instead.', 'error');
                 return;
             }
-            
+
+            for (const file of files) {
+                if (file.size > 10 * 1024 * 1024) {
+                    showToast(`⚠️ "${file.name}" is too large. Maximum 10MB per file.`, 'error');
+                    return;
+                }
+            }
+
+            const isVideo = videoCount === 1;
+
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
-            
+
             try {
-                const imageUrl = await uploadMediaFile(file, postId);
-                if (!imageUrl) throw new Error('Upload failed');
-                
+                const uploaded = await uploadMultipleMediaFiles(files, postId);
+                if (!uploaded.length) throw new Error('Upload failed');
+
+                const primaryUrl = uploaded[0].url;
+                document.getElementById('manualImageUrl').value = primaryUrl;
+
                 submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
-                
+
+                const mediaGallery = uploaded.length > 1
+                    ? uploaded.map(r => ({ url: r.url, type: r.isVideo ? 'video' : 'image' }))
+                    : null;
+
                 const response = await fetchWithAuth(apiUrl('posts'), {
                     method: 'POST',
                     body: JSON.stringify({
                         post_id: postId,
-                        image_url: imageUrl,
+                        image_url: primaryUrl,
                         caption: caption,
                         permalink: permalink || `https://www.instagram.com/p/${postId}/`,
                         writer: writer,
                         article_url: articleUrl,
                         is_video: isVideo,
-                        video_url: isVideo ? imageUrl : '',
+                        video_url: isVideo ? primaryUrl : '',
+                        media_gallery: mediaGallery,
                         published_at: new Date().toISOString()
                     })
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (result.success) {
                     showToast('✅ Post saved successfully!', 'success');
                     closePostModal();
@@ -2776,7 +2832,7 @@
                 console.error('Save error:', error);
                 showToast('❌ Error saving post. Please try again.', 'error');
             }
-            
+
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Post';
         }
@@ -2843,11 +2899,14 @@
                 const caption = post.caption || '';
                 const truncatedCaption = caption.length > 60 ? caption.substring(0, 60) + '...' : caption;
                 
+                const galleryCount = Array.isArray(post.media_gallery) ? post.media_gallery.length : 0;
+
                 return `
                     <div class="post-card">
                         <div class="post-image">
                             <img src="${post.image_url || 'assets/100_Logo.png'}" alt="${post.post_id}" loading="lazy" />
                             ${post.is_video ? '<span class="post-badge video"><i class="fa-solid fa-play"></i> Video</span>' : ''}
+                            ${galleryCount > 1 ? `<span class="post-badge" style="background:rgba(0,0,0,0.7); left:8px; right:auto;"><i class="fa-regular fa-images"></i> ${galleryCount}</span>` : ''}
                             ${hasArticle ? '<span class="post-badge article"><i class="fa-regular fa-file-lines"></i> Article</span>' : ''}
                         </div>
                         <div class="post-info">
@@ -4157,17 +4216,35 @@
             const postFileInput = document.getElementById('postMediaFile');
             if (postFileInput) {
                 postFileInput.addEventListener('change', function() {
-                    const fileName = this.files[0] ? this.files[0].name : 'No file selected';
-                    document.getElementById('postFileName').textContent = fileName;
-                    if (this.files.length > 0) {
-                        const file = this.files[0];
-                        if (file.size > 10 * 1024 * 1024) {
-                            showToast('⚠️ File is too large. Maximum 10MB.', 'error');
-                            this.value = '';
-                            document.getElementById('postFileName').textContent = 'No file selected';
-                            return;
-                        }
+                    const files = Array.from(this.files || []);
+                    selectedPostFiles = files;
+
+                    if (files.length === 0) {
+                        document.getElementById('postFileName').textContent = 'No files selected';
+                        return;
                     }
+
+                    const videoCount = files.filter(f => f.type.startsWith('video/')).length;
+                    if (videoCount > 0 && files.length > 1) {
+                        showToast('⚠️ Only one video can be uploaded at a time. For multiple items, select images only.', 'error');
+                        this.value = '';
+                        selectedPostFiles = [];
+                        document.getElementById('postFileName').textContent = 'No files selected';
+                        return;
+                    }
+
+                    const oversized = files.find(f => f.size > 10 * 1024 * 1024);
+                    if (oversized) {
+                        showToast(`⚠️ "${oversized.name}" is too large. Maximum 10MB per file.`, 'error');
+                        this.value = '';
+                        selectedPostFiles = [];
+                        document.getElementById('postFileName').textContent = 'No files selected';
+                        return;
+                    }
+
+                    document.getElementById('postFileName').textContent = files.length === 1
+                        ? files[0].name
+                        : `${files.length} images selected`;
                 });
             }
             

@@ -94,12 +94,20 @@ async function sendAdminMemberNotification(memberData) {
                 ${memberData.social_platform && memberData.social_handle ? `<p style="margin:4px 0;"><strong>Social:</strong> ${memberData.social_platform} - @${memberData.social_handle}</p>` : ''}
             </div>
             
-            <p style="font-size:14px;color:#4A4A4A;line-height:1.7;">
-                <a href="https://100hub.co.za/dashboard" style="color:#E31E24;font-weight:600;">View in Dashboard →</a>
+            <div style="margin:24px 0; text-align:center;">
+                <a href="https://100hub.co.za/dashboard.html?tab=members&filter=pending" 
+                   style="background:#E31E24;color:white;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:600;display:inline-block;font-size:16px;">
+                   👁️ View in Dashboard
+                </a>
+            </div>
+            
+            <p style="font-size:14px;color:#4A4A4A;line-height:1.7;text-align:center;">
+                Or copy this link: <br>
+                <span style="color:#E31E24;word-break:break-all;">https://100hub.co.za/dashboard.html?tab=members&filter=pending</span>
             </p>
             
             <hr style="border:none;border-top:1px solid #E8E4DE;margin:32px 0;" />
-            <p style="font-size:12px;color:#B8B0A8;">100 HUB · Broadcasting &amp; Media Production Company</p>
+            <p style="font-size:12px;color:#B8B0A8;text-align:center;">100 HUB · Broadcasting &amp; Media Production Company</p>
         </div>
     `;
     await sendEmail({
@@ -211,7 +219,7 @@ async function sendAdminSubscriptionNotification(email) {
                 <p style="margin:4px 0;"><strong>Subscribed:</strong> ${new Date().toLocaleString()}</p>
             </div>
             <p style="font-size:14px;color:#4A4A4A;line-height:1.7;">
-                <a href="https://100hub.co.za/dashboard" style="color:#E31E24;font-weight:600;">View all subscribers →</a>
+                <a href="https://100hub.co.za/dashboard.html?tab=subscriptions" style="color:#E31E24;font-weight:600;">View all subscribers →</a>
             </p>
             <hr style="border:none;border-top:1px solid #E8E4DE;margin:32px 0;" />
             <p style="font-size:12px;color:#B8B0A8;">100 HUB · Broadcasting &amp; Media Production Company</p>
@@ -269,13 +277,10 @@ function requireAdmin(req, res) {
         return false;
     }
     
-    // Try to verify the token
     try {
-        // Decode the base64 token
         const decoded = JSON.parse(Buffer.from(token, 'base64').toString('utf-8'));
         console.log('🔐 Decoded token:', decoded);
         
-        // Check if the token has an expiresAt field
         if (decoded.expiresAt) {
             const now = Date.now();
             if (now > decoded.expiresAt) {
@@ -291,8 +296,6 @@ function requireAdmin(req, res) {
             return true;
         }
         
-        // If no expiresAt, it might be a different token format
-        // Try to verify with the older method
         if (verifyToken(token)) {
             console.log('✅ Token verified successfully (legacy method)');
             return true;
@@ -423,9 +426,6 @@ async function uploadToCloudinary(mediaUrl, options = {}) {
         formData.append('folder', folder);
 
         if (apiKey && apiSecret) {
-            // Signed upload — gives us full control (explicit public_id, no random
-            // suffix appended, ok to overwrite) regardless of the unsigned preset's
-            // "Unique filename" setting.
             const crypto = await import('crypto');
             const timestamp = Math.floor(Date.now() / 1000);
             const params = {
@@ -448,8 +448,6 @@ async function uploadToCloudinary(mediaUrl, options = {}) {
             formData.append('api_key', apiKey);
             formData.append('signature', signature);
         } else {
-            // Fallback: unsigned preset (random suffix risk remains unless the
-            // "members" preset itself has "Unique filename" turned off in Cloudinary).
             formData.append('upload_preset', 'members');
             if (publicId) formData.append('public_id', publicId);
         }
@@ -483,7 +481,7 @@ async function handleMembers(req, res) {
             let query = supabase
                 .from('members')
                 .select('*', { count: 'exact' })
-                .order('created_at', { ascending: false });
+                .order('name', { ascending: true });
 
             if (statusFilter !== 'all') {
                 query = query.eq('status', statusFilter);
@@ -787,14 +785,13 @@ async function handlePosts(req, res) {
     if (req.method === 'POST') {
         if (!requireAdmin(req, res)) return;
         try {
-            const { post_id, image_url, caption, permalink, instagram_url, writer, article_url, is_video, video_url, published_at } = req.body || {};
+            const { post_id, image_url, caption, permalink, instagram_url, writer, article_url, is_video, video_url, published_at, media_gallery } = req.body || {};
             if (!post_id || !image_url) {
                 return res.status(400).json({ error: 'Post ID and image URL are required' });
             }
             const { data: existing } = await supabase.from('posts').select('id').eq('post_id', post_id).single();
             if (existing) return res.status(400).json({ error: 'This post already exists in the database' });
             
-            // Generate instagram_url if not provided
             const finalInstagramUrl = instagram_url || permalink || `https://www.instagram.com/p/${post_id}/`;
             
             const { data: post, error } = await supabase.from('posts').insert({
@@ -808,7 +805,8 @@ async function handlePosts(req, res) {
                 video_url: video_url || '',
                 article_url: article_url || '',
                 published_at: published_at || new Date().toISOString(),
-                status: 'published'
+                status: 'published',
+                media_gallery: media_gallery || null
             }).select().single();
             if (error) throw error;
             return res.status(200).json({ success: true, message: 'Post added successfully!', post: post });
@@ -821,7 +819,7 @@ async function handlePosts(req, res) {
     if (req.method === 'PUT') {
         if (!requireAdmin(req, res)) return;
         try {
-            const { id, caption, writer, article_url, published_at, image_url, video_url } = req.body || {};
+            const { id, caption, writer, article_url, published_at, image_url, video_url, media_gallery } = req.body || {};
             if (!id) return res.status(400).json({ error: 'Post ID is required' });
             const updates = {};
             if (caption !== undefined) updates.caption = caption;
@@ -830,6 +828,7 @@ async function handlePosts(req, res) {
             if (published_at !== undefined) updates.published_at = published_at;
             if (image_url !== undefined) updates.image_url = image_url;
             if (video_url !== undefined) updates.video_url = video_url;
+            if (media_gallery !== undefined) updates.media_gallery = media_gallery;
             updates.updated_at = new Date().toISOString();
             const { data: post, error } = await supabase.from('posts').update(updates).eq('id', id).select().single();
             if (error) throw error;
@@ -1176,7 +1175,6 @@ async function handleUpdatePin(req, res) {
 async function handleAds(req, res) {
     if (req.method === 'GET') {
         try {
-            // Check if admin is authenticated
             const authHeader = req.headers.authorization || '';
             const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
             const isAdmin = token && verifyToken(token);
@@ -1189,7 +1187,6 @@ async function handleAds(req, res) {
                 .order('display_order', { ascending: true })
                 .order('created_at', { ascending: true });
             
-            // If NOT admin, only return active ads (for public view)
             if (!isAdmin) {
                 query = query.eq('is_active', true);
                 const { data, error } = await query;
@@ -1199,7 +1196,6 @@ async function handleAds(req, res) {
                 return res.status(200).json({ success: true, ad });
             }
             
-            // ADMIN: Return ALL ads (including inactive)
             const { data, error } = await query;
             if (error) throw error;
             console.log('📬 Admin ads response:', data ? data.length : 0);

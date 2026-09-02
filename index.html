@@ -110,6 +110,174 @@
             .feed-search input { min-width: 100%; }
             .feed-result-count { margin-left: 0; width: 100%; text-align: center; }
         }
+
+        /* ==========================================
+           FULL-SCREEN POST VIEWER
+           (replaces the old small card-style modal so
+           images/videos are never cropped)
+           ========================================== */
+        .post-modal.active {
+            display: flex !important;
+            align-items: stretch !important;
+            justify-content: center !important;
+            position: fixed !important;
+            inset: 0 !important;
+            z-index: 9999 !important;
+            background: rgba(0, 0, 0, 0.98) !important;
+        }
+        .post-modal .modal-overlay {
+            position: fixed !important;
+            inset: 0 !important;
+        }
+        .post-modal .modal-content {
+            position: relative !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: 100vw !important;
+            max-height: 100vh !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+            background: #000 !important;
+            overflow: hidden !important;
+            display: flex !important;
+        }
+        .post-modal .modal-body {
+            display: flex !important;
+            flex-direction: row !important;
+            width: 100% !important;
+            height: 100% !important;
+            overflow: hidden !important;
+        }
+        .post-modal .modal-image {
+            flex: 1 1 65% !important;
+            height: 100vh !important;
+            max-height: 100vh !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            background: #000 !important;
+            overflow: hidden !important;
+            margin: 0 !important;
+        }
+        .post-modal .modal-image img,
+        .post-modal .modal-image video {
+            width: 100% !important;
+            height: 100% !important;
+            max-height: 100vh !important;
+            object-fit: contain !important;
+        }
+        .post-carousel {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .post-carousel-track {
+            width: 100%;
+            height: 100%;
+        }
+        .post-carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 5;
+        }
+        .post-carousel-arrow:hover {
+            background: var(--red, #E31E24);
+        }
+        .post-carousel-arrow.left { left: 16px; }
+        .post-carousel-arrow.right { right: 16px; }
+        .post-carousel-dots {
+            position: absolute;
+            bottom: 16px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            z-index: 5;
+        }
+        .post-carousel-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+        }
+        .post-carousel-dot.active {
+            background: #fff;
+            width: 18px;
+            border-radius: 4px;
+        }
+        .post-modal .modal-text {
+            flex: 0 0 400px !important;
+            max-width: 400px !important;
+            width: 400px !important;
+            height: 100vh !important;
+            overflow-y: auto !important;
+            padding: 60px 32px 32px !important;
+            background: var(--bg-primary, #0a0a0a) !important;
+            box-sizing: border-box !important;
+        }
+        .post-modal .modal-close {
+            position: fixed !important;
+            top: 20px !important;
+            right: 24px !important;
+            z-index: 10001 !important;
+            width: 44px !important;
+            height: 44px !important;
+            border-radius: 50% !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            color: #fff !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            cursor: pointer !important;
+            font-size: 18px !important;
+            backdrop-filter: blur(8px) !important;
+        }
+        .post-modal .modal-close:hover {
+            background: var(--red, #E31E24) !important;
+            border-color: var(--red, #E31E24) !important;
+        }
+        @media (max-width: 900px) {
+            .post-modal .modal-body {
+                flex-direction: column !important;
+                overflow-y: auto !important;
+            }
+            .post-modal .modal-image {
+                flex: 0 0 auto !important;
+                width: 100% !important;
+                height: 55vh !important;
+                max-height: 55vh !important;
+            }
+            .post-modal .modal-image img,
+            .post-modal .modal-image video {
+                height: 100% !important;
+                max-height: 55vh !important;
+            }
+            .post-carousel {
+                height: 100% !important;
+            }
+            .post-modal .modal-text {
+                flex: 1 1 auto !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                padding: 24px 20px 40px !important;
+            }
+        }
     </style>
 </head>
 <body class="page-home">
@@ -489,11 +657,17 @@
                 } else {
                     mediaHtml = `<img src="${post.image_url}" alt="${caption.substring(0, 50)}" loading="lazy" style="width:100%; height:100%; object-fit:cover;" />`;
                 }
+
+                const galleryCount = Array.isArray(post.media_gallery) ? post.media_gallery.length : 0;
+                const galleryBadge = galleryCount > 1
+                    ? `<span style="position:absolute; top:10px; right:10px; background:rgba(0,0,0,0.6); width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; z-index:5; color:white; font-size:12px;"><i class="fa-regular fa-clone"></i></span>`
+                    : '';
                 
                 return `
                     <div class="feed-item" data-post='${JSON.stringify(post).replace(/'/g, "&#39;")}'>
                         <div class="feed-image">
                             ${mediaHtml}
+                            ${galleryBadge}
                             ${hasArticle ? '<span style="position:absolute; bottom:10px; right:10px; background:rgba(227,30,36,0.9); padding:4px 12px; border-radius:20px; font-size:10px; color:white; z-index:5;"><i class="fa-regular fa-file-lines"></i> Article</span>' : ''}
                         </div>
                         <div class="feed-content">
@@ -614,15 +788,36 @@
             const caption = postData.caption || '';
             const permalink = postData.permalink || '#';
             
+            const gallery = Array.isArray(postData.media_gallery) ? postData.media_gallery : [];
+
             let mediaHtml = '';
-            if (postData.is_video && postData.video_url) {
+            if (gallery.length > 1) {
                 mediaHtml = `
-                    <video controls autoplay muted loop playsinline style="width:100%; max-height:55vh; object-fit:contain; background:var(--bg-tertiary);">
+                    <div class="post-carousel" id="postCarousel" data-index="0">
+                        <div class="post-carousel-track" id="postCarouselTrack" style="display:flex; height:100%; width:100%; transition:transform 0.3s ease;">
+                            ${gallery.map(g => `
+                                <div style="flex:0 0 100%; height:100%; display:flex; align-items:center; justify-content:center;">
+                                    ${g.type === 'video'
+                                        ? `<video controls playsinline style="width:100%; height:100%; object-fit:contain; background:#000;"><source src="${g.url}" type="video/mp4"></video>`
+                                        : `<img src="${g.url}" alt="${caption.substring(0, 50)}" style="width:100%; height:100%; object-fit:contain;" />`}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button class="post-carousel-arrow left" onclick="postCarouselNav(-1)" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button class="post-carousel-arrow right" onclick="postCarouselNav(1)" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
+                        <div class="post-carousel-dots" id="postCarouselDots">
+                            ${gallery.map((_, i) => `<span class="post-carousel-dot ${i === 0 ? 'active' : ''}" onclick="postCarouselGoTo(${i})"></span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (postData.is_video && postData.video_url) {
+                mediaHtml = `
+                    <video controls autoplay muted loop playsinline style="width:100%; height:100%; object-fit:contain; background:#000;">
                         <source src="${postData.video_url}" type="video/mp4">
                     </video>
                 `;
             } else {
-                mediaHtml = `<img src="${postData.image_url}" alt="${caption.substring(0, 50)}" loading="lazy" style="width:100%; max-height:55vh; object-fit:cover;" />`;
+                mediaHtml = `<img src="${postData.image_url}" alt="${caption.substring(0, 50)}" loading="lazy" style="width:100%; height:100%; object-fit:contain;" />`;
             }
             
             let articleButtonHtml = '';
@@ -657,6 +852,29 @@
             
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
+        }
+
+        function postCarouselNav(direction) {
+            const carousel = document.getElementById('postCarousel');
+            if (!carousel) return;
+            const track = document.getElementById('postCarouselTrack');
+            const dots = document.querySelectorAll('#postCarouselDots .post-carousel-dot');
+            const count = dots.length;
+            let index = parseInt(carousel.dataset.index || '0', 10);
+            index = (index + direction + count) % count;
+            carousel.dataset.index = index;
+            track.style.transform = `translateX(-${index * 100}%)`;
+            dots.forEach((d, i) => d.classList.toggle('active', i === index));
+        }
+
+        function postCarouselGoTo(index) {
+            const carousel = document.getElementById('postCarousel');
+            if (!carousel) return;
+            const track = document.getElementById('postCarouselTrack');
+            const dots = document.querySelectorAll('#postCarouselDots .post-carousel-dot');
+            carousel.dataset.index = index;
+            track.style.transform = `translateX(-${index * 100}%)`;
+            dots.forEach((d, i) => d.classList.toggle('active', i === index));
         }
 
         function closeModal() {
