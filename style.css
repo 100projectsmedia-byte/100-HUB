@@ -955,7 +955,9 @@ section {
 }
 
 /* ==========================================
-   POST MODAL
+   POST MODAL — full-screen viewer
+   Image spans full width at the top; all text
+   sits in a scrollable panel below it.
    ========================================== */
 .post-modal {
     position: fixed;
@@ -965,11 +967,12 @@ section {
     bottom: 0;
     z-index: 2000;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
     opacity: 0;
     visibility: hidden;
     transition: all 0.4s ease;
+    background: rgba(0, 0, 0, 0.98);
 }
 .post-modal.active {
     opacity: 1;
@@ -977,48 +980,48 @@ section {
 }
 
 .modal-overlay {
-    position: absolute;
+    position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(12px);
 }
 .modal-content {
     position: relative;
-    max-width: 900px;
-    max-height: 90vh;
-    width: 92%;
-    background: var(--bg-secondary);
-    border-radius: var(--radius);
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    margin: 0;
+    background: #000;
+    border-radius: 0;
+    border: none;
     overflow: hidden;
-    overflow-y: auto;
-    border: 1px solid var(--border-medium);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    transform: scale(0.95);
-    transition: transform 0.4s ease;
+    box-shadow: none;
+    transform: none;
+    display: flex;
 }
 .post-modal.active .modal-content {
-    transform: scale(1);
+    transform: none;
 }
 
 .modal-close {
-    position: sticky;
-    top: 12px;
-    right: 12px;
-    float: right;
-    width: 40px;
-    height: 40px;
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    float: none;
+    margin: 0;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border-medium);
-    color: var(--text-primary);
-    font-size: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--white);
+    font-size: 18px;
     cursor: pointer;
-    z-index: 10;
+    z-index: 10001;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: var(--transition-fast);
-    margin: 12px 12px 0 0;
+    backdrop-filter: blur(8px);
 }
 .modal-close:hover {
     background: var(--red);
@@ -1028,31 +1031,43 @@ section {
 }
 
 .modal-body {
-    padding: 0 0 32px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 .modal-image {
+    flex: 0 0 auto;
     width: 100%;
-    max-height: 55vh;
+    height: 60vh;
+    max-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
-    background: var(--bg-tertiary);
+    background: #000;
 }
 .modal-image img {
     width: 100%;
     height: 100%;
-    max-height: 55vh;
-    object-fit: cover;
+    max-height: 60vh;
+    object-fit: contain;
 }
 .modal-image video {
     width: 100%;
-    max-height: 55vh;
+    height: 100%;
+    max-height: 60vh;
     object-fit: contain;
-    background: var(--bg-tertiary);
+    background: #000;
 }
 
 .modal-video-fallback {
     position: relative;
     width: 100%;
-    max-height: 55vh;
+    height: 100%;
     min-height: 300px;
     overflow: hidden;
     background: var(--bg-tertiary);
@@ -1060,7 +1075,6 @@ section {
 .modal-video-fallback img {
     width: 100%;
     height: 100%;
-    max-height: 55vh;
     object-fit: cover;
     filter: brightness(0.6);
 }
@@ -1090,15 +1104,21 @@ section {
 }
 
 .modal-text {
-    padding: 28px 32px;
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 28px 32px 60px;
+    box-sizing: border-box;
 }
 .modal-meta {
     display: flex;
-    gap: 24px;
+    gap: 14px;
     flex-wrap: wrap;
+    align-items: center;
     font-size: 13px;
     color: var(--text-muted);
-    margin-bottom: 16px;
+    margin-bottom: 14px;
 }
 .modal-writer,
 .modal-date {
@@ -1119,28 +1139,96 @@ section {
 }
 .modal-title {
     font-family: 'Space Grotesk', -apple-system, sans-serif;
-    font-size: 28px;
-    font-weight: 700;
+    font-size: 26px;
+    font-weight: 800;
     color: var(--text-primary);
-    margin-bottom: 16px;
-    line-height: 1.25;
+    margin: 0 0 14px;
+    line-height: 1.3;
 }
 .modal-caption {
     font-size: 15px;
+    font-weight: 400;
     color: var(--text-secondary);
-    line-height: 1.8;
+    line-height: 1.7;
     margin-bottom: 24px;
-    white-space: pre-wrap;
+    white-space: pre-line;
 }
 .modal-actions {
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
+    margin-top: 4px;
 }
 .modal-actions .btn-primary,
 .modal-actions .btn-secondary {
     padding: 12px 28px;
     font-size: 13px;
+}
+
+/* Multi-image carousel inside the full-screen viewer */
+.post-carousel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.post-carousel-track {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    transition: transform 0.3s ease;
+}
+.post-carousel-track > div {
+    flex: 0 0 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.post-carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.5);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    transition: var(--transition-fast);
+}
+.post-carousel-arrow:hover {
+    background: var(--red);
+}
+.post-carousel-arrow.left { left: 16px; }
+.post-carousel-arrow.right { right: 16px; }
+.post-carousel-dots {
+    position: absolute;
+    bottom: 16px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    z-index: 5;
+}
+.post-carousel-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+.post-carousel-dot.active {
+    background: var(--white);
+    width: 18px;
+    border-radius: 4px;
 }
 
 /* ==========================================
@@ -2167,8 +2255,11 @@ section {
     .team-grid { grid-template-columns: 1fr; }
     .road-number { font-size: 48px; }
     .road-total { font-size: 20px; }
-    .modal-content { width: 96%; }
-    .modal-text { padding: 20px; }
+    .modal-content { width: 100vw; }
+    .modal-image { height: 50vh; max-height: 50vh; }
+    .modal-image img,
+    .modal-image video { max-height: 50vh; }
+    .modal-text { padding: 20px; max-width: 100%; }
     .modal-title { font-size: 22px; }
     .modal-actions { flex-direction: column; }
     .modal-actions .btn-primary,
@@ -2264,7 +2355,10 @@ section {
         padding: 6px 12px; 
     }
     .partner-logo-item img { max-height: 28px; max-width: 60px; }
-    .modal-body { padding: 0 0 20px; }
+    .modal-body { padding: 0; }
+    .modal-image { height: 45vh; max-height: 45vh; }
+    .modal-image img,
+    .modal-image video { max-height: 45vh; }
     .modal-text { padding: 16px; }
     .modal-title { font-size: 20px; }
     .team-image { height: 220px; }
