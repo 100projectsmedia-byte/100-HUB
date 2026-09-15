@@ -2139,9 +2139,9 @@
         // ==========================================
         // LOAD ALL DATA
         // ==========================================
-        function loadAllData() {
+        async function loadAllData() {
             console.log('📊 Loading all dashboard data...');
-            renderMembers();
+            await renderMembers();
             renderArticles();
             loadPartners();
             checkMediaKit();
@@ -2167,8 +2167,9 @@
             }
 
             if (filter && ['all', 'pending', 'accepted', 'declined'].includes(filter)) {
-                // renderMembers() call above is async; give it a tick before filtering
-                setTimeout(() => filterMembers(filter), 300);
+                // renderMembers() above is awaited, so the member list is
+                // already in the DOM by the time this runs.
+                filterMembers(filter);
             }
         }
 
