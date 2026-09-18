@@ -1248,4 +1248,1267 @@
     </script>
 
 </body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>100 HUB — Home</title>
+    <meta name="description" content="100 HUB - Your partner in Multimedia, Broadcasting, PR, Events & Management." />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
+    
+    <!-- Garet Font for Paalalabas -->
+    <link href="https://fonts.cdnfonts.com/css/garet" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" /></noscript>
+
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- PRELOAD ONLY THE LOGO THAT EXISTS -->
+    <link rel="preload" as="image" href="assets/Logo.png">
+
+    <style>
+        .page-home .feed-section { padding: 80px 0; }
+        .page-home .impact-section { padding: 80px 0; }
+        .page-home .partners-section { padding: 60px 0 80px; }
+
+        .hero-nav {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 32px;
+            justify-content: flex-start;
+        }
+        .hero-nav a {
+            padding: 10px 28px;
+            border-radius: 60px;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            transition: var(--transition-fast);
+            border: 1px solid var(--border-medium);
+            color: var(--text-secondary);
+            background: transparent;
+            backdrop-filter: blur(8px);
+        }
+        .hero-nav a:hover {
+            border-color: var(--red);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-red);
+        }
+        .hero-nav a.active {
+            background: var(--red);
+            color: var(--white);
+            border-color: var(--red);
+        }
+        .hero-nav a.active:hover {
+            background: var(--red-dark);
+            box-shadow: var(--shadow-red-strong);
+        }
+        @media (max-width: 600px) {
+            .hero-nav { justify-content: center; }
+            .hero-nav a { padding: 8px 18px; font-size: 12px; }
+        }
+        @media (max-width: 420px) {
+            .hero-nav { gap: 8px; }
+            .hero-nav a { padding: 6px 14px; font-size: 11px; }
+        }
+
+        .feed-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            padding: 5px 5px 5px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-subtle);
+            border-radius: 60px;
+        }
+        .feed-search i.fa-search {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .feed-search input {
+            flex: 1;
+            min-width: 160px;
+            padding: 8px 6px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+        }
+        .feed-search input:focus {
+            outline: none;
+        }
+        .feed-search input::placeholder {
+            color: var(--text-muted);
+        }
+        .feed-result-count {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-left: auto;
+            padding-right: 10px;
+            white-space: nowrap;
+        }
+        @media (max-width: 600px) {
+            .feed-search {
+                border-radius: var(--radius-sm);
+                padding: 10px;
+            }
+            .feed-search input { min-width: 100%; order: -1; }
+            .feed-result-count { margin-left: 0; width: 100%; text-align: center; padding: 4px 0 0; }
+        }
+
+    </style>
+</head>
+<body class="page-home">
+
+    <!-- SITE PRELOADER -->
+    <div id="site-preloader" class="site-preloader">
+        <div class="preloader-inner">
+            <div class="preloader-spinner-box">
+                <div class="preloader-ring ring-outer"></div>
+                <div class="preloader-ring ring-inner"></div>
+                <div class="preloader-logo">
+                    <img src="assets/Logo.png" alt="100 HUB" />
+                </div>
+            </div>
+            <div class="preloader-text-box">
+                <span class="preloader-counter" id="preloaderCounter">0%</span>
+                <span class="preloader-status" id="preloaderStatus">INITIALIZING 3D GLOBE...</span>
+            </div>
+            <div class="preloader-bar-track">
+                <div class="preloader-bar-fill" id="preloaderFill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3D GLOBE BACKGROUND -->
+    <canvas id="globe-canvas"></canvas>
+    <div class="globe-fade-overlay"></div>
+    <div id="globe-nodes-container"></div>
+
+    <!-- TECH HUD OVERLAYS -->
+    <div class="tech-hud hud-top-left">
+        <span>LAT -26.2040° S</span>
+        <span>LON 28.0470° E</span>
+        <span>ALT 1753 M</span>
+        <span class="highlight-red">SIG LOCKED.</span>
+    </div>
+    <div class="tech-hud hud-top-right">
+        <span>NODE 100-HUB-01</span>
+        <span>STATUS ONLINE</span>
+        <span class="highlight-red">SYNC 99.8%</span>
+        <span>UPLINK STABLE</span>
+    </div>
+    <div class="tech-hud hud-bottom-left">
+        <span id="hud-section-indicator">01 / 09</span>
+    </div>
+    <div class="tech-hud hud-bottom-right">
+        <span>CREATORS <strong id="hud-creators-count" class="highlight-red">100</strong></span>
+        <span>NETWORK LIVE</span>
+        <span>TIER FOUNDING</span>
+    </div>
+
+    <!-- ==================== HEADER ==================== -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-inner">
+                <a href="/" class="nav-logo">
+                    <img src="assets/Logo.png" alt="100 HUB" class="logo-img" />
+                    <span class="logo-text"><span class="highlight-red">HUB</span></span>
+                </a>
+                <div class="nav-right">
+                    <div class="nav-social">
+                        <a href="https://www.instagram.com/100projectsmedia" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="mailto:100projectsmedia@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
+                    </div>
+                    <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Slide-out Menu -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" id="mobileMenuClose"><i class="fa-solid fa-xmark"></i></button>
+        <div class="mobile-menu-links">
+            <a href="/">Home</a>
+            <a href="/profiles.html">Hub</a>
+            <a href="/work.html">Our Work</a>
+            <a href="/games.html">Games</a>
+            <a href="/rewards.html">Rewards</a>
+            <a href="/about.html">About</a>
+            <a href="/contact.html">Contact</a>
+        </div>
+        <div class="mobile-menu-social">
+            <a href="https://www.instagram.com/100projectsmedia" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>
+            <a href="mailto:100projectsmedia@gmail.com"><i class="fa-regular fa-envelope"></i> Email</a>
+        </div>
+    </div>
+
+    <!-- ==================== HERO ==================== -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-brand-header">
+                    <img src="assets/Logo.png" alt="100 HUB" class="hero-img" />
+                </div>
+                <span class="section-number">01 // BROADCASTING & MEDIA PRODUCTION</span>
+                <h1 class="hero-title">
+                    Welcome to 100 <span class="highlight-red">Hub</span>
+                </h1>
+                <p class="hero-tagline">
+                    Your partner in Multimedia, Broadcasting, PR, Events & Management.
+                </p>
+                <div class="hero-nav">
+                    <a href="/">Home</a>
+                    <a href="/profiles.html">Hub</a>
+                    <a href="/work.html">Our Work</a>
+                    <a href="/games.html">Games</a>
+                    <a href="/rewards.html">Rewards</a>
+                    <a href="/about.html">About</a>
+                    <a href="/contact.html">Contact</a>
+                </div>
+                <!-- UPDATED: Hero buttons - removed X icon -->
+                <div class="hero-buttons" style="display:flex; gap:16px; flex-wrap:wrap; margin-top:24px;">
+                    <a href="/profiles.html" class="btn-primary">
+                        <i class="fa-regular fa-eye"></i> View Hub
+                    </a>
+                    <a href="/profiles.html#community-form" class="btn-secondary" id="joinUsBtn">
+                        <i class="fa-regular fa-user-plus"></i> Join Us
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== MEDIA POSTS (FEED) ==================== -->
+    <section class="feed-section" id="feed" data-animate>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">02 // MEDIA & BROADCASTING</span>
+                <h2 class="section-title">Media Dispatches<span class="highlight-red">.</span></h2>
+                <p class="section-subtitle">Stories, interviews, and cultural coverage from the 100 network.</p>
+            </div>
+
+            <div class="feed-search">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" id="feedSearchInput" placeholder="Search posts by caption or keyword..." />
+                <button class="btn-outline btn-sm" onclick="searchFeedPosts()">
+                    <i class="fa-solid fa-search"></i> Search
+                </button>
+                <button class="btn-outline btn-sm" onclick="clearFeedSearch()">
+                    <i class="fa-solid fa-times"></i> Clear
+                </button>
+                <span class="feed-result-count">
+                    Showing <span id="feedShowingCount">0</span> posts
+                </span>
+            </div>
+
+            <div class="feed-grid" id="instagramFeed">
+                <div class="feed-loading">
+                    <div class="loader"></div>
+                    <p>Loading the latest dispatches...</p>
+                </div>
+            </div>
+            <div class="see-more-container" id="feedSeeMore" style="display:none;">
+                <button class="see-more-btn" onclick="toggleFeedPosts()" id="loadMoreFeedBtn">
+                    See More <i class="fa-solid fa-arrow-down"></i>
+                </button>
+                <button class="see-more-btn" onclick="resetFeedView()" id="resetFeedBtn" style="margin-left:12px; display:none;">
+                    Show Less <i class="fa-solid fa-arrow-up"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- POST MODAL -->
+    <div class="post-modal" id="postModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- ==================== IMPACT NUMBERS ==================== -->
+    <section class="impact-section" id="impact" data-animate>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">03</span>
+                <h2 class="section-title">Impact <span class="highlight-red">Numbers</span></h2>
+                <div class="section-divider">
+                    <span class="divider-line-short"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-line-short"></span>
+                </div>
+            </div>
+            <div class="impact-grid-home" id="impactGridHome">
+                <div class="impact-card-home">
+                    <span class="impact-number" id="homeMagazine">08</span>
+                    <span class="impact-label">Magazine Issues</span>
+                </div>
+                <div class="impact-card-home">
+                    <span class="impact-number" id="homeFeatures">100+</span>
+                    <span class="impact-label">Editorial Features</span>
+                </div>
+                <div class="impact-card-home">
+                    <span class="impact-number" id="homeCollaborations">50+</span>
+                    <span class="impact-label">Brand Collaborations</span>
+                </div>
+                <div class="impact-card-home">
+                    <span class="impact-number" id="homeReach">1M+</span>
+                    <span class="impact-label">Digital Reach</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== PARTNER LOGOS ==================== -->
+    <section class="partners-section" id="partners" data-animate>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">04 // TRUSTED NETWORK</span>
+                <h2 class="section-title">Trusted By Culture Champions<span class="highlight-red">.</span></h2>
+            </div>
+            <div class="partners-wrapper">
+                <div class="partners-track" id="partnersTrack"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-top">
+                    <img src="assets/Logo.png" alt="100 HUB" class="footer-logo" loading="lazy" />
+                    <div class="footer-social">
+                        <a href="https://www.instagram.com/100projectsmedia" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://vt.tiktok.com/ZSQ4FhnXc/" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+                        <a href="https://youtu.be/Z1G7TeuiMz4?si=peQqspcPTATRZYsd" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="mailto:100projectsmedia@gmail.com"><i class="fa-regular fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="footer-divider">
+                    <span class="divider-line-short"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-dot"></span>
+                    <span class="divider-line-short"></span>
+                </div>
+                <div class="footer-bottom">
+                    <p class="footer-tagline">Broadcasting &amp; Media Production Company</p>
+                    <p class="footer-copy">&copy; 2026 100 HUB. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== AD CARD ==================== -->
+    <div class="ad-card" id="adCard" style="display:none;">
+        <button class="ad-card-close" id="adCardClose" aria-label="Close ad">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <a href="#" id="adCardLink" target="_blank" rel="noopener">
+            <div class="ad-card-content" id="adCardContent"></div>
+            <div class="ad-card-cta">
+                <span>Learn More</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </div>
+        </a>
+    </div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <script>
+        // ==========================================
+        // API HELPER - Consolidated API Calls
+        // ==========================================
+        function apiUrl(path, params = {}) {
+            const queryParams = new URLSearchParams({ path, ...params });
+            return `/api?${queryParams.toString()}`;
+        }
+
+        // ==========================================
+        // API BASE
+        // ==========================================
+        const API_BASE = '/api';
+
+        // ==========================================
+        // POSTS STATE
+        // ==========================================
+        let allFeedPosts = [];
+        let feedDisplayCount = 9;
+        let feedShowingAll = false;
+        const FEED_DEFAULT_COUNT = 9;
+        const FEED_INCREMENT = 3;
+
+        // ==========================================
+        // LOAD POSTS FROM DATABASE
+        // ==========================================
+        async function loadPosts() {
+            const container = document.getElementById('instagramFeed');
+            const seeMoreWrap = document.getElementById('feedSeeMore');
+            const searchInput = document.getElementById('feedSearchInput');
+
+            try {
+                const searchTerm = searchInput ? searchInput.value.trim() : '';
+                const url = searchTerm 
+                    ? apiUrl('posts', { limit: 100, search: encodeURIComponent(searchTerm) })
+                    : apiUrl('posts', { limit: 100 });
+                    
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.success && data.posts && data.posts.length > 0) {
+                    allFeedPosts = data.posts;
+                    document.getElementById('feedShowingCount').textContent = allFeedPosts.length;
+                    feedDisplayCount = Math.min(FEED_DEFAULT_COUNT, allFeedPosts.length);
+                    feedShowingAll = false;
+                    renderFeedPosts(allFeedPosts.slice(0, feedDisplayCount), container);
+                    
+                    if (allFeedPosts.length > feedDisplayCount) {
+                        seeMoreWrap.style.display = 'flex';
+                        seeMoreWrap.style.gap = '12px';
+                        seeMoreWrap.style.justifyContent = 'center';
+                        updateFeedButton();
+                    } else {
+                        seeMoreWrap.style.display = 'none';
+                    }
+                } else {
+                    container.innerHTML = `<div class="feed-empty"><p>No posts yet. Check back later!</p></div>`;
+                    seeMoreWrap.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Load posts error:', error);
+                container.innerHTML = `
+                    <div class="feed-error">
+                        <p>⚠️ Unable to load posts. Please refresh or try again later.</p>
+                    </div>
+                `;
+                seeMoreWrap.style.display = 'none';
+            }
+        }
+
+        // ==========================================
+        // RENDER FEED POSTS
+        // ==========================================
+        function renderFeedPosts(posts, container) {
+            if (posts.length === 0) {
+                container.innerHTML = `<div class="feed-empty"><p>No posts found. Check back later!</p></div>`;
+                return;
+            }
+
+            container.innerHTML = posts.map((post, index) => {
+                const hasArticle = post.article_url && post.article_url.trim() !== '';
+                const date = post.published_at ? new Date(post.published_at).toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                }) : '';
+                const writer = post.writer || "100 HUB";
+                const caption = post.caption || '';
+                const truncatedCaption = caption.length > 120 ? caption.substring(0, 120) + '...' : caption;
+                
+                let mediaHtml = '';
+                if (post.is_video && post.video_url) {
+                    mediaHtml = `
+                        <video autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover;">
+                            <source src="${post.video_url}" type="video/mp4">
+                        </video>
+                        <span class="feed-play"><i class="fa-solid fa-play"></i></span>
+                    `;
+                } else {
+                    mediaHtml = `<img src="${post.image_url}" alt="${caption.substring(0, 50)}" loading="lazy" style="width:100%; height:100%; object-fit:cover;" />`;
+                }
+
+                const galleryCount = Array.isArray(post.media_gallery) ? post.media_gallery.length : 0;
+                const galleryBadge = galleryCount > 1
+                    ? `<span style="position:absolute; top:10px; right:10px; background:rgba(0,0,0,0.6); width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; z-index:5; color:white; font-size:12px;"><i class="fa-regular fa-clone"></i></span>`
+                    : '';
+                
+                return `
+                    <div class="feed-item" data-post='${JSON.stringify(post).replace(/'/g, "&#39;")}'>
+                        <div class="feed-image">
+                            ${mediaHtml}
+                            ${galleryBadge}
+                            ${hasArticle ? '<span style="position:absolute; bottom:10px; right:10px; background:rgba(227,30,36,0.9); padding:4px 12px; border-radius:20px; font-size:10px; color:white; z-index:5;"><i class="fa-regular fa-file-lines"></i> Article</span>' : ''}
+                        </div>
+                        <div class="feed-content">
+                            <p class="feed-caption">${truncatedCaption}</p>
+                            <div class="feed-meta">
+                                <span class="feed-writer"><i class="fa-regular fa-user"></i> ${writer}</span>
+                                <span class="feed-date"><i class="fa-regular fa-calendar"></i> ${date}</span>
+                            </div>
+                            <div class="feed-actions">
+                                <button class="feed-link" onclick="openPostModal(this)">
+                                    ${hasArticle ? 'Read Full Story' : 'View Post'} <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.querySelectorAll('.feed-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (e.target.closest('.feed-link')) return;
+                    const link = this.querySelector('.feed-link');
+                    if (link) {
+                        openPostModal(link);
+                    }
+                });
+            });
+        }
+
+        // ==========================================
+        // FEED CONTROLS
+        // ==========================================
+        function updateFeedButton() {
+            const btn = document.getElementById('loadMoreFeedBtn');
+            const resetBtn = document.getElementById('resetFeedBtn');
+            if (!btn) return;
+            
+            if (feedShowingAll) {
+                btn.innerHTML = `See Less <i class="fa-solid fa-arrow-up"></i>`;
+                resetBtn.style.display = 'none';
+            } else {
+                const remaining = allFeedPosts.length - feedDisplayCount;
+                btn.innerHTML = `See More (${remaining} left) <i class="fa-solid fa-arrow-down"></i>`;
+                if (feedDisplayCount > FEED_DEFAULT_COUNT) {
+                    resetBtn.style.display = 'inline-flex';
+                } else {
+                    resetBtn.style.display = 'none';
+                }
+            }
+        }
+
+        function toggleFeedPosts() {
+            const container = document.getElementById('instagramFeed');
+
+            if (feedShowingAll) {
+                feedDisplayCount = FEED_DEFAULT_COUNT;
+                feedShowingAll = false;
+            } else {
+                const newCount = Math.min(feedDisplayCount + FEED_INCREMENT, allFeedPosts.length);
+                feedDisplayCount = newCount;
+                if (feedDisplayCount >= allFeedPosts.length) {
+                    feedShowingAll = true;
+                }
+            }
+            
+            const postsToShow = allFeedPosts.slice(0, feedDisplayCount);
+            renderFeedPosts(postsToShow, container);
+            updateFeedButton();
+
+            const seeMoreWrap = document.getElementById('feedSeeMore');
+            if (allFeedPosts.length <= FEED_DEFAULT_COUNT) {
+                seeMoreWrap.style.display = 'none';
+            } else {
+                seeMoreWrap.style.display = 'flex';
+                seeMoreWrap.style.gap = '12px';
+                seeMoreWrap.style.justifyContent = 'center';
+            }
+        }
+
+        function resetFeedView() {
+            feedDisplayCount = FEED_DEFAULT_COUNT;
+            feedShowingAll = false;
+            const container = document.getElementById('instagramFeed');
+            const postsToShow = allFeedPosts.slice(0, feedDisplayCount);
+            renderFeedPosts(postsToShow, container);
+            updateFeedButton();
+            document.getElementById('feed').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function searchFeedPosts() {
+            loadPosts();
+        }
+
+        function clearFeedSearch() {
+            document.getElementById('feedSearchInput').value = '';
+            loadPosts();
+        }
+
+        // ==========================================
+        // POST MODAL
+        // ==========================================
+        const modal = document.getElementById('postModal');
+        const modalBody = document.getElementById('modalBody');
+        const modalClose = document.getElementById('modalClose');
+        const modalOverlay = document.getElementById('modalOverlay');
+
+        function openPostModal(element) {
+            const item = element.closest('.feed-item');
+            const postData = JSON.parse(item.dataset.post);
+            
+            const hasArticle = postData.article_url && postData.article_url.trim() !== '';
+            const date = postData.published_at ? new Date(postData.published_at).toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+            }) : '';
+            const writer = postData.writer || "100 HUB";
+            const caption = postData.caption || '';
+            const permalink = postData.permalink || '#';
+            
+            const gallery = Array.isArray(postData.media_gallery) ? postData.media_gallery : [];
+
+            let mediaHtml = '';
+            if (gallery.length > 1) {
+                mediaHtml = `
+                    <div class="post-carousel" id="postCarousel" data-index="0">
+                        <div class="post-carousel-track" id="postCarouselTrack" style="display:flex; height:100%; width:100%; transition:transform 0.3s ease;">
+                            ${gallery.map(g => `
+                                <div style="flex:0 0 100%; height:100%; display:flex; align-items:center; justify-content:center;">
+                                    ${g.type === 'video'
+                                        ? `<video controls playsinline style="width:100%; height:100%; object-fit:contain; background:#000;"><source src="${g.url}" type="video/mp4"></video>`
+                                        : `<img src="${g.url}" alt="${caption.substring(0, 50)}" style="width:100%; height:100%; object-fit:contain;" />`}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button class="post-carousel-arrow left" onclick="postCarouselNav(-1)" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button class="post-carousel-arrow right" onclick="postCarouselNav(1)" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
+                        <div class="post-carousel-dots" id="postCarouselDots">
+                            ${gallery.map((_, i) => `<span class="post-carousel-dot ${i === 0 ? 'active' : ''}" onclick="postCarouselGoTo(${i})"></span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (postData.is_video && postData.video_url) {
+                mediaHtml = `
+                    <video controls autoplay muted loop playsinline style="width:100%; height:100%; object-fit:contain; background:#000;">
+                        <source src="${postData.video_url}" type="video/mp4">
+                    </video>
+                `;
+            } else {
+                mediaHtml = `<img src="${postData.image_url}" alt="${caption.substring(0, 50)}" loading="lazy" style="width:100%; height:100%; object-fit:contain;" />`;
+            }
+            
+            const captionLines = caption.split('\n').filter(l => l.trim() !== '');
+            const modalHeadline = captionLines[0] || 'Untitled';
+            const modalBodyText = captionLines.slice(1).join('\n');
+
+            let articleButtonHtml = '';
+            if (hasArticle) {
+                articleButtonHtml = `
+                    <a href="${postData.article_url}" target="_blank" class="btn-primary">
+                        <i class="fa-regular fa-file-lines"></i> Read Full Article
+                    </a>
+                `;
+            }
+            
+            modalBody.innerHTML = `
+                <div class="modal-image">
+                    ${mediaHtml}
+                </div>
+                <div class="modal-text">
+                    <div class="modal-meta">
+                        <span class="modal-writer"><i class="fa-regular fa-user"></i> ${writer}</span>
+                        <span class="modal-date"><i class="fa-regular fa-calendar"></i> ${date}</span>
+                        ${hasArticle ? `<span class="modal-article-badge"><i class="fa-regular fa-file-lines"></i> Article Available</span>` : ''}
+                    </div>
+                    <h2 class="modal-title">${modalHeadline}</h2>
+                    ${modalBodyText ? `<div class="modal-caption">${modalBodyText.replace(/\n/g, '<br>')}</div>` : ''}
+                    <div class="modal-actions">
+                        ${articleButtonHtml}
+                        <a href="${permalink}" target="_blank" class="btn-secondary">
+                            <i class="fa-regular fa-eye"></i> View on Instagram
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function postCarouselNav(direction) {
+            const carousel = document.getElementById('postCarousel');
+            if (!carousel) return;
+            const track = document.getElementById('postCarouselTrack');
+            const dots = document.querySelectorAll('#postCarouselDots .post-carousel-dot');
+            const count = dots.length;
+            let index = parseInt(carousel.dataset.index || '0', 10);
+            index = (index + direction + count) % count;
+            carousel.dataset.index = index;
+            track.style.transform = `translateX(-${index * 100}%)`;
+            dots.forEach((d, i) => d.classList.toggle('active', i === index));
+        }
+
+        function postCarouselGoTo(index) {
+            const carousel = document.getElementById('postCarousel');
+            if (!carousel) return;
+            const track = document.getElementById('postCarouselTrack');
+            const dots = document.querySelectorAll('#postCarouselDots .post-carousel-dot');
+            carousel.dataset.index = index;
+            track.style.transform = `translateX(-${index * 100}%)`;
+            dots.forEach((d, i) => d.classList.toggle('active', i === index));
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        modalClose.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', closeModal);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // ==========================================
+        // IMPACT NUMBERS
+        // ==========================================
+        function loadImpactNumbers() {
+            try {
+                const data = localStorage.getItem('impactNumbers');
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    document.getElementById('homeMagazine').textContent = parsed.magazine || 8;
+                    document.getElementById('homeFeatures').textContent = parsed.features + (parsed.features > 9 ? '' : '+') || '100+';
+                    document.getElementById('homeCollaborations').textContent = parsed.collaborations + (parsed.collaborations > 9 ? '' : '+') || '50+';
+                    document.getElementById('homeReach').textContent = parsed.reach >= 1000000 ? (parsed.reach / 1000000).toFixed(1) + 'M+' : parsed.reach + '+';
+                }
+            } catch (e) {}
+        }
+
+        // ==========================================
+        // PARTNER LOGOS
+        // ==========================================
+        let partnerLogos = [];
+
+        async function loadPartners() {
+            try {
+                const response = await fetch(apiUrl('partners'));
+                if (response.ok) {
+                    const data = await response.json();
+                    partnerLogos = data.logos || [];
+                    renderPartnerLogos();
+                }
+            } catch (error) {
+                console.log('ℹ️ Could not load partner logos');
+            }
+        }
+
+        function renderPartnerLogos() {
+            const track = document.getElementById('partnersTrack');
+            if (!track) return;
+
+            if (partnerLogos.length === 0) {
+                track.innerHTML = `
+                    <div class="partner-logo-item">
+                        <span style="color:rgba(255,255,255,0.3); font-size:13px; letter-spacing:1px;">PARTNER LOGOS COMING SOON</span>
+                    </div>
+                `;
+                return;
+            }
+
+            const logos = [...partnerLogos, ...partnerLogos];
+            track.innerHTML = logos.map(logo => `
+                <div class="partner-logo-item">
+                    <img 
+                        src="${logo.url}" 
+                        alt="${logo.name}" 
+                        title="${logo.name}" 
+                        loading="lazy" 
+                        style="max-height:55px; max-width:150px; width:auto; height:auto; object-fit:contain; filter:none !important;"
+                        onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'color:rgba(255,255,255,0.3);font-size:12px;letter-spacing:0.5px;\\'>${logo.name}</span>';"
+                    />
+                </div>
+            `).join('');
+        }
+
+        // ==========================================
+        // HUD CREATORS COUNT
+        // ==========================================
+        async function updateCreatorsCount() {
+            try {
+                const response = await fetch(apiUrl('members', { status: 'accepted', limit: 1 }));
+                if (response.ok) {
+                    const data = await response.json();
+                    const count = data.count || 0;
+                    const hudEl = document.getElementById('hud-creators-count');
+                    if (hudEl) hudEl.textContent = count;
+                }
+            } catch (e) {}
+        }
+
+        // ==========================================
+        // HAMBURGER MENU
+        // ==========================================
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+
+        function toggleMobileMenu() {
+            hamburgerBtn.classList.toggle('active');
+            mobileMenu.classList.toggle('open');
+            mobileMenuOverlay.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+        }
+
+        function closeMobileMenu() {
+            hamburgerBtn.classList.remove('active');
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        if (hamburgerBtn && mobileMenu && mobileMenuOverlay && mobileMenuClose) {
+            hamburgerBtn.addEventListener('click', toggleMobileMenu);
+            mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+            mobileMenuClose.addEventListener('click', closeMobileMenu);
+        }
+
+        // ==========================================
+        // AD CARD - Load from Database (Home Page Only)
+        // ==========================================
+        async function loadAd() {
+            const adCard = document.getElementById('adCard');
+            const adContent = document.getElementById('adCardContent');
+            const adLink = document.getElementById('adCardLink');
+            const closeBtn = document.getElementById('adCardClose');
+            
+            try {
+                console.log('📬 Fetching ad...');
+                const response = await fetch('/api?path=ads');
+                const data = await response.json();
+                console.log('📬 Ad response:', data);
+                
+                if (!data.success || !data.ad) {
+                    console.log('📬 No active ad found');
+                    adCard.style.display = 'none';
+                    return;
+                }
+                
+                const ad = data.ad;
+                console.log('📬 Loading ad:', ad.title);
+                
+                adLink.href = ad.link_url;
+                
+                if (ad.media_type === 'video') {
+                    adContent.innerHTML = `
+                        <div style="position:relative; width:100%; padding-bottom:56.25%; background:#000;">
+                            <video autoplay muted loop playsinline style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;">
+                                <source src="${ad.media_url}" type="video/mp4">
+                            </video>
+                        </div>
+                    `;
+                } else {
+                    adContent.innerHTML = `
+                        <div style="position:relative; width:100%; padding-bottom:56.25%; background:#000;">
+                            <img src="${ad.media_url}" alt="${ad.title || 'Advertisement'}" loading="lazy" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;" />
+                        </div>
+                    `;
+                }
+                
+                setTimeout(() => {
+                    adCard.style.display = 'block';
+                    adCard.style.animation = 'slideUp 0.5s ease';
+                }, 1500);
+                
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    adCard.style.display = 'none';
+                    console.log('📬 Ad closed for this page view');
+                });
+                
+            } catch (error) {
+                console.error('Failed to load ad:', error);
+                adCard.style.display = 'none';
+            }
+        }
+
+        // ==========================================
+        // SCROLL REVEAL
+        // ==========================================
+        const animatedElements = document.querySelectorAll('[data-animate]');
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        animatedElements.forEach((el) => {
+            revealObserver.observe(el);
+        });
+
+        // ==========================================
+        // NAVBAR SCROLL
+        // ==========================================
+        const navbar = document.querySelector('.navbar');
+        if (navbar) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY <= 50) {
+                    navbar.classList.remove('nav-scrolled');
+                } else {
+                    navbar.classList.add('nav-scrolled');
+                }
+            }, { passive: true });
+        }
+
+        // ==========================================
+        // INIT
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', async function() {
+            loadImpactNumbers();
+            loadPartners();
+            updateCreatorsCount();
+            loadPosts();
+            
+            setTimeout(() => {
+                loadAd();
+            }, 500);
+            
+            console.log('🏠 100 HUB — Home Page Loaded');
+            console.log('📸 Feed System: Database Posts');
+            console.log('🔍 Search: Search posts by caption or keyword');
+            console.log('📄 Default: 9 posts, See More loads 3 more');
+            console.log('📬 Ad Card: Loaded from database');
+        });
+    </script>
+
+    <!-- Three.js for 3D Globe -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+        // ==========================================
+        // 3D GLOBE
+        // ==========================================
+        const canvas = document.getElementById('globe-canvas');
+        const scene = new THREE.Scene();
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100000);
+        camera.position.set(0, 2000, 18000);
+
+        const renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            antialias: true,
+            alpha: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 0.8;
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404060, 0.6);
+        scene.add(ambientLight);
+
+        const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        mainLight.position.set(10000, 8000, 12000);
+        scene.add(mainLight);
+
+        const rimLight = new THREE.DirectionalLight(0x6688ff, 0.4);
+        rimLight.position.set(-8000, 4000, -10000);
+        scene.add(rimLight);
+
+        const redLight = new THREE.PointLight(0xe31e24, 0.8, 30000);
+        redLight.position.set(5000, -3000, 8000);
+        scene.add(redLight);
+
+        const blueLight = new THREE.PointLight(0x3355ff, 0.3, 25000);
+        blueLight.position.set(-5000, 5000, -5000);
+        scene.add(blueLight);
+
+        // Cosmic particles
+        const particleCount = 2500;
+        const particleGeometry = new THREE.BufferGeometry();
+        const particlePositions = new Float32Array(particleCount * 3);
+        const particleColors = new Float32Array(particleCount * 3);
+
+        const colorPalette = [
+            new THREE.Color(0xffffff),
+            new THREE.Color(0xdce8ff),
+            new THREE.Color(0x88b5ff),
+            new THREE.Color(0xe31e24),
+            new THREE.Color(0xaaaaaa)
+        ];
+
+        for (let i = 0; i < particleCount; i++) {
+            const radius = 8000 + Math.random() * 32000;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos((Math.random() * 2) - 1);
+
+            particlePositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+            particlePositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+            particlePositions[i * 3 + 2] = radius * Math.cos(phi);
+
+            const c = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+            particleColors[i * 3] = c.r;
+            particleColors[i * 3 + 1] = c.g;
+            particleColors[i * 3 + 2] = c.b;
+        }
+
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+        particleGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 3.5,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.75,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+
+        const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particleSystem);
+
+        // Atmospheric glow
+        const auraGeo = new THREE.SphereGeometry(4250, 48, 48);
+        const auraMat = new THREE.MeshBasicMaterial({
+            color: 0x4477ff,
+            transparent: true,
+            opacity: 0.08,
+            blending: THREE.AdditiveBlending,
+            side: THREE.BackSide
+        });
+        const auraMesh = new THREE.Mesh(auraGeo, auraMat);
+        scene.add(auraMesh);
+
+        // Orbiting nodes
+        const nodesContainer = document.getElementById('globe-nodes-container');
+        const nodeDefs = [
+            { label: 'JHB-008', radius: 6500, speed: 0.006, theta: 0, tilt: new THREE.Euler(Math.PI * 0.15, 0, Math.PI * 0.1) },
+            { label: 'LOS-022', radius: 6500, speed: 0.008, theta: Math.PI * 0.6, tilt: new THREE.Euler(Math.PI * 0.15, 0, Math.PI * 0.1) },
+            { label: 'LON-041', radius: 8500, speed: -0.005, theta: Math.PI * 1.2, tilt: new THREE.Euler(-Math.PI * 0.25, 0, Math.PI * 0.15) },
+            { label: 'ACC-017', radius: 8500, speed: -0.007, theta: Math.PI * 0.3, tilt: new THREE.Euler(-Math.PI * 0.25, 0, Math.PI * 0.15) },
+            { label: 'NYC-105', radius: 10500, speed: 0.004, theta: Math.PI * 1.7, tilt: new THREE.Euler(Math.PI * 0.35, 0, -Math.PI * 0.2) },
+            { label: '100 HUB', radius: 5500, speed: 0.009, theta: Math.PI * 0.9, tilt: new THREE.Euler(Math.PI * 0.1, 0, Math.PI * 0.05) }
+        ];
+
+        const nodeObjects = [];
+        const nodeSphereGeo = new THREE.SphereGeometry(120, 16, 16);
+        const nodeSphereMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const redNodeMat = new THREE.MeshBasicMaterial({ color: 0xe31e24 });
+
+        nodeDefs.forEach((def, index) => {
+            const mesh = new THREE.Mesh(nodeSphereGeo, index === 5 ? redNodeMat : nodeSphereMat);
+            scene.add(mesh);
+
+            const badge = document.createElement('div');
+            badge.className = 'globe-node-badge';
+            badge.innerHTML = `<span class="node-pulse-dot"></span>${def.label}`;
+            nodesContainer.appendChild(badge);
+
+            nodeObjects.push({
+                def: def,
+                mesh: mesh,
+                badgeEl: badge,
+                theta: def.theta
+            });
+        });
+
+        // Preloader
+        const preloader = document.getElementById('site-preloader');
+        const preloaderFill = document.getElementById('preloaderFill');
+        const preloaderCounter = document.getElementById('preloaderCounter');
+        const preloaderStatus = document.getElementById('preloaderStatus');
+
+        function hidePreloader() {
+            if (preloaderFill) preloaderFill.style.width = '100%';
+            if (preloaderCounter) preloaderCounter.textContent = '100%';
+            if (preloaderStatus) preloaderStatus.textContent = 'SYSTEM ONLINE';
+
+            setTimeout(() => {
+                if (preloader) preloader.classList.add('loaded');
+            }, 500);
+        }
+
+        const preloaderSafetyTimer = setTimeout(() => {
+            hidePreloader();
+        }, 6000);
+
+        // Load Globe Model
+        let globeModel = null;
+        const loader = new GLTFLoader();
+
+        loader.load(
+            'assets/globe/scene.gltf',
+            (gltf) => {
+                globeModel = gltf.scene;
+
+                const box = new THREE.Box3().setFromObject(globeModel);
+                const center = box.getCenter(new THREE.Vector3());
+                const size = box.getSize(new THREE.Vector3());
+                const maxDim = Math.max(size.x, size.y, size.z);
+                const scale = 8000 / maxDim;
+                globeModel.scale.setScalar(scale);
+                globeModel.position.sub(center.multiplyScalar(scale));
+
+                globeModel.traverse((child) => {
+                    if (child.isMesh) {
+                        if (child.material) {
+                            child.material.metalness = 0.1;
+                            child.material.roughness = 0.6;
+                        }
+                    }
+                });
+
+                scene.add(globeModel);
+                console.log('🌍 Globe model loaded');
+
+                clearTimeout(preloaderSafetyTimer);
+                hidePreloader();
+            },
+            (progress) => {
+                if (progress.total > 0) {
+                    const pct = Math.min(Math.floor((progress.loaded / progress.total) * 100), 99);
+                    if (preloaderFill) preloaderFill.style.width = pct + '%';
+                    if (preloaderCounter) preloaderCounter.textContent = pct + '%';
+                    if (preloaderStatus) preloaderStatus.textContent = `LOADING 3D MODEL ${pct}%`;
+                } else {
+                    if (preloaderFill) preloaderFill.style.width = '65%';
+                    if (preloaderCounter) preloaderCounter.textContent = '65%';
+                    if (preloaderStatus) preloaderStatus.textContent = 'LOADING 3D ASSETS...';
+                }
+            },
+            (error) => {
+                console.error('❌ Globe loading error:', error);
+                clearTimeout(preloaderSafetyTimer);
+                hidePreloader();
+            }
+        );
+
+        // Mouse tracking
+        let mouseX = 0, mouseY = 0;
+        const targetRotX = { value: 0 };
+        const targetRotY = { value: 0 };
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+        });
+
+        // Camera scroll for home page
+        let targetCamY = 1500;
+        let targetCamZ = 16000;
+
+        function updateCameraScrollTarget() {
+            const scrollY = window.scrollY;
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = maxScroll > 0 ? scrollY / maxScroll : 0;
+            
+            targetCamY = 1500 - progress * 800;
+            targetCamZ = 16000 - progress * 2000;
+        }
+
+        window.addEventListener('scroll', updateCameraScrollTarget, { passive: true });
+        updateCameraScrollTarget();
+
+        // Animation loop
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const elapsed = clock.getElapsedTime();
+
+            camera.position.y += (targetCamY - camera.position.y) * 0.03;
+            camera.position.z += (targetCamZ - camera.position.z) * 0.03;
+            camera.lookAt(0, 0, 0);
+
+            if (particleSystem) {
+                particleSystem.rotation.y = elapsed * 0.015;
+                particleSystem.rotation.x = Math.sin(elapsed * 0.03) * 0.04;
+            }
+
+            if (globeModel) {
+                globeModel.rotation.y = elapsed * 0.08;
+                targetRotX.value += (mouseY * 0.15 - targetRotX.value) * 0.02;
+                targetRotY.value += (mouseX * 0.15 - targetRotY.value) * 0.02;
+                globeModel.rotation.x = targetRotX.value;
+                globeModel.rotation.z = targetRotY.value * 0.3;
+            }
+
+            redLight.position.x = Math.sin(elapsed * 0.3) * 8000;
+            redLight.position.z = Math.cos(elapsed * 0.3) * 8000;
+
+            const tempVector = new THREE.Vector3();
+
+            nodeObjects.forEach(node => {
+                node.theta += node.def.speed;
+
+                const posX = Math.cos(node.theta) * node.def.radius;
+                const posZ = Math.sin(node.theta) * node.def.radius;
+                tempVector.set(posX, 0, posZ);
+                tempVector.applyEuler(node.def.tilt);
+
+                node.mesh.position.copy(tempVector);
+
+                const projected = tempVector.clone().project(camera);
+
+                const screenX = (projected.x * 0.5 + 0.5) * window.innerWidth;
+                const screenY = (-(projected.y * 0.5) + 0.5) * window.innerHeight;
+
+                if (projected.z > 1) {
+                    node.badgeEl.style.display = 'none';
+                } else {
+                    node.badgeEl.style.display = 'flex';
+                    node.badgeEl.style.transform = `translate(-50%, -50%) translate(${screenX}px, ${screenY}px)`;
+                    node.badgeEl.style.opacity = (projected.z < 0.95) ? '0.9' : '0.15';
+                }
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        const globeCanvas = document.getElementById('globe-canvas');
+        globeCanvas.style.opacity = '1.0';
+
+        console.log('🌐 3D Globe active on home page');
+    </script>
+
+</body>
 </html>
