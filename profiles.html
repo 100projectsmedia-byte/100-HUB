@@ -88,81 +88,61 @@
 
         /* ===== HUB SEARCH BAR ===== */
         .hub-search {
-            margin-bottom: 24px;
+            margin-bottom: 8px;
         }
         .hub-search .search-container {
             display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
             align-items: center;
+            gap: 10px;
+            max-width: 420px;
+            width: 100%;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 60px;
-            padding: 5px 5px 5px 14px;
+            border-radius: 100px;
+            padding: 11px 16px;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+        .hub-search .search-container:focus-within {
+            border-color: var(--red);
+            background: rgba(255, 255, 255, 0.05);
         }
         .hub-search .search-container .search-icon {
-            padding: 0 4px 0 0;
             color: rgba(255, 255, 255, 0.4);
-            font-size: 12px;
+            font-size: 13px;
+            flex-shrink: 0;
         }
         .hub-search .search-container input {
             flex: 1;
-            min-width: 150px;
-            padding: 8px 6px;
+            min-width: 0;
+            padding: 2px 0;
             background: transparent;
             border: none;
             color: #f0f0f0;
-            font-size: 13px;
-            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-family: 'Garet', sans-serif;
             outline: none;
         }
         .hub-search .search-container input::placeholder {
             color: rgba(255, 255, 255, 0.3);
         }
-        .hub-search .search-actions {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            padding-right: 4px;
-        }
-        .hub-search .search-actions .btn-search {
-            padding: 7px 14px;
-            background: var(--red);
-            color: white;
+        .hub-search .search-clear {
+            background: none;
             border: none;
-            border-radius: 60px;
-            font-size: 11px;
-            font-weight: 500;
+            color: rgba(255, 255, 255, 0.4);
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            white-space: nowrap;
+            font-size: 13px;
+            padding: 4px;
+            flex-shrink: 0;
+            line-height: 1;
         }
-        .hub-search .search-actions .btn-search:hover {
-            background: var(--red-dark);
-            transform: translateY(-1px);
-        }
-        .hub-search .search-actions .btn-clear {
-            padding: 7px 12px;
-            background: transparent;
-            color: rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 60px;
-            font-size: 11px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            white-space: nowrap;
-        }
-        .hub-search .search-actions .btn-clear:hover {
-            border-color: var(--red);
+        .hub-search .search-clear:hover {
             color: var(--red);
         }
         .hub-search .search-result-count {
+            display: block;
             font-size: 11px;
             color: rgba(255, 255, 255, 0.35);
-            padding: 0 12px;
-            white-space: nowrap;
+            margin: 8px 0 20px 4px;
         }
 
         /* ===== HUB GRID ===== */
@@ -646,10 +626,7 @@
             .member-modal-content { max-width: 95%; }
             .member-modal-details { padding: 18px 20px 20px; }
             .member-modal-name { font-size: 22px; }
-            .hub-search .search-container { flex-wrap: wrap; }
-            .hub-search .search-container input { min-width: 100%; padding: 10px 0; }
-            .hub-search .search-actions { width: 100%; justify-content: flex-end; }
-            .hub-search .search-result-count { width: 100%; text-align: center; padding: 4px 0; }
+            .hub-search .search-container { max-width: 100%; }
         }
         @media (max-width: 480px) {
             .hub-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -657,9 +634,6 @@
             .hub-role { font-size: 11px; }
             .hub-description { font-size: 11px; min-height: 28px; -webkit-line-clamp: 1; }
             .hub-info { padding: 10px 10px 12px; }
-            .hub-search .search-actions { justify-content: center; }
-            .hub-search .search-actions .btn-search,
-            .hub-search .search-actions .btn-clear { font-size: 11px; padding: 6px 12px; }
         }
 
         .loader {
@@ -1198,16 +1172,15 @@
             <!-- ===== SEARCH BAR ===== -->
             <div class="hub-search">
                 <div class="search-container">
-                    <span class="search-icon"><i class="fa-solid fa-search"></i></span>
-                    <input type="text" id="hubSearchInput" placeholder="Search by name, role, or description..." />
-                    <div class="search-actions">
-                        <button class="btn-search" onclick="searchHubMembers()"><i class="fa-solid fa-search"></i> Search</button>
-                        <button class="btn-clear" onclick="clearHubSearch()"><i class="fa-solid fa-times"></i></button>
-                    </div>
-                    <span class="search-result-count">
-                        Showing <span id="hubShowingCount">0</span> members
-                    </span>
+                    <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+                    <input type="text" id="hubSearchInput" placeholder="Search by name, role, or description..." oninput="handleHubSearchInput()" />
+                    <button type="button" class="search-clear" id="hubSearchClear" onclick="clearHubSearch()" style="display:none;">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
                 </div>
+                <span class="search-result-count">
+                    Showing <span id="hubShowingCount">0</span> members
+                </span>
             </div>
 
             <div class="hub-grid" id="hubGrid">
@@ -1480,6 +1453,18 @@
             }
         }
 
+        let hubSearchDebounce = null;
+        function handleHubSearchInput() {
+            const input = document.getElementById('hubSearchInput');
+            const clearBtn = document.getElementById('hubSearchClear');
+            clearBtn.style.display = input.value.trim() ? 'flex' : 'none';
+
+            clearTimeout(hubSearchDebounce);
+            hubSearchDebounce = setTimeout(() => {
+                searchHubMembers();
+            }, 250);
+        }
+
         function searchHubMembers() {
             const searchInput = document.getElementById('hubSearchInput');
             const searchTerm = searchInput.value.trim().toLowerCase();
@@ -1506,6 +1491,7 @@
 
         function clearHubSearch() {
             document.getElementById('hubSearchInput').value = '';
+            document.getElementById('hubSearchClear').style.display = 'none';
             filteredHubMembers = allHubMembers;
             document.getElementById('hubShowingCount').textContent = allHubMembers.length;
             hubShowingAll = false;

@@ -79,27 +79,34 @@
         .feed-search {
             display: flex;
             align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-            padding: 5px 5px 5px 14px;
+            gap: 10px;
+            max-width: 420px;
+            width: 100%;
+            margin-bottom: 8px;
+            padding: 11px 16px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border-subtle);
-            border-radius: 60px;
+            border-radius: 100px;
+            transition: border-color 0.2s ease, background 0.2s ease;
         }
-        .feed-search i.fa-search {
-            font-size: 12px;
+        .feed-search:focus-within {
+            border-color: var(--red);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .feed-search i.fa-magnifying-glass {
+            font-size: 13px;
             color: var(--text-muted);
+            flex-shrink: 0;
         }
         .feed-search input {
             flex: 1;
-            min-width: 160px;
-            padding: 8px 6px;
+            min-width: 0;
+            padding: 2px 0;
             background: transparent;
             border: none;
             color: var(--text-primary);
-            font-size: 13px;
-            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-family: 'Garet', sans-serif;
         }
         .feed-search input:focus {
             outline: none;
@@ -107,20 +114,27 @@
         .feed-search input::placeholder {
             color: var(--text-muted);
         }
+        .feed-search-clear {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13px;
+            padding: 4px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .feed-search-clear:hover {
+            color: var(--red);
+        }
         .feed-result-count {
+            display: block;
             font-size: 11px;
             color: var(--text-muted);
-            margin-left: auto;
-            padding-right: 10px;
-            white-space: nowrap;
+            margin: 0 0 20px 4px;
         }
         @media (max-width: 600px) {
-            .feed-search {
-                border-radius: var(--radius-sm);
-                padding: 10px;
-            }
-            .feed-search input { min-width: 100%; order: -1; }
-            .feed-result-count { margin-left: 0; width: 100%; text-align: center; padding: 4px 0 0; }
+            .feed-search { max-width: 100%; }
         }
 
     </style>
@@ -262,18 +276,15 @@
             </div>
 
             <div class="feed-search">
-                <i class="fa-solid fa-search"></i>
-                <input type="text" id="feedSearchInput" placeholder="Search posts by caption or keyword..." />
-                <button class="btn-outline btn-sm" onclick="searchFeedPosts()">
-                    <i class="fa-solid fa-search"></i> Search
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="feedSearchInput" placeholder="Search posts..." oninput="handleFeedSearchInput()" />
+                <button type="button" class="feed-search-clear" id="feedSearchClear" onclick="clearFeedSearch()" style="display:none;">
+                    <i class="fa-solid fa-xmark"></i>
                 </button>
-                <button class="btn-outline btn-sm" onclick="clearFeedSearch()">
-                    <i class="fa-solid fa-times"></i> Clear
-                </button>
-                <span class="feed-result-count">
-                    Showing <span id="feedShowingCount">0</span> posts
-                </span>
             </div>
+            <span class="feed-result-count">
+                Showing <span id="feedShowingCount">0</span> posts
+            </span>
 
             <div class="feed-grid" id="instagramFeed">
                 <div class="feed-loading">
@@ -603,12 +614,25 @@
             document.getElementById('feed').scrollIntoView({ behavior: 'smooth' });
         }
 
+        let feedSearchDebounce = null;
+        function handleFeedSearchInput() {
+            const input = document.getElementById('feedSearchInput');
+            const clearBtn = document.getElementById('feedSearchClear');
+            clearBtn.style.display = input.value.trim() ? 'flex' : 'none';
+
+            clearTimeout(feedSearchDebounce);
+            feedSearchDebounce = setTimeout(() => {
+                loadPosts();
+            }, 350);
+        }
+
         function searchFeedPosts() {
             loadPosts();
         }
 
         function clearFeedSearch() {
             document.getElementById('feedSearchInput').value = '';
+            document.getElementById('feedSearchClear').style.display = 'none';
             loadPosts();
         }
 
