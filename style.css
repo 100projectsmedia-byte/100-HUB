@@ -548,34 +548,56 @@ section {
    ========================================== */
 .hero-title,
 .section-title {
+    position: relative;
     background: linear-gradient(
-        110deg,
-        #6b6b6d 0%,
-        #d8d8da 12%,
-        #ffffff 22%,
-        #8c8c8f 32%,
-        #f5f5f7 42%,
-        #5e5e60 52%,
-        #ffffff 62%,
-        #a8a8ab 74%,
-        #eaeaec 86%,
-        #7a7a7d 100%
+        100deg,
+        #3d3d3f 0%,
+        #9a9a9d 8%,
+        #ffffff 16%,
+        #ffffff 20%,
+        #c4c4c7 26%,
+        #5c5c5e 36%,
+        #3d3d3f 44%,
+        #5c5c5e 52%,
+        #c4c4c7 62%,
+        #ffffff 70%,
+        #ffffff 74%,
+        #9a9a9d 82%,
+        #3d3d3f 92%,
+        #6b6b6d 100%
     ) !important;
-    background-size: 220% auto !important;
+    background-size: 250% auto !important;
     color: #c9c9cc !important;
     -webkit-background-clip: text !important;
     background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     text-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.55),
+        0 1px 0 rgba(255, 255, 255, 0.85),
         0 2px 2px rgba(0, 0, 0, 0.45),
         0 8px 20px rgba(0, 0, 0, 0.5) !important;
-    filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35));
-    animation: chromeShine 7s linear infinite;
+    filter:
+        drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35))
+        drop-shadow(0 0 14px rgba(255, 255, 255, 0.25));
+    animation:
+        chromeShine 4.5s linear infinite,
+        chromeGlow 3s ease-in-out infinite;
 }
 @keyframes chromeShine {
     0% { background-position: 0% center; }
-    100% { background-position: 220% center; }
+    100% { background-position: 250% center; }
+}
+@keyframes chromeGlow {
+    0%, 100% {
+        filter:
+            drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35))
+            drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+    }
+    50% {
+        filter:
+            drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35))
+            drop-shadow(0 0 26px rgba(255, 255, 255, 0.55))
+            drop-shadow(0 0 46px rgba(255, 255, 255, 0.25));
+    }
 }
 @media (prefers-reduced-motion: reduce) {
     .hero-title,
@@ -2964,4 +2986,3 @@ section {
         filter: none;
     }
 }
-/* 100Hub */
