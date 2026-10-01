@@ -3,56 +3,49 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>100 HUB — Our Work</title>
-    <meta name="description" content="100 HUB - Entertainment & Media Production" />
-    <meta name="theme-color" content="#0a0a0a" />
+    <title>100 CNA — Projects</title>
+    <meta name="description" content="100 CNA Projects — Work, collaborations, and creative direction from the 100 CNA network." />
+    <meta name="theme-color" content="#FFD400" />
+
+    <meta property="og:title" content="100 CNA — Projects" />
+    <meta property="og:description" content="Work, collaborations, and creative direction." />
+    <meta property="og:image" content="assets/Logo.png" />
+    <meta property="og:type" content="website" />
+
+    <link rel="icon" type="image/png" href="assets/Logo.png" />
+    <link rel="apple-touch-icon" href="assets/Logo.png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
-    
-    <!-- Garet Font for Paalalabas -->
-    <link href="https://fonts.cdnfonts.com/css/garet" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+    <link href="https://fonts.cdnfonts.com/css/bicubik" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/sukar" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" /></noscript>
+
     <link rel="stylesheet" href="style.css" />
     <link rel="preload" as="image" href="assets/Logo.png">
 
     <style>
-        .page-work .entertainment-section { padding: 140px 0 100px; }
+        .page-work .visual-strip { padding: 140px 0 60px; }
+        .page-work .creator-section { padding: 40px 0 100px; }
+        .page-work .feature-strip { padding: 60px 0 100px; }
+        .page-work .partners-section-work { padding: 40px 0 80px; }
+        .page-work .contact-section-work { padding: 80px 0 100px; }
 
-        /* Video BG */
-        .video-bg {
-            position: fixed;
-            inset: 0;
-            z-index: -2;
-        }
-        .video-bg video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: brightness(0.22);
-        }
-        .video-bg::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.85));
-        }
-
-        /* Visual Strip */
-        .visual-strip { padding: 140px 7% 60px; }
         .video-wrapper {
             position: relative;
             height: 560px;
-            border-radius: 36px;
+            border-radius: var(--radius);
             overflow: hidden;
-            background: var(--bg-tertiary);
-            cursor: default;
+            background: var(--cna-black);
         }
-        .video-wrapper video {
+        .video-wrapper video,
+        .video-wrapper img {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -60,118 +53,124 @@
         .visual-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.92), rgba(0,0,0,0.15));
+            background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.15));
             pointer-events: none;
         }
         .visual-controls {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 20px; right: 20px;
             display: flex;
             gap: 10px;
             z-index: 10;
         }
         .visual-controls button {
-            background: rgba(0,0,0,0.55);
-            border: 1px solid rgba(255,255,255,0.15);
-            color: white;
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
+            background: var(--cna-yellow);
+            border: none;
+            color: var(--cna-black);
+            width: 44px; height: 44px;
+            border-radius: 50%;
             cursor: pointer;
             font-size: 16px;
-            backdrop-filter: blur(10px);
-            transition: 0.3s;
+            transition: var(--transition-fast);
         }
-        .visual-controls button:hover { background: var(--red); }
+        .visual-controls button:hover {
+            background: var(--cna-red);
+            color: var(--cna-white);
+        }
         .visual-content {
             position: absolute;
             bottom: 60px;
             left: 60px;
-            max-width: 700px;
+            right: 60px;
+            max-width: 720px;
         }
         .visual-content h2 {
-            font-size: clamp(36px, 5vw, 74px);
-            line-height: 1;
-            margin-bottom: 22px;
-            letter-spacing: -2px;
-            color: var(--white);
+            font-family: var(--font-display);
+            font-size: clamp(32px, 5vw, 64px);
+            line-height: 1.02;
+            margin-bottom: 20px;
+            letter-spacing: -0.03em;
+            color: var(--cna-white);
+            text-transform: uppercase;
         }
         .visual-content p {
+            font-family: var(--font-body);
             font-size: 15px;
             line-height: 1.7;
             color: rgba(255,255,255,0.75);
-            max-width: 480px;
+            max-width: 520px;
         }
         .visual-content .work-link-btn {
             display: inline-block;
-            margin-top: 16px;
-            padding: 12px 28px;
-            background: var(--red);
-            color: white;
-            border-radius: 60px;
+            margin-top: 20px;
+            padding: 14px 32px;
+            background: var(--cna-yellow);
+            color: var(--cna-black);
+            border-radius: var(--radius-pill);
             text-decoration: none;
-            font-size: 13px;
-            font-weight: 500;
-            transition: 0.3s;
+            font-family: var(--font-display);
+            font-size: 12px;
+            font-weight: 700;
+            transition: var(--transition-fast);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
         .visual-content .work-link-btn:hover {
-            background: var(--red-dark);
+            background: var(--cna-red);
+            color: var(--cna-white);
             transform: translateY(-2px);
-            box-shadow: var(--shadow-red);
         }
         .visual-content .work-agency {
-            font-size: 13px;
-            color: rgba(255,255,255,0.5);
-            margin-bottom: 8px;
-            letter-spacing: 1px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--cna-yellow);
+            margin-bottom: 12px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
         }
 
-        /* Creator Section - Dynamic Work Items */
-        .creator-section { padding: 40px 7% 120px; }
         .section-tag {
+            font-family: var(--font-mono);
             font-size: 11px;
-            letter-spacing: 4px;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
-            opacity: 0.55;
+            color: var(--cna-black);
+            opacity: 0.6;
             margin-bottom: 16px;
-            color: var(--red);
+            display: block;
         }
-        .section-title {
-            font-size: clamp(38px, 5vw, 72px);
-            line-height: 1;
+        .page-work .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(36px, 5vw, 64px);
+            line-height: 1.02;
             font-weight: 800;
-            margin-bottom: 70px;
-            letter-spacing: -3px;
-            color: var(--white);
+            margin-bottom: 60px;
+            letter-spacing: -0.03em;
+            color: var(--cna-black);
+            text-transform: uppercase;
         }
+
         .creator-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 26px;
+            gap: 24px;
         }
         .creator-card {
             position: relative;
             overflow: hidden;
-            border-radius: 28px;
-            background: #111;
+            border-radius: var(--radius);
+            background: var(--cna-black);
             height: 420px;
-            cursor: default;
         }
-        .creator-card video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: 1s ease;
-        }
-        .creator-card:hover video { transform: scale(1.08); }
+        .creator-card video,
         .creator-card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: 1s ease;
+            transition: transform 1s ease;
         }
-        .creator-card:hover img { transform: scale(1.08); }
+        .creator-card:hover video,
+        .creator-card:hover img { transform: scale(1.06); }
         .creator-overlay {
             position: absolute;
             inset: 0;
@@ -179,174 +178,89 @@
         }
         .creator-info {
             position: absolute;
-            bottom: 28px;
-            left: 28px;
-            right: 28px;
+            bottom: 24px;
+            left: 24px;
+            right: 24px;
         }
         .creator-role {
-            font-size: 11px;
-            letter-spacing: 3px;
-            opacity: 0.65;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--cna-yellow);
             margin-bottom: 8px;
-            color: var(--red);
         }
         .creator-info h3 {
-            font-size: 24px;
-            margin-bottom: 4px;
-            color: var(--white);
+            font-family: var(--font-display);
+            font-size: 22px;
+            margin-bottom: 6px;
+            color: var(--cna-white);
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
         }
         .creator-info .work-agency {
+            font-family: var(--font-body);
             font-size: 13px;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.55);
             margin-bottom: 8px;
         }
         .creator-info p {
-            font-size: 14px;
+            font-family: var(--font-body);
+            font-size: 13px;
             line-height: 1.6;
-            opacity: 0.75;
             color: rgba(255,255,255,0.75);
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
         .creator-info .work-link-btn {
             display: inline-block;
             padding: 8px 20px;
-            background: var(--red);
-            color: white;
-            border-radius: 60px;
+            background: var(--cna-yellow);
+            color: var(--cna-black);
+            border-radius: var(--radius-pill);
             text-decoration: none;
-            font-size: 12px;
-            font-weight: 500;
-            transition: 0.3s;
-            border: none;
-            cursor: pointer;
+            font-family: var(--font-display);
+            font-size: 10px;
+            font-weight: 700;
+            transition: var(--transition-fast);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
         .creator-info .work-link-btn:hover {
-            background: var(--red-dark);
-            transform: translateY(-2px);
+            background: var(--cna-red);
+            color: var(--cna-white);
         }
 
-        /* Feature Strip */
-        .feature-strip {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            padding: 0 7% 120px;
-        }
         .feature-card {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            backdrop-filter: blur(14px);
-            border-radius: 26px;
-            padding: 30px;
-            transition: 0.4s ease;
+            background: var(--cna-black);
+            border-radius: var(--radius);
+            padding: 36px 32px;
+            transition: var(--transition);
         }
         .feature-card:hover {
             transform: translateY(-6px);
-            border-color: rgba(225,6,0,0.4);
+            background: var(--cna-red);
         }
         .feature-card i {
-            font-size: 30px;
-            color: var(--red);
-            margin-bottom: 20px;
+            font-size: 32px;
+            color: var(--cna-yellow);
+            margin-bottom: 24px;
+            display: block;
         }
         .feature-card h3 {
-            font-size: 20px;
+            font-family: var(--font-display);
+            font-size: 22px;
             margin-bottom: 12px;
-            color: var(--white);
+            color: var(--cna-white);
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
         }
         .feature-card p {
+            font-family: var(--font-body);
             font-size: 14px;
-            line-height: 1.8;
-            opacity: 0.72;
-            color: var(--text-secondary);
+            line-height: 1.7;
+            color: rgba(255,255,255,0.75);
         }
 
-        /* Partner Logos - Clean, No Cards */
-        .partners-section-work {
-            background: transparent;
-            overflow: hidden;
-            padding: 40px 7% 80px;
-        }
-        .partners-section-work .section-header {
-            text-align: center;
-            max-width: 100%;
-            margin-bottom: 30px;
-        }
-        .partners-section-work .section-number {
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--red);
-            letter-spacing: 3px;
-            display: inline-block;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-        .partners-section-work .section-title {
-            font-family: 'Space Grotesk', -apple-system, sans-serif;
-            font-size: 38px;
-            font-weight: 800;
-            color: #ffffff;
-            letter-spacing: -1.8px;
-            line-height: 1.2;
-        }
-        .partners-wrapper {
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-            padding: 10px 0;
-        }
-        .partners-track {
-            display: flex;
-            gap: 60px;
-            align-items: center;
-            animation: scrollPartnerLogos 30s linear infinite;
-            width: fit-content;
-        }
-        .partners-track:hover {
-            animation-play-state: paused;
-        }
-        .partner-logo-item {
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 8px 16px;
-            min-height: 50px;
-            min-width: 80px;
-            transition: transform 0.3s ease;
-        }
-        .partner-logo-item:hover {
-            transform: scale(1.08);
-        }
-        .partner-logo-item img {
-            max-height: 40px;
-            max-width: 130px;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-            opacity: 0.6;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            filter: none !important;
-        }
-        .partner-logo-item:hover img {
-            opacity: 1;
-            transform: scale(1.05);
-        }
-        .partner-logo-item span {
-            color: rgba(255, 255, 255, 0.25);
-            font-size: 12px;
-            font-weight: 400;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
-        @keyframes scrollPartnerLogos {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        /* Contact Section */
-        .contact-section-work { padding: 80px 7% 120px; }
         .contact-grid-work {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -355,51 +269,57 @@
             margin: 0 auto;
         }
         .contact-info-work .mini-tag {
+            font-family: var(--font-mono);
             font-size: 11px;
-            letter-spacing: 4px;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
-            color: var(--red);
-            opacity: 0.8;
+            color: var(--cna-black);
+            opacity: 0.6;
             display: block;
             margin-bottom: 16px;
         }
         .contact-info-work h2 {
+            font-family: var(--font-display);
             font-size: clamp(32px, 4vw, 52px);
-            line-height: 1.1;
+            line-height: 1.05;
             font-weight: 800;
             margin-bottom: 20px;
-            color: var(--white);
+            color: var(--cna-black);
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
         }
         .contact-info-work p {
+            font-family: var(--font-body);
             font-size: 16px;
-            line-height: 1.8;
-            opacity: 0.7;
+            line-height: 1.7;
+            color: var(--cna-black);
+            opacity: 0.75;
             margin-bottom: 30px;
-            color: var(--text-secondary);
         }
         .community-card-work {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            gap: 16px;
             margin-bottom: 30px;
         }
         .community-item-work {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 16px;
+            background: var(--cna-black);
+            border-radius: var(--radius-sm);
             padding: 20px;
             text-align: center;
         }
         .community-item-work h3 {
-            font-size: 28px;
+            font-family: var(--font-display);
+            font-size: 26px;
             font-weight: 800;
-            color: var(--red);
+            color: var(--cna-yellow);
             margin-bottom: 4px;
         }
         .community-item-work span {
-            font-size: 12px;
-            opacity: 0.6;
-            color: var(--text-muted);
+            font-family: var(--font-body);
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 0.05em;
         }
         .community-buttons-work {
             display: flex;
@@ -407,49 +327,55 @@
             flex-wrap: wrap;
         }
         .community-buttons-work a {
-            padding: 12px 28px;
-            border-radius: 60px;
-            font-size: 13px;
-            font-weight: 500;
+            padding: 12px 26px;
+            border-radius: var(--radius-pill);
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 700;
             text-decoration: none;
-            transition: 0.3s ease;
+            transition: var(--transition-fast);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border: 2px solid var(--cna-black);
         }
         .community-buttons-work a:first-child {
-            background: var(--red);
-            color: white;
+            background: var(--cna-black);
+            color: var(--cna-yellow);
         }
         .community-buttons-work a:first-child:hover {
-            background: var(--red-dark);
+            background: var(--cna-red);
+            border-color: var(--cna-red);
+            color: var(--cna-white);
             transform: translateY(-2px);
         }
         .community-buttons-work a:not(:first-child) {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.08);
-            color: var(--text-primary);
+            background: transparent;
+            color: var(--cna-black);
         }
         .community-buttons-work a:not(:first-child):hover {
-            border-color: var(--red);
-            color: var(--red);
+            background: var(--cna-black);
+            color: var(--cna-yellow);
             transform: translateY(-2px);
         }
 
         .contact-form-wrap-work {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 26px;
+            background: var(--cna-black);
+            border-radius: var(--radius);
             padding: 40px;
-            backdrop-filter: blur(14px);
         }
         .contact-form-wrap-work .form-top h3 {
+            font-family: var(--font-display);
             font-size: 24px;
             margin-bottom: 8px;
-            color: var(--white);
+            color: var(--cna-white);
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
         }
         .contact-form-wrap-work .form-top p {
+            font-family: var(--font-body);
             font-size: 14px;
-            opacity: 0.6;
+            color: rgba(255,255,255,0.6);
             margin-bottom: 24px;
-            color: var(--text-muted);
         }
         .contact-form-work .form-row {
             display: grid;
@@ -461,19 +387,23 @@
         .contact-form-work textarea {
             width: 100%;
             padding: 14px 16px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 14px;
-            color: var(--text-primary);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: var(--radius-sm);
+            color: var(--cna-white);
             font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            transition: 0.3s ease;
+            font-family: var(--font-body);
+            transition: var(--transition-fast);
+        }
+        .contact-form-work input::placeholder,
+        .contact-form-work textarea::placeholder {
+            color: rgba(255,255,255,0.35);
         }
         .contact-form-work input:focus,
         .contact-form-work select:focus,
         .contact-form-work textarea:focus {
             outline: none;
-            border-color: var(--red);
+            border-color: var(--cna-yellow);
         }
         .contact-form-work textarea {
             min-height: 120px;
@@ -482,28 +412,30 @@
         }
         .contact-form-work button {
             margin-top: 20px;
-            padding: 14px 36px;
-            background: var(--red);
-            color: white;
+            padding: 16px 36px;
+            background: var(--cna-yellow);
+            color: var(--cna-black);
             border: none;
-            border-radius: 60px;
-            font-size: 13px;
-            font-weight: 500;
+            border-radius: var(--radius-pill);
+            font-family: var(--font-display);
+            font-size: 12px;
+            font-weight: 700;
             cursor: pointer;
-            transition: 0.3s ease;
-            font-family: 'Inter', sans-serif;
+            transition: var(--transition-fast);
             width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
         .contact-form-work button:hover {
-            background: var(--red-dark);
+            background: var(--cna-red);
+            color: var(--cna-white);
             transform: translateY(-2px);
         }
         .contact-form-work select option {
-            background: #1a1a1a;
-            color: white;
+            background: var(--cna-black);
+            color: var(--cna-white);
         }
 
-        /* Subscribe Float Button */
         .subscribe-float {
             position: fixed;
             bottom: 30px;
@@ -515,32 +447,32 @@
             gap: 8px;
         }
         .subscribe-float .subscribe-btn {
-            width: 60px;
-            height: 60px;
+            width: 60px; height: 60px;
             border-radius: 50%;
-            background: var(--red);
-            color: white;
+            background: var(--cna-black);
+            color: var(--cna-yellow);
             border: none;
-            font-size: 28px;
+            font-size: 24px;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(227, 30, 36, 0.4);
-            transition: all 0.3s ease;
+            transition: var(--transition-fast);
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .subscribe-float .subscribe-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 30px rgba(227, 30, 36, 0.5);
+            background: var(--cna-red);
+            color: var(--cna-white);
+            transform: scale(1.08);
         }
         .subscribe-float .subscribe-label {
+            font-family: var(--font-mono);
             font-size: 10px;
-            color: rgba(255,255,255,0.5);
-            letter-spacing: 1px;
+            color: var(--cna-black);
+            opacity: 0.6;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
         }
 
-        /* Subscribe Modal */
         .subscribe-modal {
             position: fixed;
             inset: 0;
@@ -550,9 +482,7 @@
             justify-content: center;
             padding: 20px;
         }
-        .subscribe-modal.active {
-            display: flex;
-        }
+        .subscribe-modal.active { display: flex; }
         .subscribe-modal-overlay {
             position: absolute;
             inset: 0;
@@ -561,30 +491,31 @@
         }
         .subscribe-modal-content {
             position: relative;
-            background: var(--bg-secondary);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 20px;
+            background: var(--cna-black);
+            border-radius: var(--radius);
             padding: 40px;
-            max-width: 420px;
+            max-width: 440px;
             width: 100%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
             text-align: center;
+            border: 1px solid rgba(255,212,0,0.15);
         }
         .subscribe-modal-content .modal-icon {
             font-size: 48px;
-            color: var(--red);
+            color: var(--cna-yellow);
             margin-bottom: 12px;
             display: block;
         }
         .subscribe-modal-content h2 {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 24px;
-            font-weight: 700;
-            color: var(--white);
+            font-weight: 800;
+            color: var(--cna-white);
             margin-bottom: 8px;
+            text-transform: uppercase;
         }
         .subscribe-modal-content p {
-            color: rgba(255,255,255,0.6);
+            font-family: var(--font-body);
+            color: rgba(255,255,255,0.7);
             font-size: 14px;
             line-height: 1.6;
             margin-bottom: 24px;
@@ -596,165 +527,124 @@
         }
         .subscribe-modal-content .subscribe-form input {
             padding: 14px 18px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            color: var(--text-primary);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: var(--radius-sm);
+            color: var(--cna-white);
             font-size: 14px;
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-body);
+        }
+        .subscribe-modal-content .subscribe-form input::placeholder {
+            color: rgba(255,255,255,0.35);
         }
         .subscribe-modal-content .subscribe-form input:focus {
             outline: none;
-            border-color: var(--red);
+            border-color: var(--cna-yellow);
         }
         .subscribe-modal-content .subscribe-form button {
             padding: 14px;
-            background: var(--red);
-            color: white;
+            background: var(--cna-yellow);
+            color: var(--cna-black);
             border: none;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 500;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-display);
+            font-size: 12px;
+            font-weight: 700;
             cursor: pointer;
-            transition: 0.3s ease;
-            font-family: 'Inter', sans-serif;
+            transition: var(--transition-fast);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
         .subscribe-modal-content .subscribe-form button:hover {
-            background: var(--red-dark);
-            transform: translateY(-2px);
-        }
-        .subscribe-modal-content .subscribe-form button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
+            background: var(--cna-red);
+            color: var(--cna-white);
         }
         .subscribe-modal-close {
             position: absolute;
-            top: 16px;
-            right: 16px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            width: 32px;
-            height: 32px;
+            top: 16px; right: 16px;
+            background: var(--cna-yellow);
+            border: none;
+            width: 34px; height: 34px;
             border-radius: 50%;
-            color: rgba(255,255,255,0.5);
+            color: var(--cna-black);
             cursor: pointer;
             font-size: 16px;
-            transition: 0.3s ease;
+            transition: var(--transition-fast);
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .subscribe-modal-close:hover {
-            background: var(--red);
-            color: white;
+            background: var(--cna-red);
+            color: var(--cna-white);
+            transform: rotate(90deg);
         }
         .subscribe-modal-content .subscribe-status {
             margin-top: 12px;
             font-size: 13px;
             min-height: 24px;
+            font-family: var(--font-body);
         }
-        .subscribe-modal-content .subscribe-status.success {
-            color: #4ADE80;
-        }
-        .subscribe-modal-content .subscribe-status.error {
-            color: #FF6B6B;
-        }
+        .subscribe-modal-content .subscribe-status.success { color: #4ADE80; }
+        .subscribe-modal-content .subscribe-status.error { color: #FF6B6B; }
 
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .contact-grid-work { grid-template-columns: 1fr; gap: 40px; }
-        }
         @media (max-width: 900px) {
-            .feature-strip { grid-template-columns: 1fr; }
             .video-wrapper { height: 420px; }
             .visual-content { left: 30px; right: 30px; bottom: 30px; }
             .visual-content h2 { font-size: 32px; }
             .creator-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 768px) {
-            .visual-strip, .creator-section, .feature-strip, .partners-section-work, .contact-section-work {
-                padding-left: 24px;
-                padding-right: 24px;
-            }
-            .visual-strip { padding-top: 100px; }
-            .creator-card { height: 360px; }
-            .community-card-work { grid-template-columns: 1fr 1fr; }
-            .contact-form-wrap-work { padding: 24px; }
-            .contact-form-work .form-row { grid-template-columns: 1fr; }
-            .partners-section-work .section-title { font-size: 28px; }
-            .partners-track { gap: 40px; }
-            .partner-logo-item img { max-height: 30px; max-width: 90px; }
-            .subscribe-float .subscribe-btn { width: 50px; height: 50px; font-size: 22px; }
-            .subscribe-float { bottom: 20px; right: 20px; }
-            .subscribe-modal-content { padding: 30px 24px; }
+            .contact-grid-work { grid-template-columns: 1fr; gap: 40px; }
         }
         @media (max-width: 600px) {
+            .page-work .visual-strip { padding: 110px 0 40px; }
+            .video-wrapper { height: 360px; }
             .creator-grid { grid-template-columns: 1fr; }
-            .creator-card { height: 300px; }
-            .video-wrapper { height: 320px; }
-            .visual-content { left: 20px; right: 20px; bottom: 20px; }
-            .visual-content h2 { font-size: 24px; }
-            .visual-content p { font-size: 13px; }
-            .community-card-work { grid-template-columns: 1fr 1fr; gap: 12px; }
-            .community-item-work h3 { font-size: 22px; }
-            .community-buttons-work a { width: 100%; text-align: center; }
-            .partners-section-work .section-title { font-size: 24px; }
-            .partners-track { gap: 30px; }
-            .partner-logo-item img { max-height: 25px; max-width: 70px; }
-            .subscribe-float .subscribe-btn { width: 44px; height: 44px; font-size: 18px; }
-            .subscribe-float .subscribe-label { font-size: 8px; }
+            .creator-card { height: 340px; }
+            .community-card-work { grid-template-columns: 1fr 1fr; }
+            .contact-form-work .form-row { grid-template-columns: 1fr; }
+            .community-buttons-work a { flex: 1; text-align: center; }
         }
     </style>
 </head>
 <body class="page-work">
 
-    <!-- VIDEO BACKGROUND -->
-    <div class="video-bg">
-        <video autoplay muted loop playsinline>
-            <source src="assets/entertainment/pepsi.mp4" type="video/mp4">
-        </video>
-    </div>
-
-    <!-- 3D GLOBE BACKGROUND -->
-    <canvas id="globe-canvas"></canvas>
-    <div class="globe-fade-overlay"></div>
-    <div id="globe-nodes-container"></div>
-
-    <!-- TECH HUD OVERLAYS -->
-    <div class="tech-hud hud-top-left">
-        <span>LAT -26.2040° S</span>
-        <span>LON 28.0470° E</span>
-        <span>ALT 1753 M</span>
-        <span class="highlight-red">SIG LOCKED.</span>
-    </div>
-    <div class="tech-hud hud-top-right">
-        <span>NODE 100-HUB-01</span>
-        <span>STATUS ONLINE</span>
-        <span class="highlight-red">SYNC 99.8%</span>
-        <span>UPLINK STABLE</span>
-    </div>
-    <div class="tech-hud hud-bottom-left">
-        <span>03 / 09</span>
-    </div>
-    <div class="tech-hud hud-bottom-right">
-        <span>CREATORS <strong id="hud-creators-count" class="highlight-red">100</strong></span>
-        <span>NETWORK LIVE</span>
-        <span>TIER FOUNDING</span>
+    <!-- SITE PRELOADER -->
+    <div id="site-preloader" class="site-preloader">
+        <div class="preloader-inner">
+            <div class="preloader-logo">
+                <img src="assets/Logo.png" alt="100 CNA" />
+            </div>
+            <div class="preloader-bar-track">
+                <div class="preloader-bar-fill" id="preloaderFill"></div>
+            </div>
+            <div class="preloader-counter" id="preloaderCounter">LOADING</div>
+            <div class="preloader-status" id="preloaderStatus">CREATORS &amp; ARTISTS</div>
+        </div>
     </div>
 
     <!-- ==================== HEADER ==================== -->
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div class="container">
             <div class="nav-inner">
-                <a href="/" class="nav-logo">
-                    <img src="assets/Logo.png" alt="100 HUB" class="logo-img" />
-                    <span class="logo-text"><span class="highlight-red">HUB</span></span>
-                </a>
-                <div class="nav-right">
+                <div class="nav-left">
                     <div class="nav-social">
-                        <a href="https://www.instagram.com/100projectsmedia" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://www.instagram.com/100creators_n_artists" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                         <a href="mailto:100projectsmedia@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="nav-center">
+                    <a href="/" class="nav-logo">
+                        <img src="assets/Logo.png" alt="100 CNA" class="logo-img" />
+                    </a>
+                </div>
+                <div class="nav-right">
+                    <div class="nav-links-desktop">
+                        <a href="/">Home</a>
+                        <a href="/profiles.html">Creators</a>
+                        <a href="/stories.html">Stories</a>
+                        <a href="/work.html" class="active">Projects</a>
+                        <a href="/contact.html">Join CNA</a>
+                        <a href="/about.html">About</a>
                     </div>
                     <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
                         <span></span>
@@ -766,86 +656,92 @@
         </div>
     </nav>
 
-    <!-- Mobile Slide-out Menu -->
     <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
     <div class="mobile-menu" id="mobileMenu">
         <button class="mobile-menu-close" id="mobileMenuClose"><i class="fa-solid fa-xmark"></i></button>
         <div class="mobile-menu-links">
             <a href="/">Home</a>
-            <a href="/profiles.html">Hub</a>
-            <a href="/work.html">Our Work</a>
+            <a href="/profiles.html">Creators</a>
+            <a href="/stories.html">Stories</a>
+            <a href="/work.html" class="active">Projects</a>
+            <a href="/contact.html">Join CNA</a>
+            <a href="/about.html">About</a>
             <a href="/games.html">Games</a>
             <a href="/rewards.html">Rewards</a>
-            <a href="/about.html">About</a>
-            <a href="/contact.html">Contact</a>
         </div>
         <div class="mobile-menu-social">
-            <a href="https://www.instagram.com/100projectsmedia" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>
+            <a href="https://www.instagram.com/100creators_n_artists" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>
             <a href="mailto:100projectsmedia@gmail.com"><i class="fa-regular fa-envelope"></i> Email</a>
         </div>
     </div>
 
-    <!-- ==================== VISUAL STRIP (Dynamic Main Card) ==================== -->
+    <!-- ==================== VISUAL STRIP ==================== -->
     <section class="visual-strip" id="mainWork">
-        <div class="video-wrapper" id="videoWrapper">
-            <div id="mainWorkContent">
-                <!-- Dynamically loaded from Supabase -->
-                <div style="display:flex; align-items:center; justify-content:center; height:100%; color:rgba(255,255,255,0.3);">
-                    <div class="loader"></div>
-                    <span style="margin-left:16px;">Loading featured work...</span>
+        <div class="container">
+            <div class="video-wrapper" id="videoWrapper">
+                <div id="mainWorkContent">
+                    <div style="display:flex; align-items:center; justify-content:center; height:100%; color:var(--cna-yellow);">
+                        <div class="loader"></div>
+                        <span style="margin-left:16px; font-family:var(--font-body);">Loading featured project...</span>
+                    </div>
                 </div>
-            </div>
-            <div class="visual-overlay"></div>
-            <div class="visual-controls">
-                <button id="soundBtn">🔇</button>
-                <button id="fullBtn">⛶</button>
+                <div class="visual-overlay"></div>
+                <div class="visual-controls">
+                    <button id="soundBtn">🔇</button>
+                    <button id="fullBtn">⛶</button>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- ==================== CREATOR GRID (3 Small Cards) ==================== -->
+    <!-- ==================== CREATOR GRID ==================== -->
     <section class="creator-section" id="creators">
-        <div class="section-tag">FEATURED VISUALS</div>
-        <h2 class="section-title">Creative Energy<br>Captured In Motion</h2>
-        <div class="creator-grid" id="workItemsGrid">
-            <!-- Dynamically loaded from Supabase -->
-            <div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:rgba(255,255,255,0.5);">
-                <div class="loader"></div>
-                <p>Loading work items...</p>
+        <div class="container">
+            <span class="section-tag">FEATURED VISUALS</span>
+            <h2 class="section-title">Creative Energy<br>Captured In Motion</h2>
+            <div class="creator-grid" id="workItemsGrid">
+                <div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--cna-black); opacity:0.6;">
+                    <div class="loader"></div>
+                    <p style="font-family:var(--font-body); margin-top:16px;">Loading projects...</p>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- ==================== FEATURE STRIP ==================== -->
     <section class="feature-strip">
-        <div class="feature-card">
-            <i class="fas fa-camera-retro"></i>
-            <h3>Photography</h3>
-            <p>Editorial visuals, fashion campaigns, nightlife photography and social-first content.</p>
-        </div>
-        <div class="feature-card">
-            <i class="fas fa-film"></i>
-            <h3>Creative Direction</h3>
-            <p>We shape the visual identity behind campaigns, launches and cultural moments.</p>
-        </div>
-        <div class="feature-card">
-            <i class="fas fa-music"></i>
-            <h3>Creator Culture</h3>
-            <p>Built for influencers, musicians, streetwear brands and visual storytellers.</p>
+        <div class="container">
+            <div class="creator-grid">
+                <div class="feature-card">
+                    <i class="fas fa-camera-retro"></i>
+                    <h3>Photography</h3>
+                    <p>Editorial visuals, fashion campaigns, nightlife photography and social-first content.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-film"></i>
+                    <h3>Creative Direction</h3>
+                    <p>We shape the visual identity behind campaigns, launches and cultural moments.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-music"></i>
+                    <h3>Creator Culture</h3>
+                    <p>Built for influencers, musicians, streetwear brands and visual storytellers.</p>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- ==================== PARTNER LOGOS ==================== -->
     <section class="partners-section-work" id="partners">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header" style="text-align:center; max-width:800px; margin: 0 auto 30px auto;">
                 <span class="section-number">TRUSTED BY</span>
-                <h2 class="section-title">Culture Champions<span class="highlight-red">.</span></h2>
+                <h2 class="section-title" style="text-align:center;">Culture Champions<span class="highlight-red">.</span></h2>
             </div>
             <div class="partners-wrapper">
                 <div class="partners-track" id="partnersTrackWork">
                     <div class="partner-logo-item">
-                        <span style="color:rgba(255,255,255,0.25); font-size:13px; letter-spacing:1px;">Loading partners...</span>
+                        <span>Loading partners...</span>
                     </div>
                 </div>
             </div>
@@ -854,61 +750,62 @@
 
     <!-- ==================== CONTACT SECTION ==================== -->
     <section class="contact-section-work" id="contact">
-        <div class="contact-grid-work">
-            <div class="contact-info-work">
-                <span class="mini-tag">100 HUB NETWORK</span>
-                <h2>Join The Community<br>& Work With Us</h2>
-                <p>Connect with creatives, brands, artists, and innovators from around the world. Collaborate, build campaigns, and become part of the next generation creative ecosystem.</p>
-                <div class="community-card-work">
-                    <div class="community-item-work">
-                        <h3>5K+</h3>
-                        <span>Community Members</span>
+        <div class="container">
+            <div class="contact-grid-work">
+                <div class="contact-info-work">
+                    <span class="mini-tag">100 CNA NETWORK</span>
+                    <h2>Join The Community<br>&amp; Work With Us</h2>
+                    <p>Connect with creatives, brands, artists, and innovators from around the world. Collaborate, build campaigns, and become part of the next generation creative ecosystem.</p>
+                    <div class="community-card-work">
+                        <div class="community-item-work">
+                            <h3>5K+</h3>
+                            <span>Community Members</span>
+                        </div>
+                        <div class="community-item-work">
+                            <h3>120+</h3>
+                            <span>Creative Campaigns</span>
+                        </div>
+                        <div class="community-item-work">
+                            <h3>24/7</h3>
+                            <span>Global Networking</span>
+                        </div>
                     </div>
-                    <div class="community-item-work">
-                        <h3>120+</h3>
-                        <span>Creative Campaigns</span>
-                    </div>
-                    <div class="community-item-work">
-                        <h3>24/7</h3>
-                        <span>Global Networking</span>
+                    <div class="community-buttons-work">
+                        <a href="/profiles.html">Join Community</a>
+                        <a href="https://www.instagram.com/100creators_n_artists" target="_blank">Instagram</a>
+                        <a href="mailto:100projectsmedia@gmail.com">Email</a>
                     </div>
                 </div>
-                <div class="community-buttons-work">
-                    <a href="/profiles.html">Join Community</a>
-                    <a href="https://www.instagram.com/100projectsmedia" target="_blank">Instagram</a>
-                    <a href="https://vt.tiktok.com/ZSQ4FhnXc/" target="_blank">TikTok</a>
-                    <a href="https://youtu.be/Z1G7TeuiMz4?si=peQqspcPTATRZYsd" target="_blank">YouTube</a>
+                <div class="contact-form-wrap-work">
+                    <form class="contact-form-work" id="workContactForm">
+                        <div class="form-top">
+                            <h3>Contact Us</h3>
+                            <p>Tell us about your project or collaboration.</p>
+                        </div>
+                        <div class="form-row">
+                            <input type="text" placeholder="Your Name" required />
+                            <input type="email" placeholder="Your Email" required />
+                        </div>
+                        <div class="form-row">
+                            <input type="text" placeholder="Company / Brand" />
+                            <select required>
+                                <option value="">Inquiry Type</option>
+                                <option>Talent Booking</option>
+                                <option>Brand Partnership</option>
+                                <option>Campaign Collaboration</option>
+                                <option>Creative Direction</option>
+                                <option>Media Inquiry</option>
+                            </select>
+                        </div>
+                        <textarea placeholder="Tell us about your project..." required></textarea>
+                        <button type="submit">Send Inquiry</button>
+                    </form>
                 </div>
-            </div>
-            <div class="contact-form-wrap-work">
-                <form class="contact-form-work">
-                    <div class="form-top">
-                        <h3>Contact Us</h3>
-                        <p>Tell us about your project or collaboration.</p>
-                    </div>
-                    <div class="form-row">
-                        <input type="text" placeholder="Your Name" required />
-                        <input type="email" placeholder="Your Email" required />
-                    </div>
-                    <div class="form-row">
-                        <input type="text" placeholder="Company / Brand" />
-                        <select required>
-                            <option value="">Inquiry Type</option>
-                            <option>Talent Booking</option>
-                            <option>Brand Partnership</option>
-                            <option>Campaign Collaboration</option>
-                            <option>Creative Direction</option>
-                            <option>Media Inquiry</option>
-                        </select>
-                    </div>
-                    <textarea placeholder="Tell us about your project..." required></textarea>
-                    <button type="submit">Send Inquiry</button>
-                </form>
             </div>
         </div>
     </section>
 
-    <!-- ==================== SUBSCRIBE FLOAT BUTTON ==================== -->
+    <!-- ==================== SUBSCRIBE FLOAT ==================== -->
     <div class="subscribe-float" id="subscribeFloat">
         <button class="subscribe-btn" id="subscribeFloatBtn" aria-label="Subscribe">
             <i class="fa-regular fa-envelope"></i>
@@ -916,13 +813,12 @@
         <span class="subscribe-label">Subscribe</span>
     </div>
 
-    <!-- ==================== SUBSCRIBE MODAL ==================== -->
     <div class="subscribe-modal" id="subscribeModal">
         <div class="subscribe-modal-overlay" id="subscribeModalOverlay"></div>
         <div class="subscribe-modal-content">
             <button class="subscribe-modal-close" id="subscribeModalClose"><i class="fa-solid fa-xmark"></i></button>
             <span class="modal-icon"><i class="fa-regular fa-envelope"></i></span>
-            <h2>Subscribe to 100 HUB</h2>
+            <h2>Subscribe to 100 CNA</h2>
             <p>Get updates on new projects, events, and creative opportunities delivered to your inbox.</p>
             <form class="subscribe-form" id="subscribeForm">
                 <input type="email" id="subscribeEmail" placeholder="Enter your email" required />
@@ -937,12 +833,10 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-top">
-                    <img src="assets/Logo.png" alt="100 HUB" class="footer-logo" loading="lazy" />
+                    <img src="assets/Logo.png" alt="100 CNA" class="footer-logo" loading="lazy" />
                     <div class="footer-social">
-                        <a href="https://www.instagram.com/100projectsmedia" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="https://vt.tiktok.com/ZSQ4FhnXc/" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
-                        <a href="https://youtu.be/Z1G7TeuiMz4?si=peQqspcPTATRZYsd" target="_blank"><i class="fa-brands fa-youtube"></i></a>
-                        <a href="mailto:100projectsmedia@gmail.com"><i class="fa-regular fa-envelope"></i></a>
+                        <a href="https://www.instagram.com/100creators_n_artists" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="mailto:100projectsmedia@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
                     </div>
                 </div>
                 <div class="footer-divider">
@@ -954,21 +848,12 @@
                     <span class="divider-line-short"></span>
                 </div>
                 <div class="footer-bottom">
-                    <p class="footer-tagline">Broadcasting &amp; Media Production Company</p>
-                    <p class="footer-copy">&copy; 2026 100 HUB. All rights reserved.</p>
+                    <p class="footer-tagline">Creators &amp; Artists</p>
+                    <p class="footer-copy">&copy; 2026 100 CNA. All rights reserved.</p>
                 </div>
             </div>
         </div>
     </footer>
-
-    <script type="importmap">
-    {
-        "imports": {
-            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-        }
-    }
-    </script>
 
     <script>
         // ==========================================
@@ -978,6 +863,30 @@
             const queryParams = new URLSearchParams({ path, ...params });
             return `/api?${queryParams.toString()}`;
         }
+
+        // ==========================================
+        // PRELOADER
+        // ==========================================
+        (function(){
+            const preloader = document.getElementById('site-preloader');
+            const fill = document.getElementById('preloaderFill');
+            const counter = document.getElementById('preloaderCounter');
+            let pct = 0;
+            const interval = setInterval(() => {
+                pct += Math.random() * 18;
+                if (pct >= 100) {
+                    pct = 100;
+                    clearInterval(interval);
+                    if (fill) fill.style.width = '100%';
+                    if (counter) counter.textContent = '100%';
+                    setTimeout(() => preloader && preloader.classList.add('loaded'), 400);
+                } else {
+                    if (fill) fill.style.width = pct + '%';
+                    if (counter) counter.textContent = Math.floor(pct) + '%';
+                }
+            }, 180);
+            setTimeout(() => preloader && preloader.classList.add('loaded'), 3000);
+        })();
 
         // ==========================================
         // HAMBURGER MENU
@@ -993,14 +902,12 @@
             mobileMenuOverlay.classList.toggle('active');
             document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
         }
-
         function closeMobileMenu() {
             hamburgerBtn.classList.remove('active');
             mobileMenu.classList.remove('open');
             mobileMenuOverlay.classList.remove('active');
             document.body.style.overflow = '';
         }
-
         if (hamburgerBtn && mobileMenu && mobileMenuOverlay && mobileMenuClose) {
             hamburgerBtn.addEventListener('click', toggleMobileMenu);
             mobileMenuOverlay.addEventListener('click', closeMobileMenu);
@@ -1008,88 +915,30 @@
         }
 
         // ==========================================
-        // VIDEO CONTROLS
-        // ==========================================
-        const video = document.getElementById("visualVideo");
-        const wrapper = document.getElementById("videoWrapper");
-        const soundBtn = document.getElementById("soundBtn");
-        const fullBtn = document.getElementById("fullBtn");
-
-        if (soundBtn && video) {
-            soundBtn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                video.muted = !video.muted;
-                soundBtn.textContent = video.muted ? "🔇" : "🔊";
-            });
-        }
-
-        if (fullBtn && wrapper) {
-            fullBtn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                if (!document.fullscreenElement) {
-                    wrapper.requestFullscreen();
-                    fullBtn.textContent = "⤢";
-                } else {
-                    document.exitFullscreen();
-                    fullBtn.textContent = "⛶";
-                }
-            });
-        }
-
-        // ==========================================
-        // LOAD WORK ITEMS FROM SUPABASE
+        // WORK ITEMS
         // ==========================================
         async function loadWorkItems() {
             const mainContainer = document.getElementById('mainWorkContent');
             const grid = document.getElementById('workItemsGrid');
-            
+
             try {
                 const response = await fetch(apiUrl('work-items'));
                 const data = await response.json();
-                
+
                 if (data.success && data.items && data.items.length > 0) {
                     const items = data.items;
-                    
-                    // Find featured main item
-                    const mainItem = items.find(item => item.is_featured_main === true);
-                    // Get other items (not featured main)
-                    const otherItems = items.filter(item => item.id !== (mainItem ? mainItem.id : null));
-                    
-                    // Render main card
-                    if (mainItem) {
-                        renderMainWorkItem(mainItem, mainContainer);
-                    } else {
-                        // If no featured main, use the first item as main
-                        if (items.length > 0) {
-                            renderMainWorkItem(items[0], mainContainer);
-                        } else {
-                            mainContainer.innerHTML = `
-                                <div style="display:flex; align-items:center; justify-content:center; height:100%; color:rgba(255,255,255,0.3);">
-                                    <p>No featured work available</p>
-                                </div>
-                            `;
-                        }
-                    }
-                    
-                    // Render grid items (first 3 non-main items)
+                    const mainItem = items.find(item => item.is_featured_main === true) || items[0];
+                    const otherItems = items.filter(item => item.id !== mainItem.id);
+
+                    renderMainWorkItem(mainItem, mainContainer);
+
                     const gridItems = otherItems.slice(0, 3);
                     if (gridItems.length > 0) {
                         renderWorkGridItems(gridItems, grid);
                     } else {
-                        // If no other items, use some from the main list
-                        const fallbackItems = items.filter(item => item.id !== (mainItem ? mainItem.id : null));
-                        if (fallbackItems.length > 0) {
-                            renderWorkGridItems(fallbackItems.slice(0, 3), grid);
-                        } else {
-                            grid.innerHTML = `
-                                <div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:rgba(255,255,255,0.3);">
-                                    <p>No additional work items available</p>
-                                </div>
-                            `;
-                        }
+                        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--cna-black); opacity:0.5; font-family:var(--font-body);"><p>More projects coming soon.</p></div>`;
                     }
                 } else {
-                    // Fallback to hardcoded content
                     renderFallbackWorkItems(mainContainer, grid);
                 }
             } catch (error) {
@@ -1102,46 +951,42 @@
             const isVideo = item.media_type === 'video';
             const mediaHtml = isVideo
                 ? `<video id="visualVideo" autoplay muted loop playsinline><source src="${item.media_url}" type="video/mp4"></video>`
-                : `<img src="${item.media_url}" alt="${item.title}" style="width:100%; height:100%; object-fit:cover;" />`;
-            
+                : `<img id="visualVideo" src="${item.media_url}" alt="${item.title}" />`;
+
             container.innerHTML = `
                 ${mediaHtml}
                 <div class="visual-overlay"></div>
                 <div class="visual-controls">
-                    <button id="soundBtn">🔇</button>
+                    ${isVideo ? '<button id="soundBtn">🔇</button>' : ''}
                     <button id="fullBtn">⛶</button>
                 </div>
                 <div class="visual-content">
                     ${item.agency_client ? `<div class="work-agency">${item.agency_client}</div>` : ''}
                     <h2>${item.title}</h2>
                     <p>${item.description || ''}</p>
-                    ${item.link_url ? `<a href="${item.link_url}" target="_blank" class="work-link-btn">View Work <i class="fa-solid fa-arrow-right"></i></a>` : ''}
+                    ${item.link_url ? `<a href="${item.link_url}" target="_blank" class="work-link-btn">View Project <i class="fa-solid fa-arrow-right"></i></a>` : ''}
                 </div>
             `;
-            
-            // Re-bind video controls
+
             const newVideo = container.querySelector('#visualVideo');
             const newSoundBtn = container.querySelector('#soundBtn');
             const newFullBtn = container.querySelector('#fullBtn');
             const wrapper = document.getElementById('videoWrapper');
-            
-            if (newSoundBtn && newVideo) {
+
+            if (newSoundBtn && newVideo && newVideo.tagName === 'VIDEO') {
                 newSoundBtn.addEventListener("click", (e) => {
                     e.stopPropagation();
                     newVideo.muted = !newVideo.muted;
                     newSoundBtn.textContent = newVideo.muted ? "🔇" : "🔊";
                 });
             }
-            
             if (newFullBtn && wrapper) {
                 newFullBtn.addEventListener("click", (e) => {
                     e.stopPropagation();
                     if (!document.fullscreenElement) {
                         wrapper.requestFullscreen();
-                        newFullBtn.textContent = "⤢";
                     } else {
                         document.exitFullscreen();
-                        newFullBtn.textContent = "⛶";
                     }
                 });
             }
@@ -1150,116 +995,70 @@
         function renderWorkGridItems(items, grid) {
             grid.innerHTML = items.map(item => `
                 <div class="creator-card">
-                    ${item.media_type === 'video' 
+                    ${item.media_type === 'video'
                         ? `<video autoplay muted loop playsinline><source src="${item.media_url}" type="video/mp4"></video>`
-                        : `<img src="${item.media_url}" alt="${item.title}" loading="lazy" />`
-                    }
+                        : `<img src="${item.media_url}" alt="${item.title}" loading="lazy" />`}
                     <div class="creator-overlay"></div>
                     <div class="creator-info">
                         <div class="creator-role">${item.category || 'FEATURED'}</div>
                         <h3>${item.title}</h3>
                         ${item.agency_client ? `<div class="work-agency">${item.agency_client}</div>` : ''}
                         <p>${item.description || ''}</p>
-                        ${item.link_url ? `<a href="${item.link_url}" target="_blank" class="work-link-btn">View Work <i class="fa-solid fa-arrow-right"></i></a>` : ''}
+                        ${item.link_url ? `<a href="${item.link_url}" target="_blank" class="work-link-btn">View Project <i class="fa-solid fa-arrow-right"></i></a>` : ''}
                     </div>
                 </div>
             `).join('');
         }
 
         function renderFallbackWorkItems(mainContainer, grid) {
-            // Hardcoded fallback content
             const mainItem = {
-                title: 'We Don\'t Just Shoot Content. We Build Atmosphere.',
-                description: 'Every frame is designed to feel cinematic, modern and culturally connected. Built for social media, campaigns, launch events and digital storytelling.',
+                title: "We Don't Just Shoot Content. We Build Atmosphere.",
+                description: 'Every frame is designed to feel cinematic, modern and culturally connected.',
                 media_url: 'assets/entertainment/g-star.mp4',
                 media_type: 'video',
                 agency_client: 'G-STAR RAW',
                 link_url: '#'
             };
-            
             renderMainWorkItem(mainItem, mainContainer);
-            
+
             const fallbackItems = [
-                {
-                    title: 'Street Editorial',
-                    category: 'FASHION VISUALS',
-                    description: 'Fashion-driven visuals inspired by music, youth culture and nightlife energy.',
-                    media_url: 'assets/entertainment/h&m.mp4',
-                    media_type: 'video',
-                    agency_client: 'H&M',
-                    link_url: '#'
-                },
-                {
-                    title: 'Digital Campaigns',
-                    category: 'CREATOR CONTENT',
-                    description: 'Viral-ready visuals designed for creators, artists and online storytelling.',
-                    media_url: 'assets/entertainment/maxhosa.mp4',
-                    media_type: 'video',
-                    agency_client: 'MAXHOSA',
-                    link_url: '#'
-                },
-                {
-                    title: 'Nightlife Moments',
-                    category: 'EVENT CULTURE',
-                    description: 'Capturing raw atmosphere, movement and the feeling of being there.',
-                    media_url: 'assets/entertainment/redbull.mp4',
-                    media_type: 'video',
-                    agency_client: 'RED BULL',
-                    link_url: '#'
-                }
+                { title: 'Street Editorial', category: 'FASHION VISUALS', description: 'Fashion-driven visuals inspired by music and youth culture.', media_url: 'assets/entertainment/h&m.mp4', media_type: 'video', agency_client: 'H&M', link_url: '#' },
+                { title: 'Digital Campaigns', category: 'CREATOR CONTENT', description: 'Viral-ready visuals designed for creators and online storytelling.', media_url: 'assets/entertainment/maxhosa.mp4', media_type: 'video', agency_client: 'MAXHOSA', link_url: '#' },
+                { title: 'Nightlife Moments', category: 'EVENT CULTURE', description: 'Capturing raw atmosphere, movement and the feeling of being there.', media_url: 'assets/entertainment/redbull.mp4', media_type: 'video', agency_client: 'RED BULL', link_url: '#' }
             ];
-            
             renderWorkGridItems(fallbackItems, grid);
         }
 
         // ==========================================
-        // PARTNER LOGOS - Dynamic
+        // PARTNER LOGOS
         // ==========================================
-        let partnerLogosWork = [];
-
         async function loadPartnersWork() {
             try {
                 const response = await fetch(apiUrl('partners'));
                 if (response.ok) {
                     const data = await response.json();
-                    partnerLogosWork = data.logos || [];
-                    renderPartnerLogosWork();
+                    renderPartnerLogosWork(data.logos || []);
                 }
-            } catch (error) {
-                console.log('Could not load partner logos');
-            }
+            } catch (error) {}
         }
 
-        function renderPartnerLogosWork() {
+        function renderPartnerLogosWork(logos) {
             const track = document.getElementById('partnersTrackWork');
             if (!track) return;
-
-            if (partnerLogosWork.length === 0) {
-                track.innerHTML = `
-                    <div class="partner-logo-item">
-                        <span style="color:rgba(255,255,255,0.25); font-size:13px; letter-spacing:1px;">PARTNER LOGOS COMING SOON</span>
-                    </div>
-                `;
+            if (!logos || logos.length === 0) {
+                track.innerHTML = `<div class="partner-logo-item"><span>Partner logos coming soon</span></div>`;
                 return;
             }
-
-            const logos = [...partnerLogosWork, ...partnerLogosWork];
-            track.innerHTML = logos.map(logo => `
+            const doubled = [...logos, ...logos];
+            track.innerHTML = doubled.map(logo => `
                 <div class="partner-logo-item">
-                    <img 
-                        src="${logo.url}" 
-                        alt="${logo.name}" 
-                        title="${logo.name}" 
-                        loading="lazy" 
-                        style="max-height:40px; max-width:130px; width:auto; height:auto; object-fit:contain; filter:none !important;"
-                        onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'color:rgba(255,255,255,0.25);font-size:12px;letter-spacing:0.5px;\\'>${logo.name}</span>';"
-                    />
+                    <img src="${logo.url}" alt="${logo.name}" title="${logo.name}" loading="lazy" />
                 </div>
             `).join('');
         }
 
         // ==========================================
-        // SUBSCRIBE FLOAT BUTTON
+        // SUBSCRIBE
         // ==========================================
         const subscribeFloatBtn = document.getElementById('subscribeFloatBtn');
         const subscribeModal = document.getElementById('subscribeModal');
@@ -1277,7 +1076,6 @@
             subscribeStatus.textContent = '';
             subscribeStatus.className = 'subscribe-status';
         }
-
         function closeSubscribeModal() {
             subscribeModal.classList.remove('active');
             document.body.style.overflow = '';
@@ -1286,101 +1084,64 @@
         subscribeFloatBtn.addEventListener('click', openSubscribeModal);
         subscribeModalOverlay.addEventListener('click', closeSubscribeModal);
         subscribeModalClose.addEventListener('click', closeSubscribeModal);
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeSubscribeModal();
-        });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSubscribeModal(); });
 
         subscribeForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            
             const email = subscribeEmail.value.trim();
             if (!email || !email.includes('@')) {
                 subscribeStatus.textContent = 'Please enter a valid email address.';
                 subscribeStatus.className = 'subscribe-status error';
                 return;
             }
-            
             subscribeSubmitBtn.disabled = true;
             subscribeSubmitBtn.textContent = 'Subscribing...';
             subscribeStatus.textContent = '';
             subscribeStatus.className = 'subscribe-status';
-            
+
             try {
                 const response = await fetch(apiUrl('subscriptions'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email })
                 });
-                
                 const result = await response.json();
-                
                 if (result.success) {
                     if (result.alreadySubscribed) {
-                        subscribeStatus.textContent = 'You\'re already subscribed!';
+                        subscribeStatus.textContent = "You're already subscribed!";
                         subscribeStatus.className = 'subscribe-status success';
                     } else {
-                        subscribeStatus.textContent = '✅ Successfully subscribed! Check your email.';
+                        subscribeStatus.textContent = '✅ Successfully subscribed!';
                         subscribeStatus.className = 'subscribe-status success';
                         subscribeEmail.value = '';
                     }
-                    setTimeout(() => {
-                        closeSubscribeModal();
-                    }, 3000);
+                    setTimeout(closeSubscribeModal, 2600);
                 } else {
-                    subscribeStatus.textContent = result.error || 'Something went wrong. Please try again.';
+                    subscribeStatus.textContent = result.error || 'Something went wrong.';
                     subscribeStatus.className = 'subscribe-status error';
                 }
             } catch (error) {
-                console.error('Subscribe error:', error);
                 subscribeStatus.textContent = 'Network error. Please try again.';
                 subscribeStatus.className = 'subscribe-status error';
             }
-            
             subscribeSubmitBtn.disabled = false;
             subscribeSubmitBtn.textContent = 'Subscribe';
         });
 
-        // ==========================================
-        // SCROLL REVEAL
-        // ==========================================
-        const animatedElements = document.querySelectorAll('[data-animate]');
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    revealObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-        animatedElements.forEach((el) => revealObserver.observe(el));
-
-        // ==========================================
-        // HUD CREATORS COUNT
-        // ==========================================
-        async function updateCreatorsCount() {
-            try {
-                const response = await fetch(apiUrl('members', { status: 'accepted', limit: 1 }));
-                if (response.ok) {
-                    const data = await response.json();
-                    const count = data.count || 0;
-                    const hudEl = document.getElementById('hud-creators-count');
-                    if (hudEl) hudEl.textContent = count;
-                }
-            } catch (e) {}
-        }
+        // Work contact form
+        document.getElementById('workContactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert("Thanks for reaching out! We'll be in touch soon.");
+            this.reset();
+        });
 
         // ==========================================
         // NAVBAR SCROLL
         // ==========================================
-        const navbar = document.querySelector('.navbar');
+        const navbar = document.getElementById('navbar');
         if (navbar) {
             window.addEventListener('scroll', () => {
-                if (window.scrollY <= 50) {
-                    navbar.classList.remove('nav-scrolled');
-                } else {
-                    navbar.classList.add('nav-scrolled');
-                }
+                navbar.classList.toggle('nav-scrolled', window.scrollY > 50);
             }, { passive: true });
         }
 
@@ -1388,230 +1149,10 @@
         // INIT
         // ==========================================
         document.addEventListener('DOMContentLoaded', function() {
-            updateCreatorsCount();
             loadWorkItems();
             loadPartnersWork();
-            console.log('🎬 100 HUB — Our Work Page Loaded');
-            console.log('📋 Work items loaded from database with dynamic rendering');
-            console.log('🤝 Partner logos loaded from database');
-            console.log('📬 Subscribe button active');
+            console.log('🎬 100 CNA — Projects Page Loaded');
         });
-    </script>
-
-    <!-- Three.js for 3D Globe -->
-    <script type="module">
-        import * as THREE from 'three';
-        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-
-        const canvas = document.getElementById('globe-canvas');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100000);
-        camera.position.set(0, 2000, 18000);
-
-        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 0.8;
-
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0x404060, 0.6);
-        scene.add(ambientLight);
-        const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
-        mainLight.position.set(10000, 8000, 12000);
-        scene.add(mainLight);
-        const rimLight = new THREE.DirectionalLight(0x6688ff, 0.4);
-        rimLight.position.set(-8000, 4000, -10000);
-        scene.add(rimLight);
-        const redLight = new THREE.PointLight(0xe31e24, 0.8, 30000);
-        redLight.position.set(5000, -3000, 8000);
-        scene.add(redLight);
-
-        // Particles
-        const particleCount = 2500;
-        const particleGeometry = new THREE.BufferGeometry();
-        const particlePositions = new Float32Array(particleCount * 3);
-        const particleColors = new Float32Array(particleCount * 3);
-        const colorPalette = [
-            new THREE.Color(0xffffff), new THREE.Color(0xdce8ff),
-            new THREE.Color(0x88b5ff), new THREE.Color(0xe31e24), new THREE.Color(0xaaaaaa)
-        ];
-        for (let i = 0; i < particleCount; i++) {
-            const radius = 8000 + Math.random() * 32000;
-            const theta = Math.random() * Math.PI * 2;
-            const phi = Math.acos((Math.random() * 2) - 1);
-            particlePositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-            particlePositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-            particlePositions[i * 3 + 2] = radius * Math.cos(phi);
-            const c = colorPalette[Math.floor(Math.random() * colorPalette.length)];
-            particleColors[i * 3] = c.r;
-            particleColors[i * 3 + 1] = c.g;
-            particleColors[i * 3 + 2] = c.b;
-        }
-        particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-        particleGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
-        const particleMaterial = new THREE.PointsMaterial({
-            size: 3.5, vertexColors: true, transparent: true,
-            opacity: 0.75, blending: THREE.AdditiveBlending, depthWrite: false
-        });
-        const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
-        scene.add(particleSystem);
-
-        // Aura
-        const auraGeo = new THREE.SphereGeometry(4250, 48, 48);
-        const auraMat = new THREE.MeshBasicMaterial({
-            color: 0x4477ff, transparent: true, opacity: 0.08,
-            blending: THREE.AdditiveBlending, side: THREE.BackSide
-        });
-        const auraMesh = new THREE.Mesh(auraGeo, auraMat);
-        scene.add(auraMesh);
-
-        // Nodes
-        const nodesContainer = document.getElementById('globe-nodes-container');
-        const nodeDefs = [
-            { label: 'JHB-008', radius: 6500, speed: 0.006, theta: 0, tilt: new THREE.Euler(Math.PI * 0.15, 0, Math.PI * 0.1) },
-            { label: 'LON-041', radius: 8500, speed: -0.005, theta: Math.PI * 1.2, tilt: new THREE.Euler(-Math.PI * 0.25, 0, Math.PI * 0.15) },
-            { label: '100 HUB', radius: 5500, speed: 0.009, theta: Math.PI * 0.9, tilt: new THREE.Euler(Math.PI * 0.1, 0, Math.PI * 0.05) }
-        ];
-        const nodeObjects = [];
-        const nodeSphereGeo = new THREE.SphereGeometry(120, 16, 16);
-        const nodeSphereMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-        const redNodeMat = new THREE.MeshBasicMaterial({ color: 0xe31e24 });
-        nodeDefs.forEach((def, index) => {
-            const mesh = new THREE.Mesh(nodeSphereGeo, index === 2 ? redNodeMat : nodeSphereMat);
-            scene.add(mesh);
-            const badge = document.createElement('div');
-            badge.className = 'globe-node-badge';
-            badge.innerHTML = `<span class="node-pulse-dot"></span>${def.label}`;
-            nodesContainer.appendChild(badge);
-            nodeObjects.push({ def, mesh, badgeEl: badge, theta: def.theta });
-        });
-
-        // Preloader
-        const preloader = document.getElementById('site-preloader');
-        const preloaderFill = document.getElementById('preloaderFill');
-        const preloaderCounter = document.getElementById('preloaderCounter');
-        const preloaderStatus = document.getElementById('preloaderStatus');
-
-        function hidePreloader() {
-            if (preloaderFill) preloaderFill.style.width = '100%';
-            if (preloaderCounter) preloaderCounter.textContent = '100%';
-            if (preloaderStatus) preloaderStatus.textContent = 'SYSTEM ONLINE';
-            setTimeout(() => { if (preloader) preloader.classList.add('loaded'); }, 500);
-        }
-
-        const preloaderSafetyTimer = setTimeout(hidePreloader, 6000);
-        let globeModel = null;
-        const loader = new GLTFLoader();
-        loader.load(
-            'assets/globe/scene.gltf',
-            (gltf) => {
-                globeModel = gltf.scene;
-                const box = new THREE.Box3().setFromObject(globeModel);
-                const center = box.getCenter(new THREE.Vector3());
-                const size = box.getSize(new THREE.Vector3());
-                const maxDim = Math.max(size.x, size.y, size.z);
-                const scale = 8000 / maxDim;
-                globeModel.scale.setScalar(scale);
-                globeModel.position.sub(center.multiplyScalar(scale));
-                globeModel.traverse((child) => {
-                    if (child.isMesh && child.material) {
-                        child.material.metalness = 0.1;
-                        child.material.roughness = 0.6;
-                    }
-                });
-                scene.add(globeModel);
-                clearTimeout(preloaderSafetyTimer);
-                hidePreloader();
-            },
-            (progress) => {
-                if (progress.total > 0) {
-                    const pct = Math.min(Math.floor((progress.loaded / progress.total) * 100), 99);
-                    if (preloaderFill) preloaderFill.style.width = pct + '%';
-                    if (preloaderCounter) preloaderCounter.textContent = pct + '%';
-                    if (preloaderStatus) preloaderStatus.textContent = `LOADING 3D MODEL ${pct}%`;
-                }
-            },
-            () => { clearTimeout(preloaderSafetyTimer); hidePreloader(); }
-        );
-
-        let mouseX = 0, mouseY = 0;
-        const targetRotX = { value: 0 }, targetRotY = { value: 0 };
-        document.addEventListener('mousemove', (e) => {
-            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-        });
-
-        let targetCamY = 1500;
-        let targetCamZ = 16000;
-
-        function updateCameraScrollTarget() {
-            const scrollY = window.scrollY;
-            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = maxScroll > 0 ? scrollY / maxScroll : 0;
-            targetCamY = 1500 - progress * 800;
-            targetCamZ = 16000 - progress * 2000;
-        }
-
-        window.addEventListener('scroll', updateCameraScrollTarget, { passive: true });
-        updateCameraScrollTarget();
-
-        const clock = new THREE.Clock();
-
-        function animate() {
-            requestAnimationFrame(animate);
-            const elapsed = clock.getElapsedTime();
-
-            camera.position.y += (targetCamY - camera.position.y) * 0.03;
-            camera.position.z += (targetCamZ - camera.position.z) * 0.03;
-            camera.lookAt(0, 0, 0);
-
-            if (particleSystem) {
-                particleSystem.rotation.y = elapsed * 0.015;
-                particleSystem.rotation.x = Math.sin(elapsed * 0.03) * 0.04;
-            }
-            if (globeModel) {
-                globeModel.rotation.y = elapsed * 0.08;
-                targetRotX.value += (mouseY * 0.15 - targetRotX.value) * 0.02;
-                targetRotY.value += (mouseX * 0.15 - targetRotY.value) * 0.02;
-                globeModel.rotation.x = targetRotX.value;
-                globeModel.rotation.z = targetRotY.value * 0.3;
-            }
-            redLight.position.x = Math.sin(elapsed * 0.3) * 8000;
-            redLight.position.z = Math.cos(elapsed * 0.3) * 8000;
-
-            const tempVector = new THREE.Vector3();
-            nodeObjects.forEach(node => {
-                node.theta += node.def.speed;
-                const posX = Math.cos(node.theta) * node.def.radius;
-                const posZ = Math.sin(node.theta) * node.def.radius;
-                tempVector.set(posX, 0, posZ);
-                tempVector.applyEuler(node.def.tilt);
-                node.mesh.position.copy(tempVector);
-                const projected = tempVector.clone().project(camera);
-                const screenX = (projected.x * 0.5 + 0.5) * window.innerWidth;
-                const screenY = (-(projected.y * 0.5) + 0.5) * window.innerHeight;
-                if (projected.z > 1) {
-                    node.badgeEl.style.display = 'none';
-                } else {
-                    node.badgeEl.style.display = 'flex';
-                    node.badgeEl.style.transform = `translate(-50%, -50%) translate(${screenX}px, ${screenY}px)`;
-                    node.badgeEl.style.opacity = (projected.z < 0.95) ? '0.9' : '0.15';
-                }
-            });
-
-            renderer.render(scene, camera);
-        }
-
-        animate();
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        console.log('🌐 3D Globe active on work page');
     </script>
 </body>
 </html>

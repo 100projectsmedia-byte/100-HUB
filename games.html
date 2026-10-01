@@ -3,184 +3,70 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>100 HUB — Games</title>
-    <meta name="description" content="100 HUB Games - Coming Soon" />
-    <meta name="theme-color" content="#0a0a0a" />
+    <title>100 CNA — Games</title>
+    <meta name="description" content="100 CNA Games — Coming Soon" />
+    <meta name="theme-color" content="#FFD400" />
+
+    <meta property="og:title" content="100 CNA — Games" />
+    <meta property="og:description" content="Immersive gaming experience — coming soon." />
+    <meta property="og:image" content="assets/Logo.png" />
+
+    <link rel="icon" type="image/png" href="assets/Logo.png" />
+    <link rel="apple-touch-icon" href="assets/Logo.png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
-    
-    <!-- Garet Font for Paalalabas -->
-    <link href="https://fonts.cdnfonts.com/css/garet" rel="stylesheet"> 
-    
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+    <link href="https://fonts.cdnfonts.com/css/bicubik" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/sukar" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'" />
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" /></noscript>
 
     <link rel="stylesheet" href="style.css" />
-
     <link rel="preload" as="image" href="assets/Logo.png">
-
-    <style>
-        .page-games .coming-soon-section {
-            padding: 200px 0 150px;
-            min-height: 80vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            background: transparent;
-        }
-        .coming-soon-section .coming-icon {
-            font-size: 72px;
-            color: var(--red);
-            margin-bottom: 24px;
-            display: block;
-        }
-        .coming-soon-section h1 {
-            font-family: 'Space Grotesk', -apple-system, sans-serif;
-            font-size: 64px;
-            font-weight: 800;
-            color: #ffffff;
-            letter-spacing: -2px;
-            line-height: 1.1;
-            margin-bottom: 16px;
-        }
-        .coming-soon-section h1 span {
-            color: var(--red);
-        }
-        .coming-soon-section p {
-            font-size: 20px;
-            color: rgba(255, 255, 255, 0.6);
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.8;
-        }
-        .coming-soon-section .coming-soon-divider {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin: 24px auto;
-            max-width: 200px;
-        }
-        .coming-soon-section .coming-soon-divider .divider-line {
-            flex: 1;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-        }
-        .coming-soon-section .coming-soon-divider .divider-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--red);
-        }
-        .coming-soon-section .coming-soon-divider .divider-dot-light {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-        }
-        .coming-soon-section .coming-soon-sub {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.3);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-top: 32px;
-        }
-
-        @media (max-width: 768px) {
-            .page-games .coming-soon-section { padding: 150px 0 100px; }
-            .coming-soon-section h1 { font-size: 40px; }
-            .coming-soon-section .coming-icon { font-size: 48px; }
-            .coming-soon-section p { font-size: 16px; padding: 0 20px; }
-        }
-        @media (max-width: 480px) {
-            .page-games .coming-soon-section { padding: 120px 0 80px; }
-            .coming-soon-section h1 { font-size: 30px; }
-            .coming-soon-section .coming-icon { font-size: 36px; }
-        }
-
-        .page-games .coming-soon-section * {
-            color: #ffffff !important;
-        }
-        .page-games .coming-soon-section .coming-icon {
-            color: var(--red) !important;
-        }
-        .page-games .coming-soon-section .coming-soon-divider .divider-line {
-            background: rgba(255,255,255,0.2) !important;
-        }
-        .page-games .coming-soon-section .coming-soon-divider .divider-dot {
-            background: var(--red) !important;
-        }
-        .page-games .coming-soon-section .coming-soon-divider .divider-dot-light {
-            background: rgba(255,255,255,0.3) !important;
-        }
-    </style>
 </head>
 <body class="page-games">
 
     <!-- SITE PRELOADER -->
     <div id="site-preloader" class="site-preloader">
         <div class="preloader-inner">
-            <div class="preloader-spinner-box">
-                <div class="preloader-ring ring-outer"></div>
-                <div class="preloader-ring ring-inner"></div>
-                <div class="preloader-logo">
-                    <img src="assets/Logo.png" alt="100 HUB" />
-                </div>
-            </div>
-            <div class="preloader-text-box">
-                <span class="preloader-counter" id="preloaderCounter">0%</span>
-                <span class="preloader-status" id="preloaderStatus">INITIALIZING 3D GLOBE...</span>
+            <div class="preloader-logo">
+                <img src="assets/Logo.png" alt="100 CNA" />
             </div>
             <div class="preloader-bar-track">
                 <div class="preloader-bar-fill" id="preloaderFill"></div>
             </div>
+            <div class="preloader-counter" id="preloaderCounter">LOADING</div>
+            <div class="preloader-status" id="preloaderStatus">CREATORS &amp; ARTISTS</div>
         </div>
     </div>
 
-    <!-- 3D GLOBE BACKGROUND -->
-    <canvas id="globe-canvas"></canvas>
-    <div class="globe-fade-overlay"></div>
-    <div id="globe-nodes-container"></div>
-
-    <!-- TECH HUD OVERLAYS -->
-    <div class="tech-hud hud-top-left">
-        <span>LAT -26.2040° S</span>
-        <span>LON 28.0470° E</span>
-        <span>ALT 1753 M</span>
-        <span class="highlight-red">SIG LOCKED.</span>
-    </div>
-    <div class="tech-hud hud-top-right">
-        <span>NODE 100-HUB-01</span>
-        <span>STATUS ONLINE</span>
-        <span class="highlight-red">SYNC 99.8%</span>
-        <span>UPLINK STABLE</span>
-    </div>
-    <div class="tech-hud hud-bottom-left">
-        <span>GAMES</span>
-    </div>
-    <div class="tech-hud hud-bottom-right">
-        <span>CREATORS <strong id="hud-creators-count" class="highlight-red">100</strong></span>
-        <span>NETWORK LIVE</span>
-        <span>TIER FOUNDING</span>
-    </div>
-
     <!-- ==================== HEADER ==================== -->
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div class="container">
             <div class="nav-inner">
-                <a href="/" class="nav-logo">
-                    <img src="assets/Logo.png" alt="100 HUB" class="logo-img" />
-                    <span class="logo-text"><span class="highlight-red">HUB</span></span>
-                </a>
-                <div class="nav-right">
+                <div class="nav-left">
                     <div class="nav-social">
-                        <a href="https://www.instagram.com/100projectsmedia" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://www.instagram.com/100creators_n_artists" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                         <a href="mailto:100projectsmedia@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="nav-center">
+                    <a href="/" class="nav-logo">
+                        <img src="assets/Logo.png" alt="100 CNA" class="logo-img" />
+                    </a>
+                </div>
+                <div class="nav-right">
+                    <div class="nav-links-desktop">
+                        <a href="/">Home</a>
+                        <a href="/profiles.html">Creators</a>
+                        <a href="/stories.html">Stories</a>
+                        <a href="/work.html">Projects</a>
+                        <a href="/contact.html">Join CNA</a>
+                        <a href="/about.html">About</a>
                     </div>
                     <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
                         <span></span>
@@ -192,26 +78,26 @@
         </div>
     </nav>
 
-    <!-- Mobile Slide-out Menu -->
     <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
     <div class="mobile-menu" id="mobileMenu">
         <button class="mobile-menu-close" id="mobileMenuClose"><i class="fa-solid fa-xmark"></i></button>
         <div class="mobile-menu-links">
             <a href="/">Home</a>
-            <a href="/profiles.html">Hub</a>
-            <a href="/work.html">Our Work</a>
-            <a href="/games.html">Games</a>
-            <a href="/rewards.html">Rewards</a>
+            <a href="/profiles.html">Creators</a>
+            <a href="/stories.html">Stories</a>
+            <a href="/work.html">Projects</a>
+            <a href="/contact.html">Join CNA</a>
             <a href="/about.html">About</a>
-            <a href="/contact.html">Contact</a>
+            <a href="/games.html" class="active">Games</a>
+            <a href="/rewards.html">Rewards</a>
         </div>
         <div class="mobile-menu-social">
-            <a href="https://www.instagram.com/100projectsmedia" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>
+            <a href="https://www.instagram.com/100creators_n_artists" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>
             <a href="mailto:100projectsmedia@gmail.com"><i class="fa-regular fa-envelope"></i> Email</a>
         </div>
     </div>
 
-    <!-- ==================== COMING SOON SECTION ==================== -->
+    <!-- ==================== COMING SOON ==================== -->
     <section class="coming-soon-section" id="games">
         <div class="container">
             <span class="coming-icon"><i class="fa-solid fa-gamepad"></i></span>
@@ -223,7 +109,7 @@
                 <span class="divider-line"></span>
             </div>
             <h1>Games <span>Coming Soon</span></h1>
-            <p>We're building an immersive gaming experience. Stay tuned for interactive challenges, leaderboards, and rewards.</p>
+            <p>We're building an immersive gaming experience for the 100 CNA community. Stay tuned for interactive challenges, leaderboards, and rewards.</p>
             <div class="coming-soon-divider">
                 <span class="divider-line"></span>
                 <span class="divider-dot-light"></span>
@@ -231,7 +117,7 @@
                 <span class="divider-dot-light"></span>
                 <span class="divider-line"></span>
             </div>
-            <p class="coming-soon-sub">🚀 Launching soon • Stay connected</p>
+            <p class="coming-soon-sub">🚀 Launching soon</p>
         </div>
     </section>
 
@@ -240,12 +126,10 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-top">
-                    <img src="assets/Logo.png" alt="100 HUB" class="footer-logo" loading="lazy" />
+                    <img src="assets/Logo.png" alt="100 CNA" class="footer-logo" loading="lazy" />
                     <div class="footer-social">
-                        <a href="https://www.instagram.com/100projectsmedia" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="https://vt.tiktok.com/ZSQ4FhnXc/" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
-                        <a href="https://youtu.be/Z1G7TeuiMz4?si=peQqspcPTATRZYsd" target="_blank"><i class="fa-brands fa-youtube"></i></a>
-                        <a href="mailto:100projectsmedia@gmail.com"><i class="fa-regular fa-envelope"></i></a>
+                        <a href="https://www.instagram.com/100creators_n_artists" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="mailto:100projectsmedia@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
                     </div>
                 </div>
                 <div class="footer-divider">
@@ -257,34 +141,35 @@
                     <span class="divider-line-short"></span>
                 </div>
                 <div class="footer-bottom">
-                    <p class="footer-tagline">Broadcasting &amp; Media Production Company</p>
-                    <p class="footer-copy">&copy; 2026 100 HUB. All rights reserved.</p>
+                    <p class="footer-tagline">Creators &amp; Artists</p>
+                    <p class="footer-copy">&copy; 2026 100 CNA. All rights reserved.</p>
                 </div>
             </div>
         </div>
     </footer>
 
-    <script type="importmap">
-    {
-        "imports": {
-            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-        }
-    }
-    </script>
-
     <script>
-        // ==========================================
-        // API HELPER
-        // ==========================================
-        function apiUrl(path, params = {}) {
-            const queryParams = new URLSearchParams({ path, ...params });
-            return `/api?${queryParams.toString()}`;
-        }
+        (function(){
+            const preloader = document.getElementById('site-preloader');
+            const fill = document.getElementById('preloaderFill');
+            const counter = document.getElementById('preloaderCounter');
+            let pct = 0;
+            const interval = setInterval(() => {
+                pct += Math.random() * 25;
+                if (pct >= 100) {
+                    pct = 100;
+                    clearInterval(interval);
+                    if (fill) fill.style.width = '100%';
+                    if (counter) counter.textContent = '100%';
+                    setTimeout(() => preloader && preloader.classList.add('loaded'), 300);
+                } else {
+                    if (fill) fill.style.width = pct + '%';
+                    if (counter) counter.textContent = Math.floor(pct) + '%';
+                }
+            }, 140);
+            setTimeout(() => preloader && preloader.classList.add('loaded'), 2000);
+        })();
 
-        // ==========================================
-        // HAMBURGER MENU
-        // ==========================================
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const mobileMenu = document.getElementById('mobileMenu');
         const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
@@ -296,356 +181,26 @@
             mobileMenuOverlay.classList.toggle('active');
             document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
         }
-
         function closeMobileMenu() {
             hamburgerBtn.classList.remove('active');
             mobileMenu.classList.remove('open');
             mobileMenuOverlay.classList.remove('active');
             document.body.style.overflow = '';
         }
-
         if (hamburgerBtn && mobileMenu && mobileMenuOverlay && mobileMenuClose) {
             hamburgerBtn.addEventListener('click', toggleMobileMenu);
             mobileMenuOverlay.addEventListener('click', closeMobileMenu);
             mobileMenuClose.addEventListener('click', closeMobileMenu);
         }
 
-        // ==========================================
-        // HUD CREATORS COUNT
-        // ==========================================
-        async function updateCreatorsCount() {
-            try {
-                const response = await fetch(apiUrl('members', { status: 'accepted', limit: 1 }));
-                if (response.ok) {
-                    const data = await response.json();
-                    const count = data.count || 0;
-                    const hudEl = document.getElementById('hud-creators-count');
-                    if (hudEl) hudEl.textContent = count;
-                }
-            } catch (e) {}
-        }
-
-        // ==========================================
-        // NAVBAR SCROLL
-        // ==========================================
-        const navbar = document.querySelector('.navbar');
+        const navbar = document.getElementById('navbar');
         if (navbar) {
             window.addEventListener('scroll', () => {
-                if (window.scrollY <= 50) {
-                    navbar.classList.remove('nav-scrolled');
-                } else {
-                    navbar.classList.add('nav-scrolled');
-                }
+                navbar.classList.toggle('nav-scrolled', window.scrollY > 50);
             }, { passive: true });
         }
 
-        // ==========================================
-        // INIT
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', function() {
-            updateCreatorsCount();
-            console.log('🎮 100 HUB — Games Page Loaded');
-        });
+        console.log('🎮 100 CNA — Games Loaded');
     </script>
-
-
-    <!-- Three.js for 3D Globe -->
-    <script type="module">
-        import * as THREE from 'three';
-        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-
-        // ==========================================
-        // 3D GLOBE
-        // ==========================================
-        const canvas = document.getElementById('globe-canvas');
-        const scene = new THREE.Scene();
-
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100000);
-        camera.position.set(0, 2000, 18000);
-
-        const renderer = new THREE.WebGLRenderer({
-            canvas: canvas,
-            antialias: true,
-            alpha: true
-        });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 0.8;
-
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0x404060, 0.6);
-        scene.add(ambientLight);
-
-        const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
-        mainLight.position.set(10000, 8000, 12000);
-        scene.add(mainLight);
-
-        const rimLight = new THREE.DirectionalLight(0x6688ff, 0.4);
-        rimLight.position.set(-8000, 4000, -10000);
-        scene.add(rimLight);
-
-        const redLight = new THREE.PointLight(0xe31e24, 0.8, 30000);
-        redLight.position.set(5000, -3000, 8000);
-        scene.add(redLight);
-
-        const blueLight = new THREE.PointLight(0x3355ff, 0.3, 25000);
-        blueLight.position.set(-5000, 5000, -5000);
-        scene.add(blueLight);
-
-        // Cosmic particles
-        const particleCount = 2500;
-        const particleGeometry = new THREE.BufferGeometry();
-        const particlePositions = new Float32Array(particleCount * 3);
-        const particleColors = new Float32Array(particleCount * 3);
-
-        const colorPalette = [
-            new THREE.Color(0xffffff),
-            new THREE.Color(0xdce8ff),
-            new THREE.Color(0x88b5ff),
-            new THREE.Color(0xe31e24),
-            new THREE.Color(0xaaaaaa)
-        ];
-
-        for (let i = 0; i < particleCount; i++) {
-            const radius = 8000 + Math.random() * 32000;
-            const theta = Math.random() * Math.PI * 2;
-            const phi = Math.acos((Math.random() * 2) - 1);
-
-            particlePositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-            particlePositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-            particlePositions[i * 3 + 2] = radius * Math.cos(phi);
-
-            const c = colorPalette[Math.floor(Math.random() * colorPalette.length)];
-            particleColors[i * 3] = c.r;
-            particleColors[i * 3 + 1] = c.g;
-            particleColors[i * 3 + 2] = c.b;
-        }
-
-        particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-        particleGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
-
-        const particleMaterial = new THREE.PointsMaterial({
-            size: 3.5,
-            vertexColors: true,
-            transparent: true,
-            opacity: 0.75,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false
-        });
-
-        const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
-        scene.add(particleSystem);
-
-        // Atmospheric glow
-        const auraGeo = new THREE.SphereGeometry(4250, 48, 48);
-        const auraMat = new THREE.MeshBasicMaterial({
-            color: 0x4477ff,
-            transparent: true,
-            opacity: 0.08,
-            blending: THREE.AdditiveBlending,
-            side: THREE.BackSide
-        });
-        const auraMesh = new THREE.Mesh(auraGeo, auraMat);
-        scene.add(auraMesh);
-
-        // Orbiting nodes
-        const nodesContainer = document.getElementById('globe-nodes-container');
-        const nodeDefs = [
-            { label: 'JHB-008', radius: 6500, speed: 0.006, theta: 0, tilt: new THREE.Euler(Math.PI * 0.15, 0, Math.PI * 0.1) },
-            { label: 'LOS-022', radius: 6500, speed: 0.008, theta: Math.PI * 0.6, tilt: new THREE.Euler(Math.PI * 0.15, 0, Math.PI * 0.1) },
-            { label: 'LON-041', radius: 8500, speed: -0.005, theta: Math.PI * 1.2, tilt: new THREE.Euler(-Math.PI * 0.25, 0, Math.PI * 0.15) },
-            { label: 'ACC-017', radius: 8500, speed: -0.007, theta: Math.PI * 0.3, tilt: new THREE.Euler(-Math.PI * 0.25, 0, Math.PI * 0.15) },
-            { label: 'NYC-105', radius: 10500, speed: 0.004, theta: Math.PI * 1.7, tilt: new THREE.Euler(Math.PI * 0.35, 0, -Math.PI * 0.2) },
-            { label: '100 HUB', radius: 5500, speed: 0.009, theta: Math.PI * 0.9, tilt: new THREE.Euler(Math.PI * 0.1, 0, Math.PI * 0.05) }
-        ];
-
-        const nodeObjects = [];
-        const nodeSphereGeo = new THREE.SphereGeometry(120, 16, 16);
-        const nodeSphereMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-        const redNodeMat = new THREE.MeshBasicMaterial({ color: 0xe31e24 });
-
-        nodeDefs.forEach((def, index) => {
-            const mesh = new THREE.Mesh(nodeSphereGeo, index === 5 ? redNodeMat : nodeSphereMat);
-            scene.add(mesh);
-
-            const badge = document.createElement('div');
-            badge.className = 'globe-node-badge';
-            badge.innerHTML = `<span class="node-pulse-dot"></span>${def.label}`;
-            nodesContainer.appendChild(badge);
-
-            nodeObjects.push({
-                def: def,
-                mesh: mesh,
-                badgeEl: badge,
-                theta: def.theta
-            });
-        });
-
-        // Preloader
-        const preloader = document.getElementById('site-preloader');
-        const preloaderFill = document.getElementById('preloaderFill');
-        const preloaderCounter = document.getElementById('preloaderCounter');
-        const preloaderStatus = document.getElementById('preloaderStatus');
-
-        function hidePreloader() {
-            if (preloaderFill) preloaderFill.style.width = '100%';
-            if (preloaderCounter) preloaderCounter.textContent = '100%';
-            if (preloaderStatus) preloaderStatus.textContent = 'SYSTEM ONLINE';
-
-            setTimeout(() => {
-                if (preloader) preloader.classList.add('loaded');
-            }, 500);
-        }
-
-        const preloaderSafetyTimer = setTimeout(() => {
-            hidePreloader();
-        }, 6000);
-
-        // Load Globe Model
-        let globeModel = null;
-        const loader = new GLTFLoader();
-
-        loader.load(
-            'assets/globe/scene.gltf',
-            (gltf) => {
-                globeModel = gltf.scene;
-
-                const box = new THREE.Box3().setFromObject(globeModel);
-                const center = box.getCenter(new THREE.Vector3());
-                const size = box.getSize(new THREE.Vector3());
-                const maxDim = Math.max(size.x, size.y, size.z);
-                const scale = 8000 / maxDim;
-                globeModel.scale.setScalar(scale);
-                globeModel.position.sub(center.multiplyScalar(scale));
-
-                globeModel.traverse((child) => {
-                    if (child.isMesh) {
-                        if (child.material) {
-                            child.material.metalness = 0.1;
-                            child.material.roughness = 0.6;
-                        }
-                    }
-                });
-
-                scene.add(globeModel);
-                console.log('🌍 Globe model loaded');
-
-                clearTimeout(preloaderSafetyTimer);
-                hidePreloader();
-            },
-            (progress) => {
-                if (progress.total > 0) {
-                    const pct = Math.min(Math.floor((progress.loaded / progress.total) * 100), 99);
-                    if (preloaderFill) preloaderFill.style.width = pct + '%';
-                    if (preloaderCounter) preloaderCounter.textContent = pct + '%';
-                    if (preloaderStatus) preloaderStatus.textContent = `LOADING 3D MODEL ${pct}%`;
-                } else {
-                    if (preloaderFill) preloaderFill.style.width = '65%';
-                    if (preloaderCounter) preloaderCounter.textContent = '65%';
-                    if (preloaderStatus) preloaderStatus.textContent = 'LOADING 3D ASSETS...';
-                }
-            },
-            (error) => {
-                console.error('❌ Globe loading error:', error);
-                clearTimeout(preloaderSafetyTimer);
-                hidePreloader();
-            }
-        );
-
-        // Mouse tracking
-        let mouseX = 0, mouseY = 0;
-        const targetRotX = { value: 0 };
-        const targetRotY = { value: 0 };
-
-        document.addEventListener('mousemove', (e) => {
-            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-        });
-
-        let targetCamY = 1500;
-        let targetCamZ = 16000;
-
-        function updateCameraScrollTarget() {
-            const scrollY = window.scrollY;
-            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = maxScroll > 0 ? scrollY / maxScroll : 0;
-            targetCamY = 1500 - progress * 800;
-            targetCamZ = 16000 - progress * 2000;
-        }
-
-        window.addEventListener('scroll', updateCameraScrollTarget, { passive: true });
-        updateCameraScrollTarget();
-
-        const clock = new THREE.Clock();
-
-        function animate() {
-            requestAnimationFrame(animate);
-
-            const elapsed = clock.getElapsedTime();
-
-            camera.position.y += (targetCamY - camera.position.y) * 0.03;
-            camera.position.z += (targetCamZ - camera.position.z) * 0.03;
-            camera.lookAt(0, 0, 0);
-
-            if (particleSystem) {
-                particleSystem.rotation.y = elapsed * 0.015;
-                particleSystem.rotation.x = Math.sin(elapsed * 0.03) * 0.04;
-            }
-
-            if (globeModel) {
-                globeModel.rotation.y = elapsed * 0.08;
-                targetRotX.value += (mouseY * 0.15 - targetRotX.value) * 0.02;
-                targetRotY.value += (mouseX * 0.15 - targetRotY.value) * 0.02;
-                globeModel.rotation.x = targetRotX.value;
-                globeModel.rotation.z = targetRotY.value * 0.3;
-            }
-
-            redLight.position.x = Math.sin(elapsed * 0.3) * 8000;
-            redLight.position.z = Math.cos(elapsed * 0.3) * 8000;
-
-            const tempVector = new THREE.Vector3();
-
-            nodeObjects.forEach(node => {
-                node.theta += node.def.speed;
-
-                const posX = Math.cos(node.theta) * node.def.radius;
-                const posZ = Math.sin(node.theta) * node.def.radius;
-                tempVector.set(posX, 0, posZ);
-                tempVector.applyEuler(node.def.tilt);
-
-                node.mesh.position.copy(tempVector);
-
-                const projected = tempVector.clone().project(camera);
-
-                const screenX = (projected.x * 0.5 + 0.5) * window.innerWidth;
-                const screenY = (-(projected.y * 0.5) + 0.5) * window.innerHeight;
-
-                if (projected.z > 1) {
-                    node.badgeEl.style.display = 'none';
-                } else {
-                    node.badgeEl.style.display = 'flex';
-                    node.badgeEl.style.transform = `translate(-50%, -50%) translate(${screenX}px, ${screenY}px)`;
-                    node.badgeEl.style.opacity = (projected.z < 0.95) ? '0.9' : '0.15';
-                }
-            });
-
-            renderer.render(scene, camera);
-        }
-
-        animate();
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        const globeCanvas = document.getElementById('globe-canvas');
-        globeCanvas.style.opacity = '1.0';
-
-        console.log('🌐 3D Globe active on games page');
-    </script>
-
 </body>
 </html>
