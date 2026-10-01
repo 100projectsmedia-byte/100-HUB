@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>100 CNA — Games</title>
     <meta name="description" content="100 CNA Games — Coming Soon" />
-    <meta name="theme-color" content="#FFD400" />
+    <meta name="theme-color" content="#F4CE3D" />
 
     <meta property="og:title" content="100 CNA — Games" />
     <meta property="og:description" content="Immersive gaming experience — coming soon." />
@@ -30,21 +30,15 @@
 </head>
 <body class="page-games">
 
-    <!-- SITE PRELOADER -->
     <div id="site-preloader" class="site-preloader">
         <div class="preloader-inner">
-            <div class="preloader-logo">
-                <img src="assets/Logo.png" alt="100 CNA" />
-            </div>
-            <div class="preloader-bar-track">
-                <div class="preloader-bar-fill" id="preloaderFill"></div>
-            </div>
+            <div class="preloader-logo"><img src="assets/Logo.png" alt="100 CNA" /></div>
+            <div class="preloader-bar-track"><div class="preloader-bar-fill" id="preloaderFill"></div></div>
             <div class="preloader-counter" id="preloaderCounter">LOADING</div>
             <div class="preloader-status" id="preloaderStatus">CREATORS &amp; ARTISTS</div>
         </div>
     </div>
 
-    <!-- ==================== HEADER ==================== -->
     <nav class="navbar" id="navbar">
         <div class="container">
             <div class="nav-inner">
@@ -97,7 +91,6 @@
         </div>
     </div>
 
-    <!-- ==================== COMING SOON ==================== -->
     <section class="coming-soon-section" id="games">
         <div class="container">
             <span class="coming-icon"><i class="fa-solid fa-gamepad"></i></span>
@@ -121,9 +114,18 @@
         </div>
     </section>
 
-    <!-- ==================== FOOTER ==================== -->
     <footer class="footer">
         <div class="container">
+            <div class="footer-page-nav">
+                <div class="footer-page-nav-inner">
+                    <a href="/" data-page="home"><span class="nav-num">01</span> Home</a>
+                    <a href="/profiles.html" data-page="creators"><span class="nav-num">02</span> Creators</a>
+                    <a href="/stories.html" data-page="stories"><span class="nav-num">03</span> Stories</a>
+                    <a href="/work.html" data-page="projects"><span class="nav-num">04</span> Projects</a>
+                    <a href="/contact.html" data-page="join"><span class="nav-num">05</span> Join CNA</a>
+                    <a href="/about.html" data-page="about"><span class="nav-num">06</span> About</a>
+                </div>
+            </div>
             <div class="footer-content">
                 <div class="footer-top">
                     <img src="assets/Logo.png" alt="100 CNA" class="footer-logo" loading="lazy" />
@@ -149,6 +151,25 @@
     </footer>
 
     <script>
+        // Footer active page
+        (function(){
+            const path = window.location.pathname;
+            const map = {
+                '/': 'home', '/index.html': 'home',
+                '/profiles.html': 'creators',
+                '/stories.html': 'stories',
+                '/work.html': 'projects',
+                '/contact.html': 'join',
+                '/about.html': 'about'
+            };
+            const key = map[path] || map[path.replace(/\/$/, '') || '/'] || '';
+            if (key) {
+                const active = document.querySelector(`.footer-page-nav a[data-page="${key}"]`);
+                if (active) active.classList.add('active');
+            }
+        })();
+
+        // Preloader
         (function(){
             const preloader = document.getElementById('site-preloader');
             const fill = document.getElementById('preloaderFill');

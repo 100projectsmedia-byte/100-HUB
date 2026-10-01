@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>100 CNA — Join</title>
     <meta name="description" content="Join 100 CNA — Are you a creator or artist? Tell us what you do and show us your work." />
-    <meta name="theme-color" content="#FFD400" />
+    <meta name="theme-color" content="#F4CE3D" />
 
     <meta property="og:title" content="100 CNA — Join" />
     <meta property="og:description" content="Are you a creator or artist? Tell us what you do." />
@@ -33,32 +33,26 @@
         .contact-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 60px;
+            gap: 72px;
             max-width: 1000px;
             margin: 0 auto;
         }
         @media (max-width: 820px) {
-            .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+            .contact-grid { grid-template-columns: 1fr; gap: 48px; }
         }
     </style>
 </head>
 <body class="page-contact">
 
-    <!-- SITE PRELOADER -->
     <div id="site-preloader" class="site-preloader">
         <div class="preloader-inner">
-            <div class="preloader-logo">
-                <img src="assets/Logo.png" alt="100 CNA" />
-            </div>
-            <div class="preloader-bar-track">
-                <div class="preloader-bar-fill" id="preloaderFill"></div>
-            </div>
+            <div class="preloader-logo"><img src="assets/Logo.png" alt="100 CNA" /></div>
+            <div class="preloader-bar-track"><div class="preloader-bar-fill" id="preloaderFill"></div></div>
             <div class="preloader-counter" id="preloaderCounter">LOADING</div>
             <div class="preloader-status" id="preloaderStatus">CREATORS &amp; ARTISTS</div>
         </div>
     </div>
 
-    <!-- ==================== HEADER ==================== -->
     <nav class="navbar" id="navbar">
         <div class="container">
             <div class="nav-inner">
@@ -111,10 +105,9 @@
         </div>
     </div>
 
-    <!-- ==================== CONTACT SECTION ==================== -->
-    <section class="contact-section" id="contact" data-animate style="padding: 140px 0 100px;">
+    <section class="contact-section" id="contact" data-animate style="padding: 160px 0 140px;">
         <div class="container">
-            <div class="section-header" style="text-align:center; max-width:800px; margin:0 auto 60px auto;">
+            <div class="section-header" style="text-align:center; max-width:800px; margin:0 auto 72px auto;">
                 <span class="section-number">01 // JOIN 100 CNA</span>
                 <h2 class="section-title" style="text-align:center;">Get In Touch<span class="highlight-red">.</span></h2>
                 <p class="section-subtitle" style="text-align:center; margin:0 auto;">Are you a creator or artist? Tell us what you do and show us your work.</p>
@@ -132,7 +125,7 @@
                             <span>@100creators_n_artists</span>
                         </a>
                     </div>
-                    <div style="margin-top: 28px;">
+                    <div style="margin-top: 32px;">
                         <a href="/profiles.html#community-form" class="btn-primary">
                             Apply to Join <i class="fa-solid fa-arrow-right"></i>
                         </a>
@@ -145,15 +138,24 @@
                         <input type="email" id="newsletterEmail" placeholder="Enter your email" required />
                         <button type="submit">Subscribe</button>
                     </form>
-                    <div id="newsletterStatus" style="margin-top:12px; font-size:14px; min-height:24px; font-family: var(--font-body);"></div>
+                    <div id="newsletterStatus" style="margin-top:14px; font-size:14px; min-height:24px; font-family: var(--font-body);"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ==================== FOOTER ==================== -->
     <footer class="footer">
         <div class="container">
+            <div class="footer-page-nav">
+                <div class="footer-page-nav-inner">
+                    <a href="/" data-page="home"><span class="nav-num">01</span> Home</a>
+                    <a href="/profiles.html" data-page="creators"><span class="nav-num">02</span> Creators</a>
+                    <a href="/stories.html" data-page="stories"><span class="nav-num">03</span> Stories</a>
+                    <a href="/work.html" data-page="projects"><span class="nav-num">04</span> Projects</a>
+                    <a href="/contact.html" data-page="join"><span class="nav-num">05</span> Join CNA</a>
+                    <a href="/about.html" data-page="about"><span class="nav-num">06</span> About</a>
+                </div>
+            </div>
             <div class="footer-content">
                 <div class="footer-top">
                     <img src="assets/Logo.png" alt="100 CNA" class="footer-logo" loading="lazy" />
@@ -179,17 +181,30 @@
     </footer>
 
     <script>
-        // ==========================================
-        // API HELPER
-        // ==========================================
         function apiUrl(path, params = {}) {
             const queryParams = new URLSearchParams({ path, ...params });
             return `/api?${queryParams.toString()}`;
         }
 
-        // ==========================================
-        // PRELOADER
-        // ==========================================
+        // Footer active page
+        (function(){
+            const path = window.location.pathname;
+            const map = {
+                '/': 'home', '/index.html': 'home',
+                '/profiles.html': 'creators',
+                '/stories.html': 'stories',
+                '/work.html': 'projects',
+                '/contact.html': 'join',
+                '/about.html': 'about'
+            };
+            const key = map[path] || map[path.replace(/\/$/, '') || '/'] || '';
+            if (key) {
+                const active = document.querySelector(`.footer-page-nav a[data-page="${key}"]`);
+                if (active) active.classList.add('active');
+            }
+        })();
+
+        // Preloader
         (function(){
             const preloader = document.getElementById('site-preloader');
             const fill = document.getElementById('preloaderFill');
@@ -211,9 +226,6 @@
             setTimeout(() => preloader && preloader.classList.add('loaded'), 2500);
         })();
 
-        // ==========================================
-        // HAMBURGER MENU
-        // ==========================================
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const mobileMenu = document.getElementById('mobileMenu');
         const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
@@ -237,9 +249,7 @@
             mobileMenuClose.addEventListener('click', closeMobileMenu);
         }
 
-        // ==========================================
-        // NEWSLETTER
-        // ==========================================
+        // Newsletter
         document.getElementById('newsletterForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const email = document.getElementById('newsletterEmail').value;
@@ -249,9 +259,7 @@
                 status.innerHTML = '<span style="color:#FF6B6B;">Please enter a valid email.</span>';
                 return;
             }
-
             status.innerHTML = '<span style="color:#FFD400;">⏳ Subscribing...</span>';
-
             try {
                 const response = await fetch(apiUrl('subscriptions'), {
                     method: 'POST',
@@ -259,7 +267,6 @@
                     body: JSON.stringify({ email })
                 });
                 const result = await response.json();
-
                 if (result.success) {
                     status.innerHTML = `<span style="color:#4ADE80;">✅ ${result.alreadySubscribed ? 'Already subscribed!' : 'Thanks for subscribing!'}</span>`;
                     if (!result.alreadySubscribed) document.getElementById('newsletterEmail').value = '';
@@ -271,9 +278,7 @@
             }
         });
 
-        // ==========================================
-        // SCROLL REVEAL
-        // ==========================================
+        // Scroll reveal
         const animatedElements = document.querySelectorAll('[data-animate]');
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
@@ -285,9 +290,6 @@
         }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
         animatedElements.forEach(el => revealObserver.observe(el));
 
-        // ==========================================
-        // NAVBAR SCROLL
-        // ==========================================
         const navbar = document.getElementById('navbar');
         if (navbar) {
             window.addEventListener('scroll', () => {

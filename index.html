@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>100 CNA — Creators & Artists</title>
     <meta name="description" content="100 CNA — A platform for creators and artists. We spotlight the people, work, ideas and spaces shaping culture around us." />
-    <meta name="theme-color" content="#FFD400" />
+    <meta name="theme-color" content="#F4CE3D" />
 
-    <!-- Open Graph -->
     <meta property="og:title" content="100 CNA — Creators & Artists" />
     <meta property="og:description" content="The people creating what's next." />
     <meta property="og:image" content="assets/Logo.png" />
@@ -21,7 +20,6 @@
     <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
-    <!-- 100 CNA fonts -->
     <link href="https://fonts.cdnfonts.com/css/bicubik" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/sukar" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -34,21 +32,15 @@
 </head>
 <body class="page-home">
 
-    <!-- SITE PRELOADER -->
     <div id="site-preloader" class="site-preloader">
         <div class="preloader-inner">
-            <div class="preloader-logo">
-                <img src="assets/Logo.png" alt="100 CNA" />
-            </div>
-            <div class="preloader-bar-track">
-                <div class="preloader-bar-fill" id="preloaderFill"></div>
-            </div>
+            <div class="preloader-logo"><img src="assets/Logo.png" alt="100 CNA" /></div>
+            <div class="preloader-bar-track"><div class="preloader-bar-fill" id="preloaderFill"></div></div>
             <div class="preloader-counter" id="preloaderCounter">LOADING</div>
             <div class="preloader-status" id="preloaderStatus">CREATORS &amp; ARTISTS</div>
         </div>
     </div>
 
-    <!-- ==================== HEADER ==================== -->
     <nav class="navbar" id="navbar">
         <div class="container">
             <div class="nav-inner">
@@ -58,13 +50,11 @@
                         <a href="mailto:100projectsmedia@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
                     </div>
                 </div>
-
                 <div class="nav-center">
                     <a href="/" class="nav-logo">
                         <img src="assets/Logo.png" alt="100 CNA" class="logo-img" />
                     </a>
                 </div>
-
                 <div class="nav-right">
                     <div class="nav-links-desktop">
                         <a href="/">Home</a>
@@ -84,7 +74,6 @@
         </div>
     </nav>
 
-    <!-- Mobile Slide-out Menu -->
     <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
     <div class="mobile-menu" id="mobileMenu">
         <button class="mobile-menu-close" id="mobileMenuClose"><i class="fa-solid fa-xmark"></i></button>
@@ -104,26 +93,17 @@
         </div>
     </div>
 
-    <!-- ==================== HERO ==================== -->
     <section class="hero" id="hero">
         <div class="container">
             <div class="hero-content">
                 <div class="hero-brand-header">
                     <img src="assets/Logo.png" alt="100 CNA" class="hero-img" />
                 </div>
-                <h1 class="hero-title">
-                    Are You a Creator<br>or Artist?
-                </h1>
-                <p class="hero-tagline">
-                    Tell us what you do and show us your work.
-                </p>
+                <h1 class="hero-title">Are You a Creator<br>or Artist?</h1>
+                <p class="hero-tagline">Tell us what you do and show us your work.</p>
                 <div class="hero-cta">
-                    <a href="/profiles.html" class="btn-primary">
-                        Explore Hub <i class="fa-solid fa-arrow-right"></i>
-                    </a>
-                    <a href="/contact.html" class="btn-secondary">
-                        Join Hub
-                    </a>
+                    <a href="/profiles.html" class="btn-primary">Explore Hub <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="/contact.html" class="btn-secondary">Join Hub</a>
                 </div>
                 <div class="hero-scroll-cue">
                     <span>The People Creating What's Next.</span>
@@ -133,7 +113,6 @@
         </div>
     </section>
 
-    <!-- ==================== FEATURED CREATOR ==================== -->
     <section class="feed-section" id="featured" data-animate>
         <div class="container">
             <div class="section-header">
@@ -150,7 +129,6 @@
         </div>
     </section>
 
-    <!-- ==================== LATEST / STORIES ==================== -->
     <section class="feed-section" id="feed" data-animate>
         <div class="container">
             <div class="section-header">
@@ -162,15 +140,9 @@
             <div class="feed-search">
                 <i class="fa-solid fa-search"></i>
                 <input type="text" id="feedSearchInput" placeholder="Search stories..." />
-                <button class="btn-outline btn-sm" onclick="searchFeedPosts()">
-                    <i class="fa-solid fa-search"></i> Search
-                </button>
-                <button class="btn-outline btn-sm" onclick="clearFeedSearch()">
-                    <i class="fa-solid fa-times"></i> Clear
-                </button>
-                <span class="feed-result-count">
-                    Showing <span id="feedShowingCount">0</span> stories
-                </span>
+                <button class="btn-outline btn-sm" onclick="searchFeedPosts()"><i class="fa-solid fa-search"></i> Search</button>
+                <button class="btn-outline btn-sm" onclick="clearFeedSearch()"><i class="fa-solid fa-times"></i> Clear</button>
+                <span class="feed-result-count">Showing <span id="feedShowingCount">0</span> stories</span>
             </div>
 
             <div class="feed-grid" id="instagramFeed">
@@ -180,17 +152,12 @@
                 </div>
             </div>
             <div class="see-more-container" id="feedSeeMore" style="display:none;">
-                <button class="see-more-btn" onclick="toggleFeedPosts()" id="loadMoreFeedBtn">
-                    See More <i class="fa-solid fa-arrow-down"></i>
-                </button>
-                <button class="see-more-btn" onclick="resetFeedView()" id="resetFeedBtn" style="margin-left:12px; display:none;">
-                    Show Less <i class="fa-solid fa-arrow-up"></i>
-                </button>
+                <button class="see-more-btn" onclick="toggleFeedPosts()" id="loadMoreFeedBtn">See More <i class="fa-solid fa-arrow-down"></i></button>
+                <button class="see-more-btn" onclick="resetFeedView()" id="resetFeedBtn" style="margin-left:12px; display:none;">Show Less <i class="fa-solid fa-arrow-up"></i></button>
             </div>
         </div>
     </section>
 
-    <!-- POST MODAL -->
     <div class="post-modal" id="postModal">
         <div class="modal-overlay" id="modalOverlay"></div>
         <div class="modal-content">
@@ -199,7 +166,6 @@
         </div>
     </div>
 
-    <!-- ==================== EXPLORE CREATORS ==================== -->
     <section class="feed-section" id="creators" data-animate>
         <div class="container">
             <div class="section-header">
@@ -214,40 +180,28 @@
                 </div>
             </div>
             <div class="see-more-container">
-                <a href="/profiles.html" class="see-more-btn">
-                    See All Creators <i class="fa-solid fa-arrow-right"></i>
-                </a>
+                <a href="/profiles.html" class="see-more-btn">See All Creators <i class="fa-solid fa-arrow-right"></i></a>
             </div>
         </div>
     </section>
 
-    <!-- ==================== JOIN CTA ==================== -->
-    <section class="community-section" id="join" data-animate style="background: var(--cna-black);">
+    <section class="community-section cna-dark" id="join" data-animate style="background: var(--cna-black);">
         <div class="container">
-            <div class="section-header" style="text-align:center; max-width:800px; margin:0 auto 40px auto;">
+            <div class="section-header" style="text-align:center; max-width:800px; margin:0 auto 48px auto;">
                 <span class="section-number" style="background: rgba(255,212,0,0.15); color: var(--cna-yellow);">04 // JOIN 100 CNA</span>
-                <h2 class="section-title" style="color:var(--cna-white); text-align:center;">
-                    Are You a Creator or Artist<span class="highlight-red">?</span>
-                </h2>
-                <p class="section-subtitle" style="color:rgba(255,255,255,0.7); text-align:center; margin: 0 auto;">
-                    Tell us what you do and show us your work.
-                </p>
+                <h2 class="section-title" style="color:var(--cna-white); text-align:center;">Are You a Creator or Artist<span class="highlight-red">?</span></h2>
+                <p class="section-subtitle" style="color:rgba(255,255,255,0.7); text-align:center; margin: 0 auto;">Tell us what you do and show us your work.</p>
             </div>
-            <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap; margin-top: 32px;">
-                <a href="/contact.html" class="btn-primary" style="background: var(--cna-yellow); color: var(--cna-black); border-color: var(--cna-yellow);">
-                    Join 100 CNA <i class="fa-solid fa-arrow-right"></i>
-                </a>
-                <a href="/profiles.html" class="btn-secondary" style="color: var(--cna-yellow); border-color: var(--cna-yellow);">
-                    Browse Creators
-                </a>
+            <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap; margin-top: 40px;">
+                <a href="/contact.html" class="btn-primary" style="background: var(--cna-yellow); color: var(--cna-black); border-color: var(--cna-yellow);">Join 100 CNA <i class="fa-solid fa-arrow-right"></i></a>
+                <a href="/profiles.html" class="btn-secondary" style="color: var(--cna-yellow); border-color: var(--cna-yellow);">Browse Creators</a>
             </div>
         </div>
     </section>
 
-    <!-- ==================== IMPACT NUMBERS ==================== -->
     <section class="impact-section" id="impact" data-animate>
         <div class="container">
-            <div class="section-header" style="text-align:center; max-width:800px; margin: 0 auto 40px auto;">
+            <div class="section-header" style="text-align:center; max-width:800px; margin: 0 auto 56px auto;">
                 <span class="section-number">05 // IMPACT</span>
                 <h2 class="section-title" style="text-align:center;">By The Numbers<span class="highlight-red">.</span></h2>
             </div>
@@ -272,7 +226,6 @@
         </div>
     </section>
 
-    <!-- ==================== PARTNERS ==================== -->
     <section class="partners-section" id="partners" data-animate>
         <div class="container">
             <div class="section-header" style="text-align:center; max-width:800px; margin: 0 auto 40px auto;">
@@ -285,9 +238,18 @@
         </div>
     </section>
 
-    <!-- ==================== FOOTER ==================== -->
     <footer class="footer">
         <div class="container">
+            <div class="footer-page-nav">
+                <div class="footer-page-nav-inner">
+                    <a href="/" data-page="home"><span class="nav-num">01</span> Home</a>
+                    <a href="/profiles.html" data-page="creators"><span class="nav-num">02</span> Creators</a>
+                    <a href="/stories.html" data-page="stories"><span class="nav-num">03</span> Stories</a>
+                    <a href="/work.html" data-page="projects"><span class="nav-num">04</span> Projects</a>
+                    <a href="/contact.html" data-page="join"><span class="nav-num">05</span> Join CNA</a>
+                    <a href="/about.html" data-page="about"><span class="nav-num">06</span> About</a>
+                </div>
+            </div>
             <div class="footer-content">
                 <div class="footer-top">
                     <img src="assets/Logo.png" alt="100 CNA" class="footer-logo" loading="lazy" />
@@ -312,41 +274,40 @@
         </div>
     </footer>
 
-    <!-- ==================== AD CARD ==================== -->
     <div class="ad-card" id="adCard" style="display:none;">
-        <button class="ad-card-close" id="adCardClose" aria-label="Close ad">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
+        <button class="ad-card-close" id="adCardClose" aria-label="Close ad"><i class="fa-solid fa-xmark"></i></button>
         <a href="#" id="adCardLink" target="_blank" rel="noopener">
             <div class="ad-card-content" id="adCardContent"></div>
-            <div class="ad-card-cta">
-                <span>Learn More</span>
-                <i class="fa-solid fa-arrow-right"></i>
-            </div>
+            <div class="ad-card-cta"><span>Learn More</span><i class="fa-solid fa-arrow-right"></i></div>
         </a>
     </div>
 
     <script>
-        // ==========================================
-        // API HELPER
-        // ==========================================
         function apiUrl(path, params = {}) {
             const queryParams = new URLSearchParams({ path, ...params });
             return `/api?${queryParams.toString()}`;
         }
 
-        // ==========================================
-        // POSTS STATE
-        // ==========================================
-        let allFeedPosts = [];
-        let feedDisplayCount = 9;
-        let feedShowingAll = false;
-        const FEED_DEFAULT_COUNT = 9;
-        const FEED_INCREMENT = 3;
+        // Footer active page
+        (function(){
+            const path = window.location.pathname;
+            const map = {
+                '/': 'home',
+                '/index.html': 'home',
+                '/profiles.html': 'creators',
+                '/stories.html': 'stories',
+                '/work.html': 'projects',
+                '/contact.html': 'join',
+                '/about.html': 'about'
+            };
+            const key = map[path] || map[path.replace(/\/$/, '') || '/'] || '';
+            if (key) {
+                const active = document.querySelector(`.footer-page-nav a[data-page="${key}"]`);
+                if (active) active.classList.add('active');
+            }
+        })();
 
-        // ==========================================
-        // PRELOADER
-        // ==========================================
+        // Preloader
         (function(){
             const preloader = document.getElementById('site-preloader');
             const fill = document.getElementById('preloaderFill');
@@ -365,34 +326,31 @@
                     if (counter) counter.textContent = Math.floor(pct) + '%';
                 }
             }, 180);
-            // Safety: force-hide after 3s no matter what
             setTimeout(() => preloader && preloader.classList.add('loaded'), 3000);
         })();
 
-        // ==========================================
-        // LOAD POSTS
-        // ==========================================
+        // Posts
+        let allFeedPosts = [];
+        let feedDisplayCount = 9;
+        let feedShowingAll = false;
+        const FEED_DEFAULT_COUNT = 9;
+        const FEED_INCREMENT = 3;
+
         async function loadPosts() {
             const container = document.getElementById('instagramFeed');
             const seeMoreWrap = document.getElementById('feedSeeMore');
             const searchInput = document.getElementById('feedSearchInput');
-
             try {
                 const searchTerm = searchInput ? searchInput.value.trim() : '';
-                const url = searchTerm 
-                    ? apiUrl('posts', { limit: 100, search: encodeURIComponent(searchTerm) })
-                    : apiUrl('posts', { limit: 100 });
-                    
+                const url = searchTerm ? apiUrl('posts', { limit: 100, search: encodeURIComponent(searchTerm) }) : apiUrl('posts', { limit: 100 });
                 const response = await fetch(url);
                 const data = await response.json();
-                
                 if (data.success && data.posts && data.posts.length > 0) {
                     allFeedPosts = data.posts;
                     document.getElementById('feedShowingCount').textContent = allFeedPosts.length;
                     feedDisplayCount = Math.min(FEED_DEFAULT_COUNT, allFeedPosts.length);
                     feedShowingAll = false;
                     renderFeedPosts(allFeedPosts.slice(0, feedDisplayCount), container);
-                    
                     if (allFeedPosts.length > feedDisplayCount) {
                         seeMoreWrap.style.display = 'flex';
                         seeMoreWrap.style.gap = '12px';
@@ -406,12 +364,7 @@
                     seeMoreWrap.style.display = 'none';
                 }
             } catch (error) {
-                console.error('Load posts error:', error);
-                container.innerHTML = `
-                    <div class="feed-error">
-                        <p>⚠️ Unable to load stories. Please refresh.</p>
-                    </div>
-                `;
+                container.innerHTML = `<div class="feed-error"><p>⚠️ Unable to load stories. Please refresh.</p></div>`;
                 seeMoreWrap.style.display = 'none';
             }
         }
@@ -421,33 +374,19 @@
                 container.innerHTML = `<div class="feed-empty"><p>No stories found.</p></div>`;
                 return;
             }
-
             container.innerHTML = posts.map((post) => {
                 const hasArticle = post.article_url && post.article_url.trim() !== '';
-                const date = post.published_at ? new Date(post.published_at).toLocaleDateString('en-US', {
-                    month: 'short', day: 'numeric', year: 'numeric'
-                }) : '';
+                const date = post.published_at ? new Date(post.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
                 const writer = post.writer || "100 CNA";
                 const caption = post.caption || '';
                 const truncatedCaption = caption.length > 110 ? caption.substring(0, 110) + '...' : caption;
-                
-                let mediaHtml = '';
-                if (post.is_video && post.video_url) {
-                    mediaHtml = `
-                        <video autoplay muted loop playsinline>
-                            <source src="${post.video_url}" type="video/mp4">
-                        </video>
-                        <span class="feed-play"><i class="fa-solid fa-play"></i></span>
-                    `;
-                } else {
-                    mediaHtml = `<img src="${post.image_url}" alt="${caption.substring(0, 50)}" loading="lazy" />`;
-                }
-
+                let mediaHtml = post.is_video && post.video_url
+                    ? `<video autoplay muted loop playsinline><source src="${post.video_url}" type="video/mp4"></video><span class="feed-play"><i class="fa-solid fa-play"></i></span>`
+                    : `<img src="${post.image_url}" alt="${caption.substring(0, 50)}" loading="lazy" />`;
                 const galleryCount = Array.isArray(post.media_gallery) ? post.media_gallery.length : 0;
                 const galleryBadge = galleryCount > 1
                     ? `<span style="position:absolute; top:12px; right:12px; background:var(--cna-yellow); color:var(--cna-black); width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; z-index:5; font-size:12px;"><i class="fa-regular fa-clone"></i></span>`
                     : '';
-                
                 return `
                     <div class="feed-item" data-post='${JSON.stringify(post).replace(/'/g, "&#39;")}'>
                         <div class="feed-image">
@@ -462,15 +401,12 @@
                                 <span class="feed-date"><i class="fa-regular fa-calendar"></i> ${date}</span>
                             </div>
                             <div class="feed-actions">
-                                <button class="feed-link" onclick="openPostModal(this)">
-                                    ${hasArticle ? 'Read Story' : 'View Post'} <i class="fa-solid fa-arrow-right"></i>
-                                </button>
+                                <button class="feed-link" onclick="openPostModal(this)">${hasArticle ? 'Read Story' : 'View Post'} <i class="fa-solid fa-arrow-right"></i></button>
                             </div>
                         </div>
                     </div>
                 `;
             }).join('');
-
             document.querySelectorAll('.feed-item').forEach(item => {
                 item.addEventListener('click', function(e) {
                     if (e.target.closest('.feed-link')) return;
@@ -484,7 +420,6 @@
             const btn = document.getElementById('loadMoreFeedBtn');
             const resetBtn = document.getElementById('resetFeedBtn');
             if (!btn) return;
-            
             if (feedShowingAll) {
                 btn.innerHTML = `See Less <i class="fa-solid fa-arrow-up"></i>`;
                 resetBtn.style.display = 'none';
@@ -518,14 +453,9 @@
         }
 
         function searchFeedPosts() { loadPosts(); }
-        function clearFeedSearch() {
-            document.getElementById('feedSearchInput').value = '';
-            loadPosts();
-        }
+        function clearFeedSearch() { document.getElementById('feedSearchInput').value = ''; loadPosts(); }
 
-        // ==========================================
-        // POST MODAL
-        // ==========================================
+        // Post modal
         const modal = document.getElementById('postModal');
         const modalBody = document.getElementById('modalBody');
         const modalClose = document.getElementById('modalClose');
@@ -534,29 +464,18 @@
         function openPostModal(element) {
             const item = element.closest('.feed-item');
             const postData = JSON.parse(item.dataset.post);
-            
             const hasArticle = postData.article_url && postData.article_url.trim() !== '';
-            const date = postData.published_at ? new Date(postData.published_at).toLocaleDateString('en-US', {
-                month: 'long', day: 'numeric', year: 'numeric'
-            }) : '';
+            const date = postData.published_at ? new Date(postData.published_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
             const writer = postData.writer || "100 CNA";
             const caption = postData.caption || '';
             const permalink = postData.permalink || '#';
-            
             const gallery = Array.isArray(postData.media_gallery) ? postData.media_gallery : [];
-
             let mediaHtml = '';
             if (gallery.length > 1) {
                 mediaHtml = `
                     <div class="post-carousel" id="postCarousel" data-index="0">
                         <div class="post-carousel-track" id="postCarouselTrack">
-                            ${gallery.map(g => `
-                                <div>
-                                    ${g.type === 'video'
-                                        ? `<video controls playsinline><source src="${g.url}" type="video/mp4"></video>`
-                                        : `<img src="${g.url}" alt="${caption.substring(0, 50)}" />`}
-                                </div>
-                            `).join('')}
+                            ${gallery.map(g => `<div>${g.type === 'video' ? `<video controls playsinline><source src="${g.url}" type="video/mp4"></video>` : `<img src="${g.url}" alt="" />`}</div>`).join('')}
                         </div>
                         <button class="post-carousel-arrow left" onclick="postCarouselNav(-1)"><i class="fa-solid fa-chevron-left"></i></button>
                         <button class="post-carousel-arrow right" onclick="postCarouselNav(1)"><i class="fa-solid fa-chevron-right"></i></button>
@@ -568,18 +487,12 @@
             } else if (postData.is_video && postData.video_url) {
                 mediaHtml = `<video controls autoplay muted loop playsinline><source src="${postData.video_url}" type="video/mp4"></video>`;
             } else {
-                mediaHtml = `<img src="${postData.image_url}" alt="${caption.substring(0, 50)}" />`;
+                mediaHtml = `<img src="${postData.image_url}" alt="" />`;
             }
-            
             const captionLines = caption.split('\n').filter(l => l.trim() !== '');
             const modalHeadline = captionLines[0] || 'Untitled';
             const modalBodyText = captionLines.slice(1).join('\n');
-
-            let articleButtonHtml = '';
-            if (hasArticle) {
-                articleButtonHtml = `<a href="${postData.article_url}" target="_blank" class="btn-primary"><i class="fa-regular fa-file-lines"></i> Read Full Article</a>`;
-            }
-            
+            const articleButtonHtml = hasArticle ? `<a href="${postData.article_url}" target="_blank" class="btn-primary"><i class="fa-regular fa-file-lines"></i> Read Full Article</a>` : '';
             modalBody.innerHTML = `
                 <div class="modal-image">${mediaHtml}</div>
                 <div class="modal-text">
@@ -596,7 +509,6 @@
                     </div>
                 </div>
             `;
-            
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -626,14 +538,11 @@
             modal.classList.remove('active');
             document.body.style.overflow = '';
         }
-
         modalClose.addEventListener('click', closeModal);
         modalOverlay.addEventListener('click', closeModal);
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-        // ==========================================
-        // FEATURED CREATOR (first accepted member)
-        // ==========================================
+        // Featured creator
         async function loadFeaturedCreator() {
             const grid = document.getElementById('featuredCreatorGrid');
             try {
@@ -644,23 +553,23 @@
                     return;
                 }
                 const member = data.members[0];
-                const img = member.selected_image || member.image1 || '';
+                const img = member.selected_image || member.selectedImage || member.image1 || '';
                 const initials = (member.name || '?').split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
                 const mediaHtml = img
                     ? `<img src="${img}" alt="${member.name}" loading="lazy" />`
                     : `<div class="avatar-fallback">${initials}</div>`;
                 grid.innerHTML = `
                     <div class="feed-item" style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 0; cursor: pointer;" onclick="window.location.href='/profiles.html'">
-                        <div class="feed-image" style="aspect-ratio: auto; height: 100%; min-height: 420px;">
+                        <div class="feed-image" style="aspect-ratio: auto; height: 100%; min-height: 440px;">
                             ${mediaHtml}
-                            <span class="cna-number-badge" style="top:20px; left:20px; font-size:13px; padding:6px 16px;">CNA 001</span>
+                            <span class="cna-number-badge" style="top:24px; left:24px; font-size:13px; padding:7px 18px;">CNA 001</span>
                         </div>
-                        <div class="feed-content" style="display:flex; flex-direction:column; justify-content:center; padding: 48px 44px;">
-                            <div style="font-family: var(--font-mono); font-size: 11px; color: var(--cna-yellow); opacity: 0.8; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 12px;">Featured Creator</div>
-                            <h3 style="font-family: var(--font-display); font-size: 36px; color: var(--cna-white); margin-bottom: 12px; text-transform: uppercase; letter-spacing: -0.01em; line-height: 1.1;">${member.name || 'Anonymous'}</h3>
-                            <p style="font-family: var(--font-body); font-size: 16px; color: var(--cna-yellow); opacity: 0.9; margin-bottom: 16px;">${member.role || 'Creative'}</p>
+                        <div class="feed-content" style="display:flex; flex-direction:column; justify-content:center; padding: 56px 52px;">
+                            <div style="font-family: var(--font-mono); font-size: 11px; color: var(--cna-yellow); opacity: 0.8; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 14px;">Featured Creator</div>
+                            <h3 style="font-family: var(--font-display); font-size: 36px; color: var(--cna-white); margin-bottom: 14px; text-transform: uppercase; letter-spacing: -0.01em; line-height: 1.1;">${member.name || 'Anonymous'}</h3>
+                            <p style="font-family: var(--font-body); font-size: 16px; color: var(--cna-yellow); opacity: 0.9; margin-bottom: 18px;">${member.role || 'Creative'}</p>
                             ${member.description ? `<p style="font-family: var(--font-body); font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.7;">${member.description.substring(0, 220)}${member.description.length > 220 ? '...' : ''}</p>` : ''}
-                            <div style="margin-top: 24px;">
+                            <div style="margin-top: 28px;">
                                 <span class="btn-primary" style="background: var(--cna-yellow); color: var(--cna-black); border-color: var(--cna-yellow);">View Profile <i class="fa-solid fa-arrow-right"></i></span>
                             </div>
                         </div>
@@ -671,9 +580,7 @@
             }
         }
 
-        // ==========================================
-        // EXPLORE CREATORS (6 preview)
-        // ==========================================
+        // Home creators preview
         async function loadHomeCreators() {
             const grid = document.getElementById('homeCreatorsGrid');
             try {
@@ -684,14 +591,12 @@
                     const db = new Date(b.created_at || b.timestamp || 0);
                     return da - db;
                 }).slice(0, 6);
-
                 if (members.length === 0) {
                     grid.innerHTML = `<div class="hub-empty"><p>No creators yet. Be the first to join!</p></div>`;
                     return;
                 }
-
                 grid.innerHTML = members.map((member, i) => {
-                    const img = member.selected_image || member.image1 || '';
+                    const img = member.selected_image || member.selectedImage || member.image1 || '';
                     const initials = (member.name || '?').split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
                     const cnaNum = String(i + 1).padStart(3, '0');
                     const imageHtml = img
@@ -719,9 +624,7 @@
             }
         }
 
-        // ==========================================
-        // IMPACT NUMBERS
-        // ==========================================
+        // Impact numbers
         function loadImpactNumbers() {
             try {
                 const data = localStorage.getItem('impactNumbers');
@@ -735,9 +638,7 @@
             } catch (e) {}
         }
 
-        // ==========================================
-        // PARTNERS
-        // ==========================================
+        // Partners
         async function loadPartners() {
             try {
                 const response = await fetch(apiUrl('partners'));
@@ -752,11 +653,7 @@
             const track = document.getElementById('partnersTrack');
             if (!track) return;
             if (!logos || logos.length === 0) {
-                track.innerHTML = `
-                    <div class="partner-logo-item">
-                        <span>Partner logos coming soon</span>
-                    </div>
-                `;
+                track.innerHTML = `<div class="partner-logo-item"><span>Partner logos coming soon</span></div>`;
                 return;
             }
             const doubled = [...logos, ...logos];
@@ -767,9 +664,7 @@
             `).join('');
         }
 
-        // ==========================================
-        // HAMBURGER MENU
-        // ==========================================
+        // Hamburger
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const mobileMenu = document.getElementById('mobileMenu');
         const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
@@ -793,15 +688,12 @@
             mobileMenuClose.addEventListener('click', closeMobileMenu);
         }
 
-        // ==========================================
-        // AD CARD
-        // ==========================================
+        // Ad card
         async function loadAd() {
             const adCard = document.getElementById('adCard');
             const adContent = document.getElementById('adCardContent');
             const adLink = document.getElementById('adCardLink');
             const closeBtn = document.getElementById('adCardClose');
-            
             try {
                 const response = await fetch('/api?path=ads');
                 const data = await response.json();
@@ -811,7 +703,7 @@
                 if (ad.media_type === 'video') {
                     adContent.innerHTML = `<video autoplay muted loop playsinline style="width:100%; display:block;"><source src="${ad.media_url}" type="video/mp4"></video>`;
                 } else {
-                    adContent.innerHTML = `<img src="${ad.media_url}" alt="${ad.title || 'Advertisement'}" loading="lazy" style="width:100%; display:block;" />`;
+                    adContent.innerHTML = `<img src="${ad.media_url}" alt="Ad" loading="lazy" style="width:100%; display:block;" />`;
                 }
                 setTimeout(() => { adCard.style.display = 'block'; }, 1800);
                 closeBtn.addEventListener('click', function(e) {
@@ -824,9 +716,7 @@
             }
         }
 
-        // ==========================================
-        // SCROLL REVEAL
-        // ==========================================
+        // Scroll reveal
         const animatedElements = document.querySelectorAll('[data-animate]');
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
@@ -838,9 +728,6 @@
         }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
         animatedElements.forEach(el => revealObserver.observe(el));
 
-        // ==========================================
-        // NAVBAR SCROLL
-        // ==========================================
         const navbar = document.getElementById('navbar');
         if (navbar) {
             window.addEventListener('scroll', () => {
@@ -848,9 +735,6 @@
             }, { passive: true });
         }
 
-        // ==========================================
-        // INIT
-        // ==========================================
         document.addEventListener('DOMContentLoaded', function() {
             loadImpactNumbers();
             loadPartners();

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>100 CNA — Creators</title>
     <meta name="description" content="Meet the people creating what's next. The 100 CNA Hub — a creator directory." />
-    <meta name="theme-color" content="#FFD400" />
+    <meta name="theme-color" content="#F4CE3D" />
 
     <meta property="og:title" content="100 CNA — Creators" />
     <meta property="og:description" content="Meet the people creating what's next." />
@@ -32,21 +32,15 @@
 </head>
 <body class="page-profiles">
 
-    <!-- SITE PRELOADER -->
     <div id="site-preloader" class="site-preloader">
         <div class="preloader-inner">
-            <div class="preloader-logo">
-                <img src="assets/Logo.png" alt="100 CNA" />
-            </div>
-            <div class="preloader-bar-track">
-                <div class="preloader-bar-fill" id="preloaderFill"></div>
-            </div>
+            <div class="preloader-logo"><img src="assets/Logo.png" alt="100 CNA" /></div>
+            <div class="preloader-bar-track"><div class="preloader-bar-fill" id="preloaderFill"></div></div>
             <div class="preloader-counter" id="preloaderCounter">LOADING</div>
             <div class="preloader-status" id="preloaderStatus">CREATORS &amp; ARTISTS</div>
         </div>
     </div>
 
-    <!-- ==================== HEADER ==================== -->
     <nav class="navbar" id="navbar">
         <div class="container">
             <div class="nav-inner">
@@ -80,7 +74,6 @@
         </div>
     </nav>
 
-    <!-- Mobile Slide-out Menu -->
     <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
     <div class="mobile-menu" id="mobileMenu">
         <button class="mobile-menu-close" id="mobileMenuClose"><i class="fa-solid fa-xmark"></i></button>
@@ -100,7 +93,6 @@
         </div>
     </div>
 
-    <!-- ==================== HUB SECTION ==================== -->
     <section class="hub-section" id="hub" data-animate>
         <div class="container">
             <div class="section-header">
@@ -117,9 +109,7 @@
                         <button class="btn-search" onclick="searchHubMembers()"><i class="fa-solid fa-search"></i> Search</button>
                         <button class="btn-clear" onclick="clearHubSearch()"><i class="fa-solid fa-times"></i></button>
                     </div>
-                    <span class="search-result-count">
-                        Showing <span id="hubShowingCount">0</span> creators
-                    </span>
+                    <span class="search-result-count">Showing <span id="hubShowingCount">0</span> creators</span>
                 </div>
             </div>
 
@@ -130,26 +120,23 @@
                 </div>
             </div>
             <div class="see-more-container" id="hubSeeMore" style="display:none;">
-                <button class="see-more-btn" onclick="loadMoreHubMembers()">
-                    See More <i class="fa-solid fa-arrow-right"></i>
-                </button>
+                <button class="see-more-btn" onclick="loadMoreHubMembers()">See More <i class="fa-solid fa-arrow-right"></i></button>
             </div>
         </div>
     </section>
 
-    <!-- ==================== COMMUNITY SECTION ==================== -->
-    <section class="community-section" id="community" data-animate>
+    <section class="community-section" id="community" data-animate style="background: var(--cna-black);">
         <div class="container">
-            <div class="section-header" style="text-align:center; max-width:800px; margin: 0 auto 40px auto;">
-                <span class="section-number">02 // CREATIVE NETWORK</span>
-                <h2 class="section-title" style="text-align:center;">Join 100 CNA<span class="highlight-red">.</span></h2>
-                <p class="section-subtitle" style="text-align:center; margin:0 auto;">Are you a creator or artist? Tell us what you do and show us your work.</p>
+            <div class="section-header" style="text-align:center; max-width:800px; margin: 0 auto 48px auto;">
+                <span class="section-number" style="background: rgba(255,212,0,0.15); color: var(--cna-yellow);">02 // CREATIVE NETWORK</span>
+                <h2 class="section-title" style="color:var(--cna-white); text-align:center;">Join 100 CNA<span class="highlight-red">.</span></h2>
+                <p class="section-subtitle" style="color:rgba(255,255,255,0.7); text-align:center; margin:0 auto;">Are you a creator or artist? Tell us what you do and show us your work.</p>
             </div>
             <div class="community-grid">
                 <div class="community-content">
-                    <h3>Creators Community</h3>
-                    <p>Connect with writers, creatives, and culture-shapers building something real. Add yourself. Discover talent. Collaborate.</p>
-                    <div class="road-to-100">
+                    <h3 style="color:var(--cna-white);">Creators Community</h3>
+                    <p style="color:rgba(255,255,255,0.75);">Connect with writers, creatives, and culture-shapers building something real. Add yourself. Discover talent. Collaborate.</p>
+                    <div class="road-to-100" style="background: rgba(255,255,255,0.05);">
                         <span class="road-label">ROAD TO 100</span>
                         <div class="road-counter">
                             <span class="road-number" id="memberCount">...</span>
@@ -160,7 +147,7 @@
                         </div>
                         <p class="road-status" id="roadStatus">Loading creators...</p>
                     </div>
-                    <ul class="community-benefits">
+                    <ul class="community-benefits" style="color:rgba(255,255,255,0.85);">
                         <li><i class="fa-regular fa-circle-check"></i> Creative Opportunities</li>
                         <li><i class="fa-regular fa-circle-check"></i> Editorial Features</li>
                         <li><i class="fa-regular fa-circle-check"></i> Events &amp; Networking</li>
@@ -168,7 +155,7 @@
                         <li><i class="fa-regular fa-circle-check"></i> Brand Collaborations</li>
                     </ul>
                     <div style="margin-top: 24px;">
-                        <a href="#community-form" class="btn-primary" onclick="document.getElementById('community-form').scrollIntoView({behavior:'smooth'}); return false;">
+                        <a href="#community-form" class="btn-primary" style="background: var(--cna-yellow); color: var(--cna-black); border-color: var(--cna-yellow);" onclick="document.getElementById('community-form').scrollIntoView({behavior:'smooth'}); return false;">
                             <i class="fa-regular fa-paper-plane"></i> Join 100 CNA
                         </a>
                     </div>
@@ -181,24 +168,14 @@
                             <input type="file" id="memberPhotos" accept="image/*" multiple required />
                             <small>Upload 1 to 3 images (PNG, JPG, JPEG)</small>
                         </div>
-                        <div class="form-group">
-                            <input type="text" id="memberName" placeholder="Full Name" required />
-                        </div>
-                        <div class="form-group">
-                            <input type="email" id="memberEmail" placeholder="Email Address" required />
-                        </div>
-                        <div class="form-group">
-                            <input type="text" id="memberRole" placeholder="Discipline / Role (e.g., Photographer, Writer, Brand Strategist)" required />
-                        </div>
-                        <div class="form-group">
-                            <input type="text" id="memberLocation" placeholder="Location (e.g., Johannesburg)" />
-                        </div>
+                        <div class="form-group"><input type="text" id="memberName" placeholder="Full Name" required /></div>
+                        <div class="form-group"><input type="email" id="memberEmail" placeholder="Email Address" required /></div>
+                        <div class="form-group"><input type="text" id="memberRole" placeholder="Discipline / Role (e.g., Photographer, Writer)" required /></div>
+                        <div class="form-group"><input type="text" id="memberLocation" placeholder="Location (e.g., Johannesburg)" /></div>
                         <div class="form-group">
                             <textarea id="memberDescription" placeholder="Bio — tell us about your creative focus, skills, and qualifications" rows="3"></textarea>
                         </div>
-                        <div class="form-group">
-                            <input type="url" id="memberWebsite" placeholder="Website or Portfolio Link (optional)" />
-                        </div>
+                        <div class="form-group"><input type="url" id="memberWebsite" placeholder="Website or Portfolio Link (optional)" /></div>
                         <div class="form-group social-group">
                             <label>Social Media (optional)</label>
                             <div class="social-row">
@@ -230,7 +207,6 @@
         </div>
     </section>
 
-    <!-- ==================== MEMBER PROFILE MODAL ==================== -->
     <div class="member-modal" id="memberModal">
         <div class="member-modal-overlay" id="memberModalOverlay"></div>
         <div class="member-modal-content">
@@ -239,9 +215,18 @@
         </div>
     </div>
 
-    <!-- ==================== FOOTER ==================== -->
     <footer class="footer">
         <div class="container">
+            <div class="footer-page-nav">
+                <div class="footer-page-nav-inner">
+                    <a href="/" data-page="home"><span class="nav-num">01</span> Home</a>
+                    <a href="/profiles.html" data-page="creators"><span class="nav-num">02</span> Creators</a>
+                    <a href="/stories.html" data-page="stories"><span class="nav-num">03</span> Stories</a>
+                    <a href="/work.html" data-page="projects"><span class="nav-num">04</span> Projects</a>
+                    <a href="/contact.html" data-page="join"><span class="nav-num">05</span> Join CNA</a>
+                    <a href="/about.html" data-page="about"><span class="nav-num">06</span> About</a>
+                </div>
+            </div>
             <div class="footer-content">
                 <div class="footer-top">
                     <img src="assets/Logo.png" alt="100 CNA" class="footer-logo" loading="lazy" />
@@ -267,37 +252,30 @@
     </footer>
 
     <script>
-        // ==========================================
-        // API HELPER
-        // ==========================================
         function apiUrl(path, params = {}) {
             const queryParams = new URLSearchParams({ path, ...params });
             return `/api?${queryParams.toString()}`;
         }
 
-        // ==========================================
-        // SOCIAL META
-        // ==========================================
-        const SOCIAL_META = {
-            instagram: { icon: 'fa-brands fa-instagram', label: 'Instagram', url: (h) => `https://instagram.com/${h}` },
-            tiktok:    { icon: 'fa-brands fa-tiktok',    label: 'TikTok',    url: (h) => `https://tiktok.com/@${h}` },
-            twitter:   { icon: 'fa-brands fa-x-twitter', label: 'Twitter/X', url: (h) => `https://x.com/${h}` },
-            linkedin:  { icon: 'fa-brands fa-linkedin-in',label: 'LinkedIn', url: (h) => `https://linkedin.com/in/${h}` },
-            youtube:   { icon: 'fa-brands fa-youtube',   label: 'YouTube',   url: (h) => `https://youtube.com/@${h}` },
-            facebook:  { icon: 'fa-brands fa-facebook-f',label: 'Facebook',  url: (h) => `https://facebook.com/${h}` },
-            behance:   { icon: 'fa-brands fa-behance',   label: 'Behance',   url: (h) => `https://behance.net/${h}` },
-            pinterest: { icon: 'fa-brands fa-pinterest-p',label:'Pinterest', url: (h) => `https://pinterest.com/${h}` },
-        };
+        // Footer active page
+        (function(){
+            const path = window.location.pathname;
+            const map = {
+                '/': 'home', '/index.html': 'home',
+                '/profiles.html': 'creators',
+                '/stories.html': 'stories',
+                '/work.html': 'projects',
+                '/contact.html': 'join',
+                '/about.html': 'about'
+            };
+            const key = map[path] || map[path.replace(/\/$/, '') || '/'] || '';
+            if (key) {
+                const active = document.querySelector(`.footer-page-nav a[data-page="${key}"]`);
+                if (active) active.classList.add('active');
+            }
+        })();
 
-        function optimizeImage(url, width = 400) {
-            if (!url) return url;
-            if (!url.includes('res.cloudinary.com')) return url;
-            return url.replace('/upload/', `/upload/f_auto,q_auto:good,w_${width},c_limit/`);
-        }
-
-        // ==========================================
-        // PRELOADER
-        // ==========================================
+        // Preloader
         (function(){
             const preloader = document.getElementById('site-preloader');
             const fill = document.getElementById('preloaderFill');
@@ -319,9 +297,24 @@
             setTimeout(() => preloader && preloader.classList.add('loaded'), 3000);
         })();
 
-        // ==========================================
-        // HAMBURGER MENU
-        // ==========================================
+        const SOCIAL_META = {
+            instagram: { icon: 'fa-brands fa-instagram', label: 'Instagram', url: (h) => `https://instagram.com/${h}` },
+            tiktok:    { icon: 'fa-brands fa-tiktok',    label: 'TikTok',    url: (h) => `https://tiktok.com/@${h}` },
+            twitter:   { icon: 'fa-brands fa-x-twitter', label: 'Twitter/X', url: (h) => `https://x.com/${h}` },
+            linkedin:  { icon: 'fa-brands fa-linkedin-in',label: 'LinkedIn', url: (h) => `https://linkedin.com/in/${h}` },
+            youtube:   { icon: 'fa-brands fa-youtube',   label: 'YouTube',   url: (h) => `https://youtube.com/@${h}` },
+            facebook:  { icon: 'fa-brands fa-facebook-f',label: 'Facebook',  url: (h) => `https://facebook.com/${h}` },
+            behance:   { icon: 'fa-brands fa-behance',   label: 'Behance',   url: (h) => `https://behance.net/${h}` },
+            pinterest: { icon: 'fa-brands fa-pinterest-p',label:'Pinterest', url: (h) => `https://pinterest.com/${h}` },
+        };
+
+        function optimizeImage(url, width = 400) {
+            if (!url) return url;
+            if (!url.includes('res.cloudinary.com')) return url;
+            return url.replace('/upload/', `/upload/f_auto,q_auto:good,w_${width},c_limit/`);
+        }
+
+        // Hamburger
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const mobileMenu = document.getElementById('mobileMenu');
         const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
@@ -345,9 +338,6 @@
             mobileMenuClose.addEventListener('click', closeMobileMenu);
         }
 
-        // ==========================================
-        // MEMBER COUNT
-        // ==========================================
         const MAX_MEMBERS = 100;
 
         async function getMemberCount() {
@@ -358,42 +348,34 @@
                     return data.count || 0;
                 }
                 return 0;
-            } catch (error) {
-                return 0;
-            }
+            } catch (error) { return 0; }
         }
 
         function updateCounterDisplay(count) {
             const counter = document.getElementById('memberCount');
             const progress = document.getElementById('progressBar');
             const status = document.getElementById('roadStatus');
-
             if (count === null || count === undefined) {
                 if (counter) counter.textContent = '...';
                 if (progress) progress.style.width = '0%';
                 if (status) status.textContent = 'Loading creators...';
                 return;
             }
-
             if (counter) counter.textContent = count;
             if (progress) progress.style.width = ((count || 0) / MAX_MEMBERS) * 100 + '%';
             if (status) status.textContent = (count || 0) + ' creators have joined the journey';
         }
 
-        // ==========================================
-        // HUB MEMBERS
-        // ==========================================
         let allHubMembers = [];
         let filteredHubMembers = [];
         let hubShowingAll = false;
         const HUB_INITIAL = 6;
 
-        async function loadHubMembers(reset = true) {
+        async function loadHubMembers() {
             try {
                 const response = await fetch(apiUrl('members', { status: 'accepted', limit: 200 }));
                 if (response.ok) {
                     const data = await response.json();
-                    // Sort by signup order (oldest first) so CNA numbers reflect join order
                     allHubMembers = (data.members || []).slice().sort((a, b) => {
                         const da = new Date(a.created_at || a.timestamp || 0);
                         const db = new Date(b.created_at || b.timestamp || 0);
@@ -403,15 +385,12 @@
                     document.getElementById('hubShowingCount').textContent = allHubMembers.length;
                     renderHubGrid();
                 }
-            } catch (error) {
-                console.log('Could not load hub members');
-            }
+            } catch (error) { console.log('Could not load hub members'); }
         }
 
         function searchHubMembers() {
             const searchInput = document.getElementById('hubSearchInput');
             const searchTerm = searchInput.value.trim().toLowerCase();
-
             if (!searchTerm) {
                 filteredHubMembers = allHubMembers;
             } else {
@@ -420,13 +399,9 @@
                     const role = (member.role || '').toLowerCase();
                     const description = (member.description || '').toLowerCase();
                     const email = (member.email || '').toLowerCase();
-                    return name.includes(searchTerm) ||
-                           role.includes(searchTerm) ||
-                           description.includes(searchTerm) ||
-                           email.includes(searchTerm);
+                    return name.includes(searchTerm) || role.includes(searchTerm) || description.includes(searchTerm) || email.includes(searchTerm);
                 });
             }
-
             document.getElementById('hubShowingCount').textContent = filteredHubMembers.length;
             hubShowingAll = false;
             renderHubGrid();
@@ -443,15 +418,12 @@
         function renderHubGrid() {
             const container = document.getElementById('hubGrid');
             const seeMoreWrap = document.getElementById('hubSeeMore');
-
             const membersToShow = hubShowingAll ? filteredHubMembers : filteredHubMembers.slice(0, HUB_INITIAL);
-
             if (filteredHubMembers.length === 0) {
                 container.innerHTML = `<div class="hub-empty"><p>${allHubMembers.length === 0 ? 'No creators yet. Be the first to join!' : 'No creators match your search.'}</p></div>`;
                 seeMoreWrap.style.display = 'none';
                 return;
             }
-
             container.innerHTML = membersToShow.map((member) => {
                 const displayImage = member.selectedImage || member.selected_image || member.image1 || '';
                 const img = displayImage ? optimizeImage(displayImage, 400) : '';
@@ -459,27 +431,12 @@
                 const role = member.role || 'Creative';
                 const description = member.description || '';
                 const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-
-                // CNA number — derived from position in the signup-ordered list
-                const originalIndex = allHubMembers.findIndex(m =>
-                    (m.id && member.id) ? m.id === member.id : m.email === member.email
-                );
+                const originalIndex = allHubMembers.findIndex(m => (m.id && member.id) ? m.id === member.id : m.email === member.email);
                 const cnaNum = String((originalIndex >= 0 ? originalIndex : 0) + 1).padStart(3, '0');
-
-                let imageHtml = '';
-                if (img) {
-                    imageHtml = `<img src="${img}" alt="${name}" loading="lazy" />`;
-                } else {
-                    imageHtml = `<div class="avatar-fallback">${initials || '?'}</div>`;
-                }
-
-                let descriptionHtml = '';
-                if (description && description.trim()) {
-                    descriptionHtml = `<p class="hub-description">${description}</p>`;
-                } else {
-                    descriptionHtml = `<p class="hub-description-empty">No description provided</p>`;
-                }
-
+                const imageHtml = img ? `<img src="${img}" alt="${name}" loading="lazy" />` : `<div class="avatar-fallback">${initials || '?'}</div>`;
+                const descriptionHtml = description && description.trim()
+                    ? `<p class="hub-description">${description}</p>`
+                    : `<p class="hub-description-empty">No description provided</p>`;
                 return `
                     <div class="hub-card" onclick='openMemberModal(${JSON.stringify(member).replace(/'/g, "&#39;")})'>
                         <div class="hub-image">
@@ -494,7 +451,6 @@
                     </div>
                 `;
             }).join('');
-
             if (filteredHubMembers.length > HUB_INITIAL) {
                 seeMoreWrap.style.display = 'block';
                 const btn = seeMoreWrap.querySelector('button');
@@ -516,22 +472,14 @@
             }
         }
 
-        // ==========================================
-        // MEMBER PROFILE MODAL
-        // ==========================================
         function openMemberModal(member) {
             const selectedImage = member.selectedImage || member.selected_image || member.image1 || '';
             const img = selectedImage ? optimizeImage(selectedImage, 800) : '';
             const joinDate = member.created_at || member.timestamp
                 ? new Date(member.created_at || member.timestamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
                 : '';
-
-            // CNA number
-            const originalIndex = allHubMembers.findIndex(m =>
-                (m.id && member.id) ? m.id === member.id : m.email === member.email
-            );
+            const originalIndex = allHubMembers.findIndex(m => (m.id && member.id) ? m.id === member.id : m.email === member.email);
             const cnaNum = String((originalIndex >= 0 ? originalIndex : 0) + 1).padStart(3, '0');
-
             let imageHtml = '';
             if (img) {
                 imageHtml = `<img src="${img}" alt="${member.name}" />`;
@@ -539,83 +487,42 @@
                 const initials = (member.name || '?').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
                 imageHtml = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--cna-black-soft);font-size:80px;color:var(--cna-yellow);font-weight:800;font-family:var(--font-display);">${initials}</div>`;
             }
-
             let socialHtml = '';
             if (member.social_platform && member.social_handle) {
                 const meta = SOCIAL_META[member.social_platform];
                 if (meta) {
-                    const url = meta.url(member.social_handle);
-                    socialHtml = `
-                        <a href="${url}" target="_blank" rel="noopener" class="member-social-link">
-                            <i class="${meta.icon}"></i>
-                            <span>${meta.label}: @${member.social_handle}</span>
-                        </a>
-                    `;
+                    socialHtml = `<a href="${meta.url(member.social_handle)}" target="_blank" rel="noopener" class="member-social-link"><i class="${meta.icon}"></i><span>${meta.label}: @${member.social_handle}</span></a>`;
                 }
             }
-
             let websiteHtml = '';
             if (member.website) {
                 const display = member.website.replace(/^https?:\/\//, '').replace(/\/$/, '');
-                websiteHtml = `
-                    <a href="${member.website}" target="_blank" rel="noopener" class="member-website-link">
-                        <i class="fa-solid fa-paperclip"></i>
-                        <span>${display}</span>
-                    </a>
-                `;
+                websiteHtml = `<a href="${member.website}" target="_blank" rel="noopener" class="member-website-link"><i class="fa-solid fa-paperclip"></i><span>${display}</span></a>`;
             }
-
             let descriptionHtml = '';
             if (member.description && member.description.trim()) {
-                descriptionHtml = `
-                    <div class="member-modal-description">
-                        <span class="member-modal-label">About</span>
-                        <p>${member.description}</p>
-                    </div>
-                `;
+                descriptionHtml = `<div class="member-modal-description"><span class="member-modal-label">About</span><p>${member.description}</p></div>`;
             }
-
             let skillsHtml = '';
             if (member.skills) {
-                skillsHtml = `
-                    <div class="member-modal-skills">
-                        <span class="member-modal-label">Skills &amp; Focus</span>
-                        <p>${member.skills}</p>
-                    </div>
-                `;
+                skillsHtml = `<div class="member-modal-skills"><span class="member-modal-label">Skills &amp; Focus</span><p>${member.skills}</p></div>`;
             }
-
-            let roleHtml = '';
-            if (member.role) {
-                roleHtml = `<span class="member-modal-role">${member.role}</span>`;
-            }
-
-            let emailHtml = '';
-            if (member.email) {
-                emailHtml = `<div class="member-modal-email"><i class="fa-regular fa-envelope"></i> ${member.email}</div>`;
-            }
+            let roleHtml = member.role ? `<span class="member-modal-role">${member.role}</span>` : '';
+            let emailHtml = member.email ? `<div class="member-modal-email"><i class="fa-regular fa-envelope"></i> ${member.email}</div>` : '';
 
             document.getElementById('memberModalBody').innerHTML = `
-                <div class="member-modal-photo">
-                    ${imageHtml}
-                </div>
+                <div class="member-modal-photo">${imageHtml}</div>
                 <div class="member-modal-details">
-                    <span class="member-modal-label" style="margin-bottom:6px;">CNA ${cnaNum}</span>
+                    <span class="member-modal-label" style="margin-bottom:8px;">CNA ${cnaNum}</span>
                     <h2 class="member-modal-name">${member.name || 'Anonymous'}</h2>
                     ${emailHtml}
                     ${roleHtml}
                     ${joinDate ? `<span class="member-modal-date">Joined ${joinDate}</span>` : ''}
                     ${descriptionHtml}
                     ${skillsHtml}
-                    ${(socialHtml || websiteHtml) ? `
-                        <div class="member-modal-links">
-                            ${socialHtml}
-                            ${websiteHtml}
-                        </div>
-                    ` : ''}
+                    ${(socialHtml || websiteHtml) ? `<div class="member-modal-links">${socialHtml}${websiteHtml}</div>` : ''}
                 </div>
             `;
-
             document.getElementById('memberModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -624,19 +531,13 @@
             document.getElementById('memberModal').classList.remove('active');
             document.body.style.overflow = '';
         }
-
         document.getElementById('memberModalClose').addEventListener('click', closeMemberModal);
         document.getElementById('memberModalOverlay').addEventListener('click', closeMemberModal);
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeMemberModal();
-        });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMemberModal(); });
 
-        // ==========================================
-        // SIGNUP FORM
-        // ==========================================
+        // Signup
         document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-
             const name = document.getElementById('memberName').value;
             const email = document.getElementById('memberEmail').value;
             const role = document.getElementById('memberRole').value;
@@ -648,18 +549,9 @@
             const fileInput = document.getElementById('memberPhotos');
             const files = fileInput.files;
 
-            if (!name || !email || !role) {
-                alert('Please fill in all required fields.');
-                return;
-            }
-            if (files.length === 0) {
-                alert('Please upload at least one photo.');
-                return;
-            }
-            if (files.length > 3) {
-                alert('Please upload a maximum of 3 photos.');
-                return;
-            }
+            if (!name || !email || !role) { alert('Please fill in all required fields.'); return; }
+            if (files.length === 0) { alert('Please upload at least one photo.'); return; }
+            if (files.length > 3) { alert('Please upload a maximum of 3 photos.'); return; }
 
             const submitBtn = document.getElementById('signupSubmitBtn');
             const form = document.getElementById('signupForm');
@@ -675,36 +567,24 @@
                     formData.append('file', file);
                     formData.append('upload_preset', 'members');
                     formData.append('folder', '100 TRUSTEES');
-
-                    const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/dfozevcbl/image/upload`, {
-                        method: 'POST',
-                        body: formData
-                    });
-
+                    const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/dfozevcbl/image/upload`, { method: 'POST', body: formData });
                     if (uploadResponse.ok) {
                         const data = await uploadResponse.json();
                         imageUrls.push(data.secure_url);
-                    } else {
-                        console.error('Upload failed:', await uploadResponse.text());
                     }
                 }
-
                 if (imageUrls.length === 0) {
                     alert('Failed to upload images. Please try again.');
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Application';
                     return;
                 }
-
-                // Fold location into role if provided, so it displays cleanly
                 const roleWithLocation = location ? `${role} / ${location}` : role;
-
                 const response = await fetch(apiUrl('signup'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        name,
-                        email,
+                        name, email,
                         role: roleWithLocation,
                         description: description || '',
                         skills: '',
@@ -717,14 +597,11 @@
                         status: 'pending'
                     })
                 });
-
                 const result = await response.json();
-
                 if (result.success) {
                     form.style.display = 'none';
                     successDiv.style.display = 'block';
                     fileInput.value = '';
-
                     const count = await getMemberCount();
                     updateCounterDisplay(count);
                     loadHubMembers();
@@ -732,17 +609,13 @@
                     alert(result.error || 'Something went wrong. Please try again.');
                 }
             } catch (error) {
-                console.error('Error:', error);
                 alert('❌ ' + error.message);
             }
-
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Application';
         });
 
-        // ==========================================
-        // SCROLL REVEAL
-        // ==========================================
+        // Scroll reveal
         const animatedElements = document.querySelectorAll('[data-animate]');
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
@@ -754,9 +627,6 @@
         }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
         animatedElements.forEach(el => revealObserver.observe(el));
 
-        // ==========================================
-        // NAVBAR SCROLL
-        // ==========================================
         const navbar = document.getElementById('navbar');
         if (navbar) {
             window.addEventListener('scroll', () => {
@@ -764,12 +634,9 @@
             }, { passive: true });
         }
 
-        // ==========================================
-        // INIT
-        // ==========================================
         document.addEventListener('DOMContentLoaded', async function() {
             updateCounterDisplay(null);
-            await loadHubMembers(true);
+            await loadHubMembers();
             const memberCount = await getMemberCount();
             updateCounterDisplay(memberCount);
             console.log('👥 100 CNA — Creators Page Loaded');
