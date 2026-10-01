@@ -9,11 +9,17 @@
 
     <meta property="og:title" content="100 CNA — Creators" />
     <meta property="og:description" content="Meet the people creating what's next." />
-    <meta property="og:image" content="assets/Logo.png" />
+    <meta property="og:image" content="https://www.100hub.co.za/assets/Logo.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://www.100hub.co.za/profiles.html" />
     <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://www.100hub.co.za/assets/Logo.png" />
 
-    <link rel="icon" type="image/png" href="assets/Logo.png" />
-    <link rel="apple-touch-icon" href="assets/Logo.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/Logo.png" />
+    <link rel="icon" type="image/png" sizes="180x180" href="assets/Logo.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/Logo.png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,8 +90,6 @@
             <a href="/work.html">Projects</a>
             <a href="/contact.html">Join CNA</a>
             <a href="/about.html">About</a>
-            <a href="/games.html">Games</a>
-            <a href="/rewards.html">Rewards</a>
         </div>
         <div class="mobile-menu-social">
             <a href="https://www.instagram.com/100creators_n_artists" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>
@@ -93,10 +97,10 @@
         </div>
     </div>
 
-    <section class="hub-section" id="hub" data-animate>
+    <section class="hub-section" id="hub" data-animate style="padding: 180px 0 160px;">
         <div class="container">
             <div class="section-header">
-                <span class="section-number">01 // THE CNA HUB</span>
+                <span class="section-number">The CNA Hub</span>
                 <h2 class="section-title">100 CNA Hub<span class="highlight-red">.</span></h2>
                 <p class="section-subtitle">Meet The People Creating What's Next.</p>
             </div>
@@ -125,10 +129,10 @@
         </div>
     </section>
 
-    <section class="community-section" id="community" data-animate style="background: var(--cna-black);">
+    <section class="community-section" id="community" data-animate style="background: var(--cna-black); padding: 180px 0;">
         <div class="container">
-            <div class="section-header" style="text-align:center; max-width:800px; margin: 0 auto 48px auto;">
-                <span class="section-number" style="background: rgba(255,212,0,0.15); color: var(--cna-yellow);">02 // CREATIVE NETWORK</span>
+            <div class="section-header" style="text-align:center; max-width:800px; margin: 0 auto 72px auto;">
+                <span class="section-number" style="color: var(--cna-yellow);">Creative Network</span>
                 <h2 class="section-title" style="color:var(--cna-white); text-align:center;">Join 100 CNA<span class="highlight-red">.</span></h2>
                 <p class="section-subtitle" style="color:rgba(255,255,255,0.7); text-align:center; margin:0 auto;">Are you a creator or artist? Tell us what you do and show us your work.</p>
             </div>
@@ -154,7 +158,7 @@
                         <li><i class="fa-regular fa-circle-check"></i> Industry Conversations</li>
                         <li><i class="fa-regular fa-circle-check"></i> Brand Collaborations</li>
                     </ul>
-                    <div style="margin-top: 24px;">
+                    <div style="margin-top: 28px;">
                         <a href="#community-form" class="btn-primary" style="background: var(--cna-yellow); color: var(--cna-black); border-color: var(--cna-yellow);" onclick="document.getElementById('community-form').scrollIntoView({behavior:'smooth'}); return false;">
                             <i class="fa-regular fa-paper-plane"></i> Join 100 CNA
                         </a>
@@ -314,7 +318,6 @@
             return url.replace('/upload/', `/upload/f_auto,q_auto:good,w_${width},c_limit/`);
         }
 
-        // Hamburger
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const mobileMenu = document.getElementById('mobileMenu');
         const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
@@ -615,7 +618,6 @@
             submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Application';
         });
 
-        // Scroll reveal
         const animatedElements = document.querySelectorAll('[data-animate]');
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {

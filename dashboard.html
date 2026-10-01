@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard — 100 HUB</title>
+    <title>Dashboard — 100 CNA</title>
     
     <!-- Preconnect for faster loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1640,7 +1640,7 @@
                     </div>
                     <div class="form-group">
                         <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Writer</label>
-                        <input type="text" id="manualWriter" placeholder="100 HUB" />
+                        <input type="text" id="manualWriter" placeholder="100 CNA" />
                     </div>
                     <div class="form-group">
                         <label style="display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); margin-bottom:4px;">Article URL (Optional)</label>
@@ -2632,7 +2632,7 @@
             document.getElementById('manualImageUrl').value = '';
             document.getElementById('manualCaption').value = '';
             document.getElementById('manualPermalink').value = '';
-            document.getElementById('manualWriter').value = '100 HUB';
+            document.getElementById('manualWriter').value = '100 CNA';
             document.getElementById('postArticleUrl').value = '';
             document.getElementById('postMediaFile').value = '';
             document.getElementById('mediaPreview').style.display = 'none';
@@ -2760,7 +2760,7 @@
             const postId = document.getElementById('manualPostId').value.trim();
             const caption = document.getElementById('manualCaption').value.trim();
             const permalink = document.getElementById('manualPermalink').value.trim();
-            const writer = document.getElementById('manualWriter').value.trim() || '100 HUB';
+            const writer = document.getElementById('manualWriter').value.trim() || '100 CNA';
             const articleUrl = document.getElementById('postArticleUrl').value.trim();
 
             if (!postId) {
@@ -3028,7 +3028,7 @@
             if (!post) return;
             document.getElementById('editPostId').value = post.id;
             document.getElementById('editPostCaption').value = post.caption || '';
-            document.getElementById('editPostWriter').value = post.writer || '100 HUB';
+            document.getElementById('editPostWriter').value = post.writer || '100 CNA';
             document.getElementById('editPostArticleUrl').value = post.article_url || '';
             document.getElementById('editPostModal').classList.add('active');
             document.body.style.overflow = 'hidden';

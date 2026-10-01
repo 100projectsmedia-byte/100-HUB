@@ -28,7 +28,7 @@ async function sendEmail({ to, subject, html }) {
                 'Authorization': `Bearer ${apiKey}`
             },
             body: JSON.stringify({
-                from: `100 HUB <${EMAIL_FROM}>`,
+                from: `100 CNA <${EMAIL_FROM}>`,
                 to: [to],
                 reply_to: REPLY_TO_EMAIL,
                 subject,
@@ -50,7 +50,7 @@ async function sendConfirmationEmail(email, name) {
         <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1A1A1A;">
             <h1 style="font-size:26px;font-weight:700;margin-bottom:8px;">Hi ${name},</h1>
             <p style="font-size:16px;color:#4A4A4A;line-height:1.7;margin-bottom:24px;">
-                Thank you for applying to join the 100 HUB community! 🙌
+                Thank you for applying to join the 100 CNA community! 🙌
             </p>
             <p style="font-size:15px;color:#4A4A4A;line-height:1.7;margin-bottom:24px;">
                 We've received your application and we're excited to review your profile.
@@ -65,15 +65,15 @@ async function sendConfirmationEmail(email, name) {
             </div>
             <p style="font-size:14px;color:#8A8A8A;line-height:1.7;">
                 Follow us on Instagram 
-                <a href="https://instagram.com/100projectsmedia" style="color:#E31E24;">@100projectsmedia</a>.
+                <a href="https://instagram.com/100creators_n_artists" style="color:#E31E24;">@100creators_n_artists</a>.
             </p>
             <hr style="border:none;border-top:1px solid #E8E4DE;margin:32px 0;" />
-            <p style="font-size:12px;color:#B8B0A8;">100 HUB · Broadcasting &amp; Media Production Company</p>
+            <p style="font-size:12px;color:#B8B0A8;">100 CNA · Creators &amp; Artists</p>
         </div>
     `;
     await sendEmail({
         to: email,
-        subject: '✅ Application Received - 100 HUB',
+        subject: '✅ Application Received - 100 CNA',
         html
     });
 }
@@ -82,7 +82,7 @@ async function sendAdminMemberNotification(memberData) {
     const html = `
         <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1A1A1A;">
             <h1 style="font-size:24px;font-weight:700;margin-bottom:16px;">🔔 New Member Application</h1>
-            <p style="font-size:16px;color:#4A4A4A;margin-bottom:20px;">A new member has applied to join the 100 HUB community.</p>
+            <p style="font-size:16px;color:#4A4A4A;margin-bottom:20px;">A new member has applied to join the 100 CNA community.</p>
             
             <div style="background:#F5F5F5;border-radius:10px;padding:20px 24px;margin-bottom:24px;">
                 <p style="margin:0 0 10px;font-size:12px;color:#8A8A8A;text-transform:uppercase;letter-spacing:1px;">Applicant Details</p>
@@ -95,7 +95,7 @@ async function sendAdminMemberNotification(memberData) {
             </div>
             
             <div style="margin:24px 0; text-align:center;">
-                <a href="https://100hub.co.za/dashboard.html?tab=members&filter=pending" 
+                <a href="https://www.100hub.co.za/dashboard.html?tab=members&filter=pending" 
                    style="background:#E31E24;color:white;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:600;display:inline-block;font-size:16px;">
                    👁️ View in Dashboard
                 </a>
@@ -103,16 +103,16 @@ async function sendAdminMemberNotification(memberData) {
             
             <p style="font-size:14px;color:#4A4A4A;line-height:1.7;text-align:center;">
                 Or copy this link: <br>
-                <span style="color:#E31E24;word-break:break-all;">https://100hub.co.za/dashboard.html?tab=members&filter=pending</span>
+                <span style="color:#E31E24;word-break:break-all;">https://www.100hub.co.za/dashboard.html?tab=members&filter=pending</span>
             </p>
             
             <hr style="border:none;border-top:1px solid #E8E4DE;margin:32px 0;" />
-            <p style="font-size:12px;color:#B8B0A8;text-align:center;">100 HUB · Broadcasting &amp; Media Production Company</p>
+            <p style="font-size:12px;color:#B8B0A8;text-align:center;">100 CNA · Creators &amp; Artists</p>
         </div>
     `;
     await sendEmail({
         to: ADMIN_EMAIL,
-        subject: '🔔 New Member Application - 100 HUB',
+        subject: '🔔 New Member Application - 100 CNA',
         html
     });
 }
@@ -123,12 +123,12 @@ async function sendAcceptedEmail(email, name) {
             <h1 style="font-size:26px;font-weight:700;margin-bottom:8px;">Welcome to the 100 Family, ${name}!</h1>
             <p style="font-size:16px;color:#4A4A4A;line-height:1.7;margin-bottom:24px;">
                 Your application has been reviewed and we're excited to let you know — 
-                you've been <strong>officially accepted</strong> as a member of the 100 HUB creative community.
+                you've been <strong>officially accepted</strong> as a member of the 100 CNA creative community.
             </p>
             <div style="background:#F5F5F5;border-radius:10px;padding:20px 24px;margin-bottom:28px;">
                 <p style="margin:0 0 10px;font-size:12px;color:#8A8A8A;text-transform:uppercase;letter-spacing:1px;">What to expect</p>
                 <ul style="margin:0;padding-left:18px;font-size:14px;color:#4A4A4A;line-height:2;">
-                    <li>Your profile is now live on the 100 HUB</li>
+                    <li>Your profile is now live on the 100 CNA Hub</li>
                     <li>Creative opportunities and collaborations</li>
                     <li>Editorial features in 100 Magazine</li>
                     <li>Exclusive events and networking</li>
@@ -137,16 +137,16 @@ async function sendAcceptedEmail(email, name) {
             </div>
             <p style="font-size:14px;color:#8A8A8A;line-height:1.7;">
                 Follow us on Instagram 
-                <a href="https://instagram.com/100projectsmedia" style="color:#E31E24;">@100projectsmedia</a> 
+                <a href="https://instagram.com/100creators_n_artists" style="color:#E31E24;">@100creators_n_artists</a> 
                 and stay connected with the community.
             </p>
             <hr style="border:none;border-top:1px solid #E8E4DE;margin:32px 0;" />
-            <p style="font-size:12px;color:#B8B0A8;">100 HUB · Broadcasting &amp; Media Production Company</p>
+            <p style="font-size:12px;color:#B8B0A8;">100 CNA · Creators &amp; Artists</p>
         </div>
     `;
     await sendEmail({
         to: email,
-        subject: "🎉 You've been accepted to 100 HUB!",
+        subject: "🎉 You've been accepted to 100 CNA!",
         html
     });
 }
@@ -156,7 +156,7 @@ async function sendDeclinedEmail(email, name) {
         <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1A1A1A;">
             <h1 style="font-size:24px;font-weight:700;margin-bottom:8px;">Hello ${name},</h1>
             <p style="font-size:16px;color:#4A4A4A;line-height:1.7;margin-bottom:24px;">
-                Thank you for your interest in joining the 100 HUB community. After carefully reviewing your application,
+                Thank you for your interest in joining the 100 CNA community. After carefully reviewing your application,
                 we are unable to accept you as a member at this time.
             </p>
             <p style="font-size:15px;color:#4A4A4A;line-height:1.7;margin-bottom:24px;">
@@ -165,15 +165,15 @@ async function sendDeclinedEmail(email, name) {
             </p>
             <p style="font-size:14px;color:#8A8A8A;line-height:1.7;">
                 Follow us on Instagram 
-                <a href="https://instagram.com/100projectsmedia" style="color:#E31E24;">@100projectsmedia</a>.
+                <a href="https://instagram.com/100creators_n_artists" style="color:#E31E24;">@100creators_n_artists</a>.
             </p>
             <hr style="border:none;border-top:1px solid #E8E4DE;margin:32px 0;" />
-            <p style="font-size:12px;color:#B8B0A8;">100 HUB · Broadcasting &amp; Media Production Company</p>
+            <p style="font-size:12px;color:#B8B0A8;">100 CNA · Creators &amp; Artists</p>
         </div>
     `;
     await sendEmail({
         to: email,
-        subject: 'Update on your 100 HUB Application',
+        subject: 'Update on your 100 CNA Application',
         html
     });
 }
@@ -183,7 +183,7 @@ async function sendSubscriptionConfirmation(email) {
         <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1A1A1A;">
             <h1 style="font-size:26px;font-weight:700;margin-bottom:8px;">✅ You're Subscribed!</h1>
             <p style="font-size:16px;color:#4A4A4A;line-height:1.7;margin-bottom:24px;">
-                Thank you for subscribing to the 100 HUB newsletter. You'll receive updates on new projects, events, and creative opportunities.
+                Thank you for subscribing to the 100 CNA newsletter. You'll receive updates on new projects, events, and creative opportunities.
             </p>
             <div style="background:#F5F5F5;border-radius:10px;padding:20px 24px;margin-bottom:28px;">
                 <p style="margin:0 0 10px;font-size:12px;color:#8A8A8A;text-transform:uppercase;letter-spacing:1px;">What to expect</p>
@@ -196,15 +196,15 @@ async function sendSubscriptionConfirmation(email) {
             </div>
             <p style="font-size:14px;color:#8A8A8A;line-height:1.7;">
                 Follow us on Instagram 
-                <a href="https://instagram.com/100projectsmedia" style="color:#E31E24;">@100projectsmedia</a>.
+                <a href="https://instagram.com/100creators_n_artists" style="color:#E31E24;">@100creators_n_artists</a>.
             </p>
             <hr style="border:none;border-top:1px solid #E8E4DE;margin:32px 0;" />
-            <p style="font-size:12px;color:#B8B0A8;">100 HUB · Broadcasting &amp; Media Production Company</p>
+            <p style="font-size:12px;color:#B8B0A8;">100 CNA · Creators &amp; Artists</p>
         </div>
     `;
     await sendEmail({
         to: email,
-        subject: "✅ You're subscribed to 100 HUB!",
+        subject: "✅ You're subscribed to 100 CNA!",
         html
     });
 }
@@ -213,21 +213,21 @@ async function sendAdminSubscriptionNotification(email) {
     const html = `
         <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1A1A1A;">
             <h1 style="font-size:24px;font-weight:700;margin-bottom:16px;">📬 New Subscriber</h1>
-            <p style="font-size:16px;color:#4A4A4A;margin-bottom:20px;">A new user has subscribed to the 100 HUB newsletter.</p>
+            <p style="font-size:16px;color:#4A4A4A;margin-bottom:20px;">A new user has subscribed to the 100 CNA newsletter.</p>
             <div style="background:#F5F5F5;border-radius:10px;padding:20px 24px;margin-bottom:24px;">
                 <p style="margin:4px 0;"><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
                 <p style="margin:4px 0;"><strong>Subscribed:</strong> ${new Date().toLocaleString()}</p>
             </div>
             <p style="font-size:14px;color:#4A4A4A;line-height:1.7;">
-                <a href="https://100hub.co.za/dashboard.html?tab=subscriptions" style="color:#E31E24;font-weight:600;">View all subscribers →</a>
+                <a href="https://www.100hub.co.za/dashboard.html?tab=subscriptions" style="color:#E31E24;font-weight:600;">View all subscribers →</a>
             </p>
             <hr style="border:none;border-top:1px solid #E8E4DE;margin:32px 0;" />
-            <p style="font-size:12px;color:#B8B0A8;">100 HUB · Broadcasting &amp; Media Production Company</p>
+            <p style="font-size:12px;color:#B8B0A8;">100 CNA · Creators &amp; Artists</p>
         </div>
     `;
     await sendEmail({
         to: ADMIN_EMAIL,
-        subject: '📬 New Subscriber - 100 HUB',
+        subject: '📬 New Subscriber - 100 CNA',
         html
     });
 }
@@ -238,7 +238,7 @@ async function sendAdminSubscriptionNotification(email) {
 
 function generateToken() {
     const payload = {
-        expiresAt: Date.now() + 1000 * 60 * 60 * 4, // 4 hours
+        expiresAt: Date.now() + 1000 * 60 * 60 * 4,
         issuedAt: Date.now(),
         version: '1.0'
     };
@@ -247,7 +247,6 @@ function generateToken() {
 
 function verifyToken(token) {
     if (!token) return false;
-    
     try {
         const decoded = JSON.parse(Buffer.from(token, 'base64').toString('utf-8'));
         if (decoded.expiresAt && Date.now() > decoded.expiresAt) {
@@ -402,10 +401,6 @@ async function deleteMultipleFromCloudinary(urls) {
     }
     return results;
 }
-
-// ==========================================
-// HELPER FUNCTIONS
-// ==========================================
 
 async function uploadToCloudinary(mediaUrl, options = {}) {
     const { publicId = null, resourceType = 'image' } = options;
@@ -800,7 +795,7 @@ async function handlePosts(req, res) {
                 caption: caption || '',
                 permalink: permalink || `https://www.instagram.com/p/${post_id}/`,
                 instagram_url: finalInstagramUrl,
-                writer: writer || '100 HUB',
+                writer: writer || '100 CNA',
                 is_video: is_video || false,
                 video_url: video_url || '',
                 article_url: article_url || '',
