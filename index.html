@@ -35,225 +35,6 @@
 
     <link rel="stylesheet" href="style.css" />
     <link rel="preload" as="image" href="assets/Logo.png">
-
-    <style>
-        /* ==========================================
-           HERO VIDEO — full-bleed background
-           ========================================== */
-        .hero {
-            position: relative;
-            overflow: hidden;
-        }
-        .hero-video-wrapper {
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            overflow: hidden;
-            background: var(--cna-yellow);
-        }
-        .hero-video {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            transform: translate(-50%, -50%);
-            object-fit: cover;
-            pointer-events: none;
-        }
-        .hero-video-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-                to bottom,
-                rgba(244, 206, 61, 0.85) 0%,
-                rgba(244, 206, 61, 0.55) 45%,
-                rgba(244, 206, 61, 0.9) 100%
-            );
-        }
-        .hero-content,
-        .hero .container {
-            position: relative;
-            z-index: 1;
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .hero-video { display: none; }
-        }
-
-        /* ==========================================
-           JOIN MODAL — opens on homepage button click
-           ========================================== */
-        .join-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 6000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .join-modal.active { display: flex; }
-        .join-modal-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(12px);
-        }
-        .join-modal-content {
-            position: relative;
-            background: var(--cna-black);
-            border-radius: var(--radius);
-            width: 100%;
-            max-width: 560px;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 52px 44px 44px;
-            border: 1px solid rgba(255,212,0,0.15);
-            animation: joinModalIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        @keyframes joinModalIn {
-            from { opacity: 0; transform: translateY(20px) scale(0.97); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .join-modal-close {
-            position: absolute;
-            top: 16px; right: 16px;
-            background: var(--cna-yellow);
-            border: none;
-            width: 38px; height: 38px;
-            border-radius: 50%;
-            color: var(--cna-black);
-            cursor: pointer;
-            font-size: 16px;
-            transition: var(--transition-fast);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .join-modal-close:hover {
-            background: var(--cna-red);
-            color: var(--cna-white);
-            transform: rotate(90deg);
-        }
-        .join-modal-content h3 {
-            font-family: var(--font-display);
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--cna-white);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: -0.01em;
-        }
-        .join-modal-content .join-sub {
-            font-family: var(--font-body);
-            font-size: 14px;
-            color: rgba(255,255,255,0.6);
-            margin-bottom: 28px;
-            line-height: 1.6;
-        }
-        .join-modal-content .form-group {
-            margin-bottom: 18px;
-        }
-        .join-modal-content .form-group label {
-            display: block;
-            font-family: var(--font-mono);
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--cna-yellow);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            opacity: 0.8;
-        }
-        .join-modal-content input,
-        .join-modal-content textarea,
-        .join-modal-content select {
-            width: 100%;
-            padding: 14px 18px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: var(--radius-sm);
-            color: var(--cna-white);
-            font-size: 14px;
-            font-family: var(--font-body);
-            transition: var(--transition-fast);
-        }
-        .join-modal-content input::placeholder,
-        .join-modal-content textarea::placeholder { color: rgba(255,255,255,0.35); }
-        .join-modal-content input:focus,
-        .join-modal-content textarea:focus,
-        .join-modal-content select:focus { outline: none; border-color: var(--cna-yellow); }
-        .join-modal-content textarea { min-height: 90px; resize: vertical; }
-        .join-modal-content select option { background: var(--cna-black); color: var(--cna-white); }
-        .join-modal-content input[type="file"] {
-            padding: 10px;
-            font-size: 13px;
-        }
-        .join-modal-content small {
-            color: rgba(255,255,255,0.4);
-            font-size: 11px;
-            display: block;
-            margin-top: 8px;
-            font-family: var(--font-body);
-        }
-        .join-modal-content .join-submit {
-            width: 100%;
-            padding: 16px;
-            background: var(--cna-yellow);
-            color: var(--cna-black);
-            border: none;
-            border-radius: var(--radius-pill);
-            font-family: var(--font-display);
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            transition: var(--transition-fast);
-            margin-top: 8px;
-        }
-        .join-modal-content .join-submit:hover {
-            background: var(--cna-red);
-            color: var(--cna-white);
-            transform: translateY(-2px);
-        }
-        .join-modal-content .join-submit:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .join-modal-status {
-            margin-top: 16px;
-            font-size: 13px;
-            font-family: var(--font-body);
-            min-height: 22px;
-            text-align: center;
-        }
-        .join-modal-success {
-            text-align: center;
-            padding: 20px 0;
-        }
-        .join-modal-success i {
-            font-size: 48px;
-            color: var(--cna-yellow);
-            display: block;
-            margin-bottom: 14px;
-        }
-        .join-modal-success h4 {
-            font-family: var(--font-display);
-            font-size: 22px;
-            color: var(--cna-white);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-        .join-modal-success p {
-            color: rgba(255,255,255,0.7);
-            font-size: 14px;
-            line-height: 1.6;
-        }
-    </style>
 </head>
 <body class="page-home">
 
@@ -310,24 +91,17 @@
         </div>
     </div>
 
-    <!-- ==================== HERO ==================== -->
     <section class="hero" id="hero">
-        <div class="hero-video-wrapper">
-            <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="assets/Logo.png">
-                <source src="assets/hero.mp4" type="video/mp4">
-            </video>
-            <div class="hero-video-overlay"></div>
-        </div>
         <div class="container">
             <div class="hero-content">
                 <div class="hero-brand-header">
-                    <img src="assets/Logo.png" alt="100 CNA" class="hero-img" />
+                    <img src="assets/Logo.mp4" alt="100 CNA" class="hero-img" />
                 </div>
                 <h1 class="hero-title">Are You a Creator<br>or Artist?</h1>
                 <p class="hero-tagline">Tell us what you do and show us your work.</p>
                 <div class="hero-cta">
                     <a href="/profiles.html" class="btn-primary">Explore Creators <i class="fa-solid fa-arrow-right"></i></a>
-                    <button type="button" class="btn-secondary" id="joinNowBtn">Join 100 CNA</button>
+                    <a href="/contact.html" class="btn-secondary">Join 100 CNA</a>
                 </div>
                 <div class="hero-scroll-cue">
                     <span>The People Creating What's Next.</span>
@@ -337,57 +111,6 @@
         </div>
     </section>
 
-    <!-- ==================== JOIN MODAL ==================== -->
-    <div class="join-modal" id="joinModal">
-        <div class="join-modal-overlay" id="joinModalOverlay"></div>
-        <div class="join-modal-content">
-            <button class="join-modal-close" id="joinModalClose"><i class="fa-solid fa-xmark"></i></button>
-            <div id="joinModalForm">
-                <h3>Join 100 CNA</h3>
-                <p class="join-sub">Are you a creator or artist? Tell us what you do and show us your work.</p>
-                <form id="quickJoinForm">
-                    <div class="form-group">
-                        <label>Photo(s) — up to 3</label>
-                        <input type="file" id="quickPhotos" accept="image/*" multiple required />
-                        <small>PNG, JPG — max 10MB each</small>
-                    </div>
-                    <div class="form-group">
-                        <label>Full Name</label>
-                        <input type="text" id="quickName" required />
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" id="quickEmail" required />
-                    </div>
-                    <div class="form-group">
-                        <label>Discipline / Role</label>
-                        <input type="text" id="quickRole" placeholder="e.g. Photographer, Writer" required />
-                    </div>
-                    <div class="form-group">
-                        <label>Location</label>
-                        <input type="text" id="quickLocation" placeholder="e.g. Johannesburg" />
-                    </div>
-                    <div class="form-group">
-                        <label>Bio</label>
-                        <textarea id="quickDescription" placeholder="Tell us about your creative focus and skills"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Website / Portfolio (optional)</label>
-                        <input type="url" id="quickWebsite" />
-                    </div>
-                    <button type="submit" class="join-submit" id="quickJoinSubmit">Submit Application</button>
-                    <div class="join-modal-status" id="quickJoinStatus"></div>
-                </form>
-            </div>
-            <div class="join-modal-success" id="joinModalSuccess" style="display:none;">
-                <i class="fa-regular fa-circle-check"></i>
-                <h4>Application Submitted!</h4>
-                <p>We'll review your profile and be in touch soon.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== FEATURED CREATOR ==================== -->
     <section class="feed-section" id="featured" data-animate>
         <div class="container">
             <div class="section-header">
@@ -404,7 +127,6 @@
         </div>
     </section>
 
-    <!-- ==================== DOORWAY: EXPLORE CREATORS ==================== -->
     <section data-animate style="padding: 60px 0;">
         <div class="container">
             <div class="doorway-section">
@@ -422,7 +144,6 @@
         </div>
     </section>
 
-    <!-- ==================== DOORWAY: STORIES ==================== -->
     <section data-animate style="padding: 60px 0 120px;">
         <div class="container">
             <div class="doorway-section">
@@ -440,7 +161,6 @@
         </div>
     </section>
 
-    <!-- ==================== JOIN CTA ==================== -->
     <section class="community-section cna-dark" id="join" data-animate style="background: var(--cna-black); padding: 180px 0;">
         <div class="container">
             <div class="section-header" style="text-align:center; max-width:800px; margin:0 auto 72px auto;">
@@ -449,13 +169,12 @@
                 <p class="section-subtitle" style="color:rgba(255,255,255,0.7); text-align:center; margin: 0 auto;">Are you a creator or artist? Tell us what you do and show us your work.</p>
             </div>
             <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-top: 48px;">
-                <button type="button" class="btn-primary" id="joinBottomBtn" style="background: var(--cna-yellow); color: var(--cna-black); border-color: var(--cna-yellow);">Apply to Join <i class="fa-solid fa-arrow-right"></i></button>
-                <button type="button" class="btn-secondary" id="joinBottomBtn2" style="color: var(--cna-yellow); border-color: var(--cna-yellow);">Submit Your Profile</button>
+                <a href="/contact.html" class="btn-primary" style="background: var(--cna-yellow); color: var(--cna-black); border-color: var(--cna-yellow);">Apply to Join <i class="fa-solid fa-arrow-right"></i></a>
+                <a href="/profiles.html#community-form" class="btn-secondary" style="color: var(--cna-yellow); border-color: var(--cna-yellow);">Submit Your Profile</a>
             </div>
         </div>
     </section>
 
-    <!-- ==================== PARTNERS ==================== -->
     <section class="partners-section" id="partners" data-animate>
         <div class="container">
             <div class="section-header" style="text-align:center; max-width:800px; margin: 0 auto 56px auto;">
@@ -540,10 +259,11 @@
             }
         })();
 
-        // Session-aware preloader
+        // Session-aware preloader — only runs on first page of the session
         (function(){
             const preloader = document.getElementById('site-preloader');
             if (!preloader) return;
+
             const alreadyLoaded = sessionStorage.getItem('cna_preloader_shown');
             if (alreadyLoaded === 'true') {
                 preloader.classList.add('loaded');
@@ -551,6 +271,7 @@
                 return;
             }
             sessionStorage.setItem('cna_preloader_shown', 'true');
+
             const fill = document.getElementById('preloaderFill');
             const counter = document.getElementById('preloaderCounter');
             let pct = 0;
@@ -593,133 +314,6 @@
             mobileMenuClose.addEventListener('click', closeMobileMenu);
         }
 
-        // ==========================================
-        // JOIN MODAL — open / close / submit
-        // ==========================================
-        const joinModal = document.getElementById('joinModal');
-        const joinModalOverlay = document.getElementById('joinModalOverlay');
-        const joinModalClose = document.getElementById('joinModalClose');
-        const joinModalForm = document.getElementById('joinModalForm');
-        const joinModalSuccess = document.getElementById('joinModalSuccess');
-        const quickJoinForm = document.getElementById('quickJoinForm');
-        const quickJoinStatus = document.getElementById('quickJoinStatus');
-        const quickJoinSubmit = document.getElementById('quickJoinSubmit');
-
-        function openJoinModal() {
-            joinModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeJoinModal() {
-            joinModal.classList.remove('active');
-            document.body.style.overflow = '';
-            // reset form after close
-            setTimeout(() => {
-                joinModalForm.style.display = '';
-                joinModalSuccess.style.display = 'none';
-                quickJoinForm.reset();
-                quickJoinStatus.textContent = '';
-                quickJoinSubmit.disabled = false;
-                quickJoinSubmit.textContent = 'Submit Application';
-            }, 300);
-        }
-
-        document.getElementById('joinNowBtn').addEventListener('click', openJoinModal);
-        document.getElementById('joinBottomBtn').addEventListener('click', openJoinModal);
-        document.getElementById('joinBottomBtn2').addEventListener('click', openJoinModal);
-        joinModalOverlay.addEventListener('click', closeJoinModal);
-        joinModalClose.addEventListener('click', closeJoinModal);
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && joinModal.classList.contains('active')) closeJoinModal();
-        });
-
-        // Submit — upload images to Cloudinary, then POST to /api?path=signup
-        quickJoinForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const name = document.getElementById('quickName').value.trim();
-            const email = document.getElementById('quickEmail').value.trim();
-            const role = document.getElementById('quickRole').value.trim();
-            const location = document.getElementById('quickLocation').value.trim();
-            const description = document.getElementById('quickDescription').value.trim();
-            const website = document.getElementById('quickWebsite').value.trim();
-            const files = document.getElementById('quickPhotos').files;
-
-            if (!name || !email || !role) {
-                quickJoinStatus.innerHTML = '<span style="color:#FF6B6B;">Please fill in the required fields.</span>';
-                return;
-            }
-            if (files.length === 0) {
-                quickJoinStatus.innerHTML = '<span style="color:#FF6B6B;">Please upload at least one photo.</span>';
-                return;
-            }
-            if (files.length > 3) {
-                quickJoinStatus.innerHTML = '<span style="color:#FF6B6B;">Maximum 3 photos.</span>';
-                return;
-            }
-
-            quickJoinSubmit.disabled = true;
-            quickJoinSubmit.textContent = 'Uploading…';
-            quickJoinStatus.innerHTML = '<span style="color:#FFD400;">Uploading images…</span>';
-
-            try {
-                const imageUrls = [];
-                for (const file of files) {
-                    const fd = new FormData();
-                    fd.append('file', file);
-                    fd.append('upload_preset', 'members');
-                    fd.append('folder', '100 TRUSTEES');
-                    const up = await fetch('https://api.cloudinary.com/v1_1/dfozevcbl/image/upload', {
-                        method: 'POST',
-                        body: fd
-                    });
-                    if (up.ok) {
-                        const d = await up.json();
-                        imageUrls.push(d.secure_url);
-                    }
-                }
-                if (imageUrls.length === 0) throw new Error('Image upload failed');
-
-                quickJoinStatus.innerHTML = '<span style="color:#FFD400;">Submitting…</span>';
-                const roleWithLocation = location ? `${role} / ${location}` : role;
-
-                const res = await fetch(apiUrl('signup'), {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name,
-                        email,
-                        role: roleWithLocation,
-                        description: description || '',
-                        skills: '',
-                        website: website || '',
-                        socialPlatform: '',
-                        socialHandle: '',
-                        image1: imageUrls[0] || '',
-                        image2: imageUrls[1] || '',
-                        image3: imageUrls[2] || '',
-                        status: 'pending'
-                    })
-                });
-                const result = await res.json();
-
-                if (result.success) {
-                    joinModalForm.style.display = 'none';
-                    joinModalSuccess.style.display = 'block';
-                } else {
-                    quickJoinStatus.innerHTML = `<span style="color:#FF6B6B;">${result.error || 'Something went wrong.'}</span>`;
-                    quickJoinSubmit.disabled = false;
-                    quickJoinSubmit.textContent = 'Submit Application';
-                }
-            } catch (err) {
-                quickJoinStatus.innerHTML = `<span style="color:#FF6B6B;">❌ ${err.message}</span>`;
-                quickJoinSubmit.disabled = false;
-                quickJoinSubmit.textContent = 'Submit Application';
-            }
-        });
-
-        // ==========================================
-        // FEATURED CREATOR
-        // ==========================================
         async function loadFeaturedCreator() {
             const grid = document.getElementById('featuredCreatorGrid');
             try {
@@ -757,9 +351,6 @@
             }
         }
 
-        // ==========================================
-        // PARTNERS
-        // ==========================================
         async function loadPartners() {
             try {
                 const response = await fetch(apiUrl('partners'));
@@ -785,9 +376,6 @@
             `).join('');
         }
 
-        // ==========================================
-        // AD CARD
-        // ==========================================
         async function loadAd() {
             const adCard = document.getElementById('adCard');
             const adContent = document.getElementById('adCardContent');
@@ -815,9 +403,6 @@
             }
         }
 
-        // ==========================================
-        // SCROLL REVEAL + NAVBAR
-        // ==========================================
         const animatedElements = document.querySelectorAll('[data-animate]');
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
@@ -836,14 +421,11 @@
             }, { passive: true });
         }
 
-        // ==========================================
-        // INIT
-        // ==========================================
         document.addEventListener('DOMContentLoaded', function() {
             loadFeaturedCreator();
             loadPartners();
             setTimeout(loadAd, 800);
-            console.log('🏠 100 CNA — Home Loaded (hero video + inline join)');
+            console.log('🏠 100 CNA — Home Loaded');
         });
     </script>
 </body>
