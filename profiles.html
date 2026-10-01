@@ -97,10 +97,10 @@
         </div>
     </div>
 
-    <section class="hub-section" id="hub" data-animate style="padding: 180px 0 160px;">
+    <section class="hub-section" id="hub" data-animate style="padding: 220px 0 160px;">
         <div class="container">
             <div class="section-header">
-                <span class="section-number">The CNA Hub</span>
+                <span class="section-number">Creators / Hub</span>
                 <h2 class="section-title">100 CNA Hub<span class="highlight-red">.</span></h2>
                 <p class="section-subtitle">Meet The People Creating What's Next.</p>
             </div>
@@ -124,7 +124,7 @@
                 </div>
             </div>
             <div class="see-more-container" id="hubSeeMore" style="display:none;">
-                <button class="see-more-btn" onclick="loadMoreHubMembers()">See More <i class="fa-solid fa-arrow-right"></i></button>
+                <button class="see-more-btn" onclick="loadMoreHubMembers()">Show More Creators <i class="fa-solid fa-arrow-right"></i></button>
             </div>
         </div>
     </section>
@@ -132,7 +132,7 @@
     <section class="community-section" id="community" data-animate style="background: var(--cna-black); padding: 180px 0;">
         <div class="container">
             <div class="section-header" style="text-align:center; max-width:800px; margin: 0 auto 72px auto;">
-                <span class="section-number" style="color: var(--cna-yellow);">Creative Network</span>
+                <span class="section-number" style="color: var(--cna-yellow);">Creators / Join</span>
                 <h2 class="section-title" style="color:var(--cna-white); text-align:center;">Join 100 CNA<span class="highlight-red">.</span></h2>
                 <p class="section-subtitle" style="color:rgba(255,255,255,0.7); text-align:center; margin:0 auto;">Are you a creator or artist? Tell us what you do and show us your work.</p>
             </div>
@@ -230,6 +230,10 @@
                     <a href="/contact.html" data-page="join"><span class="nav-num">05</span> Join CNA</a>
                     <a href="/about.html" data-page="about"><span class="nav-num">06</span> About</a>
                 </div>
+                <div class="footer-page-nav-secondary">
+                    <a href="/games.html">Games — Coming Soon</a>
+                    <a href="/rewards.html">Rewards — Coming Soon</a>
+                </div>
             </div>
             <div class="footer-content">
                 <div class="footer-top">
@@ -261,7 +265,6 @@
             return `/api?${queryParams.toString()}`;
         }
 
-        // Footer active page
         (function(){
             const path = window.location.pathname;
             const map = {
@@ -279,7 +282,6 @@
             }
         })();
 
-        // Preloader
         (function(){
             const preloader = document.getElementById('site-preloader');
             const fill = document.getElementById('preloaderFill');
@@ -459,8 +461,8 @@
                 const btn = seeMoreWrap.querySelector('button');
                 if (btn) {
                     btn.innerHTML = hubShowingAll
-                        ? 'See Less <i class="fa-solid fa-arrow-up"></i>'
-                        : 'See More <i class="fa-solid fa-arrow-right"></i>';
+                        ? 'Show Fewer Creators <i class="fa-solid fa-arrow-up"></i>'
+                        : 'Show More Creators <i class="fa-solid fa-arrow-right"></i>';
                 }
             } else {
                 seeMoreWrap.style.display = 'none';
@@ -538,7 +540,6 @@
         document.getElementById('memberModalOverlay').addEventListener('click', closeMemberModal);
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMemberModal(); });
 
-        // Signup
         document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const name = document.getElementById('memberName').value;

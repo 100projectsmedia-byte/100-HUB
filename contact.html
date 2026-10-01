@@ -112,7 +112,7 @@
     <section class="contact-section" id="contact" data-animate style="padding: 220px 0 180px;">
         <div class="container">
             <div class="section-header" style="text-align:center; max-width:800px; margin:0 auto 96px auto;">
-                <span class="section-number">Join 100 CNA</span>
+                <span class="section-number">Join / Apply</span>
                 <h2 class="section-title" style="text-align:center;">Get In Touch<span class="highlight-red">.</span></h2>
                 <p class="section-subtitle" style="text-align:center; margin:0 auto;">Are you a creator or artist? Tell us what you do and show us your work.</p>
             </div>
@@ -159,6 +159,10 @@
                     <a href="/contact.html" data-page="join"><span class="nav-num">05</span> Join CNA</a>
                     <a href="/about.html" data-page="about"><span class="nav-num">06</span> About</a>
                 </div>
+                <div class="footer-page-nav-secondary">
+                    <a href="/games.html">Games — Coming Soon</a>
+                    <a href="/rewards.html">Rewards — Coming Soon</a>
+                </div>
             </div>
             <div class="footer-content">
                 <div class="footer-top">
@@ -190,7 +194,6 @@
             return `/api?${queryParams.toString()}`;
         }
 
-        // Footer active page
         (function(){
             const path = window.location.pathname;
             const map = {
@@ -208,7 +211,6 @@
             }
         })();
 
-        // Preloader
         (function(){
             const preloader = document.getElementById('site-preloader');
             const fill = document.getElementById('preloaderFill');
@@ -253,7 +255,6 @@
             mobileMenuClose.addEventListener('click', closeMobileMenu);
         }
 
-        // Newsletter
         document.getElementById('newsletterForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const email = document.getElementById('newsletterEmail').value;

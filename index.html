@@ -63,7 +63,7 @@
                 </div>
                 <div class="nav-right">
                     <div class="nav-links-desktop">
-                        <a href="/">Home</a>
+                        <a href="/" class="active">Home</a>
                         <a href="/profiles.html">Creators</a>
                         <a href="/stories.html">Stories</a>
                         <a href="/work.html">Projects</a>
@@ -84,7 +84,7 @@
     <div class="mobile-menu" id="mobileMenu">
         <button class="mobile-menu-close" id="mobileMenuClose"><i class="fa-solid fa-xmark"></i></button>
         <div class="mobile-menu-links">
-            <a href="/">Home</a>
+            <a href="/" class="active">Home</a>
             <a href="/profiles.html">Creators</a>
             <a href="/stories.html">Stories</a>
             <a href="/work.html">Projects</a>
@@ -97,6 +97,7 @@
         </div>
     </div>
 
+    <!-- ==================== HERO ==================== -->
     <section class="hero" id="hero">
         <div class="container">
             <div class="hero-content">
@@ -117,14 +118,15 @@
         </div>
     </section>
 
+    <!-- ==================== FEATURED CREATOR ==================== -->
     <section class="feed-section" id="featured" data-animate>
         <div class="container">
             <div class="section-header">
-                <span class="section-number">Featured Creator</span>
+                <span class="section-number">Home / Featured</span>
                 <h2 class="section-title">CNA Spotlight<span class="highlight-red">.</span></h2>
-                <p class="section-subtitle">The people and work we're interested in right now.</p>
+                <p class="section-subtitle">The creator we're interested in right now.</p>
             </div>
-            <div class="feed-grid" id="featuredCreatorGrid">
+            <div id="featuredCreatorGrid">
                 <div class="feed-loading">
                     <div class="loader"></div>
                     <p>Loading featured creator...</p>
@@ -133,107 +135,62 @@
         </div>
     </section>
 
-    <section class="feed-section" id="feed" data-animate>
+    <!-- ==================== DOORWAY: EXPLORE CREATORS ==================== -->
+    <section data-animate style="padding: 60px 0;">
         <div class="container">
-            <div class="section-header">
-                <span class="section-number">Latest</span>
-                <h2 class="section-title">Stories &amp; Features<span class="highlight-red">.</span></h2>
-                <p class="section-subtitle">Recent dispatches from the 100 CNA network.</p>
-            </div>
-
-            <div class="feed-search">
-                <i class="fa-solid fa-search"></i>
-                <input type="text" id="feedSearchInput" placeholder="Search stories..." />
-                <button class="btn-outline btn-sm" onclick="searchFeedPosts()"><i class="fa-solid fa-search"></i> Search</button>
-                <button class="btn-outline btn-sm" onclick="clearFeedSearch()"><i class="fa-solid fa-times"></i> Clear</button>
-                <span class="feed-result-count">Showing <span id="feedShowingCount">0</span> stories</span>
-            </div>
-
-            <div class="feed-grid" id="instagramFeed">
-                <div class="feed-loading">
-                    <div class="loader"></div>
-                    <p>Loading the latest stories...</p>
+            <div class="doorway-section">
+                <div class="doorway-content">
+                    <span class="section-number" style="margin-bottom: 16px;">Home / Creators</span>
+                    <h3>Explore the 100 CNA Hub</h3>
+                    <p>A directory of photographers, directors, writers, and cultural strategists shaping what's next. Browse, discover, and connect.</p>
                 </div>
-            </div>
-            <div class="see-more-container" id="feedSeeMore" style="display:none;">
-                <button class="see-more-btn" onclick="toggleFeedPosts()" id="loadMoreFeedBtn">See More <i class="fa-solid fa-arrow-down"></i></button>
-                <button class="see-more-btn" onclick="resetFeedView()" id="resetFeedBtn" style="margin-left:12px; display:none;">Show Less <i class="fa-solid fa-arrow-up"></i></button>
+                <div class="doorway-action">
+                    <a href="/profiles.html" class="btn-primary">
+                        Meet the Creators <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </section>
 
-    <div class="post-modal" id="postModal">
-        <div class="modal-overlay" id="modalOverlay"></div>
-        <div class="modal-content">
-            <button class="modal-close" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
-            <div class="modal-body" id="modalBody"></div>
-        </div>
-    </div>
-
-    <section class="feed-section" id="creators" data-animate>
+    <!-- ==================== DOORWAY: STORIES ==================== -->
+    <section data-animate style="padding: 60px 0 120px;">
         <div class="container">
-            <div class="section-header">
-                <span class="section-number">The CNA Hub</span>
-                <h2 class="section-title">Explore Creators<span class="highlight-red">.</span></h2>
-                <p class="section-subtitle">Meet the people creating what's next.</p>
-            </div>
-            <div class="hub-grid" id="homeCreatorsGrid">
-                <div class="hub-loading">
-                    <div class="loader"></div>
-                    <p>Loading creators...</p>
+            <div class="doorway-section">
+                <div class="doorway-content">
+                    <span class="section-number" style="margin-bottom: 16px;">Home / Stories</span>
+                    <h3>Read the Latest Stories</h3>
+                    <p>Features, interviews, photo stories, and cultural coverage from the 100 CNA network.</p>
                 </div>
-            </div>
-            <div class="see-more-container">
-                <a href="/profiles.html" class="see-more-btn">See All Creators <i class="fa-solid fa-arrow-right"></i></a>
+                <div class="doorway-action">
+                    <a href="/stories.html" class="btn-primary">
+                        Read Stories <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </section>
 
-    <section class="community-section" id="join" data-animate style="background: var(--cna-black);">
+    <!-- ==================== JOIN CTA ==================== -->
+    <section class="community-section cna-dark" id="join" data-animate style="background: var(--cna-black); padding: 180px 0;">
         <div class="container">
             <div class="section-header" style="text-align:center; max-width:800px; margin:0 auto 72px auto;">
-                <span class="section-number" style="color: var(--cna-yellow);">Join 100 CNA</span>
-                <h2 class="section-title" style="color:var(--cna-white); text-align:center;">Are You a Creator or Artist<span class="highlight-red">?</span></h2>
-                <p class="section-subtitle" style="color:rgba(255,255,255,0.7); text-align:center; margin: 0 auto;">Tell us what you do and show us your work.</p>
+                <span class="section-number" style="color: var(--cna-yellow);">Home / Join</span>
+                <h2 class="section-title" style="color:var(--cna-white); text-align:center;">Join 100 CNA<span class="highlight-red">.</span></h2>
+                <p class="section-subtitle" style="color:rgba(255,255,255,0.7); text-align:center; margin: 0 auto;">Are you a creator or artist? Tell us what you do and show us your work.</p>
             </div>
             <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-top: 48px;">
-                <a href="/contact.html" class="btn-primary" style="background: var(--cna-yellow); color: var(--cna-black); border-color: var(--cna-yellow);">Join 100 CNA <i class="fa-solid fa-arrow-right"></i></a>
-                <a href="/profiles.html" class="btn-secondary" style="color: var(--cna-yellow); border-color: var(--cna-yellow);">Browse Creators</a>
+                <a href="/contact.html" class="btn-primary" style="background: var(--cna-yellow); color: var(--cna-black); border-color: var(--cna-yellow);">Apply to Join <i class="fa-solid fa-arrow-right"></i></a>
+                <a href="/profiles.html#community-form" class="btn-secondary" style="color: var(--cna-yellow); border-color: var(--cna-yellow);">Submit Your Profile</a>
             </div>
         </div>
     </section>
 
-    <section class="impact-section" id="impact" data-animate>
-        <div class="container">
-            <div class="section-header" style="text-align:center; max-width:800px; margin: 0 auto 72px auto;">
-                <span class="section-number">Impact</span>
-                <h2 class="section-title" style="text-align:center;">By The Numbers<span class="highlight-red">.</span></h2>
-            </div>
-            <div class="impact-grid-home" id="impactGridHome">
-                <div class="impact-card-home">
-                    <span class="impact-number" id="homeMagazine">08</span>
-                    <span class="impact-label">Magazine Issues</span>
-                </div>
-                <div class="impact-card-home">
-                    <span class="impact-number" id="homeFeatures">100+</span>
-                    <span class="impact-label">Editorial Features</span>
-                </div>
-                <div class="impact-card-home">
-                    <span class="impact-number" id="homeCollaborations">50+</span>
-                    <span class="impact-label">Brand Collaborations</span>
-                </div>
-                <div class="impact-card-home">
-                    <span class="impact-number" id="homeReach">1M+</span>
-                    <span class="impact-label">Digital Reach</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
+    <!-- ==================== PARTNERS ==================== -->
     <section class="partners-section" id="partners" data-animate>
         <div class="container">
             <div class="section-header" style="text-align:center; max-width:800px; margin: 0 auto 56px auto;">
-                <span class="section-number">Trusted By</span>
+                <span class="section-number">Home / Partners</span>
                 <h2 class="section-title" style="text-align:center;">Culture Champions<span class="highlight-red">.</span></h2>
             </div>
             <div class="partners-wrapper">
@@ -252,6 +209,10 @@
                     <a href="/work.html" data-page="projects"><span class="nav-num">04</span> Projects</a>
                     <a href="/contact.html" data-page="join"><span class="nav-num">05</span> Join CNA</a>
                     <a href="/about.html" data-page="about"><span class="nav-num">06</span> About</a>
+                </div>
+                <div class="footer-page-nav-secondary">
+                    <a href="/games.html">Games — Coming Soon</a>
+                    <a href="/rewards.html">Rewards — Coming Soon</a>
                 </div>
             </div>
             <div class="footer-content">
@@ -292,7 +253,6 @@
             return `/api?${queryParams.toString()}`;
         }
 
-        // Footer active page
         (function(){
             const path = window.location.pathname;
             const map = {
@@ -310,7 +270,6 @@
             }
         })();
 
-        // Preloader
         (function(){
             const preloader = document.getElementById('site-preloader');
             const fill = document.getElementById('preloaderFill');
@@ -332,227 +291,36 @@
             setTimeout(() => preloader && preloader.classList.add('loaded'), 3000);
         })();
 
-        // Posts
-        let allFeedPosts = [];
-        let feedDisplayCount = 9;
-        let feedShowingAll = false;
-        const FEED_DEFAULT_COUNT = 9;
-        const FEED_INCREMENT = 3;
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
 
-        async function loadPosts() {
-            const container = document.getElementById('instagramFeed');
-            const seeMoreWrap = document.getElementById('feedSeeMore');
-            const searchInput = document.getElementById('feedSearchInput');
-            try {
-                const searchTerm = searchInput ? searchInput.value.trim() : '';
-                const url = searchTerm ? apiUrl('posts', { limit: 100, search: encodeURIComponent(searchTerm) }) : apiUrl('posts', { limit: 100 });
-                const response = await fetch(url);
-                const data = await response.json();
-                if (data.success && data.posts && data.posts.length > 0) {
-                    allFeedPosts = data.posts;
-                    document.getElementById('feedShowingCount').textContent = allFeedPosts.length;
-                    feedDisplayCount = Math.min(FEED_DEFAULT_COUNT, allFeedPosts.length);
-                    feedShowingAll = false;
-                    renderFeedPosts(allFeedPosts.slice(0, feedDisplayCount), container);
-                    if (allFeedPosts.length > feedDisplayCount) {
-                        seeMoreWrap.style.display = 'flex';
-                        seeMoreWrap.style.gap = '12px';
-                        seeMoreWrap.style.justifyContent = 'center';
-                        updateFeedButton();
-                    } else {
-                        seeMoreWrap.style.display = 'none';
-                    }
-                } else {
-                    container.innerHTML = `<div class="feed-empty"><p>No stories yet. Check back soon!</p></div>`;
-                    seeMoreWrap.style.display = 'none';
-                }
-            } catch (error) {
-                container.innerHTML = `<div class="feed-error"><p>⚠️ Unable to load stories. Please refresh.</p></div>`;
-                seeMoreWrap.style.display = 'none';
-            }
+        function toggleMobileMenu() {
+            hamburgerBtn.classList.toggle('active');
+            mobileMenu.classList.toggle('open');
+            mobileMenuOverlay.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
         }
-
-        function renderFeedPosts(posts, container) {
-            if (posts.length === 0) {
-                container.innerHTML = `<div class="feed-empty"><p>No stories found.</p></div>`;
-                return;
-            }
-            container.innerHTML = posts.map((post) => {
-                const hasArticle = post.article_url && post.article_url.trim() !== '';
-                const date = post.published_at ? new Date(post.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
-                const writer = post.writer || "100 CNA";
-                const caption = post.caption || '';
-                const truncatedCaption = caption.length > 110 ? caption.substring(0, 110) + '...' : caption;
-                let mediaHtml = post.is_video && post.video_url
-                    ? `<video autoplay muted loop playsinline><source src="${post.video_url}" type="video/mp4"></video><span class="feed-play"><i class="fa-solid fa-play"></i></span>`
-                    : `<img src="${post.image_url}" alt="${caption.substring(0, 50)}" loading="lazy" />`;
-                const galleryCount = Array.isArray(post.media_gallery) ? post.media_gallery.length : 0;
-                const galleryBadge = galleryCount > 1
-                    ? `<span style="position:absolute; top:12px; right:12px; background:var(--cna-yellow); color:var(--cna-black); width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; z-index:5; font-size:12px;"><i class="fa-regular fa-clone"></i></span>`
-                    : '';
-                return `
-                    <div class="feed-item" data-post='${JSON.stringify(post).replace(/'/g, "&#39;")}'>
-                        <div class="feed-image">
-                            ${mediaHtml}
-                            ${galleryBadge}
-                            ${hasArticle ? '<span style="position:absolute; bottom:12px; right:12px; background:var(--cna-red); padding:4px 12px; border-radius:20px; font-size:10px; color:white; z-index:5; font-family:var(--font-display); letter-spacing:0.08em; text-transform:uppercase;"><i class="fa-regular fa-file-lines"></i> Article</span>' : ''}
-                        </div>
-                        <div class="feed-content">
-                            <p class="feed-caption">${truncatedCaption}</p>
-                            <div class="feed-meta">
-                                <span class="feed-writer"><i class="fa-regular fa-user"></i> ${writer}</span>
-                                <span class="feed-date"><i class="fa-regular fa-calendar"></i> ${date}</span>
-                            </div>
-                            <div class="feed-actions">
-                                <button class="feed-link" onclick="openPostModal(this)">${hasArticle ? 'Read Story' : 'View Post'} <i class="fa-solid fa-arrow-right"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            document.querySelectorAll('.feed-item').forEach(item => {
-                item.addEventListener('click', function(e) {
-                    if (e.target.closest('.feed-link')) return;
-                    const link = this.querySelector('.feed-link');
-                    if (link) openPostModal(link);
-                });
-            });
-        }
-
-        function updateFeedButton() {
-            const btn = document.getElementById('loadMoreFeedBtn');
-            const resetBtn = document.getElementById('resetFeedBtn');
-            if (!btn) return;
-            if (feedShowingAll) {
-                btn.innerHTML = `See Less <i class="fa-solid fa-arrow-up"></i>`;
-                resetBtn.style.display = 'none';
-            } else {
-                const remaining = allFeedPosts.length - feedDisplayCount;
-                btn.innerHTML = `See More (${remaining} left) <i class="fa-solid fa-arrow-down"></i>`;
-                resetBtn.style.display = feedDisplayCount > FEED_DEFAULT_COUNT ? 'inline-flex' : 'none';
-            }
-        }
-
-        function toggleFeedPosts() {
-            const container = document.getElementById('instagramFeed');
-            if (feedShowingAll) {
-                feedDisplayCount = FEED_DEFAULT_COUNT;
-                feedShowingAll = false;
-            } else {
-                feedDisplayCount = Math.min(feedDisplayCount + FEED_INCREMENT, allFeedPosts.length);
-                if (feedDisplayCount >= allFeedPosts.length) feedShowingAll = true;
-            }
-            renderFeedPosts(allFeedPosts.slice(0, feedDisplayCount), container);
-            updateFeedButton();
-        }
-
-        function resetFeedView() {
-            feedDisplayCount = FEED_DEFAULT_COUNT;
-            feedShowingAll = false;
-            const container = document.getElementById('instagramFeed');
-            renderFeedPosts(allFeedPosts.slice(0, feedDisplayCount), container);
-            updateFeedButton();
-            document.getElementById('feed').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function searchFeedPosts() { loadPosts(); }
-        function clearFeedSearch() { document.getElementById('feedSearchInput').value = ''; loadPosts(); }
-
-        // Post modal
-        const modal = document.getElementById('postModal');
-        const modalBody = document.getElementById('modalBody');
-        const modalClose = document.getElementById('modalClose');
-        const modalOverlay = document.getElementById('modalOverlay');
-
-        function openPostModal(element) {
-            const item = element.closest('.feed-item');
-            const postData = JSON.parse(item.dataset.post);
-            const hasArticle = postData.article_url && postData.article_url.trim() !== '';
-            const date = postData.published_at ? new Date(postData.published_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
-            const writer = postData.writer || "100 CNA";
-            const caption = postData.caption || '';
-            const permalink = postData.permalink || '#';
-            const gallery = Array.isArray(postData.media_gallery) ? postData.media_gallery : [];
-            let mediaHtml = '';
-            if (gallery.length > 1) {
-                mediaHtml = `
-                    <div class="post-carousel" id="postCarousel" data-index="0">
-                        <div class="post-carousel-track" id="postCarouselTrack">
-                            ${gallery.map(g => `<div>${g.type === 'video' ? `<video controls playsinline><source src="${g.url}" type="video/mp4"></video>` : `<img src="${g.url}" alt="" />`}</div>`).join('')}
-                        </div>
-                        <button class="post-carousel-arrow left" onclick="postCarouselNav(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-                        <button class="post-carousel-arrow right" onclick="postCarouselNav(1)"><i class="fa-solid fa-chevron-right"></i></button>
-                        <div class="post-carousel-dots" id="postCarouselDots">
-                            ${gallery.map((_, i) => `<span class="post-carousel-dot ${i === 0 ? 'active' : ''}" onclick="postCarouselGoTo(${i})"></span>`).join('')}
-                        </div>
-                    </div>
-                `;
-            } else if (postData.is_video && postData.video_url) {
-                mediaHtml = `<video controls autoplay muted loop playsinline><source src="${postData.video_url}" type="video/mp4"></video>`;
-            } else {
-                mediaHtml = `<img src="${postData.image_url}" alt="" />`;
-            }
-            const captionLines = caption.split('\n').filter(l => l.trim() !== '');
-            const modalHeadline = captionLines[0] || 'Untitled';
-            const modalBodyText = captionLines.slice(1).join('\n');
-            const articleButtonHtml = hasArticle ? `<a href="${postData.article_url}" target="_blank" class="btn-primary"><i class="fa-regular fa-file-lines"></i> Read Full Article</a>` : '';
-            modalBody.innerHTML = `
-                <div class="modal-image">${mediaHtml}</div>
-                <div class="modal-text">
-                    <div class="modal-meta">
-                        <span><i class="fa-regular fa-user"></i> ${writer}</span>
-                        <span><i class="fa-regular fa-calendar"></i> ${date}</span>
-                        ${hasArticle ? `<span class="modal-article-badge"><i class="fa-regular fa-file-lines"></i> Article</span>` : ''}
-                    </div>
-                    <h2 class="modal-title">${modalHeadline}</h2>
-                    ${modalBodyText ? `<div class="modal-caption">${modalBodyText.replace(/\n/g, '<br>')}</div>` : ''}
-                    <div class="modal-actions">
-                        ${articleButtonHtml}
-                        <a href="${permalink}" target="_blank" class="btn-secondary"><i class="fa-regular fa-eye"></i> View on Instagram</a>
-                    </div>
-                </div>
-            `;
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function postCarouselNav(direction) {
-            const carousel = document.getElementById('postCarousel');
-            if (!carousel) return;
-            const track = document.getElementById('postCarouselTrack');
-            const dots = document.querySelectorAll('#postCarouselDots .post-carousel-dot');
-            let index = (parseInt(carousel.dataset.index || '0', 10) + direction + dots.length) % dots.length;
-            carousel.dataset.index = index;
-            track.style.transform = `translateX(-${index * 100}%)`;
-            dots.forEach((d, i) => d.classList.toggle('active', i === index));
-        }
-
-        function postCarouselGoTo(index) {
-            const carousel = document.getElementById('postCarousel');
-            if (!carousel) return;
-            const track = document.getElementById('postCarouselTrack');
-            const dots = document.querySelectorAll('#postCarouselDots .post-carousel-dot');
-            carousel.dataset.index = index;
-            track.style.transform = `translateX(-${index * 100}%)`;
-            dots.forEach((d, i) => d.classList.toggle('active', i === index));
-        }
-
-        function closeModal() {
-            modal.classList.remove('active');
+        function closeMobileMenu() {
+            hamburgerBtn.classList.remove('active');
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.remove('active');
             document.body.style.overflow = '';
         }
-        modalClose.addEventListener('click', closeModal);
-        modalOverlay.addEventListener('click', closeModal);
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+        if (hamburgerBtn && mobileMenu && mobileMenuOverlay && mobileMenuClose) {
+            hamburgerBtn.addEventListener('click', toggleMobileMenu);
+            mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+            mobileMenuClose.addEventListener('click', closeMobileMenu);
+        }
 
-        // Featured creator
         async function loadFeaturedCreator() {
             const grid = document.getElementById('featuredCreatorGrid');
             try {
                 const res = await fetch(apiUrl('members', { status: 'accepted', limit: 1 }));
                 const data = await res.json();
                 if (!data.members || data.members.length === 0) {
-                    grid.innerHTML = `<div class="feed-empty"><p>Featured creator coming soon.</p></div>`;
+                    grid.innerHTML = `<div class="feed-empty" style="grid-column:1/-1;"><p>Featured creator coming soon.</p></div>`;
                     return;
                 }
                 const member = data.members[0];
@@ -562,82 +330,25 @@
                     ? `<img src="${img}" alt="${member.name}" loading="lazy" />`
                     : `<div class="avatar-fallback">${initials}</div>`;
                 grid.innerHTML = `
-                    <div class="feed-item" style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 0; cursor: pointer;" onclick="window.location.href='/profiles.html'">
-                        <div class="feed-image" style="aspect-ratio: auto; height: 100%; min-height: 480px;">
+                    <div class="feed-item" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 0; cursor: pointer; max-width: 1200px; margin: 0 auto;" onclick="window.location.href='/profiles.html'">
+                        <div class="feed-image" style="aspect-ratio: auto; height: 100%; min-height: 520px;">
                             ${mediaHtml}
-                            <span class="cna-number-badge" style="top:28px; left:28px; font-size:13px; padding:8px 20px;">CNA 001</span>
+                            <span class="cna-number-badge" style="top:32px; left:32px; font-size:13px; padding:8px 20px;">CNA 001</span>
                         </div>
-                        <div class="feed-content" style="display:flex; flex-direction:column; justify-content:center; padding: 64px 60px;">
-                            <div style="font-family: var(--font-mono); font-size: 11px; color: var(--cna-yellow); opacity: 0.8; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 18px;">Featured Creator</div>
-                            <h3 style="font-family: var(--font-display); font-size: 36px; color: var(--cna-white); margin-bottom: 16px; text-transform: uppercase; letter-spacing: -0.01em; line-height: 1.1;">${member.name || 'Anonymous'}</h3>
-                            <p style="font-family: var(--font-body); font-size: 16px; color: var(--cna-yellow); opacity: 0.9; margin-bottom: 22px;">${member.role || 'Creative'}</p>
-                            ${member.description ? `<p style="font-family: var(--font-body); font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.7;">${member.description.substring(0, 220)}${member.description.length > 220 ? '...' : ''}</p>` : ''}
-                            <div style="margin-top: 32px;">
+                        <div class="feed-content" style="display:flex; flex-direction:column; justify-content:center; padding: 72px 64px;">
+                            <div style="font-family: var(--font-mono); font-size: 11px; color: var(--cna-yellow); opacity: 0.8; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 20px;">Featured Creator</div>
+                            <h3 style="font-family: var(--font-display); font-size: 40px; color: var(--cna-white); margin-bottom: 18px; text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.05;">${member.name || 'Anonymous'}</h3>
+                            <p style="font-family: var(--font-body); font-size: 16px; color: var(--cna-yellow); opacity: 0.9; margin-bottom: 24px;">${member.role || 'Creative'}</p>
+                            ${member.description ? `<p style="font-family: var(--font-body); font-size: 15px; color: rgba(255,255,255,0.72); line-height: 1.7;">${member.description.substring(0, 260)}${member.description.length > 260 ? '...' : ''}</p>` : ''}
+                            <div style="margin-top: 36px;">
                                 <span class="btn-primary" style="background: var(--cna-yellow); color: var(--cna-black); border-color: var(--cna-yellow);">View Profile <i class="fa-solid fa-arrow-right"></i></span>
                             </div>
                         </div>
                     </div>
                 `;
             } catch (e) {
-                grid.innerHTML = `<div class="feed-empty"><p>Featured creator coming soon.</p></div>`;
+                grid.innerHTML = `<div class="feed-empty" style="grid-column:1/-1;"><p>Featured creator coming soon.</p></div>`;
             }
-        }
-
-        // Home creators preview
-        async function loadHomeCreators() {
-            const grid = document.getElementById('homeCreatorsGrid');
-            try {
-                const res = await fetch(apiUrl('members', { status: 'accepted', limit: 200 }));
-                const data = await res.json();
-                const members = (data.members || []).slice().sort((a, b) => {
-                    const da = new Date(a.created_at || a.timestamp || 0);
-                    const db = new Date(b.created_at || b.timestamp || 0);
-                    return da - db;
-                }).slice(0, 6);
-                if (members.length === 0) {
-                    grid.innerHTML = `<div class="hub-empty"><p>No creators yet. Be the first to join!</p></div>`;
-                    return;
-                }
-                grid.innerHTML = members.map((member, i) => {
-                    const img = member.selected_image || member.selectedImage || member.image1 || '';
-                    const initials = (member.name || '?').split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
-                    const cnaNum = String(i + 1).padStart(3, '0');
-                    const imageHtml = img
-                        ? `<img src="${img}" alt="${member.name}" loading="lazy" />`
-                        : `<div class="avatar-fallback">${initials}</div>`;
-                    const descHtml = member.description
-                        ? `<p class="hub-description">${member.description}</p>`
-                        : `<p class="hub-description-empty">No description</p>`;
-                    return `
-                        <div class="hub-card" onclick="window.location.href='/profiles.html'">
-                            <div class="hub-image">
-                                <span class="cna-number-badge">CNA ${cnaNum}</span>
-                                ${imageHtml}
-                            </div>
-                            <div class="hub-info">
-                                <h3 class="hub-name">${member.name || 'Anonymous'}</h3>
-                                <p class="hub-role">${member.role || 'Creative'}</p>
-                                ${descHtml}
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            } catch (e) {
-                grid.innerHTML = `<div class="hub-empty"><p>Unable to load creators.</p></div>`;
-            }
-        }
-
-        function loadImpactNumbers() {
-            try {
-                const data = localStorage.getItem('impactNumbers');
-                if (data) {
-                    const parsed = JSON.parse(data);
-                    document.getElementById('homeMagazine').textContent = parsed.magazine || 8;
-                    document.getElementById('homeFeatures').textContent = parsed.features + (parsed.features > 9 ? '' : '+') || '100+';
-                    document.getElementById('homeCollaborations').textContent = parsed.collaborations + (parsed.collaborations > 9 ? '' : '+') || '50+';
-                    document.getElementById('homeReach').textContent = parsed.reach >= 1000000 ? (parsed.reach / 1000000).toFixed(1) + 'M+' : parsed.reach + '+';
-                }
-            } catch (e) {}
         }
 
         async function loadPartners() {
@@ -663,29 +374,6 @@
                     <img src="${logo.url}" alt="${logo.name}" title="${logo.name}" loading="lazy" />
                 </div>
             `).join('');
-        }
-
-        const hamburgerBtn = document.getElementById('hamburgerBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-        const mobileMenuClose = document.getElementById('mobileMenuClose');
-
-        function toggleMobileMenu() {
-            hamburgerBtn.classList.toggle('active');
-            mobileMenu.classList.toggle('open');
-            mobileMenuOverlay.classList.toggle('active');
-            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
-        }
-        function closeMobileMenu() {
-            hamburgerBtn.classList.remove('active');
-            mobileMenu.classList.remove('open');
-            mobileMenuOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-        if (hamburgerBtn && mobileMenu && mobileMenuOverlay && mobileMenuClose) {
-            hamburgerBtn.addEventListener('click', toggleMobileMenu);
-            mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-            mobileMenuClose.addEventListener('click', closeMobileMenu);
         }
 
         async function loadAd() {
@@ -734,13 +422,10 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            loadImpactNumbers();
-            loadPartners();
-            loadPosts();
             loadFeaturedCreator();
-            loadHomeCreators();
+            loadPartners();
             setTimeout(loadAd, 800);
-            console.log('🏠 100 CNA — Home Loaded');
+            console.log('🏠 100 CNA — Home Loaded (doorway mode)');
         });
     </script>
 </body>

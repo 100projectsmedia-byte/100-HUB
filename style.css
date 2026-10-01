@@ -1,6 +1,6 @@
 /* ==========================================
    100 CNA — GLOBAL STYLESHEET
-   Round 3: more whitespace, image treatment, badge cleanup
+   Round 4: doorway sections, cream tier, breadcrumb labels
    ========================================== */
 
 @import url('https://fonts.cdnfonts.com/css/bicubik');
@@ -13,6 +13,8 @@
     --cna-yellow-deep: #E4BE2C;
     --cna-yellow-soft: #FBE19A;
     --cna-yellow-pale: #FDF3D2;
+    --cna-cream: #FFF8E0;
+    --cna-cream-deep: #F5EBC8;
     --cna-black: #0A0A0A;
     --cna-black-soft: #1A1A1A;
     --cna-black-line: #2A2A2A;
@@ -234,24 +236,23 @@ h1, h2, h3, h4, h5, h6,
     background: none; border: none;
     width: 40px; height: 40px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     transition: var(--transition-fast);
 }
 .mobile-menu .mobile-menu-close:hover { color: var(--cna-red); transform: rotate(90deg); }
 .mobile-menu-links { display: flex; flex-direction: column; margin-bottom: 32px; }
 .mobile-menu-links a {
     display: block;
-    padding: 22px 0;
+    padding: 20px 0;
     font-family: var(--font-display);
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 700;
     color: var(--cna-yellow);
     text-decoration: none;
     border-bottom: 1px solid rgba(255, 212, 0, 0.15);
     transition: var(--transition-fast);
-    text-transform: uppercase;
+    text-transform: none;
+    letter-spacing: -0.01em;
 }
 .mobile-menu-links a:hover,
 .mobile-menu-links a.active { color: var(--cna-red); padding-left: 8px; }
@@ -274,11 +275,11 @@ h1, h2, h3, h4, h5, h6,
 .mobile-menu-social a:hover { color: var(--cna-red); opacity: 1; }
 
 /* ==========================================
-   SECTIONS — MORE WHITESPACE
+   SECTIONS
    ========================================== */
 section {
     background: transparent;
-    padding: 180px 0;   /* was 140 — now 180 */
+    padding: 180px 0;
     width: 100%;
     overflow: hidden;
     position: relative;
@@ -293,23 +294,34 @@ section + section {
 .section-header {
     text-align: left;
     max-width: 850px;
-    margin: 0 0 96px 0;   /* was 72 — now 96 */
+    margin: 0 0 96px 0;
 }
-/* Badge simplified — no more "01 //" pill; just a small mono caption */
+
+/* Section label — breadcrumb style */
 .section-number {
     font-family: var(--font-mono);
     font-size: 11px;
     font-weight: 700;
     color: var(--cna-black);
-    letter-spacing: 0.3em;
-    display: inline-block;
+    letter-spacing: 0.25em;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     margin-bottom: 24px;
     text-transform: uppercase;
-    opacity: 0.6;
+    opacity: 0.55;
     padding: 0;
     background: transparent;
     border-radius: 0;
 }
+.section-number::before {
+    content: "";
+    width: 24px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.6;
+}
+
 .section-title {
     font-family: var(--font-display);
     font-size: 64px;
@@ -328,6 +340,12 @@ section + section {
     margin-top: 14px;
     max-width: 650px;
     font-weight: 400;
+}
+
+.cna-dark .section-number,
+.section-number.on-dark {
+    color: var(--cna-yellow);
+    opacity: 0.65;
 }
 
 /* ==========================================
@@ -462,14 +480,76 @@ section + section {
 .hero-nav { display: none; }
 
 /* ==========================================
-   FEED — LAYERED BG + IMAGE TREATMENT
+   DOORWAY SECTIONS (homepage)
+   ========================================== */
+.doorway-section {
+    background: var(--cna-cream);
+    border-radius: var(--radius);
+    padding: 88px 72px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 48px;
+    flex-wrap: wrap;
+    position: relative;
+    overflow: hidden;
+}
+.doorway-section::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 6px;
+    background: var(--cna-black);
+    opacity: 0.06;
+}
+.doorway-content {
+    flex: 1;
+    min-width: 280px;
+    max-width: 640px;
+}
+.doorway-content h3 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4.5vw, 56px);
+    font-weight: 800;
+    color: var(--cna-black);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+.doorway-content p {
+    font-family: var(--font-body);
+    font-size: 17px;
+    color: var(--cna-black);
+    opacity: 0.72;
+    line-height: 1.7;
+    max-width: 520px;
+    margin-bottom: 0;
+}
+.doorway-action { flex-shrink: 0; }
+@media (max-width: 820px) {
+    .doorway-section {
+        padding: 56px 40px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .doorway-section .btn-primary,
+    .doorway-section .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ==========================================
+   FEED
    ========================================== */
 .feed-section { background: var(--cna-yellow-soft); }
 
 .feed-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 36px;   /* was 28 — now 36 */
+    gap: 36px;
     width: 100%;
 }
 .feed-item {
@@ -512,9 +592,7 @@ section + section {
     width: 56px; height: 56px;
     background: var(--cna-yellow);
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     color: var(--cna-black);
     font-size: 18px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.4);
@@ -834,6 +912,8 @@ section + section {
 /* ==========================================
    IMPACT NUMBERS
    ========================================== */
+.impact-section { background: var(--cna-cream); }
+
 .impact-grid-home {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -1579,6 +1659,32 @@ section + section {
 .footer-page-nav a.active { color: var(--cna-yellow); }
 .footer-page-nav a.active .nav-num { opacity: 1; }
 
+.footer-page-nav-secondary {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+.footer-page-nav-secondary a {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+    text-decoration: none;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: var(--transition-fast);
+}
+.footer-page-nav-secondary a:hover {
+    color: var(--cna-yellow);
+}
+.footer-page-nav-secondary a + a::before {
+    content: "·";
+    margin-right: 24px;
+    opacity: 0.5;
+}
+
 .footer-content {
     display: flex;
     flex-direction: column;
@@ -1973,7 +2079,7 @@ section + section {
     .coming-soon-section .coming-icon { font-size: 40px; }
 
     .mobile-menu { width: 100%; }
-    .mobile-menu-links a { font-size: 22px; padding: 18px 0; }
+    .mobile-menu-links a { font-size: 20px; padding: 18px 0; }
 
     .pin-box .pin-inputs input { width: 46px; height: 56px; font-size: 22px; }
     .pin-box { padding: 24px; }
@@ -1985,6 +2091,8 @@ section + section {
 
     .footer-page-nav-inner { gap: 6px 16px; flex-direction: column; }
     .footer-page-nav a { font-size: 10px; }
+    .footer-page-nav-secondary { flex-direction: column; gap: 8px; }
+    .footer-page-nav-secondary a + a::before { display: none; }
     .footer { padding-bottom: 40px; }
     .footer-content { gap: 24px; }
     .footer-logo { height: 52px; }

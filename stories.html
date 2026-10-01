@@ -63,9 +63,8 @@
             line-height: 1.7;
         }
         .page-stories .stories-hero .section-number {
-            display: block;
+            display: inline-flex;
             margin-bottom: 28px;
-            opacity: 0.6;
         }
 
         .stories-filter {
@@ -237,7 +236,7 @@
 
     <section class="stories-hero">
         <div class="container">
-            <span class="section-number">Stories &amp; Features</span>
+            <span class="section-number">Stories / All</span>
             <h1>Stories<span>.</span></h1>
             <p>Features, interviews, photo stories, and cultural coverage from the 100 CNA network.</p>
         </div>
@@ -271,8 +270,8 @@
             </div>
 
             <div class="see-more-container" id="storiesSeeMore" style="display:none;">
-                <button class="see-more-btn" onclick="toggleStoriesPosts()" id="loadMoreStoriesBtn">See More <i class="fa-solid fa-arrow-down"></i></button>
-                <button class="see-more-btn" onclick="resetStoriesView()" id="resetStoriesBtn" style="margin-left:12px; display:none;">Show Less <i class="fa-solid fa-arrow-up"></i></button>
+                <button class="see-more-btn" onclick="toggleStoriesPosts()" id="loadMoreStoriesBtn">Load More Stories <i class="fa-solid fa-arrow-down"></i></button>
+                <button class="see-more-btn" onclick="resetStoriesView()" id="resetStoriesBtn" style="margin-left:12px; display:none;">Show Fewer <i class="fa-solid fa-arrow-up"></i></button>
             </div>
 
         </div>
@@ -289,7 +288,7 @@
     <section class="community-section" id="newsletter" data-animate style="background: var(--cna-black); padding: 140px 0;">
         <div class="container">
             <div class="section-header" style="text-align:center; max-width:720px; margin:0 auto;">
-                <span class="section-number" style="color: var(--cna-yellow);">Stay In The Loop</span>
+                <span class="section-number" style="color: var(--cna-yellow);">Stories / Newsletter</span>
                 <h2 class="section-title" style="color:var(--cna-white); text-align:center;">Never Miss a Story<span class="highlight-red">.</span></h2>
                 <p class="section-subtitle" style="color:rgba(255,255,255,0.7); text-align:center; margin: 0 auto 44px auto;">Subscribe for features, interviews, and creative opportunities delivered to your inbox.</p>
                 <form id="storiesNewsletterForm" style="display:flex; gap:14px; flex-wrap:wrap; justify-content:center; max-width: 580px; margin: 0 auto;">
@@ -311,6 +310,10 @@
                     <a href="/work.html" data-page="projects"><span class="nav-num">04</span> Projects</a>
                     <a href="/contact.html" data-page="join"><span class="nav-num">05</span> Join CNA</a>
                     <a href="/about.html" data-page="about"><span class="nav-num">06</span> About</a>
+                </div>
+                <div class="footer-page-nav-secondary">
+                    <a href="/games.html">Games — Coming Soon</a>
+                    <a href="/rewards.html">Rewards — Coming Soon</a>
                 </div>
             </div>
             <div class="footer-content">
@@ -343,7 +346,6 @@
             return `/api?${queryParams.toString()}`;
         }
 
-        // Footer active page
         (function(){
             const path = window.location.pathname;
             const map = {
@@ -361,7 +363,6 @@
             }
         })();
 
-        // Preloader
         (function(){
             const preloader = document.getElementById('site-preloader');
             const fill = document.getElementById('preloaderFill');
@@ -536,11 +537,11 @@
             const resetBtn = document.getElementById('resetStoriesBtn');
             if (!btn) return;
             if (storiesShowingAll) {
-                btn.innerHTML = `See Less <i class="fa-solid fa-arrow-up"></i>`;
+                btn.innerHTML = `Show Fewer Stories <i class="fa-solid fa-arrow-up"></i>`;
                 resetBtn.style.display = 'none';
             } else {
                 const remaining = filteredStories.length - storiesDisplayCount;
-                btn.innerHTML = `See More (${remaining} left) <i class="fa-solid fa-arrow-down"></i>`;
+                btn.innerHTML = `Load More Stories (${remaining}) <i class="fa-solid fa-arrow-down"></i>`;
                 resetBtn.style.display = storiesDisplayCount > STORIES_DEFAULT_COUNT ? 'inline-flex' : 'none';
             }
         }
