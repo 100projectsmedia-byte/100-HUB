@@ -551,12 +551,6 @@
         <div class="container">
             <div class="nav-inner">
                 <div class="nav-left">
-                    <div class="nav-social">
-                        <a href="https://www.instagram.com/100creators_n_artists" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="mailto:100projectsmedia@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
-                    </div>
-                </div>
-                <div class="nav-center">
                     <a href="/" class="nav-logo">
                         <img src="assets/Logo.png" alt="100 CNA" class="logo-img" />
                     </a>
@@ -805,13 +799,22 @@
             }
         })();
 
+        // Session-aware preloader
         (function(){
             const preloader = document.getElementById('site-preloader');
+            if (!preloader) return;
+            const alreadyLoaded = sessionStorage.getItem('cna_preloader_shown');
+            if (alreadyLoaded === 'true') {
+                preloader.classList.add('loaded');
+                preloader.style.display = 'none';
+                return;
+            }
+            sessionStorage.setItem('cna_preloader_shown', 'true');
             const fill = document.getElementById('preloaderFill');
             const counter = document.getElementById('preloaderCounter');
             let pct = 0;
             const interval = setInterval(() => {
-                pct += Math.random() * 18;
+                pct += Math.random() * 20;
                 if (pct >= 100) {
                     pct = 100;
                     clearInterval(interval);
@@ -822,7 +825,7 @@
                     if (fill) fill.style.width = pct + '%';
                     if (counter) counter.textContent = Math.floor(pct) + '%';
                 }
-            }, 180);
+            }, 160);
             setTimeout(() => preloader && preloader.classList.add('loaded'), 3000);
         })();
 
@@ -969,7 +972,7 @@
             const doubled = [...logos, ...logos];
             track.innerHTML = doubled.map(logo => `
                 <div class="partner-logo-item">
-                    <img src="${logo.url}" alt="${logo.name}" title="${logo.name}" loading="lazy" />
+                    <img src="${logo.url}" alt="${logo.name}" title="${logo.name}" loading="lazy" style="display:block;" />
                 </div>
             `).join('');
         }

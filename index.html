@@ -51,12 +51,6 @@
         <div class="container">
             <div class="nav-inner">
                 <div class="nav-left">
-                    <div class="nav-social">
-                        <a href="https://www.instagram.com/100creators_n_artists" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="mailto:100projectsmedia@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
-                    </div>
-                </div>
-                <div class="nav-center">
                     <a href="/" class="nav-logo">
                         <img src="assets/Logo.png" alt="100 CNA" class="logo-img" />
                     </a>
@@ -97,7 +91,6 @@
         </div>
     </div>
 
-    <!-- ==================== HERO ==================== -->
     <section class="hero" id="hero">
         <div class="container">
             <div class="hero-content">
@@ -118,7 +111,6 @@
         </div>
     </section>
 
-    <!-- ==================== FEATURED CREATOR ==================== -->
     <section class="feed-section" id="featured" data-animate>
         <div class="container">
             <div class="section-header">
@@ -135,7 +127,6 @@
         </div>
     </section>
 
-    <!-- ==================== DOORWAY: EXPLORE CREATORS ==================== -->
     <section data-animate style="padding: 60px 0;">
         <div class="container">
             <div class="doorway-section">
@@ -153,7 +144,6 @@
         </div>
     </section>
 
-    <!-- ==================== DOORWAY: STORIES ==================== -->
     <section data-animate style="padding: 60px 0 120px;">
         <div class="container">
             <div class="doorway-section">
@@ -171,7 +161,6 @@
         </div>
     </section>
 
-    <!-- ==================== JOIN CTA ==================== -->
     <section class="community-section cna-dark" id="join" data-animate style="background: var(--cna-black); padding: 180px 0;">
         <div class="container">
             <div class="section-header" style="text-align:center; max-width:800px; margin:0 auto 72px auto;">
@@ -186,7 +175,6 @@
         </div>
     </section>
 
-    <!-- ==================== PARTNERS ==================== -->
     <section class="partners-section" id="partners" data-animate>
         <div class="container">
             <div class="section-header" style="text-align:center; max-width:800px; margin: 0 auto 56px auto;">
@@ -253,6 +241,7 @@
             return `/api?${queryParams.toString()}`;
         }
 
+        // Footer active page
         (function(){
             const path = window.location.pathname;
             const map = {
@@ -270,13 +259,24 @@
             }
         })();
 
+        // Session-aware preloader — only runs on first page of the session
         (function(){
             const preloader = document.getElementById('site-preloader');
+            if (!preloader) return;
+
+            const alreadyLoaded = sessionStorage.getItem('cna_preloader_shown');
+            if (alreadyLoaded === 'true') {
+                preloader.classList.add('loaded');
+                preloader.style.display = 'none';
+                return;
+            }
+            sessionStorage.setItem('cna_preloader_shown', 'true');
+
             const fill = document.getElementById('preloaderFill');
             const counter = document.getElementById('preloaderCounter');
             let pct = 0;
             const interval = setInterval(() => {
-                pct += Math.random() * 18;
+                pct += Math.random() * 20;
                 if (pct >= 100) {
                     pct = 100;
                     clearInterval(interval);
@@ -287,7 +287,7 @@
                     if (fill) fill.style.width = pct + '%';
                     if (counter) counter.textContent = Math.floor(pct) + '%';
                 }
-            }, 180);
+            }, 160);
             setTimeout(() => preloader && preloader.classList.add('loaded'), 3000);
         })();
 
@@ -371,7 +371,7 @@
             const doubled = [...logos, ...logos];
             track.innerHTML = doubled.map(logo => `
                 <div class="partner-logo-item">
-                    <img src="${logo.url}" alt="${logo.name}" title="${logo.name}" loading="lazy" />
+                    <img src="${logo.url}" alt="${logo.name}" title="${logo.name}" loading="lazy" style="display:block;" />
                 </div>
             `).join('');
         }
@@ -425,7 +425,7 @@
             loadFeaturedCreator();
             loadPartners();
             setTimeout(loadAd, 800);
-            console.log('🏠 100 CNA — Home Loaded (doorway mode)');
+            console.log('🏠 100 CNA — Home Loaded');
         });
     </script>
 </body>
