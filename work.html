@@ -37,15 +37,16 @@
     <link rel="preload" as="image" href="assets/Logo.png">
 
     <style>
-        .page-work .visual-strip { padding: 200px 0 100px; }
-        .page-work .creator-section { padding: 100px 0 160px; }
-        .page-work .feature-strip { padding: 120px 0 160px; }
-        .page-work .partners-section-work { padding: 100px 0 140px; }
-        .page-work .contact-section-work { padding: 140px 0 180px; }
+        .page-work .visual-strip { padding: 84px 0 56px; }
+        .page-work .creator-section { padding: 56px 0 90px; }
+        .page-work .feature-strip { padding: 40px 0 90px; }
+        .page-work .partners-section-work { padding: 56px 0 80px; }
+        .page-work .contact-section-work { padding: 80px 0 100px; }
 
         .video-wrapper {
             position: relative;
-            height: 640px;
+            height: min(560px, calc(100svh - 150px));
+            min-height: 380px;
             border-radius: var(--radius);
             overflow: hidden;
             background: var(--cna-black);
@@ -79,16 +80,16 @@
         .visual-controls button:hover { background: var(--cna-red); color: var(--cna-white); }
         .visual-content {
             position: absolute;
-            bottom: 88px;
-            left: 88px;
-            right: 88px;
+            bottom: 48px;
+            left: 56px;
+            right: 56px;
             max-width: 720px;
         }
         .visual-content h2 {
             font-family: var(--font-display);
-            font-size: clamp(32px, 5vw, 64px);
-            line-height: 1.02;
-            margin-bottom: 28px;
+            font-size: clamp(24px, 3.2vw, 42px);
+            line-height: 1.05;
+            margin-bottom: 18px;
             letter-spacing: -0.03em;
             color: var(--cna-white);
             text-transform: uppercase;
@@ -102,8 +103,8 @@
         }
         .visual-content .work-link-btn {
             display: inline-block;
-            margin-top: 28px;
-            padding: 18px 40px;
+            margin-top: 20px;
+            padding: 14px 32px;
             background: var(--cna-yellow);
             color: var(--cna-black);
             border-radius: var(--radius-pill);
@@ -141,10 +142,10 @@
         }
         .page-work .section-title {
             font-family: var(--font-display);
-            font-size: clamp(36px, 5vw, 64px);
-            line-height: 1.02;
+            font-size: clamp(26px, 3.2vw, 42px);
+            line-height: 1.05;
             font-weight: 800;
-            margin-bottom: 88px;
+            margin-bottom: 40px;
             letter-spacing: -0.03em;
             color: var(--cna-black);
             text-transform: uppercase;
@@ -272,10 +273,10 @@
         }
         .contact-info-work h2 {
             font-family: var(--font-display);
-            font-size: clamp(32px, 4vw, 52px);
-            line-height: 1.05;
+            font-size: clamp(26px, 3vw, 38px);
+            line-height: 1.08;
             font-weight: 800;
-            margin-bottom: 28px;
+            margin-bottom: 18px;
             color: var(--cna-black);
             text-transform: uppercase;
             letter-spacing: -0.02em;
@@ -519,15 +520,18 @@
         .subscribe-modal-content .subscribe-status.error { color: #FF6B6B; }
 
         @media (max-width: 900px) {
-            .video-wrapper { height: 500px; }
-            .visual-content { left: 48px; right: 48px; bottom: 48px; }
-            .visual-content h2 { font-size: 32px; }
+            .video-wrapper { height: min(480px, calc(100svh - 140px)); }
+            .visual-content { left: 32px; right: 32px; bottom: 32px; }
+            .visual-content h2 { font-size: 26px; }
             .creator-grid { grid-template-columns: repeat(2, 1fr); gap: 28px; }
-            .contact-grid-work { grid-template-columns: 1fr; gap: 64px; }
+            .contact-grid-work { grid-template-columns: 1fr; gap: 44px; }
         }
         @media (max-width: 600px) {
-            .page-work .visual-strip { padding: 150px 0 70px; }
-            .video-wrapper { height: 400px; }
+            .page-work .visual-strip { padding: 76px 0 40px; }
+            .video-wrapper { height: min(420px, calc(100svh - 120px)); }
+            .visual-content { left: 20px; right: 20px; bottom: 22px; }
+            .visual-content h2 { font-size: 22px; }
+            .visual-content p { font-size: 13px; }
             .creator-grid { grid-template-columns: 1fr; }
             .creator-card { height: 380px; }
             .community-card-work { grid-template-columns: 1fr 1fr; }
@@ -599,11 +603,6 @@
                         <div class="loader"></div>
                         <span style="margin-left:16px; font-family:var(--font-body);">Loading featured project...</span>
                     </div>
-                </div>
-                <div class="visual-overlay"></div>
-                <div class="visual-controls">
-                    <button id="soundBtn">🔇</button>
-                    <button id="fullBtn">⛶</button>
                 </div>
             </div>
         </div>
@@ -1046,8 +1045,17 @@
 
         document.getElementById('workContactForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            alert("Thanks for reaching out! We'll be in touch soon.");
-            this.reset();
+            const f = this;
+            const fields = f.querySelectorAll('input, select, textarea');
+            const name = fields[0].value.trim();
+            const email = fields[1].value.trim();
+            const company = fields[2].value.trim();
+            const type = fields[3].value;
+            const message = fields[4].value.trim();
+            const subject = `${type || 'Inquiry'} — ${name}`;
+            const body = `Name: ${name}\nEmail: ${email}\nCompany / Brand: ${company || '-'}\nInquiry type: ${type}\n\n${message}`;
+            window.location.href = `mailto:100projectsmedia@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            f.reset();
         });
 
         const navbar = document.getElementById('navbar');

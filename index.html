@@ -127,7 +127,7 @@
         </div>
     </section>
 
-    <section data-animate style="padding: 60px 0;">
+    <section data-animate style="padding: 40px 0 20px;">
         <div class="container">
             <div class="doorway-section">
                 <div class="doorway-content">
@@ -144,7 +144,7 @@
         </div>
     </section>
 
-    <section data-animate style="padding: 60px 0 120px;">
+    <section data-animate style="padding: 20px 0 80px;">
         <div class="container">
             <div class="doorway-section">
                 <div class="doorway-content">
@@ -161,14 +161,14 @@
         </div>
     </section>
 
-    <section class="community-section cna-dark" id="join" data-animate style="background: var(--cna-black); padding: 180px 0;">
+    <section class="community-section cna-dark" id="join" data-animate style="background: var(--cna-black); padding: 90px 0;">
         <div class="container">
-            <div class="section-header" style="text-align:center; max-width:800px; margin:0 auto 72px auto;">
+            <div class="section-header" style="text-align:center; max-width:800px; margin:0 auto 36px auto;">
                 <span class="section-number" style="color: var(--cna-yellow);">Home / Join</span>
                 <h2 class="section-title" style="color:var(--cna-white); text-align:center;">Join 100 CNA<span class="highlight-red">.</span></h2>
                 <p class="section-subtitle" style="color:rgba(255,255,255,0.7); text-align:center; margin: 0 auto;">Are you a creator or artist? Tell us what you do and show us your work.</p>
             </div>
-            <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-top: 48px;">
+            <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-top: 28px;">
                 <a href="/contact.html#apply" class="btn-primary" style="background: var(--cna-yellow); color: var(--cna-black); border-color: var(--cna-yellow);">Apply to Join <i class="fa-solid fa-arrow-right"></i></a>
                 <a href="/profiles.html#community-form" class="btn-secondary" style="color: var(--cna-yellow); border-color: var(--cna-yellow);">Submit Your Profile</a>
             </div>
@@ -177,7 +177,7 @@
 
     <section class="partners-section" id="partners" data-animate>
         <div class="container">
-            <div class="section-header" style="text-align:center; max-width:800px; margin: 0 auto 56px auto;">
+            <div class="section-header" style="text-align:center; max-width:800px; margin: 0 auto 32px auto;">
                 <span class="section-number">Home / Partners</span>
                 <h2 class="section-title" style="text-align:center;">Culture Champions<span class="highlight-red">.</span></h2>
             </div>
@@ -187,12 +187,12 @@
         </div>
     </section>
 
-    <section class="community-section" id="newsletter" data-animate style="background: var(--cna-black); padding: 140px 0;">
+    <section class="community-section" id="newsletter" data-animate style="background: var(--cna-black); padding: 80px 0;">
         <div class="container">
             <div class="section-header" style="text-align:center; max-width:720px; margin:0 auto;">
                 <span class="section-number" style="color: var(--cna-yellow);">Home / Newsletter</span>
                 <h2 class="section-title" style="color:var(--cna-white); text-align:center;">Stay Connected<span class="highlight-red">.</span></h2>
-                <p class="section-subtitle" style="color:rgba(255,255,255,0.7); text-align:center; margin: 0 auto 44px auto;">Subscribe for updates on new projects, events, and creative opportunities.</p>
+                <p class="section-subtitle" style="color:rgba(255,255,255,0.7); text-align:center; margin: 0 auto 28px auto;">Subscribe for updates on new projects, events, and creative opportunities.</p>
                 <form id="homeNewsletterForm" style="display:flex; gap:14px; flex-wrap:wrap; justify-content:center; max-width: 580px; margin: 0 auto;">
                     <input type="email" id="homeNewsletterEmail" placeholder="Enter your email" required style="flex:1; min-width:240px; padding: 18px 26px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: var(--radius-pill); color: var(--cna-white); font-family: var(--font-body); font-size: 14px; outline: none;" />
                     <button type="submit" class="btn-primary" style="background: var(--cna-yellow); color: var(--cna-black); border-color: var(--cna-yellow);">Subscribe</button>
@@ -346,14 +346,14 @@
                     : `<div class="avatar-fallback">${initials}</div>`;
                 grid.innerHTML = `
                     <div class="feed-item" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 0; cursor: pointer; max-width: 1200px; margin: 0 auto;" onclick="window.location.href='/profiles.html'">
-                        <div class="feed-image" style="aspect-ratio: auto; height: 100%; min-height: 520px;">
+                        <div class="feed-image" style="aspect-ratio: auto; height: 100%; min-height: 420px;">
                             ${mediaHtml}
                             <span class="cna-number-badge" style="top:32px; left:32px; font-size:13px; padding:8px 20px;">CNA 001</span>
                         </div>
-                        <div class="feed-content" style="display:flex; flex-direction:column; justify-content:center; padding: 72px 64px;">
+                        <div class="feed-content" style="display:flex; flex-direction:column; justify-content:center; padding: 48px 48px;">
                             <div style="font-family: var(--font-mono); font-size: 11px; color: var(--cna-yellow); opacity: 0.8; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 20px;">Featured Creator</div>
-                            <h3 style="font-family: var(--font-display); font-size: 40px; color: var(--cna-white); margin-bottom: 18px; text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.05;">${member.name || 'Anonymous'}</h3>
-                            <p style="font-family: var(--font-body); font-size: 16px; color: var(--cna-yellow); opacity: 0.9; margin-bottom: 24px;">${member.role || 'Creative'}</p>
+                            <h3 style="font-family: var(--font-display); font-size: 30px; color: var(--cna-white); margin-bottom: 14px; text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.05;">${member.name || 'Anonymous'}</h3>
+                            <p style="font-family: var(--font-body); font-size: 15px; color: var(--cna-yellow); opacity: 0.9; margin-bottom: 18px;">${member.role || 'Creative'}</p>
                             ${member.description ? `<p style="font-family: var(--font-body); font-size: 15px; color: rgba(255,255,255,0.72); line-height: 1.7;">${member.description.substring(0, 260)}${member.description.length > 260 ? '...' : ''}</p>` : ''}
                             <div style="margin-top: 36px;">
                                 <span class="btn-primary" style="background: var(--cna-yellow); color: var(--cna-black); border-color: var(--cna-yellow);">View Profile <i class="fa-solid fa-arrow-right"></i></span>
