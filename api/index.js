@@ -545,7 +545,7 @@ async function handleSignup(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
     
     try {
-        const { name, email, role, skills, website, image1, image2, image3, socialPlatform, socialHandle } = req.body || {};
+        const { name, email, role, description, skills, website, image1, image2, image3, socialPlatform, socialHandle } = req.body || {};
         if (!name || !email || !role) {
             return res.status(400).json({ error: 'Name, email, and role are required' });
         }
@@ -557,6 +557,7 @@ async function handleSignup(req, res) {
 
         const { data, error } = await supabase.from('members').insert({
             name, email, role,
+            description: description || '',
             skills: skills || '',
             website: website || '',
             social_platform: socialPlatform || '',
@@ -582,7 +583,7 @@ async function handleSignup(req, res) {
 async function handleUpdateMember(req, res) {
     if (!requireAdmin(req, res)) return;
     try {
-        const { email, status, selectedImage, name, role, skills } = req.body || {};
+        const { email, status, selectedImage, name, role, skills, description } = req.body || {};
         if (!email) return res.status(400).json({ error: 'Member email is required' });
 
         const { data: existingMember } = await supabase
@@ -599,6 +600,7 @@ async function handleUpdateMember(req, res) {
         if (name !== undefined) updates.name = name;
         if (role !== undefined) updates.role = role;
         if (skills !== undefined) updates.skills = skills;
+        if (description !== undefined) updates.description = description;
         updates.updated_at = new Date().toISOString();
 
         const { data: updated, error } = await supabase

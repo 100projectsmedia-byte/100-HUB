@@ -1031,9 +1031,48 @@
             .search-bar .search-count { width: 100%; text-align: center; padding: 4px 0; }
             .dashboard-tabs button { padding: 8px 12px; font-size: 12px; }
         }
+    
+        /* ---- Dashboard keeps its own dark theme (site-wide palette is yellow) ---- */
+        body.page-dashboard {
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #161616;
+            --bg-tertiary: #101010;
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.75);
+            --text-muted: #9A9A9A;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-medium: rgba(255, 255, 255, 0.12);
+            --border-strong: rgba(255, 255, 255, 0.2);
+            --shadow-red: 0 4px 20px rgba(227, 30, 36, 0.15);
+            --shadow-red-strong: 0 8px 32px rgba(227, 30, 36, 0.3);
+            background: #0A0A0A;
+            color: #FFFFFF;
+        }
+        body.page-dashboard ::-webkit-scrollbar-track { background: #0A0A0A; }
+        body.page-dashboard ::-webkit-scrollbar-thumb { background: var(--cna-red); }
+        body.page-dashboard ::selection { background: var(--red); color: #fff; }
+        body.page-dashboard .pin-overlay { background: #0A0A0A; }
+        body.page-dashboard .pin-box .lock-icon { color: var(--cna-red); }
+        body.page-dashboard .pin-box h2 { color: #FFFFFF; }
+        body.page-dashboard .pin-box p { color: #FFFFFF; }
+        body.page-dashboard .pin-box .pin-inputs input { border-color: rgba(255,255,255,0.3); color: #FFFFFF; }
+        body.page-dashboard .pin-box .pin-inputs input:focus { background: transparent; color: #FFFFFF; border-color: var(--cna-red); }
+        body.page-dashboard .pin-box .pin-inputs input.error { border-color: var(--cna-red); }
+        body.page-dashboard .pin-box .pin-actions .btn-pin-submit { background: var(--cna-red); color: #FFFFFF; }
+        body.page-dashboard .pin-box .pin-actions .btn-pin-submit:hover { background: #C41A1F; color: #fff; }
+        body.page-dashboard .pin-box .pin-actions .btn-pin-clear { color: #FFFFFF; border-color: rgba(255,255,255,0.3); }
+        body.page-dashboard .pin-box .pin-actions .btn-pin-clear:hover { background: #FFFFFF; color: #0A0A0A; }
+        /* header: black bar with red accents (not the yellow used on the public site) */
+        body.page-dashboard .navbar { background: #0A0A0A; border-bottom-color: rgba(227, 30, 36, 0.4); }
+        body.page-dashboard .nav-social a { color: #FFFFFF; }
+        body.page-dashboard .nav-social a:hover { color: var(--cna-red); }
+        body.page-dashboard .hamburger span { background: #FFFFFF; }
+        body.page-dashboard .nav-logo .logo-text { color: #FFFFFF; }
+        body.page-dashboard .mobile-menu-links a, body.page-dashboard .mobile-menu-social a { color: #FFFFFF; }
+        body.page-dashboard .mobile-menu-links a:hover, body.page-dashboard .mobile-menu-links a.active { color: var(--cna-red); }
     </style>
 </head>
-<body>
+<body class="page-dashboard">
 
     <!-- ==================== PIN PROTECTION OVERLAY ==================== -->
     <div class="pin-overlay" id="pinOverlay">
