@@ -125,15 +125,15 @@ h1, h2, h3, h4, h5, h6,
     top: 0; left: 0; right: 0;
     z-index: 1000;
     padding: 16px 0;
-    background: var(--cna-yellow);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.35);  /* WHITE divider */
+    background: var(--cna-black);
+    border-bottom: 1px solid rgba(244, 206, 61, 0.25);  /* subtle yellow divider */
     transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), background 0.4s ease;
     width: 100%;
 }
 .navbar.nav-hidden { transform: translateY(-100%); }
 .navbar.nav-scrolled {
-    background: var(--cna-yellow);
-    border-bottom-color: rgba(255, 255, 255, 0.5);
+    background: var(--cna-black);
+    border-bottom-color: rgba(244, 206, 61, 0.4);
 }
 
 /* New navbar layout: logo left, nav right */
@@ -174,7 +174,7 @@ h1, h2, h3, h4, h5, h6,
     font-family: var(--font-display);
     font-size: 12px;
     font-weight: 600;
-    color: var(--cna-black);
+    color: var(--cna-white);
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -183,7 +183,7 @@ h1, h2, h3, h4, h5, h6,
     border-bottom: 2px solid transparent;
 }
 .nav-links-desktop a:hover,
-.nav-links-desktop a.active { border-bottom-color: var(--cna-black); }
+.nav-links-desktop a.active { color: var(--cna-yellow); border-bottom-color: var(--cna-yellow); }
 
 /* Show desktop links + hide hamburger on desktop */
 @media (min-width: 1024px) {
@@ -209,7 +209,7 @@ h1, h2, h3, h4, h5, h6,
 .hamburger span {
     display: block;
     width: 26px; height: 2.5px;
-    background: var(--cna-black);
+    background: var(--cna-yellow);
     transition: var(--transition-fast);
     border-radius: 2px;
 }
@@ -385,7 +385,7 @@ section + section {
     padding: 0 20px;
 }
 .hero-brand-header { margin-bottom: 48px; display: flex; justify-content: center; }
-.hero-img { height: 110px; width: auto; }
+.hero-img { height: 170px; width: auto; max-width: 100%; }
 .hero-title {
     font-family: var(--font-display);
     font-size: clamp(40px, 6vw, 88px);
@@ -1468,6 +1468,11 @@ section + section {
 .social-group .social-row select { flex: 0 0 150px; min-width: 130px; }
 .social-group .social-row input { flex: 1; min-width: 160px; }
 
+/* Apply card (Join CNA page) */
+.apply-card { max-width: 760px; margin: 0 auto; }
+.apply-card .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+@media (max-width: 600px) { .apply-card .form-row { grid-template-columns: 1fr; } }
+
 /* ==========================================
    TEAM
    ========================================== */
@@ -2028,7 +2033,7 @@ section + section {
     .container { padding: 0 48px; }
     section { padding: 140px 0; }
     .section-header { margin-bottom: 72px; }
-    .hero-img { height: 90px; }
+    .hero-img { height: 140px; }
     .section-title { font-size: 48px; }
     .about-statement { font-size: 36px; }
     .community-grid { grid-template-columns: 1fr; gap: 72px; }
@@ -2045,7 +2050,7 @@ section + section {
     .nav-logo .logo-img { height: 48px; }
 
     .hero { min-height: auto; padding: 150px 0 100px; }
-    .hero-img { height: 80px; }
+    .hero-img { height: 120px; }
     .hero-title { font-size: clamp(32px, 8vw, 56px); }
     .hero-tagline { font-size: 16px; }
 
@@ -2082,7 +2087,7 @@ section + section {
     .nav-logo .logo-img { height: 40px; }
 
     .hero { padding: 130px 0 80px; }
-    .hero-img { height: 68px; }
+    .hero-img { height: 100px; }
     .hero-title { font-size: clamp(28px, 9vw, 42px); }
     .hero-tagline { font-size: 15px; margin-bottom: 40px; }
     .hero-cta { flex-direction: column; width: 100%; align-items: stretch; margin-bottom: 48px; }
@@ -2147,7 +2152,7 @@ section + section {
     .container { padding: 0 18px; }
     section { padding: 76px 0; }
     .hero-title { font-size: 28px; }
-    .hero-img { height: 60px; }
+    .hero-img { height: 88px; }
     .section-title { font-size: 24px; }
 
     .feed-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
