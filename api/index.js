@@ -11,8 +11,8 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANO
 // ==========================================
 
 const EMAIL_FROM = 'noreply@100hub.co.za';
-const REPLY_TO_EMAIL = '100projectsmedia@gmail.com';
-const ADMIN_EMAIL = '100projectsmedia@gmail.com';
+const REPLY_TO_EMAIL = 'CNA@100projects.co.za';
+const ADMIN_EMAIL = 'CNA@100projects.co.za';
 
 async function sendEmail({ to, subject, html }) {
     const apiKey = process.env.RESEND_API_KEY;
