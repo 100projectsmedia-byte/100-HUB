@@ -87,7 +87,7 @@
         </div>
         <div class="mobile-menu-social">
             <a href="https://www.instagram.com/100creators_n_artists" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>
-            <a href="mailto:100projectsmedia@gmail.com"><i class="fa-regular fa-envelope"></i> Email</a>
+            <a href="mailto:CNA@100projects.co.za"><i class="fa-regular fa-envelope"></i> Email</a>
         </div>
     </div>
 
@@ -162,7 +162,7 @@
                     <h3>Apply to Join</h3>
                     <form id="signupForm">
                         <div class="form-group">
-                            <label>Professional Photo (1-3 images)</label>
+                            <label>Profile Photo or Company Logo (1-3 images)</label>
                             <input type="file" id="memberPhotos" accept="image/*" multiple required />
                             <small>Upload 1 to 3 images (PNG, JPG, JPEG)</small>
                         </div>
@@ -234,7 +234,7 @@
                     <img src="assets/Logo.png" alt="100 CNA" class="footer-logo" loading="lazy" />
                     <div class="footer-social">
                         <a href="https://www.instagram.com/100creators_n_artists" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="mailto:100projectsmedia@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
+                        <a href="mailto:CNA@100projects.co.za" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
                     </div>
                 </div>
                 <div class="footer-divider">
@@ -385,9 +385,12 @@
                 if (response.ok) {
                     const data = await response.json();
                     allHubMembers = (data.members || []).slice().sort((a, b) => {
-                        const da = new Date(a.created_at || a.timestamp || 0);
-                        const db = new Date(b.created_at || b.timestamp || 0);
-                        return da - db;
+                        const na = (a.name || '').trim();
+                        const nb = (b.name || '').trim();
+                        if (!na && !nb) return 0;
+                        if (!na) return 1;
+                        if (!nb) return -1;
+                        return na.localeCompare(nb, undefined, { sensitivity: 'base', numeric: true });
                     });
                     filteredHubMembers = allHubMembers;
                     document.getElementById('hubShowingCount').textContent = allHubMembers.length;
