@@ -446,8 +446,7 @@
                 const role = member.role || 'Creative';
                 const description = member.description || '';
                 const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-                const originalIndex = allHubMembers.findIndex(m => (m.id && member.id) ? m.id === member.id : m.email === member.email);
-                const cnaNum = String((originalIndex >= 0 ? originalIndex : 0) + 1).padStart(3, '0');
+                const cnaNum = cnaNumberFor(member);
                 const imageHtml = img ? `<img src="${img}" alt="${name}" loading="lazy" />` : `<div class="avatar-fallback">${initials || '?'}</div>`;
                 const descriptionHtml = description && description.trim()
                     ? `<p class="hub-description">${description}</p>`
@@ -487,14 +486,24 @@
             }
         }
 
+        // CNA number: permanent value saved on the member (assigned when they are approved).
+        // Until the numbering SQL has been run, fall back to sign-up order so numbers never follow the alphabet.
+        function cnaNumberFor(member) {
+            const pad = n => String(n).padStart(3, '0');
+            if (member.member_number !== undefined && member.member_number !== null) return pad(member.member_number);
+            const ts = m => new Date(m.created_at || m.timestamp || 0).getTime();
+            const key = m => String(m.id || m.email || '');
+            const rank = allHubMembers.filter(m => ts(m) < ts(member) || (ts(m) === ts(member) && key(m) < key(member))).length + 1;
+            return pad(rank);
+        }
+
         function openMemberModal(member) {
             const selectedImage = member.selectedImage || member.selected_image || member.image1 || '';
             const img = selectedImage ? optimizeImage(selectedImage, 800) : '';
             const joinDate = member.created_at || member.timestamp
                 ? new Date(member.created_at || member.timestamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
                 : '';
-            const originalIndex = allHubMembers.findIndex(m => (m.id && member.id) ? m.id === member.id : m.email === member.email);
-            const cnaNum = String((originalIndex >= 0 ? originalIndex : 0) + 1).padStart(3, '0');
+            const cnaNum = cnaNumberFor(member);
             let imageHtml = '';
             if (img) {
                 imageHtml = `<img src="${img}" alt="${member.name}" />`;

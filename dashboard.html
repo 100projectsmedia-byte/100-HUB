@@ -2340,7 +2340,7 @@
                     return `
                         <tr>
                             <td>${index + 1}</td>
-                            <td><strong style="color:var(--text-primary);">${member.name}</strong></td>
+                            <td><strong style="color:var(--text-primary);">${member.name}</strong>${member.member_number != null ? ` <span style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted); margin-left:6px;">CNA ${String(member.member_number).padStart(3,'0')}</span>` : ''}</td>
                             <td><a href="mailto:${member.email}" style="color:rgba(255,255,255,0.7); text-decoration:none;">${member.email}</a></td>
                             <td><span class="member-role">${member.role || '-'}</span></td>
                             <td><span class="status-badge ${member.status || 'pending'}">${member.status || 'pending'}</span></td>
