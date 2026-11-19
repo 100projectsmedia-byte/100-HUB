@@ -1032,6 +1032,21 @@
             .dashboard-tabs button { padding: 8px 12px; font-size: 12px; }
         }
     
+        /* ---- Rewards tab ---- */
+        .reward-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 760px; }
+        .reward-form .full { grid-column: 1 / -1; }
+        .reward-form select, .reward-form input[type="text"] {
+            width: 100%; padding: 12px 18px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
+            background: rgba(255,255,255,0.04); color: var(--text-primary); font-size: 14px; font-family: 'Inter', sans-serif;
+        }
+        .reward-form select option { background: #161616; color: #FFFFFF; }
+        .reward-form select:focus, .reward-form input[type="text"]:focus { outline: none; border-color: var(--red); }
+        .reward-check { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-secondary); cursor: pointer; }
+        .reward-check input { width: 16px; height: 16px; accent-color: var(--red); }
+        .reward-winner-cell { display: flex; align-items: center; gap: 12px; }
+        .reward-winner-cell img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+        @media (max-width: 700px) { .reward-form { grid-template-columns: 1fr; } }
+
         /* ---- Dashboard keeps its own dark theme (site-wide palette is yellow) ---- */
         body.page-dashboard {
             --bg-primary: #0A0A0A;
@@ -1183,6 +1198,7 @@
                 <button data-tab="work">Work</button>
                 <button data-tab="ads">Ads</button>
                 <button data-tab="partners">Partners</button>
+                <button data-tab="rewards">Rewards</button>
                 <button data-tab="subscriptions">Subscriptions</button>
                 <button data-tab="impact">Impact Numbers</button>
                 <button data-tab="mediakit">Media Kit</button>
@@ -1390,6 +1406,64 @@
                 <div id="partnerUploadStatus" style="margin-top:8px; font-size:12px; min-height:20px;"></div>
                 <p style="font-size:12px; color:rgba(255,255,255,0.5); margin-top:8px;">
                     💡 Upload a logo image (PNG, JPG, SVG) - it will be saved to Cloudinary automatically.
+                </p>
+            </div>
+
+            <!-- Tab: Rewards -->
+            <div class="tab-content" id="tab-rewards">
+                <div class="dashboard-actions">
+                    <button class="btn-outline" onclick="loadRewards()">
+                        <i class="fa-solid fa-rotate"></i> Refresh
+                    </button>
+                    <span style="margin-left:auto; font-size:14px; color:rgba(255,255,255,0.6);">
+                        Winners: <strong id="rewardsTotal">0</strong>
+                    </span>
+                </div>
+
+                <h3 style="font-family:'Playfair Display',serif; font-size:20px; margin-bottom:16px;">Add a Winner</h3>
+                <div class="reward-form">
+                    <div class="full">
+                        <select id="rewardMemberSelect">
+                            <option value="">Loading members...</option>
+                        </select>
+                    </div>
+                    <div class="full">
+                        <input type="text" id="rewardName" placeholder="What did they win? (e.g., Featured in 100 Magazine)" maxlength="160" />
+                    </div>
+                    <div class="full">
+                        <input type="text" id="rewardLink" placeholder="Link (optional) - e.g. an event page. Shows as &quot;View Reward&quot;" />
+                    </div>
+                    <label class="reward-check full">
+                        <input type="checkbox" id="rewardNotify" checked />
+                        Email the winner to let them know
+                    </label>
+                    <div class="full">
+                        <button class="btn-primary" id="addRewardBtn" onclick="addReward()">
+                            <i class="fa-regular fa-plus"></i> Add Winner
+                        </button>
+                    </div>
+                </div>
+                <div id="rewardStatus" style="margin-top:10px; font-size:13px; min-height:20px;"></div>
+
+                <h3 style="font-family:'Playfair Display',serif; font-size:20px; margin:30px 0 16px;">Current Winners</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Winner</th>
+                                <th>Won</th>
+                                <th>Link</th>
+                                <th>Date</th>
+                                <th style="text-align:center;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rewardsTableBody">
+                            <tr><td colspan="5"><div class="empty-state"><i class="fa-solid fa-trophy"></i><p>Loading winners...</p></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="font-size:12px; color:rgba(255,255,255,0.5); margin-top:8px;">
+                    💡 Winners appear on the public Rewards page straight away. Remove a winner with the delete button.
                 </p>
             </div>
 
@@ -2259,6 +2333,7 @@
                 document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
                 document.getElementById('tab-' + this.dataset.tab).classList.add('active');
                 if (this.dataset.tab === 'partners') loadPartners();
+                if (this.dataset.tab === 'rewards') loadRewards();
                 if (this.dataset.tab === 'mediakit') checkMediaKit();
                 if (this.dataset.tab === 'impact') loadImpactNumbers();
                 if (this.dataset.tab === 'articles') renderArticles();
@@ -3850,6 +3925,112 @@
         }
 
         // ==========================================
+        // REWARDS
+        // ==========================================
+        function rwEsc(value) {
+            return String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        async function loadRewardMembers() {
+            const select = document.getElementById('rewardMemberSelect');
+            try {
+                const response = await fetchWithAuth(apiUrl('members', { status: 'accepted', limit: 500 }));
+                const data = await response.json();
+                const members = (data.members || []).slice().sort((a, b) =>
+                    (a.name || '').trim().localeCompare((b.name || '').trim(), undefined, { sensitivity: 'base' }));
+                select.innerHTML = '<option value="">Select a member...</option>' + members.map(m => {
+                    const num = (m.member_number !== undefined && m.member_number !== null)
+                        ? ' - CNA ' + String(m.member_number).padStart(3, '0') : '';
+                    return `<option value="${rwEsc(m.id)}">${rwEsc((m.name || '').trim())}${num}</option>`;
+                }).join('');
+            } catch (error) {
+                if (error.message !== 'Unauthorized') {
+                    select.innerHTML = '<option value="">Could not load members</option>';
+                    showToast('Could not load members.', 'error');
+                }
+            }
+        }
+
+        async function loadRewards() {
+            const select = document.getElementById('rewardMemberSelect');
+            if (select && select.options.length <= 1) loadRewardMembers();
+            const tbody = document.getElementById('rewardsTableBody');
+            try {
+                const response = await fetchWithAuth(apiUrl('rewards'));
+                const data = await response.json();
+                const rewards = data.rewards || [];
+                document.getElementById('rewardsTotal').textContent = rewards.length;
+                if (rewards.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><i class="fa-solid fa-trophy"></i><p>No winners added yet.</p></div></td></tr>';
+                    return;
+                }
+                tbody.innerHTML = rewards.map(r => {
+                    const img = r.winner_image ? `<img src="${rwEsc(getOptimizedImage(r.winner_image, 80, 80))}" alt="" />` : '';
+                    const num = (r.member_number !== undefined && r.member_number !== null)
+                        ? `<span style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted);">CNA ${String(r.member_number).padStart(3, '0')}</span>` : '';
+                    const link = r.reward_link
+                        ? `<a href="${rwEsc(r.reward_link)}" target="_blank" rel="noopener noreferrer" style="color:var(--red); text-decoration:none;">Open link</a>`
+                        : '<span style="color:var(--text-muted);">-</span>';
+                    const date = r.created_at ? new Date(r.created_at).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' }) : '-';
+                    return `
+                        <tr>
+                            <td><div class="reward-winner-cell">${img}<div><strong style="color:var(--text-primary);">${rwEsc(r.winner_name)}</strong><br>${num}</div></div></td>
+                            <td>${rwEsc(r.reward_name)}</td>
+                            <td>${link}</td>
+                            <td>${date}</td>
+                            <td style="text-align:center;">
+                                <button class="btn-outline" style="padding:6px 12px; font-size:12px;" data-id="${rwEsc(r.id)}" data-name="${rwEsc(r.winner_name + ' - ' + r.reward_name)}" onclick="confirmDelete('reward', this.dataset.id, this.dataset.name)">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>`;
+                }).join('');
+            } catch (error) {
+                if (error.message !== 'Unauthorized') {
+                    console.error('Error loading rewards:', error);
+                    showToast('Error loading winners.', 'error');
+                }
+            }
+        }
+
+        async function addReward() {
+            const memberId = document.getElementById('rewardMemberSelect').value;
+            const rewardName = document.getElementById('rewardName').value.trim();
+            const rewardLink = document.getElementById('rewardLink').value.trim();
+            const notify = document.getElementById('rewardNotify').checked;
+            const status = document.getElementById('rewardStatus');
+            const btn = document.getElementById('addRewardBtn');
+
+            if (!memberId) { status.innerHTML = '<span style="color:#ff6b6b;">Please choose a member.</span>'; return; }
+            if (!rewardName) { status.innerHTML = '<span style="color:#ff6b6b;">Please enter what they won.</span>'; return; }
+
+            btn.disabled = true;
+            status.innerHTML = '<span style="color:rgba(255,255,255,0.6);">Adding winner...</span>';
+            try {
+                const response = await fetchWithAuth(apiUrl('rewards'), {
+                    method: 'POST',
+                    body: JSON.stringify({ memberId, rewardName, rewardLink, notify })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    status.innerHTML = '';
+                    showToast(result.notified ? 'Winner added and emailed!' : 'Winner added!', 'success');
+                    document.getElementById('rewardMemberSelect').value = '';
+                    document.getElementById('rewardName').value = '';
+                    document.getElementById('rewardLink').value = '';
+                    await loadRewards();
+                } else {
+                    status.innerHTML = `<span style="color:#ff6b6b;">${rwEsc(result.error || 'Could not add winner.')}</span>`;
+                }
+            } catch (error) {
+                if (error.message !== 'Unauthorized') {
+                    status.innerHTML = '<span style="color:#ff6b6b;">Network error. Please try again.</span>';
+                }
+            }
+            btn.disabled = false;
+        }
+
+        // ==========================================
         // SUBSCRIPTIONS
         // ==========================================
         let allSubscriptions = [];
@@ -4086,6 +4267,8 @@
                     endpoint = 'articles';
                 } else if (deleteTarget.type === 'partner') {
                     endpoint = 'partners';
+                } else if (deleteTarget.type === 'reward') {
+                    endpoint = 'rewards';
                 } else if (deleteTarget.type === 'post') {
                     endpoint = 'posts';
                 } else if (deleteTarget.type === 'ad') {
@@ -4117,6 +4300,8 @@
                         await refreshArticles();
                     } else if (deleteTarget.type === 'partner') {
                         await loadPartners();
+                    } else if (deleteTarget.type === 'reward') {
+                        await loadRewards();
                     } else if (deleteTarget.type === 'post') {
                         await loadPosts();
                     } else if (deleteTarget.type === 'work') {

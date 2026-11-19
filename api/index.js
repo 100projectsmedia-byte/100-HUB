@@ -1281,6 +1281,125 @@ async function handleAds(req, res) {
 }
 
 // ==========================================
+// REWARDS (winners shown on the public Rewards page)
+// ==========================================
+function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+async function sendWinnerEmail(email, name, rewardName, link) {
+    const safeName = escapeHtml(name);
+    const safeReward = escapeHtml(rewardName);
+    const button = link
+        ? `<p style="margin:0 0 28px;"><a href="${escapeHtml(link)}" style="display:inline-block;background:#E31E24;color:#ffffff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:14px 28px;border-radius:999px;">View reward</a></p>`
+        : '';
+    const html = `
+        <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1A1A1A;">
+            <h1 style="font-size:26px;font-weight:700;margin-bottom:8px;">Congratulations ${safeName}! 🏆</h1>
+            <p style="font-size:16px;color:#4A4A4A;line-height:1.7;margin-bottom:24px;">
+                You've been selected as a <strong>100 CNA winner</strong>.
+            </p>
+            <div style="background:#F5F5F5;border-radius:10px;padding:20px 24px;margin-bottom:28px;">
+                <p style="margin:0 0 8px;font-size:12px;color:#8A8A8A;text-transform:uppercase;letter-spacing:1px;">You won</p>
+                <p style="margin:0;font-size:20px;font-weight:700;color:#1A1A1A;">${safeReward}</p>
+            </div>
+            ${button}
+            <p style="font-size:14px;color:#4A4A4A;line-height:1.7;">
+                You'll also be featured on the 100 CNA Rewards page. If you have any questions, just reply to this email.
+            </p>
+            <hr style="border:none;border-top:1px solid #E8E4DE;margin:32px 0;" />
+            <p style="font-size:12px;color:#B8B0A8;">100 CNA · Creators &amp; Artists</p>
+        </div>
+    `;
+    await sendEmail({ to: email, subject: `🏆 You've won: ${rewardName}`, html });
+}
+
+// Public columns only - never expose the winner's email address
+const REWARD_PUBLIC_COLUMNS = 'id, winner_name, winner_image, member_number, reward_name, reward_link, created_at';
+
+async function handleRewards(req, res) {
+    if (req.method === 'GET') {
+        try {
+            const { data, error } = await supabase
+                .from('rewards')
+                .select(REWARD_PUBLIC_COLUMNS)
+                .order('created_at', { ascending: false });
+            if (error) throw error;
+            return res.status(200).json({ rewards: data || [] });
+        } catch (error) {
+            return res.status(200).json({ rewards: [] });
+        }
+    }
+
+    if (req.method === 'POST') {
+        if (!requireAdmin(req, res)) return;
+        try {
+            const { memberId, rewardName, rewardLink, notify } = req.body || {};
+            const prize = (rewardName || '').trim();
+            if (!memberId || !prize) {
+                return res.status(400).json({ error: 'Winner and reward name are required' });
+            }
+
+            // Optional link: only http/https allowed
+            let link = (rewardLink || '').trim();
+            if (link) {
+                if (!/^https?:\/\//i.test(link)) link = 'https://' + link;
+                try {
+                    const parsed = new URL(link);
+                    if (!['http:', 'https:'].includes(parsed.protocol)) throw new Error('bad protocol');
+                } catch (e) {
+                    return res.status(400).json({ error: 'The reward link is not a valid web address' });
+                }
+            }
+
+            const { data: member, error: memberError } = await supabase
+                .from('members')
+                .select('id, name, email, selected_image, image1, member_number')
+                .eq('id', memberId)
+                .single();
+            if (memberError || !member) {
+                return res.status(404).json({ error: 'Member not found' });
+            }
+
+            const { error } = await supabase.from('rewards').insert({
+                member_id: member.id,
+                winner_name: (member.name || 'Member').trim(),
+                winner_email: member.email || null,
+                winner_image: member.selected_image || member.image1 || '',
+                member_number: member.member_number ?? null,
+                reward_name: prize,
+                reward_link: link || null
+            });
+            if (error) throw error;
+
+            const shouldNotify = notify !== false;
+            if (shouldNotify && member.email) {
+                await sendWinnerEmail(member.email, (member.name || '').trim() || 'there', prize, link || null);
+            }
+
+            return res.status(200).json({ success: true, notified: !!(shouldNotify && member.email) });
+        } catch (error) {
+            return res.status(500).json({ error: 'Failed to add winner: ' + error.message });
+        }
+    }
+
+    if (req.method === 'DELETE') {
+        if (!requireAdmin(req, res)) return;
+        try {
+            const { id } = req.body || {};
+            if (!id) return res.status(400).json({ error: 'ID is required' });
+            const { error } = await supabase.from('rewards').delete().eq('id', id);
+            if (error) throw error;
+            return res.status(200).json({ success: true });
+        } catch (error) {
+            return res.status(500).json({ error: 'Failed to remove winner: ' + error.message });
+        }
+    }
+
+    return res.status(405).json({ error: 'Method not allowed' });
+}
+
+// ==========================================
 // MAIN HANDLER
 // ==========================================
 export default async function handler(req, res) {
@@ -1317,6 +1436,8 @@ export default async function handler(req, res) {
             return handleImpactNumbers(req, res);
         case 'articles':
             return handleArticles(req, res);
+        case 'rewards':
+            return handleRewards(req, res);
         case 'verify-pin':
             return handleVerifyPin(req, res);
         case 'update-pin':

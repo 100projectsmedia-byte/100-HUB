@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>100 CNA — Rewards</title>
-    <meta name="description" content="100 CNA Rewards — Coming Soon" />
+    <meta name="description" content="100 CNA Rewards — meet the creators who have won and see what they received." />
     <meta name="theme-color" content="#F4CE3D" />
 
     <meta property="og:title" content="100 CNA — Rewards" />
-    <meta property="og:description" content="Loyalty and rewards program — coming soon." />
+    <meta property="og:description" content="Meet the creators who have won and see what they received." />
     <meta property="og:image" content="https://www.100hub.co.za/assets/Logo.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -92,26 +92,21 @@
         </div>
     </div>
 
-    <section class="coming-soon-section" id="rewards">
+    <section class="contact-section" id="rewards" data-animate style="padding: 96px 0 28px;">
         <div class="container">
-            <span class="coming-icon"><i class="fa-solid fa-trophy"></i></span>
-            <div class="coming-soon-divider">
-                <span class="divider-line"></span>
-                <span class="divider-dot"></span>
-                <span class="divider-dot-light"></span>
-                <span class="divider-dot"></span>
-                <span class="divider-line"></span>
+            <div class="section-header" style="text-align:center; max-width:800px; margin:0 auto;">
+                <span class="section-number">Rewards / Winners</span>
+                <h1 class="section-title" style="text-align:center;">Celebrating Our Winners<span class="highlight-red">.</span></h1>
+                <p class="section-subtitle" style="text-align:center; margin:0 auto;">Meet the 100 CNA creators who have earned a reward, and see what they won.</p>
             </div>
-            <h1>Rewards <span>Coming Soon</span></h1>
-            <p>We're creating a loyalty and rewards program for the 100 CNA community. Earn points, unlock perks, and get recognized.</p>
-            <div class="coming-soon-divider">
-                <span class="divider-line"></span>
-                <span class="divider-dot-light"></span>
-                <span class="divider-dot"></span>
-                <span class="divider-dot-light"></span>
-                <span class="divider-line"></span>
+        </div>
+    </section>
+
+    <section id="winners" data-animate style="padding: 24px 0 90px;">
+        <div class="container">
+            <div class="hub-grid rewards-grid" id="rewardsGrid">
+                <p class="rewards-message">Loading winners...</p>
             </div>
-            <p class="coming-soon-sub">🌟 Building something special</p>
         </div>
     </section>
 
@@ -128,7 +123,7 @@
                 </div>
                 <div class="footer-page-nav-secondary">
                     <a href="/games.html">Games — Coming Soon</a>
-                    <a href="/rewards.html">Rewards — Coming Soon</a>
+                    <a href="/rewards.html">Rewards</a>
                 </div>
             </div>
             <div class="footer-content">
@@ -232,6 +227,78 @@
                 navbar.classList.toggle('nav-scrolled', window.scrollY > 50);
             }, { passive: true });
         }
+
+        function apiUrl(path, params = {}) {
+            const queryParams = new URLSearchParams({ path, ...params });
+            return `/api?${queryParams.toString()}`;
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        function optimizedImage(url) {
+            if (url && url.includes('cloudinary.com')) {
+                return url.replace('/upload/', '/upload/c_fill,w_700,h_700,q_auto,f_auto/');
+            }
+            return url || '';
+        }
+
+        function safeLink(url) {
+            try {
+                const parsed = new URL(url);
+                return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : '';
+            } catch (e) { return ''; }
+        }
+
+        async function loadRewards() {
+            const grid = document.getElementById('rewardsGrid');
+            try {
+                const response = await fetch(apiUrl('rewards'));
+                const data = await response.json();
+                const rewards = data.rewards || [];
+                if (rewards.length === 0) {
+                    grid.innerHTML = `
+                        <div class="rewards-empty">
+                            <i class="fa-solid fa-trophy"></i>
+                            <h3>First winners coming soon</h3>
+                            <p>We'll announce our first winners here. Join 100 CNA to be in the running.</p>
+                            <a href="/contact.html#apply" class="btn-primary">Join 100 CNA</a>
+                        </div>`;
+                    return;
+                }
+                grid.innerHTML = rewards.map(r => {
+                    const name = escapeHtml(r.winner_name);
+                    const img = optimizedImage(r.winner_image);
+                    const initials = (r.winner_name || '?').split(' ').filter(Boolean).map(n => n[0]).join('').toUpperCase().slice(0, 2);
+                    const imageHtml = img
+                        ? `<img src="${escapeHtml(img)}" alt="${name}" loading="lazy" />`
+                        : `<div class="avatar-fallback">${escapeHtml(initials)}</div>`;
+                    const badge = (r.member_number !== undefined && r.member_number !== null)
+                        ? `<span class="cna-number-badge">CNA ${String(r.member_number).padStart(3, '0')}</span>` : '';
+                    const href = r.reward_link ? safeLink(r.reward_link) : '';
+                    const linkHtml = href
+                        ? `<a class="reward-link" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">View Reward <i class="fa-solid fa-arrow-up-right-from-square"></i></a>`
+                        : '';
+                    const date = r.created_at
+                        ? new Date(r.created_at).toLocaleDateString('en-ZA', { month: 'long', year: 'numeric' }) : '';
+                    return `
+                        <div class="hub-card reward-card">
+                            <div class="hub-image">${badge}${imageHtml}</div>
+                            <div class="hub-info">
+                                <p class="reward-label"><i class="fa-solid fa-trophy"></i> Winner</p>
+                                <h3 class="hub-name">${name}</h3>
+                                <p class="reward-prize">${escapeHtml(r.reward_name)}</p>
+                                ${linkHtml}
+                                ${date ? `<p class="reward-date">Awarded ${escapeHtml(date)}</p>` : ''}
+                            </div>
+                        </div>`;
+                }).join('');
+            } catch (error) {
+                grid.innerHTML = '<p class="rewards-message">Could not load winners right now. Please try again later.</p>';
+            }
+        }
+        loadRewards();
 
         console.log('🏆 100 CNA — Rewards Loaded');
     </script>

@@ -2216,3 +2216,87 @@ section + section {
     .stories-search .btn-clear-stories { padding: 10px 12px; }
     .stories-search .btn-search-stories { padding: 10px 14px; }
 }
+
+
+/* ==========================================
+   REWARDS PAGE
+   ========================================== */
+.hub-grid.rewards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 28px;
+    justify-content: center;
+}
+.reward-card { cursor: default; }
+.reward-card:hover { transform: translateY(-4px); }
+.reward-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cna-yellow);
+    margin-bottom: 8px;
+}
+.reward-label i { margin-right: 6px; }
+.reward-prize {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--cna-white);
+    line-height: 1.45;
+    margin-bottom: 4px;
+}
+.reward-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 10px 22px;
+    border-radius: var(--radius-pill);
+    background: var(--cna-yellow);
+    color: var(--cna-black);
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+.reward-link:hover { background: var(--cna-white); }
+.reward-date {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 12px;
+}
+.rewards-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-family: var(--font-body);
+    color: var(--cna-black);
+    opacity: 0.7;
+}
+.rewards-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+.rewards-empty i { font-size: 40px; color: var(--cna-black); margin-bottom: 16px; display: block; }
+.rewards-empty h3 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    color: var(--cna-black);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+.rewards-empty p {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--cna-black);
+    opacity: 0.75;
+    margin-bottom: 24px;
+}
+@media (max-width: 600px) {
+    .hub-grid.rewards-grid { grid-template-columns: 1fr; }
+}
