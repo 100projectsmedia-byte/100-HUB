@@ -4,7 +4,13 @@
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+// Server-side key: lets the API read/write every table regardless of row level security.
+// Falls back to the anon key until SUPABASE_SERVICE_ROLE_KEY is added in Vercel.
+const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY,
+    { auth: { persistSession: false, autoRefreshToken: false } }
+);
 
 // ==========================================
 // EMAIL FUNCTIONS
